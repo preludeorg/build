@@ -3,7 +3,6 @@ from vertebrae.core import Server, Application
 
 from app.routes.dcf import DCFRoutes
 from app.routes.manifest import ManifestRoutes
-from app.routes.probe import ProbeRoutes
 from app.services.compile import CompileService
 from app.services.dcf import DCFService
 from app.services.manifest import ManifestService
@@ -16,7 +15,6 @@ if __name__ == '__main__':
         applications=[
             Application(port=3000, routes=[
                 ManifestRoutes(),
-                ProbeRoutes(),
                 DCFRoutes()
             ])
         ],

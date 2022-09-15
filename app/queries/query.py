@@ -19,3 +19,11 @@ class Query:
     @staticmethod
     def remove_manifest():
         return f""" DELETE FROM manifest WHERE id = %(id)s; """
+
+    @staticmethod
+    def activity():
+        return f""" SELECT name, status, cpu, created FROM results WHERE name = %(name)s ;"""
+
+    @staticmethod
+    def add_link():
+        return f""" INSERT INTO results (name, status, cpu) VALUES (%(name)s, %(status)s, %(cpu)s); """

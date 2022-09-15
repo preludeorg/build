@@ -1,4 +1,5 @@
 import logging
+import resource
 from functools import wraps
 
 from aiohttp import web
@@ -15,10 +16,7 @@ def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
-            if args[1].headers.get('token') != Config.find('token'):
-                logging.error('Unauthorized request')
-                return web.Response(status=401, text='Token not accepted')
-            return await func(args[0], data=await get_request_data(args[1]))
+            return await func(args, params)
 
         except KeyError as e:
             logging.error(e)
@@ -42,3 +40,15 @@ def allowed(func):
             logging.error(f'Unhandled: {e}')
             return web.Response(status=500, text=str(e))
     return helper
+
+
+def clock(func):
+    @wraps(func)
+    def wrapper(*args, **params):
+        pre = resource.getrusage(resource.RUSAGE_SELF)
+        pre_cycles = getattr(pre, 'ru_utime') + getattr(pre, 'ru_stime')
+        status = func(*args, **params)
+        post = resource.getrusage(resource.RUSAGE_SELF)
+        post_cycles = getattr(post, 'ru_utime') + getattr(post, 'ru_stime')
+        return status, '%.3f' % float(post_cycles - pre_cycles)
+    return wrapper
