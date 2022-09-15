@@ -1,3 +1,5 @@
+import asyncio
+
 from aiohttp import web
 from vertebrae.core import Route
 from vertebrae.service import Service
@@ -12,7 +14,7 @@ class DCFRoutes:
             Route('GET', '/dcf/{name}', self._get_dcf),
             Route('POST', '/dcf/{name}', self._post_dcf),
             Route('DELETE', '/dcf/{name}', self._del_dcf),
-            Route('POST', '/dcf/{name}/test', self._test_dcf),
+            Route('GET', '/dcf/{name}/links', self._get_links),
             Route('POST', '/dcf/{name}/submit', self._submit_dcf)
         ]
 
@@ -32,13 +34,17 @@ class DCFRoutes:
         return web.Response(status=200)
 
     @allowed
-    async def _test_dcf(self, data: dict) -> web.json_response:
-        link = await Service.service('testbench').test(name=data['name'])
-        return web.json_response(link)
+    async def _get_links(self, data: dict) -> web.json_response:
+        links = await Service.service('dcf').links(name=data['name'])
+        return web.json_response(links)
 
     @allowed
     async def _submit_dcf(self, data: dict) -> web.Response:
-        compiled = await Service.service('compile').compile(name=data['name'])
-        if await Service.service('testbench').test(so=compiled):
-            await Service.service('signing').sign(name=data['name'])
-            return web.Response(status=200)
+        async def _submission_process():
+            relative_path = await Service.service('compile').compile(name=data['name'])
+            link = await Service.service('testbench').test(name=data['name'], so=relative_path)
+            if link.status == 0:
+                await Service.service('signing').sign(so=relative_path)
+
+        asyncio.create_task(_submission_process())
+        return web.Response(status=200, text='Submission received')
