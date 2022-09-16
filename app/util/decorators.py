@@ -1,9 +1,10 @@
-import logging
 import resource
 from functools import wraps
 
 from aiohttp import web
-from vertebrae.config import Config
+from vertebrae.core import Server
+
+log = Server.create_log('api')
 
 
 async def get_request_data(req):
@@ -19,25 +20,25 @@ def allowed(func):
             return await func(args, params)
 
         except KeyError as e:
-            logging.error(e)
+            log.error(e)
             return web.Response(status=400, text=str(e))
         except TypeError as e:
-            logging.error(e)
+            log.error(e)
             return web.Response(status=400, text=str(e))
         except ValueError as e:
-            logging.error(e)
+            log.error(e)
             return web.Response(status=400, text=str(e))
         except FileNotFoundError as e:
-            logging.error(e)
+            log.error(e)
             return web.Response(status=404, text=str(e))
         except TimeoutError as e:
-            logging.error(e)
+            log.error(e)
             return web.Response(status=408, text=str(e))
         except ConnectionError as e:
-            logging.error(e)
+            log.error(e)
             return web.Response(status=503, text=str(e))
         except Exception as e:
-            logging.error(f'Unhandled: {e}')
+            log.error(f'Unhandled: {e}')
             return web.Response(status=500, text=str(e))
     return helper
 

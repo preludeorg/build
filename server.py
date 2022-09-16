@@ -19,10 +19,10 @@ if __name__ == '__main__':
             ])
         ],
         services=[
-            ManifestService(),
-            DCFService(),
-            SigningService(),
-            TestBenchService(),
-            CompileService()
+            ManifestService(name='manifest'),
+            DCFService(name='dcf'),
+            SigningService(name='signing'),
+            TestBenchService(name='testbench'),
+            CompileService(name='compile')
         ])
     server.run()

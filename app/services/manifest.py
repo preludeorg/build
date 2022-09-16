@@ -5,8 +5,8 @@ from app.queries.query import Query
 
 class ManifestService(Service):
 
-    def __init__(self):
-        self.log = self.logger('manifest')
+    def __init__(self, name):
+        super().__init__(name)
         self.database = self.db()
         self.query = Query()
 

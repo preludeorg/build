@@ -11,8 +11,8 @@ from app.util.link import Link
 
 class TestBenchService(Service):
 
-    def __init__(self):
-        self.log = self.logger('testbench')
+    def __init__(self, name):
+        super().__init__(name)
         self.database = self.db()
         self.query = Query()
 

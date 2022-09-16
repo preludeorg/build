@@ -20,31 +20,31 @@ class DCFRoutes:
 
     @allowed
     async def _get_dcf(self, data: dict) -> web.json_response:
-        code = await Service.service('dcf').select(name=data['name'])
+        code = await Service.find('dcf').select(name=data['name'])
         return web.json_response(dict(code=code))
 
     @allowed
     async def _post_dcf(self, data: dict) -> web.Response:
-        await Service.service('dcf').add(name=data['name'], code=data['code'])
+        await Service.find('dcf').add(name=data['name'], code=data['code'])
         return web.Response(status=200)
 
     @allowed
     async def _del_dcf(self,data: dict) -> web.Response:
-        await Service.service('dcf').remove(name=data['name'])
+        await Service.find('dcf').remove(name=data['name'])
         return web.Response(status=200)
 
     @allowed
     async def _get_links(self, data: dict) -> web.json_response:
-        links = await Service.service('dcf').links(name=data['name'])
+        links = await Service.find('dcf').links(name=data['name'])
         return web.json_response(links)
 
     @allowed
     async def _submit_dcf(self, data: dict) -> web.Response:
         async def _submission_process():
-            relative_path = await Service.service('compile').compile(name=data['name'])
-            link = await Service.service('testbench').test(name=data['name'], so=relative_path)
+            relative_path = await Service.find('compile').compile(name=data['name'])
+            link = await Service.find('testbench').test(name=data['name'], so=relative_path)
             if link.status == 0:
-                await Service.service('signing').sign(so=relative_path)
+                await Service.find('signing').sign(so=relative_path)
 
         asyncio.create_task(_submission_process())
         return web.Response(status=200, text='Submission received')

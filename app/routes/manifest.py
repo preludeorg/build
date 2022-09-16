@@ -17,11 +17,11 @@ class ManifestRoutes:
 
     @allowed
     async def _get_manifest(self, data: dict) -> web.json_response:
-        return web.json_response(await Service.service('manifest').select())
+        return web.json_response(await Service.find('manifest').select())
 
     @allowed
     async def _put_manifest(self, data: dict) -> web.Response:
-        await Service.service('manifest').add(
+        await Service.find('manifest').add(
             ttp_id=data['id'],
             name=data['name'],
             classification=data['classification']
@@ -30,10 +30,10 @@ class ManifestRoutes:
 
     @allowed
     async def _get_manifest_entry(self, data: dict) -> web.json_response:
-        ttp = await Service.service('manifest').select(ttp_id=data['id'])
+        ttp = await Service.find('manifest').select(ttp_id=data['id'])
         return web.json_response(ttp)
 
     @allowed
     async def _del_manifest_entry(self, data: dict) -> web.Response:
-        await Service.service('manifest').remove(ttp_id=data['id'])
+        await Service.find('manifest').remove(ttp_id=data['id'])
         return web.Response(status=200)

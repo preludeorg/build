@@ -6,8 +6,8 @@ from app.util.link import Link
 
 class DCFService(Service):
 
-    def __init__(self):
-        self.log = self.logger('dcf')
+    def __init__(self, name):
+        super().__init__(name)
         self.database = self.db()
         self.query = Query()
 
