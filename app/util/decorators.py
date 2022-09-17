@@ -2,23 +2,17 @@ import resource
 from functools import wraps
 
 from aiohttp import web
-from vertebrae.core import Server
+from vertebrae.core import create_log, strip_request
 
-log = Server.create_log('api')
-
-
-async def get_request_data(req):
-    if req.method in ['GET', 'DELETE']:
-        return dict(req.rel_url.query) | dict(req.match_info)
-    return dict(await req.json()) | dict(req.match_info)
+log = create_log('api')
 
 
 def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
+            params['data'] = strip_request(args[1])
             return await func(args, params)
-
         except KeyError as e:
             log.error(e)
             return web.Response(status=400, text=str(e))
