@@ -11,7 +11,7 @@ def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
-            params['data'] = strip_request(args[1])
+            params['data'] = await strip_request(args[1])
             return await func(args, params)
         except KeyError as e:
             log.error(e)
