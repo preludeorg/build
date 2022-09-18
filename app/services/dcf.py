@@ -27,3 +27,7 @@ class DCFService(Service):
         """ Get results for a given DCF """
         hits = await self.database.relational.fetch(self.query.activity(), dict(name=name))
         return [Link(name=h[0], status=h[1], cpu=h[2], created=h[3]) for h in hits]
+
+    async def code_files(self, ttp_id: str):
+        """ Find all code files for a given TTP """
+        return [dcf async for dcf in self.database.directory.walk(prefix=ttp_id)]

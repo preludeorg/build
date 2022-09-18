@@ -31,7 +31,10 @@ class ManifestRoutes:
     @allowed
     async def _get_manifest_entry(self, data: dict) -> web.json_response:
         ttp = await Service.find('manifest').select(ttp_id=data['id'])
-        return web.json_response(ttp)
+        if ttp:
+            code_files = await Service.find('dcf').code_files(ttp_id=data['id'])
+            return web.json_response(dict(**ttp, dcf=code_files))
+        return web.Response(status=404, text='TTP not found')
 
     @allowed
     async def _del_manifest_entry(self, data: dict) -> web.Response:
