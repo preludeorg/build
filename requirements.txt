@@ -1,2 +1,3 @@
 aiohttp==3.8.1
 vertebrae==0.5.26
+ziglang==0.9.1
