@@ -3,6 +3,7 @@ from vertebrae.core import Server, Application
 
 from app.routes.dcf import DCFRoutes
 from app.routes.manifest import ManifestRoutes
+from app.routes.web import WebRoutes
 from app.services.compile import CompileService
 from app.services.dcf import DCFService
 from app.services.manifest import ManifestService
@@ -14,6 +15,7 @@ if __name__ == '__main__':
     server = Server(
         applications=[
             Application(port=3000, routes=[
+                WebRoutes(),
                 ManifestRoutes(),
                 DCFRoutes()
             ])

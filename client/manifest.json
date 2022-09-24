@@ -1,0 +1,21 @@
+{
+   "name": "Prelude Operator",
+   "short_name": "Operator",
+   "start_url": "/static/templates/index.html",
+   "display": "standalone",
+   "background_color": "#5900b3",
+   "theme_color": "black",
+   "description": "An editor for building TTPs",
+   "icons": [
+     {
+       "src":"/static/assets/icon192.png",
+       "sizes":"192x192",
+       "type":"image/png"
+     },
+     {
+       "src":"/static/assets/icon512.png",
+       "sizes":"512x512",
+       "type":"image/png"
+     }
+   ]
+}
