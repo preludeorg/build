@@ -4,9 +4,9 @@ from datetime import datetime
 
 from vertebrae.service import Service
 
-from app.queries.query import Query
-from app.util.decorators import clock
-from app.util.link import Link
+from backend.queries.query import Query
+from backend.util.decorators import clock
+from backend.util.link import Link
 
 
 class TestBenchService(Service):

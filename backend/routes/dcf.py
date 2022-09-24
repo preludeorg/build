@@ -4,18 +4,18 @@ from aiohttp import web
 from vertebrae.core import Route
 from vertebrae.service import Service
 
-from app.util.decorators import allowed
+from backend.util.decorators import allowed
 
 
 class DCFRoutes:
 
     def routes(self) -> [Route]:
         return [
-            Route('GET', '/dcf/{name}', self._get_dcf),
-            Route('POST', '/dcf/{name}', self._post_dcf),
-            Route('DELETE', '/dcf/{name}', self._del_dcf),
-            Route('GET', '/dcf/{name}/links', self._get_links),
-            Route('POST', '/dcf/{name}/submit', self._submit_dcf)
+            Route('GET', '/{account_id}/dcf/{name}', self._get_dcf),
+            Route('POST', '/{account_id}/dcf/{name}', self._post_dcf),
+            Route('DELETE', '/{account_id}/dcf/{name}', self._del_dcf),
+            Route('GET', '/{account_id}/dcf/{name}/links', self._get_links),
+            Route('POST', '/{account_id}/dcf/{name}/submit', self._submit_dcf)
         ]
 
     @allowed

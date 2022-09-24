@@ -1,7 +1,7 @@
 from vertebrae.service import Service
 
-from app.queries.query import Query
-from app.util.link import Link
+from backend.queries.query import Query
+from backend.util.link import Link
 
 
 class DCFService(Service):

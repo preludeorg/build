@@ -1,6 +1,6 @@
 from vertebrae.service import Service
 
-from app.queries.query import Query
+from backend.queries.query import Query
 
 
 class ManifestService(Service):

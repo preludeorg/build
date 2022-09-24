@@ -2,17 +2,17 @@ from aiohttp import web
 from vertebrae.core import Route
 from vertebrae.service import Service
 
-from app.util.decorators import allowed
+from backend.util.decorators import allowed
 
 
 class ManifestRoutes:
 
     def routes(self) -> [Route]:
         return [
-            Route('GET', '/manifest', self._get_manifest),
-            Route('PUT', '/manifest', self._put_manifest),
-            Route('GET', '/manifest/{id}', self._get_manifest_entry),
-            Route('DELETE', '/manifest/{id}', self._del_manifest_entry)
+            Route('GET', '/{account_id}/manifest', self._get_manifest),
+            Route('PUT', '/{account_id}/manifest', self._put_manifest),
+            Route('GET', '/{account_id}/manifest/{id}', self._get_manifest_entry),
+            Route('DELETE', '/{account_id}/manifest/{id}', self._del_manifest_entry)
         ]
 
     @allowed
