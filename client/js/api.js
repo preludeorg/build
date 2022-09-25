@@ -73,7 +73,7 @@ let Api = {
     login: () => {
         let host = localStorage.getItem('PRELUDE_SERVER') || 'http://localhost:3000';
         let account = localStorage.getItem('PRELUDE_ACCOUNT_ID') || 'prelude';
-        let token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN');
+        let token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN') || 'goober';
 
         Api.ttp = new TTPRoutes(host, account, token);
         Api.dcf = new DCFRoutes(host, account, token);
