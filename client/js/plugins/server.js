@@ -18,13 +18,19 @@ class Server {
             ev.stopPropagation();
             ev.preventDefault();
 
+            $('#spinner').show();
             const host = $('#i-ip').val();
             const account = $('#i-account').val();
             const token = $('#i-token').val();
             Api.ping(host, account, token).then(() => {
-                this.write(sidebar);
+                localStorage.setItem('PRELUDE_SERVER', host);
+                localStorage.setItem('PRELUDE_ACCOUNT_ID', account);
+                localStorage.setItem('PRELUDE_ACCOUNT_TOKEN', token);
+                location.reload();
             }).catch(err => {
                console.error(`Unable to connect to ${host}, ${err}`);
+            }).finally(() => {
+               $('#spinner').hide();
             });
         });
         contents.append(ip);

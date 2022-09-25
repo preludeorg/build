@@ -12,7 +12,7 @@ let Page = {
         $('#manifest').empty();
         $('#plugins').empty();
 
-        Api.attach(host, account, token);
+        Api.login(host, account, token);
         Api.ttp.manifest().then(manifest => {
             Object.values(manifest).forEach(ttp => {
                 Page.addTTP(ttp);

@@ -9,6 +9,10 @@ window.onload = () => {
 }
 
 $(document).ready(function () {
-    Page.build('http://localhost:3000', 'prelude', 'gogo');
+    let host = localStorage.getItem('PRELUDE_SERVER') || 'http://localhost:3000';
+    let account = localStorage.getItem('PRELUDE_ACCOUNT_ID') || 'prelude';
+    let token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN');
+
+    Page.build(host, account, token);
     Page.listen();
 });

@@ -70,13 +70,13 @@ class DCFRoutes extends Routes {
 }
 
 let Api = {
-    attach: (host, account, token) => {
+    login: (host, account, token) => {
         Api.ttp = new TTPRoutes(host, account, token);
         Api.dcf = new DCFRoutes(host, account, token);
     },
     async ping(host, account, token) {
         const headers = {account: account, token: token};
-        return await this.handleRoute(`${host}/ping`, {headers: headers});
+        return fetch(`${host}/ping`, {headers: headers});
     }
 };
 
