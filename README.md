@@ -1,6 +1,6 @@
 # Operator Server
 
-Operator Server is an authoring and testing application designed specifically around TTPs.
+Operator Server is an authoring and testing application designed specifically for TTPs.
 
 ## Get started
 
