@@ -34,4 +34,4 @@ class Server {
     }
 }
 
-export default Servers;
+export default Server;
