@@ -35,7 +35,11 @@ class TTPRoutes extends Routes {
         });
     }
     async delete(id) {
-        return await this.handleRoute(`${this.host}/manifest/${id}`, {method: 'DELETE', headers: this.headers});
+        return await this.handleRoute(`${this.host}/manifest/${id}`, {
+            method: 'DELETE',
+            body: JSON.stringify({}),
+            headers: this.headers
+        });
     }
     async history(name) {
         return await this.handleRoute(`${this.host}/probe/${name}`, {headers: this.headers});

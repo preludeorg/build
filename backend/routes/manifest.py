@@ -23,13 +23,18 @@ class ManifestRoutes:
 
     @allowed
     async def _put_manifest(self, account: Account, data: dict) -> web.json_response:
-        identifier = await account.manifest.add(
-            ttp_id=data.get('id', str(uuid.uuid4())),
-            name=data.get('name'),
-            classification=data.get('classification', 'unknown')
-        )
-        ttp = await account.manifest.select(ttp_id=identifier)
-        return web.json_response(ttp.get(identifier))
+        exists = data.get('id', str(uuid.uuid4()))
+        if exists:
+            ttp = await account.manifest.select(ttp_id=exists)
+            await account.manifest.add(
+                ttp_id=exists,
+                name=data.get('name', ttp.get(exists).get('name')),
+                classification=data.get('classification', ttp.get(exists).get('classification'))
+            )
+        else:
+            await account.manifest.add( ttp_id=exists, name=data.get('name'))
+            ttp = await account.manifest.select(ttp_id=exists)
+        return web.json_response(ttp.get(exists))
 
     @allowed
     async def _get_manifest_entry(self, account: Account, data: dict) -> web.json_response:

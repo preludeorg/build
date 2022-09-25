@@ -47,11 +47,10 @@ class Manifest:
         hits = await self.database.relational.fetch(query, dict(account_id=self.account_id, id=ttp_id))
         return {hit[0]: dict(id=hit[0], name=hit[1], classification=hit[2]) for hit in hits}
 
-    async def add(self, ttp_id: str, name: str, classification='unknown') -> str:
+    async def add(self, ttp_id: str, name: str, classification='unknown') -> None:
         """ Add an entry to the manifest """
         params = dict(account_id=self.account_id, id=ttp_id, name=name, classification=classification)
         await self.database.relational.execute(self.query.update_manifest(), params)
-        return ttp_id
 
     async def remove(self, ttp_id: str) -> None:
         """ Remove an entry from the manifest """
