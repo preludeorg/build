@@ -2,7 +2,7 @@ import Page from "/client/js/page.js";
 
 window.onload = () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/client/js/serviceworker.js').then(() => {
+        navigator.serviceWorker.register('/client/serviceworker.js').then(() => {
            console.log('ServiceWorker registered');
         });
     }
