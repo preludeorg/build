@@ -1,3 +1,5 @@
+import uuid
+
 from aiohttp import web
 from vertebrae.core import Route
 
@@ -20,13 +22,14 @@ class ManifestRoutes:
         return web.json_response(await account.manifest.select())
 
     @allowed
-    async def _put_manifest(self, account: Account, data: dict) -> web.Response:
-        await account.manifest.add(
-            ttp_id=data['id'],
-            name=data['name'],
-            classification=data['classification']
+    async def _put_manifest(self, account: Account, data: dict) -> web.json_response:
+        identifier = await account.manifest.add(
+            ttp_id=data.get('id', str(uuid.uuid4())),
+            name=data.get('name'),
+            classification=data.get('classification', 'unknown')
         )
-        return web.Response(status=200)
+        ttp = await account.manifest.select(ttp_id=identifier)
+        return web.json_response(ttp.get(identifier))
 
     @allowed
     async def _get_manifest_entry(self, account: Account, data: dict) -> web.json_response:
@@ -34,9 +37,9 @@ class ManifestRoutes:
         if ttp:
             code_files = await account.dcf.code_files(ttp_id=data['id'])
             return web.json_response(dict(**ttp, dcf=code_files))
-        return web.Response(status=404, text='TTP not found')
+        return web.json_response({}, status=404)
 
     @allowed
-    async def _del_manifest_entry(self, account: Account, data: dict) -> web.Response:
+    async def _del_manifest_entry(self, account: Account, data: dict) -> web.json_response:
         await account.manifest.remove(ttp_id=data['id'])
-        return web.Response(status=200)
+        return web.json_response({})

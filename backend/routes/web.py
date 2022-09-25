@@ -12,4 +12,4 @@ class WebRoutes:
 
     @template('index.html')
     async def _get_index(self, request: web.Request) -> dict:
-        return dict(hello='world')
+        return dict()
