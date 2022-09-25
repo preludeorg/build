@@ -74,13 +74,16 @@ class DCFRoutes extends Routes {
 }
 
 let Api = {
-    login: () => {
+    credentials: () => {
         let host = localStorage.getItem('PRELUDE_SERVER') || 'http://localhost:3000';
         let account = localStorage.getItem('PRELUDE_ACCOUNT_ID') || 'prelude';
         let token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN') || 'goober';
-
-        Api.ttp = new TTPRoutes(host, account, token);
-        Api.dcf = new DCFRoutes(host, account, token);
+        return {host: host, account: account, token: token};
+    },
+    login: () => {
+        const creds = Api.credentials();
+        Api.ttp = new TTPRoutes(creds.host, creds.account, creds.token);
+        Api.dcf = new DCFRoutes(creds.host, creds.account, creds.token);
     },
     async ping(host, account, token) {
         const headers = {account: account, token: token};

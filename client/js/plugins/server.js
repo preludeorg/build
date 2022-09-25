@@ -5,11 +5,13 @@ class Server {
         return '&#9678; Server';
     }
     write(sidebar) {
+        const creds = Api.credentials();
         let contents = sidebar.find('#plugin-contents').empty();
         sidebar.find('#plugin-name').html(this.name());
         sidebar.find('#plugin-description').text('' +
             'By default, Operator is backed by the managed Prelude Service. ' +
-            'You can host alternative Operator instances and log in below.');
+            'You can host alternative Operator instances and log in below.' +
+            `You are logged into ${creds.host} as ${creds.account}.`);
 
         const ip = $('<input id="i-ip" class="plugin-input" placeholder="Enter an IP">');
         const account = $('<input id="i-account" class="plugin-input" placeholder="Enter account ID" type="text">');
