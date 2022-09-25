@@ -9,13 +9,15 @@ class TestBenchService(Service):
     def __init__(self, name):
         super().__init__(name)
 
-    async def test(self, name: str, so: str) -> [Link]:
-        """ Test a DCF """
+    async def test(self, name: str, binary) -> [Link]:
+        """ Test a compiled DCF """
+        links = []
         for container in []:
             self.log.debug(f'{name} running test')
-            await self.run(address=container, code=so)
+            await self.run(address=container, binary=binary)
+        return links
 
     @clock
-    async def run(self, address: str, code: str):
+    async def run(self, address: str, binary):
         """ Execute test and record the CPU cycles used """
-        pass
+        # TODO: 1) upload binary to test container 2) execute 3) get link back
