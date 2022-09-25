@@ -4,6 +4,8 @@ from functools import wraps
 from aiohttp import web
 from vertebrae.core import create_log, strip_request
 
+from backend.modules.account import Account
+
 log = create_log('api')
 
 
@@ -11,7 +13,15 @@ def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
-            return await func(args, await strip_request(args[1]))
+            account_id = args[1].headers.get('account')
+            if not account_id:
+                log.warning(f'{account_id} is missing a required header')
+                return web.Response(status=412, text='Missing account')
+
+            params['account'] = Account(account_id=account_id)
+            params['data'] = await strip_request(args[1])
+            return await func(args, **params)
+
         except KeyError as e:
             log.error(e)
             return web.Response(status=400, text=str(e))

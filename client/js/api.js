@@ -31,7 +31,7 @@ class TTPRoutes extends Routes {
     async delete(id) {
         return await this.handleRoute(`${this.host}/manifest/${id}`, {method: 'DELETE', headers: this.headers});
     }
-    async history(id) {
+    async history(name) {
         return await this.handleRoute(`${this.host}/probe/${name}`, {headers: this.headers});
     }
 }
@@ -44,7 +44,8 @@ class DCFRoutes extends Routes {
         return await this.handleRoute(`${this.host}/dcf/${name}`, {headers: this.headers});
     }
     async save(name, code) {
-        return await this.handleRoute(`${this.host}/dcf/${name}`, {method: 'POST', body: code, headers: this.headers});
+        const data = {code: code};
+        return await this.handleRoute(`${this.host}/dcf/${name}`, {method: 'POST', body: data, headers: this.headers});
     }
     async delete(name) {
         return await this.handleRoute(`${this.host}/dcf/${name}`, {method: 'DELETE', headers: this.headers});

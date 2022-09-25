@@ -50,7 +50,6 @@ class TTP {
             });
         });
     }
-
 }
 
 class DCF {

@@ -1,3 +1,4 @@
+import CodeMirror from "/client/js/lib/codemirror5/src/codemirror.js";
 import Api from "/client/js/api.js";
 import C from "/client/js/screens/lang/c.js";
 
@@ -14,7 +15,6 @@ class Code {
         this.editor.setOption('mode', this.mode().language());
     }
     setUpEditor() {
-        /**
         this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {
             lineNumbers: true,
             autoRefresh: true,
@@ -35,7 +35,6 @@ class Code {
                 }
             }
         });
-         **/
     }
     mode() {
         return new C();

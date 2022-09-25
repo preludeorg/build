@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<title>Prelude Operator</title>
-		<meta charset="utf-8">
 		<!-- PWA requirements -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -12,13 +11,8 @@
 		<!-- base CSS and jQuery -->
 		<link rel="stylesheet" href="/client/css/app.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-		<!-- code mirror -->
-		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
-		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/display/autorefresh.min.js"></script>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/darcula.min.css">
-		<!-- (embedded) external libraries -->
+		<!-- embedded external libraries -->
+		<link rel="stylesheet" href="/client/css/darcula.css">
 		<link rel="stylesheet" href="/client/css/contextmenu.css">
 		<script src="/client/js/lib/resizable.js"></script>
 		<script src="/client/js/lib/contextmenu.js"></script>
@@ -68,7 +62,9 @@
 				</div>
 			  </div>
 
-			  <div id="screen-code" class="screen"></div>
+				<div id="screen-code" class="screen">
+					<textarea id="dcf-contents"></textarea>
+				</div>
 			</div>
 
 			<div class="splitter-horizontal"></div>

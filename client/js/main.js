@@ -9,6 +9,6 @@ window.onload = () => {
 }
 
 $(document).ready(function () {
-    Page.build();
+    Page.build({host:'http://localhost:3000/blah', token:'gogo'});
     Page.listen();
 });
