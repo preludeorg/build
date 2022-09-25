@@ -11,7 +11,6 @@ let Page = {
     build: (backend) => {
         $('#manifest').empty();
         $('#plugins').empty();
-        $('#spinner').show();
 
         Api.attach(backend);
         Api.ttp.manifest().then(manifest => {
@@ -79,9 +78,10 @@ let Page = {
                     } else if (key.startsWith('!')) {
                         const classification = key.substring(key.indexOf('!')+1);
                         Api.ttp.save({id: Page.id, classification: classification}).then(() => {
-                            $('ul.context-menu-list').find(`li.context-menu-item.context-menu-icon`)
+                            let menu = $('ul.context-menu-list');
+                            menu.find(`li.context-menu-item.context-menu-icon`)
                                 .removeClass('context-menu-active');
-                            $('ul.context-menu-list').find(`li.context-menu-item.context-menu-icon.context-menu-icon-${key.substring(key.indexOf('!')+1)}`)
+                            menu.find(`li.context-menu-item.context-menu-icon.context-menu-icon-${key.substring(key.indexOf('!')+1)}`)
                                 .addClass('context-menu-active');
                             $(`${options.selector}`).find('.ttp-classification')
                                 .attr("src",`/client/assets/classifications/${classification}.svg`);
