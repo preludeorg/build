@@ -1,0 +1,107 @@
+#servers {
+    padding: 5px 0;
+    margin: 0;
+    border-radius: 8px;
+
+    .server {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top: 5px;
+        padding: 5px;
+        border-radius: 8px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--color-selection);
+        }
+
+        .servers-checkbox[type="checkbox"] {
+            position: relative;
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-accent);
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            appearance: initial;
+            margin: 0 16px 0 0;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-lighter-selection);            
+            }
+        }
+
+        .servers-checkbox[type="checkbox"]:checked {
+            background-color: var(--color-success);
+        }
+
+        .servers-label {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 18px;
+            padding: 5px 10px;
+            flex-grow: 1;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            span {
+                flex-grow: 1;
+            }
+        }
+
+        .servers-button {
+            position: relative;
+            padding: 0;
+            border: none;
+            color: var(--color-lighter-selection);
+            background-color: transparent;
+            top: 8px;
+            font-size: 12px;
+            cursor: pointer;
+
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: 16px;
+                left: 27%;
+                padding: 4px;
+                transform: rotate(45deg);
+                border-top: 1px solid var(--color-lighter-selection);
+                border-right: 1px solid var(--color-lighter-selection);
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 16px;
+                right: 27%;
+                padding: 4px;
+                transform: rotate(225deg);
+                border-top: 1px solid var(--color-lighter-selection);
+                border-right: 1px solid var(--color-lighter-selection);
+            }
+
+            &:hover {
+                color: #fff;
+
+                &::before {
+                    border-top: 1px solid #fff;
+                    border-right: 1px solid #fff;
+                }
+
+                &::after {
+                    border-top: 1px solid #fff;
+                    border-right: 1px solid #fff;
+                }
+            }
+        }
+    }
+
+    .server-active {
+        background-color: var(--color-selection);
+    }
+}

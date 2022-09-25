@@ -1,8 +1,8 @@
 let cacheName = 'operator';
 let filesToCache = [
-    '/static/templates/index.html',
-    '/static/css/style.css',
-    '/static/js/main.js'
+    '/client/templates/index.html',
+    '/client/css/app.css',
+    '/client/js/main.js'
 ];
 
 /* Start the service worker and cache the app's content */

@@ -1,0 +1,162 @@
+@charset "UTF-8";
+/*!
+ * jQuery contextMenu - Plugin for simple contextMenu handling
+ *
+ * Version: v2.9.2
+ *
+ * Authors: Björn Brala (SWIS.nl), Rodney Rehm, Addy Osmani (patches for FF)
+ * Web: http://swisnl.github.io/jQuery-contextMenu/
+ *
+ * Copyright (c) 2011-2020 SWIS BV and contributors
+ *
+ * Licensed under
+ *   MIT License http://www.opensource.org/licenses/mit-license
+ *
+ * Date: 2020-05-13T13:55:37.023Z
+ */
+
+.context-menu-list {
+  position: absolute; 
+  display: inline-block;
+  min-width: 13em;
+  max-width: 26em;
+  padding: 0 5px;
+  margin: 0.3em 12px;
+  font-family: inherit;
+  font-size: 14px;
+  list-style-type: none;
+  background-color: var(--color-selection);
+  border-left: 2px solid rgba(0, 0, 0, .5) ;
+  filter: opacity(0.98);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .5);
+}
+
+.context-menu-item {
+  position: relative;
+  box-sizing: content-box;
+  padding: 10px 10px 10px 30px;
+  margin: 5px 0;
+  border-radius: 8px;
+  color: #2f2f2f;
+  background: var(--color-selection);
+  color: #fff;
+}
+
+.context-menu-separator {
+  padding: 0; 
+  margin: 5px 5px;
+  border-bottom: 1px solid var(--color-button);
+  filter: opacity(0.3);
+}
+
+.context-menu-item.context-menu-hover {
+  color: #fff;
+  cursor: pointer; 
+  background-color: var(--color-lighter-selection);
+}
+
+.context-menu-submenu:after {
+  position: absolute;
+  top: 50%;
+  right: .5em;
+  z-index: 1; 
+  width: 0;
+  height: 0;
+  content: '';
+  border-color: transparent transparent transparent #fff;
+  border-style: solid;
+  border-width: .25em 0 .25em .25em;
+  transform: translateY(-50%);
+}
+
+/* Icons */
+
+.context-menu-icon::before {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 15%;
+  left: 0;
+  margin-left: 0;
+  transform: scale(0.75);
+  filter: var(--filter-icon-color);
+  background-repeat: no-repeat;
+}
+
+.context-menu-item.context-menu-icon-apple::before {
+  content: '';
+  background-image: url('../assets/logos/darwin.svg');
+}
+
+.context-menu-item.context-menu-icon-linux::before {
+  content: '';
+  background-image: url('../assets/logos/linux.svg');
+}
+
+.context-menu-icon-edit:before {
+  content: '';
+  background-image: url('../assets/edit-box.svg');
+}
+
+.context-menu-icon-delete:before {
+  content: '';
+  background-image: url('../assets/trash-bin.svg');
+}
+
+.context-menu-item.context-menu-icon-unknown::before {
+  content: '';
+  background-image: url('../assets/classifications/unknown.svg');
+}
+
+.context-menu-item.context-menu-icon-security::before {
+  content: '';
+  background-image: url('../assets/classifications/security.svg');
+}
+
+.context-menu-item.context-menu-icon-network::before {
+  content: '';
+  background-image: url('../assets/classifications/network.svg');
+}
+
+.context-menu-item.context-menu-icon-user::before {
+  content: '';
+  background-image: url('../assets/classifications/user.svg');
+}
+
+.context-menu-item.context-menu-icon-fs::before {
+  content: '';
+  background-image: url('../assets/classifications/fs.svg');
+}
+
+.context-menu-item.context-menu-icon-application::before {
+  content: '';
+  background-image: url('../assets/classifications/application.svg');
+}
+
+.context-menu-item.context-menu-icon-process::before {
+  content: '';
+  background-image: url('../assets/classifications/process.svg');
+}
+
+.context-menu-item.context-menu-icon-behavior::before {
+  content: '';
+  background-image: url('../assets/classifications/behavior.svg');
+}
+
+.context-menu-active {
+  background-color: var(--color-lighter-selection);
+}
+
+/* Classification panel */
+
+.context-menu-item > .context-menu-list {
+  top: .3em; 
+  /* re-positioned by js */
+  right: -.3em;
+  display: none;
+}
+
+.context-menu-item.context-menu-visible > .context-menu-list {
+  display: block;
+}
