@@ -70,7 +70,11 @@ class DCFRoutes extends Routes {
 }
 
 let Api = {
-    login: (host, account, token) => {
+    login: () => {
+        let host = localStorage.getItem('PRELUDE_SERVER') || 'http://localhost:3000';
+        let account = localStorage.getItem('PRELUDE_ACCOUNT_ID') || 'prelude';
+        let token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN');
+
         Api.ttp = new TTPRoutes(host, account, token);
         Api.dcf = new DCFRoutes(host, account, token);
     },

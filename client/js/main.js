@@ -1,3 +1,4 @@
+import Api from "/client/js/api.js";
 import Page from "/client/js/page.js";
 
 window.onload = () => {
@@ -9,10 +10,7 @@ window.onload = () => {
 }
 
 $(document).ready(function () {
-    let host = localStorage.getItem('PRELUDE_SERVER') || 'http://localhost:3000';
-    let account = localStorage.getItem('PRELUDE_ACCOUNT_ID') || 'prelude';
-    let token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN');
-
-    Page.build(host, account, token);
+    Api.login();
+    Page.build();
     Page.listen();
 });

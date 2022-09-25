@@ -8,11 +8,10 @@ let Page = {
     screens: {
         code: new Code(),
     },
-    build: (host, account, token) => {
+    build: () => {
         $('#manifest').empty();
         $('#plugins').empty();
 
-        Api.login(host, account, token);
         Api.ttp.manifest().then(manifest => {
             Object.values(manifest).forEach(ttp => {
                 Page.addTTP(ttp);
