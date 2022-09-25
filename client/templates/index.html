@@ -1,0 +1,132 @@
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<html>
+	<head>
+		<title>Prelude Operator</title>
+		<!-- PWA requirements -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta name="apple-mobile-web-app-status-bar" content="#aa7700">
+		<meta name="theme-color" content="black">
+		<link rel="manifest" href="/client/manifest.json">
+		<!-- base CSS and jQuery -->
+		<link rel="stylesheet" href="/client/css/app.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<!-- embedded external libraries -->
+		<link rel="stylesheet" href="/client/css/darcula.css">
+		<link rel="stylesheet" href="/client/css/contextmenu.css">
+		<script src="/client/js/lib/resizable.js"></script>
+		<script src="/client/js/lib/contextmenu.js"></script>
+	</head>
+	<body>
+	  <div id="spinner" class="simple-spinner">
+		<span></span>
+	  </div>
+
+	  <div class="panel-container">
+
+		<div id="directory-listing" class="panel-left">
+		  <div class="panel-container-vertical">
+			<div class="panel-filter">
+			  <input id="manifest-filter" placeholder="Looking for a TTP?" spellcheck="false"/>
+			  <div id="add-ttp-container">
+				<img id="add-ttp" alt="Add TTP" src="/client/assets/add-circle.svg"/>
+			  </div>
+			</div>
+			<ul id="manifest"></ul>
+		  </div>
+		</div>
+
+		<div class="splitter"></div>
+
+		<div class="panel-right">
+		  <div class="panel-container-vertical">
+			<div class="panel-top">
+			  <div id="screen-welcome" class="screen">
+				<div id="welcome-line">Welcome to Prelude Operator</div>
+				<div id="welcome-steps">
+				  <img src="/client/assets/book.svg"/>
+				  <span>Read our <a href="https://docs.prelude.org">Documentation</a></span>
+				</div>
+				<div id="welcome-splitter"></div>
+				<div id="welcome-steps">
+				  <img src="/client/assets/add-circle.svg"/>
+				  <span>Create a TTP</span>
+				</div>
+				<div id="welcome-steps">
+				  <img src="/client/assets/pointer.svg"/>
+				  <span>Add a procedure</span>
+				</div>
+				<div id="welcome-steps">
+				  <img src="/client/assets/play.svg"/>
+				  <span>Test</span>
+				</div>
+			  </div>
+
+				<div id="screen-code" class="screen">
+					<textarea id="dcf-contents"></textarea>
+				</div>
+			</div>
+
+			<div class="splitter-horizontal"></div>
+
+			<div class="panel-bottom">
+			  <div class="control-bar">
+			  <div id="deploy-dcf" class="deploy-button">
+				<span>Test DCF</span>
+				<img src="/client/assets/play.svg" />
+			  </div>
+			  </div>
+			  <div id="dcf-results"></div>
+			</div>
+		  </div>
+		</div>
+
+		<div id="plugin-template" class="plugin-box" style="display: none">
+		  <div class="container">
+			<h2 id="plugin-name"></h2>
+			<p id="plugin-description"></p>
+			<br>
+			<div id="plugin-contents"></div>
+		  </div>
+		</div>
+
+		<div class="plugin-bar">
+		  <ul id="plugins"></ul>
+		</div>
+
+	  </div>
+
+	</body>
+</html>
+
+<!-- TEMPLATES -->
+
+<li id="ttp-template" class="ttp-template">
+  <div id="ttp-row">
+	<img class="ttp-classification"/>
+	<p id="ttp-name" spellcheck="false" class="file"></p>
+	<div class="dropdown-arrow"></div>
+  </div>
+  <ul id="dcf-listing"></ul>
+</li>
+
+<li id="dcf-template" class="dcf-template">
+  <div id="dcf-row">
+	<img id="platform-logo" />
+	<p id="platform" spellcheck="false" class="file"></p>
+  </div>
+</li>
+
+<!-- Start the app by loading the main JS -->
+<script type="module" src="/client/js/main.js"></script>
+<!-- Ensure all panels can resize -->
+<script>
+	$(".panel-left").resizable({
+		handleSelector: ".splitter",
+		resizeHeight: false
+	});
+	$(".panel-top").resizable({
+		handleSelector: ".splitter-horizontal",
+		resizeWidth: false
+	});
+</script>

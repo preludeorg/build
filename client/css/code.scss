@@ -1,0 +1,25 @@
+#screen-code {
+    padding: 0;
+}
+.CodeMirror {
+    font-size: 13px;
+}
+.CodeMirror-vscrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--color-main);
+    border-radius: 20px;
+    border: 3px solid var(--color-theme);
+}
+.deployment {
+    background-color: inherit;
+    margin: 0;
+    right: 0;
+    padding: 10px 80px 0 0;
+    z-index: 999;
+    position: absolute;
+}
+.deployment img {
+    height: 30px;
+    top: 20px;
+    right: 25px;
+    filter: invert(0.75);
+}
