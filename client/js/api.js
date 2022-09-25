@@ -60,8 +60,8 @@ class DCFRoutes extends Routes {
     async delete(name) {
         return await this.handleRoute(`${this.host}/dcf/${name}`, {method: 'DELETE', headers: this.headers});
     }
-    async run(name, code) {
-        return await this.handleRoute(`${this.host}/dcf/${name}/run`,{
+    async submit(name, code) {
+        return await this.handleRoute(`${this.host}/dcf/${name}/submit`,{
             method: 'POST',
             body: code,
             headers: this.headers

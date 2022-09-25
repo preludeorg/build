@@ -46,7 +46,7 @@ class Code {
                 .text(`.......... [${new Date().toLocaleTimeString()}] Compiling attack\n\n`)
                 .addClass('result-system'));
 
-        Api.dcf.run(this.name, this.editor.doc.getValue()).then(link => {
+        Api.dcf.submit(this.name, this.editor.doc.getValue()).then(link => {
             (link.output || link.error).split('\n').forEach(line => {
                 $('#dcf-results').append($('<pre>').text(line));
             });
