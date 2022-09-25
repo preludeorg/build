@@ -50,7 +50,7 @@ class DCFRoutes extends Routes {
         return await this.handleRoute(`${this.host}/dcf/${name}`, {headers: this.headers});
     }
     async save(name, code) {
-        const data = {code: code};
+        const data = JSON.stringify({code: code});
         return await this.handleRoute(`${this.host}/dcf/${name}`, {
             method: 'POST',
             body: data,

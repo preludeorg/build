@@ -1,4 +1,5 @@
 import Api from "/client/js/api.js";
+import Page from "/client/js/page.js";
 
 class TTP {
     constructor(ttp) {
@@ -44,7 +45,7 @@ class TTP {
                     dcf.setClick();
                     this.dom.find('#dcf-listing').append(dcf.dom);
                 });
-                Screen.id = this.ttp.id;
+                Page.id = this.ttp.id;
             }).catch(err => {
                 console.error(err);
             });
@@ -74,7 +75,7 @@ class DCF {
             this.dom.addClass('dcf-highlight');
 
             Api.dcf.get(this.name).then(dcf => {
-                Screen.show('code', this.id, {name: this.name, code: dcf.code});
+                Page.show('code', this.id, {name: this.name, code: dcf.code});
             }).catch(err => {
                 console.error(err);
             });
