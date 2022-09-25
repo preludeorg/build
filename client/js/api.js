@@ -1,7 +1,8 @@
 class Routes {
-    constructor(host, token) {
+    constructor(host, account, token) {
         this.host = host;
         this.headers = {
+            account: account,
             token: token
         };
     }
@@ -15,8 +16,8 @@ class Routes {
 }
 
 class TTPRoutes extends Routes {
-    constructor(host, token) {
-        super(host, token);
+    constructor(host, account, token) {
+        super(host, account, token);
     }
     async manifest() {
         return await this.handleRoute(`${this.host}/manifest`, {headers: this.headers});
@@ -37,8 +38,8 @@ class TTPRoutes extends Routes {
 }
 
 class DCFRoutes extends Routes {
-    constructor(host, token) {
-        super(host, token);
+    constructor(host, account, token) {
+        super(host, account, token);
     }
     async get(name) {
         return await this.handleRoute(`${this.host}/dcf/${name}`, {headers: this.headers});
@@ -58,9 +59,9 @@ class DCFRoutes extends Routes {
 }
 
 let Api = {
-    attach: (host, token) => {
-        Api.ttp = new TTPRoutes(host, token);
-        Api.dcf = new DCFRoutes(host, token);
+    attach: (host, account, token) => {
+        Api.ttp = new TTPRoutes(host, account, token);
+        Api.dcf = new DCFRoutes(host, account, token);
     }
 };
 

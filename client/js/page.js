@@ -8,11 +8,11 @@ let Page = {
     screens: {
         code: new Code(),
     },
-    build: (server) => {
+    build: (host, account, token) => {
         $('#manifest').empty();
         $('#plugins').empty();
 
-        Api.attach(server.host, server.token);
+        Api.attach(host, account, token);
         Api.ttp.manifest().then(manifest => {
             Object.values(manifest).forEach(ttp => {
                 Page.addTTP(ttp);
@@ -48,7 +48,12 @@ let Page = {
     },
     listen() {
         $("#add-ttp").click(function(){
-            let template = Page.addTTP({id: '<UUID PLEASE>', name: 'Change me'});
+            function uuid() {
+                return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+                );
+            }
+            let template = Page.addTTP({id: uuid(), name: 'Change me'});
             template.dom.find('#ttp-name').attr('contentEditable', 'true').focus();
         });
         $("#deploy-dcf").click(function(){
