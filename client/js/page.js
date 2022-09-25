@@ -1,6 +1,6 @@
 import Api from "/client/js/api.js";
 import Templates from "/client/js/dom/templates.js";
-import Servers from "/client/js/plugins/servers.js";
+import Server from "/client/js/plugins/server.js";
 import Code from "/client/js/screens/code.js";
 
 let Page = {
@@ -18,7 +18,7 @@ let Page = {
                 Page.addTTP(ttp);
             });
         }).finally(() => {
-            Page.addPlugin(new Servers());
+            Page.addPlugin(new Server());
             $('#spinner').hide();
         });
     },
