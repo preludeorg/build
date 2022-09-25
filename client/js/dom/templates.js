@@ -9,17 +9,18 @@ class TTP {
             .show();
     }
     write() {
+        let self = this;
         this.dom.find('#ttp-name').data('id', this.ttp.id).text(this.ttp.name)
             .blur(function() {
-                Api.ttp.save({id: this.ttp.id, name: $(this).text()}).then(() => {
+                Api.ttp.save({id: self.ttp.id, name: $(this).text()}).then(() => {
                     $(this).attr('contentEditable', 'false');
                 });
             }).on('keydown',function(e){
-            let key = e.keyCode || e.charCode;
-            if (key === 13) {
-                $(this).blur();
-            }
-        });
+                let key = e.keyCode || e.charCode;
+                if (key === 13) {
+                    $(this).blur();
+                }
+            });
         this.dom.find('.ttp-classification')
             .attr("src",`/client/assets/classifications/${this.ttp.classification}.svg`);
         $('ul.context-menu-list').find(`li.context-menu-item.context-menu-icon.context-menu-icon-${this.ttp.classification}`)

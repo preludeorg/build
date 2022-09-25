@@ -21,7 +21,7 @@ class Query:
         return f"""
         INSERT INTO manifest (account_id, id, name, classification)
         VALUES (%(account_id)s, %(id)s, %(name)s, %(classification)s)
-        ON CONFLICT (account_id, id) 
+        ON CONFLICT (account_id, id)
         DO UPDATE SET name = EXCLUDED.name, classification = EXCLUDED.classification;
         """
 

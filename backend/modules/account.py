@@ -31,7 +31,7 @@ class DCF:
 
     async def code_files(self, ttp_id: str):
         """ Find all code files for a given TTP """
-        return [dcf async for dcf in self.database.directory.walk(prefix=ttp_id)]
+        return [dcf async for dcf in self.database.directory.walk(prefix=f'src/{ttp_id}')]
 
 
 class Manifest:
