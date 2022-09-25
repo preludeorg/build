@@ -1,4 +1,4 @@
-import Page from "./modules/page.js";
+import Page from "/client/js/page.js";
 
 window.onload = () => {
     if ('serviceWorker' in navigator) {
@@ -9,9 +9,6 @@ window.onload = () => {
 }
 
 $(document).ready(function () {
-    const page = new Page();
-    page.build();
-    //Screen.listen();
-    //const keychain = Local.keychain.read();
-    //Screen.build(keychain.servers.localhost);
+    Page.build();
+    Page.listen();
 });

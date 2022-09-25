@@ -1,16 +1,25 @@
 <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 <html>
 	<head>
+		<title>Prelude Operator</title>
 		<meta charset="utf-8">
+		<!-- PWA requirements -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<meta name="apple-mobile-web-app-status-bar" content="#aa7700">
 		<meta name="theme-color" content="black">
-		<title>Prelude Operator</title>
-		<link rel="stylesheet" href="/client/css/app.css">
-		<link rel="stylesheet" href="/client/css/contextmenu.css">
 		<link rel="manifest" href="/client/manifest.json">
+		<!-- base CSS and jQuery -->
+		<link rel="stylesheet" href="/client/css/app.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<!-- code mirror -->
+		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/display/autorefresh.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/darcula.min.css">
+		<!-- (embedded) external libraries -->
+		<link rel="stylesheet" href="/client/css/contextmenu.css">
 		<script src="/client/js/lib/resizable.js"></script>
 		<script src="/client/js/lib/contextmenu.js"></script>
 	</head>
@@ -92,29 +101,29 @@
 	  </div>
 
 	</body>
-
-	<!-- TEMPLATES -->
-
-	<li id="ttp-template" class="ttp-template">
-	  <div id="ttp-row">
-		<img class="ttp-classification"><img/>
-		<p id="ttp-name" spellcheck="false" class="file"></p>
-		<div class="dropdown-arrow"></div>
-	  </div>
-	  <ul id="dcf-listing"></ul>
-	</li>
-
-	<li id="dcf-template" class="dcf-template">
-	  <div id="dcf-row">
-		<img id="platform-logo">
-		<p id="platform" spellcheck="false" class="file"></p>
-	  </div>
-	</li>
 </html>
 
+<!-- TEMPLATES -->
+
+<li id="ttp-template" class="ttp-template">
+  <div id="ttp-row">
+	<img class="ttp-classification"/>
+	<p id="ttp-name" spellcheck="false" class="file"></p>
+	<div class="dropdown-arrow"></div>
+  </div>
+  <ul id="dcf-listing"></ul>
+</li>
+
+<li id="dcf-template" class="dcf-template">
+  <div id="dcf-row">
+	<img id="platform-logo" />
+	<p id="platform" spellcheck="false" class="file"></p>
+  </div>
+</li>
+
+<!-- Start the app by loading the main JS -->
 <script type="module" src="/client/js/main.js"></script>
-<script type="module" src="/client/js/modules/page.js"></script>
-<script type="module" src="/client/js/modules/api.js"></script>
+<!-- Ensure all panels can resize -->
 <script>
 	$(".panel-left").resizable({
 		handleSelector: ".splitter",
