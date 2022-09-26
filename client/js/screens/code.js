@@ -46,16 +46,12 @@ class Code {
                 .text(`.......... [${new Date().toLocaleTimeString()}] Compiling attack\n\n`)
                 .addClass('result-system'));
 
-        Api.dcf.submit(this.name).then(link => {
-            (link.output || link.error).split('\n').forEach(line => {
-                $('#dcf-results').append($('<pre>').text(line));
-            });
-            $('#dcf-results').append($('<pre>')
-                .text(`\n.......... [${new Date().toLocaleTimeString()}] ${link.status ? 'failed' : 'completed'} (${link.cpu.toFixed(3)}s CPU used)`)
-                .addClass(`result-${link.status}`).addClass('result-system'));
-            $('#spinner').hide();
+        Api.dcf.submit(this.name).then(() => {
+            //TODO: click button to show history
         }).catch(err => {
             $('#dcf-result').text(err);
+        }).finally(() => {
+            $('#spinner').hide();
         });
     }
 }

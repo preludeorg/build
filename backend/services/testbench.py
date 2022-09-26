@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from vertebrae.config import Config
 from vertebrae.service import Service
 
@@ -15,10 +17,11 @@ class TestBenchService(Service):
         links = []
         for container in Config.find('testbench'):  # TODO: ensure env.yml contains web service addresses
             self.log.debug(f'{name} running test')
-            await self.run(address=container, binary=binary)
+            links.append(await self.run(address=container, binary=binary))
         return links
 
     @clock
     async def run(self, address: str, binary):
         """ Execute test and record the CPU cycles used """
         # TODO: 1) upload binary to test container 2) execute 3) get link back
+        return Link(name='', status=0, cpu=0.002, created=datetime.now())
