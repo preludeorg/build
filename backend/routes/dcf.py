@@ -25,14 +25,14 @@ class DCFRoutes:
         return web.json_response(dict(code=code))
 
     @allowed
-    async def _post_dcf(self, account: Account, data: dict) -> web.json_response:
+    async def _post_dcf(self, account: Account, data: dict) -> web.Response:
         await account.dcf.add(name=data['name'], code=data['code'])
-        return web.json_response({})
+        return web.Response(status=200)
 
     @allowed
-    async def _del_dcf(self, account: Account, data: dict) -> web.json_response:
+    async def _del_dcf(self, account: Account, data: dict) -> web.Response:
         await account.dcf.remove(name=data['name'])
-        return web.json_response({})
+        return web.Response(status=200)
 
     @allowed
     async def _get_links(self, account: Account, data: dict) -> web.json_response:
@@ -48,4 +48,4 @@ class DCFRoutes:
                 await Service.find('signing').sign(binary=binary)
 
         asyncio.create_task(_submission_process())
-        return web.json_response({})
+        return web.Response(status=200, text='Submission received')

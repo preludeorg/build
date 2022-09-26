@@ -7,12 +7,16 @@ class Routes {
             'content-type': 'application/json'
         }
     }
-    async handleRoute(route, options) {
+    async handleRoute(route, options, json=true) {
+        options['headers'] = this.headers;
         const promise = fetch(route, options).catch(err => {
             console.error(`Error fetching ${route}: ${err}`);
             return {};
         });
-        return await promise.then(res => res.json());
+        if (json) {
+            return await promise.then(res => res.json());
+        }
+        return await promise;
     }
 }
 
@@ -21,28 +25,23 @@ class TTPRoutes extends Routes {
         super(host, account, token);
     }
     async manifest() {
-        return await this.handleRoute(`${this.host}/manifest`, {headers: this.headers});
+        return await this.handleRoute(`${this.host}/manifest`, {});
     }
     async get(id) {
-        return await this.handleRoute(`${this.host}/manifest/${id}`, {headers: this.headers});
+        return await this.handleRoute(`${this.host}/manifest/${id}`, {});
     }
     async save(procedure) {
         const data = JSON.stringify(procedure);
-        return await this.handleRoute(`${this.host}/manifest`, {
-            method: 'PUT',
-            body: data,
-            headers: this.headers
-        });
+        return await this.handleRoute(`${this.host}/manifest`, {method: 'PUT', body: data});
     }
     async delete(id) {
         return await this.handleRoute(`${this.host}/manifest/${id}`, {
             method: 'DELETE',
             body: JSON.stringify({}),
-            headers: this.headers
-        });
+        }, false);
     }
     async history(name) {
-        return await this.handleRoute(`${this.host}/probe/${name}`, {headers: this.headers});
+        return await this.handleRoute(`${this.host}/probe/${name}`, {});
     }
 }
 
@@ -51,25 +50,23 @@ class DCFRoutes extends Routes {
         super(host, account, token);
     }
     async get(name) {
-        return await this.handleRoute(`${this.host}/dcf/${name}`, {headers: this.headers});
+        return await this.handleRoute(`${this.host}/dcf/${name}`, {});
     }
     async save(name, code) {
         const data = JSON.stringify({code: code});
         return await this.handleRoute(`${this.host}/dcf/${name}`, {
             method: 'POST',
-            body: data,
-            headers: this.headers
-        });
+            body: data
+        }, false);
     }
     async delete(name) {
-        return await this.handleRoute(`${this.host}/dcf/${name}`, {method: 'DELETE', headers: this.headers});
+        return await this.handleRoute(`${this.host}/dcf/${name}`, {method: 'DELETE'});
     }
     async submit(name) {
         return await this.handleRoute(`${this.host}/dcf/${name}/submit`,{
             method: 'POST',
-            body: JSON.stringify({}),
-            headers: this.headers
-        });
+            body: JSON.stringify({})
+        }, false);
     }
 }
 

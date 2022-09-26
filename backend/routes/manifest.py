@@ -37,14 +37,14 @@ class ManifestRoutes:
         return web.json_response(ttp.get(exists))
 
     @allowed
-    async def _get_manifest_entry(self, account: Account, data: dict) -> web.json_response:
+    async def _get_manifest_entry(self, account: Account, data: dict) -> web.Response:
         ttp = await account.manifest.select(ttp_id=data['id'])
         if ttp:
             code_files = await account.dcf.code_files(ttp_id=data['id'])
             return web.json_response(dict(**ttp, dcf=code_files))
-        return web.json_response({}, status=404)
+        return web.Response(status=404, text='No TTP with that identifier')
 
     @allowed
-    async def _del_manifest_entry(self, account: Account, data: dict) -> web.json_response:
+    async def _del_manifest_entry(self, account: Account, data: dict) -> web.Response:
         await account.manifest.remove(ttp_id=data['id'])
-        return web.json_response({})
+        return web.Response(status=200)
