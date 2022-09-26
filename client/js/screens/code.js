@@ -47,7 +47,18 @@ class Code {
                 .addClass('result-system'));
 
         Api.dcf.submit(this.name).then(() => {
-            //TODO: click button to show history
+            const action = $('<button>').text('Click to view results');
+            action.on('click', (ev) => {
+                ev.stopPropagation();
+                ev.preventDefault();
+
+                Api.dcf.history(this.name).then(links => {
+                    links.forEach(link => {
+                       console.log(link);
+                    });
+                });
+            });
+            $('#dcf-results').append(action);
         }).catch(err => {
             $('#dcf-result').text(err);
         }).finally(() => {

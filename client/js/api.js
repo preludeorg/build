@@ -40,9 +40,6 @@ class TTPRoutes extends Routes {
             body: JSON.stringify({}),
         }, false);
     }
-    async history(name) {
-        return await this.handleRoute(`${this.host}/probe/${name}`, {});
-    }
 }
 
 class DCFRoutes extends Routes {
@@ -67,6 +64,9 @@ class DCFRoutes extends Routes {
             method: 'POST',
             body: JSON.stringify({})
         }, false);
+    }
+    async history(name) {
+        return await this.handleRoute(`${this.host}/dcf/${name}/links`, {});
     }
 }
 
