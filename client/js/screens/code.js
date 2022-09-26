@@ -41,13 +41,8 @@ class Code {
     }
     test() {
         $('#spinner').show();
-        $('#dcf-results').empty()
-            .append($('<pre>')
-                .text(`.......... [${new Date().toLocaleTimeString()}] Compiling attack\n\n`)
-                .addClass('result-system'));
-
         Api.dcf.submit(this.name).then(() => {
-            const action = $('<button>').text('Click to view results');
+            const action = $('<button>').text('Click to refresh results');
             action.on('click', (ev) => {
                 ev.stopPropagation();
                 ev.preventDefault();
