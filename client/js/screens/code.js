@@ -1,4 +1,3 @@
-import CodeMirror from "/client/js/lib/codemirror5/src/codemirror.js";
 import Api from "/client/js/api.js";
 import C from "/client/js/screens/lang/c.js";
 
