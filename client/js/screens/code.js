@@ -1,5 +1,6 @@
 import Api from "/client/js/api.js";
 import C from "/client/js/screens/lang/c.js";
+import Python from "/client/js/screens/lang/py.js";
 
 class Code {
     constructor() {
@@ -9,9 +10,10 @@ class Code {
     }
     write(data) {
         $('.panel-top').css('height', '75%');
+        const ext = data.name.split('.').pop();
         this.name = data.name;
         this.editor.setValue(data.code);
-        this.editor.setOption('mode', this.mode().language());
+        this.editor.setOption('mode', this.language(ext).mode());
     }
     setUpEditor() {
         this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {
@@ -19,7 +21,7 @@ class Code {
             autoRefresh: true,
             tabMode: 'indent',
             theme: 'darcula',
-            mode: new C().language(),
+            mode: new C().mode(),
             indentWithTabs: false,
             smartIndent: true,
             tabSize: 2
@@ -35,8 +37,12 @@ class Code {
             }
         });
     }
-    mode() {
-        return new C();
+    language(ext) {
+        if (ext === 'c') {
+            return new C();
+        } else if (ext === 'py') {
+            return new Python();
+        }
     }
     test() {
         $('#spinner').show();

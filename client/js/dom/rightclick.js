@@ -1,4 +1,5 @@
-import Api from "../api";
+import Api from "/client/js/api.js";
+import Page from "/client/js/page.js";
 
 let RightClick = {
     attach: () => {
@@ -25,7 +26,8 @@ let RightClick = {
                         });
                     } else {
                         const name = `${Page.id}_${key}`;
-                        const code = Page.screens.code.mode('c').bootstrap();
+                        const ext = key.split('.').pop();
+                        const code = Page.screens.code.language(ext).bootstrap();
                         Api.dcf.save(name, code).then(() => {
                             const template = Page.addDCF(name);
                             $(this).find('#dcf-listing').append(template.dom);
@@ -49,9 +51,10 @@ let RightClick = {
                         }
                     },
                     sep1: '---------',
-                    'linux-x86.c': {name: 'Add DCF - Linux (x86)', icon: 'linux'},
-                    'darwin-x86.c': {name: 'Add DCF - MacOS (x86)', icon: 'apple'},
-                    'darwin-arm64.c': {name: 'Add DCF - MacOS (arm64)', icon: 'apple'},
+                    'python-*.py': {name: 'Attach Python (*)', icon: 'python'},
+                    'linux-x86.c': {name: 'Attach Linux (x86)', icon: 'linux'},
+                    'darwin-x86.c': {name: 'Attach MacOS (x86)', icon: 'apple'},
+                    'darwin-arm64.c': {name: 'Attach MacOS (arm64)', icon: 'apple'},
                     sep2: '---------',
                     rename: {name: 'Rename', icon: 'edit'},
                     delete: {name: 'Delete', icon: 'delete'}

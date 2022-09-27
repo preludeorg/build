@@ -1,5 +1,5 @@
-class Mode {
-    language() {
+class C {
+    mode() {
         return 'text/x-csrc';
     }
     bootstrap() {
@@ -18,4 +18,4 @@ class Mode {
     }
 }
 
-export default Mode;
+export default C;
