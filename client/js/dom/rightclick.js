@@ -51,7 +51,7 @@ let RightClick = {
                         }
                     },
                     sep1: '---------',
-                    'python-*.py': {name: 'Attach Python (*)', icon: 'python'},
+                    'python-*.py': {name: 'Attach Python', icon: 'python'},
                     'linux-x86.c': {name: 'Attach Linux (x86)', icon: 'linux'},
                     'darwin-x86.c': {name: 'Attach MacOS (x86)', icon: 'apple'},
                     'darwin-arm64.c': {name: 'Attach MacOS (arm64)', icon: 'apple'},

@@ -45,7 +45,7 @@ def allowed(func):
             log.error(e)
             return web.Response(status=503, text=str(e))
         except Exception as e:
-            log.error(f'Unhandled: {e}')
+            log.exception(f'Unhandled: {e}')
             return web.Response(status=500, text=str(e))
     return helper
 
