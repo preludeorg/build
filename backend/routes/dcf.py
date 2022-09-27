@@ -37,7 +37,7 @@ class DCFRoutes:
     @allowed
     async def _get_links(self, account: Account, data: dict) -> web.json_response:
         links = await account.dcf.links(name=data['name'])
-        return web.json_response(links)
+        return web.json_response([link.display for link in links])
 
     @allowed
     async def _submit_dcf(self, account: Account, data: dict) -> web.Response:
