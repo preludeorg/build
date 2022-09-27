@@ -25,6 +25,7 @@ let Page = {
     },
     show: (id=null, data=null) => {
         Page.id = id;
+        $('.screen').each(function(i, obj) { $(this).hide() });
         $('#screen-code').show();
         Page.screens.code.write(data);
     },
