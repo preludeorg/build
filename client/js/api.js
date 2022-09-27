@@ -77,7 +77,7 @@ let Api = {
         ).join('');
         const host = localStorage.getItem('PRELUDE_SERVER') || 'http://localhost:3000';
         const account = localStorage.getItem('PRELUDE_ACCOUNT_ID') || freshAccount;
-        const token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN') || 'goober';
+        const token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN');
         return {host: host, account: account, token: token};
     },
     login: () => {
