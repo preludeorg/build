@@ -1,3 +1,4 @@
+from vertebrae.config import Config
 from vertebrae.service import Service
 
 from backend.queries.query import Query
@@ -9,19 +10,20 @@ class DCF:
     def __init__(self, account_id: str):
         self.account_id = account_id
         self.database = Service.db()
+        self._accounts_bucket = Config.find('aws')['buckets']['accounts']
         self.query = Query()
 
     async def select(self, name: str) -> str:
         """ Locate a single DCF """
-        return await self.database.directory.read(filename=f'src/{name}')
+        return (await self.database.s3.read(bucket=self._accounts_bucket, key=f'{self.account_id}/src/{name}')).decode('utf-8')
 
     async def add(self, name: str, code: str) -> None:
         """ Add an entry to the manifest """
-        await self.database.directory.write(filename=f'src/{name}', contents=code)
+        await self.database.s3.write(bucket=self._accounts_bucket, key=f'{self.account_id}/src/{name}', contents=code)
 
     async def remove(self, name: str) -> None:
         """ Remove an entry from the manifest """
-        await self.database.directory.delete(filename=f'src/{name}')
+        await self.database.s3.delete(bucket=self._accounts_bucket, key=f'{self.account_id}/src/{name}')
 
     async def links(self, name: str) -> [Link]:
         """ Get results for a given DCF """
@@ -31,7 +33,8 @@ class DCF:
 
     async def code_files(self, ttp_id: str):
         """ Find all code files for a given TTP """
-        return [dcf async for dcf in self.database.directory.walk(prefix=f'src/{ttp_id}')]
+        f = await self.database.s3.read_all(bucket=self._accounts_bucket, prefix=f'{self.account_id}/src/{ttp_id}')
+        return list(f.keys())
 
 
 class Manifest:

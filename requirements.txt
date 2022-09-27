@@ -1,2 +1,2 @@
 aiohttp==3.8.1
-vertebrae==0.5.11
+vertebrae==0.5.12
