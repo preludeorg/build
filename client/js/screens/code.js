@@ -20,7 +20,7 @@ class Code {
             lineNumbers: true,
             autoRefresh: true,
             tabMode: 'indent',
-            theme: 'darcula',
+            theme: 'material-darker',
             mode: new C().mode(),
             indentWithTabs: false,
             smartIndent: true,
