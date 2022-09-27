@@ -1,6 +1,6 @@
-import CodeMirror from "/client/js/lib/codemirror5/src/codemirror.js";
 import Api from "/client/js/api.js";
 import C from "/client/js/screens/lang/c.js";
+import Python from "/client/js/screens/lang/py.js";
 
 class Code {
     constructor() {
@@ -10,17 +10,18 @@ class Code {
     }
     write(data) {
         $('.panel-top').css('height', '75%');
+        const ext = data.name.split('.').pop();
         this.name = data.name;
         this.editor.setValue(data.code);
-        this.editor.setOption('mode', this.mode().language());
+        this.editor.setOption('mode', this.language(ext).mode());
     }
     setUpEditor() {
         this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {
             lineNumbers: true,
             autoRefresh: true,
             tabMode: 'indent',
-            theme: 'darcula',
-            mode: new C().language(),
+            theme: 'material-darker',
+            mode: new C().mode(),
             indentWithTabs: false,
             smartIndent: true,
             tabSize: 2
@@ -36,18 +37,17 @@ class Code {
             }
         });
     }
-    mode() {
-        return new C();
+    language(ext) {
+        if (ext === 'c') {
+            return new C();
+        } else if (ext === 'py') {
+            return new Python();
+        }
     }
     test() {
         $('#spinner').show();
-        $('#dcf-results').empty()
-            .append($('<pre>')
-                .text(`.......... [${new Date().toLocaleTimeString()}] Compiling attack\n\n`)
-                .addClass('result-system'));
-
         Api.dcf.submit(this.name).then(() => {
-            const action = $('<button>').text('Click to view results');
+            const action = $('<button>').text('Click to refresh results');
             action.on('click', (ev) => {
                 ev.stopPropagation();
                 ev.preventDefault();

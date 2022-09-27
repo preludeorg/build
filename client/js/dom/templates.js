@@ -76,7 +76,7 @@ class DCF {
             this.dom.addClass('dcf-highlight');
 
             Api.dcf.get(this.name).then(dcf => {
-                Page.show('code', this.id, {name: this.name, code: dcf.code});
+                Page.show(this.id, {name: this.name, code: dcf.code});
             }).catch(err => {
                 console.error(err);
             });

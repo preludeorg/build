@@ -9,8 +9,8 @@ class Server {
         let contents = sidebar.find('#plugin-contents').empty();
         sidebar.find('#plugin-name').html(this.name());
         sidebar.find('#plugin-description').text('' +
-            'By default, Operator is backed by the managed Prelude Service. ' +
-            'You can host alternative Operator instances and log in below.' +
+            'By default, Operator is backed by the managed Prelude Server. ' +
+            'You can host alternative Server instances and log in below.' +
             `You are logged into ${creds.host} as ${creds.account}.`);
 
         const ip = $('<input id="i-ip" class="plugin-input" placeholder="Enter an IP">');
