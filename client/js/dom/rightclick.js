@@ -51,10 +51,11 @@ let RightClick = {
                         }
                     },
                     sep1: '---------',
-                    'python-*.py': {name: 'Attach Python', icon: 'python'},
-                    'linux-x86.c': {name: 'Attach Linux (x86)', icon: 'linux'},
-                    'darwin-x86.c': {name: 'Attach MacOS (x86)', icon: 'apple'},
-                    'darwin-arm64.c': {name: 'Attach MacOS (arm64)', icon: 'apple'},
+                    'linux-python.py': {name: 'Attach Linux - python', icon: 'linux'},
+                    'linux-x86.c': {name: 'Attach Linux - x86', icon: 'linux'},
+                    'darwin-python.py': {name: 'Attach MacOS - python', icon: 'apple'},
+                    'darwin-x86.c': {name: 'Attach MacOS - x86', icon: 'apple'},
+                    'darwin-arm64.c': {name: 'Attach MacOS - arm64', icon: 'apple'},
                     sep2: '---------',
                     rename: {name: 'Rename', icon: 'edit'},
                     delete: {name: 'Delete', icon: 'delete'}
