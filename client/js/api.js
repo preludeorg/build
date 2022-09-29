@@ -72,13 +72,14 @@ class DCFRoutes extends Routes {
 
 let Api = {
     credentials: () => {
-        const freshAccount = Array.from(
-            Array(20), () => Math.floor(Math.random() * 36).toString(36)
-        ).join('');
-        const host = localStorage.getItem('PRELUDE_SERVER') || 'http://localhost:3000';
-        const account = localStorage.getItem('PRELUDE_ACCOUNT_ID') || freshAccount;
-        const token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN') || '';
-        return {host: host, account: account, token: token};
+        const host = localStorage.getItem('PRELUDE_SERVER');
+        const account = localStorage.getItem('PRELUDE_ACCOUNT_ID');
+        const token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN');
+        return {
+            host: host || 'http://localhost:3000',
+            account: account || Api.createAccount(),
+            token: token || ''
+        };
     },
     setCredentials(host, account, token) {
         localStorage.setItem('PRELUDE_SERVER', host);
@@ -94,6 +95,11 @@ let Api = {
     async ping(host, account, token) {
         const headers = {account: account, token: token};
         return fetch(`${host}/ping`, {headers: headers});
+    },
+    async createAccount() {
+        return Array.from(
+            Array(20), () => Math.floor(Math.random() * 36).toString(36)
+        ).join('');
     }
 };
 
