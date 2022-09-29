@@ -3,12 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
  entry: {
-  index: './js/main.js'
+  index: './client/js/main.js'
  },
  plugins: [
    new HtmlWebpackPlugin({
        title: 'Operator',
-       template: 'templates/index.html',
+       template: 'client/templates/index.html',
    }),
  ],
  output: {
