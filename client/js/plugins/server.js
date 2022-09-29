@@ -25,9 +25,7 @@ class Server {
             const account = $('#i-account').val();
             const token = $('#i-token').val();
             Api.ping(host, account, token).then(() => {
-                localStorage.setItem('PRELUDE_SERVER', host);
-                localStorage.setItem('PRELUDE_ACCOUNT_ID', account);
-                localStorage.setItem('PRELUDE_ACCOUNT_TOKEN', token);
+                Api.setCredentials(host, account, token);
                 location.reload();
             }).catch(err => {
                console.error(`Unable to connect to ${host}, ${err}`);

@@ -80,8 +80,14 @@ let Api = {
         const token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN') || '';
         return {host: host, account: account, token: token};
     },
+    setCredentials(host, account, token) {
+        localStorage.setItem('PRELUDE_SERVER', host);
+        localStorage.setItem('PRELUDE_ACCOUNT_ID', account);
+        localStorage.setItem('PRELUDE_ACCOUNT_TOKEN', token);
+    },
     login: () => {
         const creds = Api.credentials();
+        Api.setCredentials(creds.host, creds.account, creds.token);
         Api.ttp = new TTPRoutes(creds.host, creds.account, creds.token);
         Api.dcf = new DCFRoutes(creds.host, creds.account, creds.token);
     },
