@@ -1,4 +1,4 @@
-import Api from "/client/js/api.js";
+import Api from "../api.js";
 
 class Server {
     name() {

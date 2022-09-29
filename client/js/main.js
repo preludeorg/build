@@ -1,6 +1,6 @@
-import Api from "/client/js/api.js";
-import Page from "/client/js/page.js";
-import Server from "/client/js/plugins/server.js";
+import Api from "js/api.js";
+import Page from "js/page.js";
+import Server from "js/plugins/server.js";
 
 window.onload = () => {
     if ('serviceWorker' in navigator) {

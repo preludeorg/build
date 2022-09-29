@@ -1,6 +1,6 @@
-import Api from "/client/js/api.js";
-import C from "/client/js/screens/lang/c.js";
-import Python from "/client/js/screens/lang/py.js";
+import Api from "../api.js";
+import C from "./lang/c.js";
+import Python from "./lang/py.js";
 
 class Code {
     constructor() {
