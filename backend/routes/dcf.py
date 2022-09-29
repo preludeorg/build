@@ -1,7 +1,7 @@
 from aiohttp import web
 from vertebrae.core import Route
 from vertebrae.service import Service
-import logging
+
 from backend.modules.account import Account
 from backend.util.decorators import allowed
 
