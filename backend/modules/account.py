@@ -3,6 +3,7 @@ import uuid
 
 from vertebrae.config import Config
 from vertebrae.service import Service
+from vertebrae.config import Config
 
 from pathlib import Path
 
