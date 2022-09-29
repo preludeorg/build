@@ -6,6 +6,7 @@ Operator Server is an authoring and testing application designed specifically fo
 
 Install the requirements and start the server:
 ```
+yarn build
 pip install -r requirements.txt
 python server.py
 ```
