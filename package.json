@@ -13,6 +13,7 @@
     "codemirror": "^6.0.1"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
     "html-webpack-plugin": "^5.5.0",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.10.0"
