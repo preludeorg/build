@@ -14,6 +14,7 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 { from: "client/assets", to: "static/assets" },
+                { from: "client/manifest.json", to: "static"}
             ],
         }),
     ],
