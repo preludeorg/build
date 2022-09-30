@@ -15,10 +15,14 @@
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
     "html-webpack-plugin": "^5.5.0",
+    "sass": "^1.55.0",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.10.0"
   },
   "scripts": {
-    "build": "webpack --config client/webpack.config.js"
+    "sass:compile": "sass client/css/app.scss client/css/app.css",
+    "sass:watch": "nodemon -e scss -x \"npm run sass:compile\"",
+
+    "build": "yarn sass:compile && webpack --config client/webpack.config.js"
   }
 }

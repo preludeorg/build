@@ -13,8 +13,10 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
+                { from: "client/manifest.json", to: "static"},
                 { from: "client/assets", to: "static/assets" },
-                { from: "client/manifest.json", to: "static"}
+                { from: "client/css/font", to: "static/css/font" },
+                { from: "client/css/app.css", to: "static/css" }
             ],
         }),
     ],
