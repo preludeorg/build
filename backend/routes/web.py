@@ -1,3 +1,5 @@
+from typing import Union
+
 from aiohttp import web
 from aiohttp_jinja2 import template
 from vertebrae.core import Route, StaticRoute
@@ -9,11 +11,11 @@ from backend.util.decorators import allowed
 
 class WebRoutes:
 
-    def routes(self) -> [Route]:
+    def routes(self) -> [Union[Route, StaticRoute]]:
         return [
             Route('GET', '/', self._get_index),
             Route('POST', '/register', self._register),
-            StaticRoute('/client', 'client')
+            StaticRoute('/static', '/dist/static')
         ]
 
     @template('index.html')
