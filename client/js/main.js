@@ -9,8 +9,11 @@ window.onload = () => {
     }
 }
 
-$(document).ready(function () {
-    Api.login();
+const callback = function() {
     Page.build();
     Page.listen();
+};
+
+$(document).ready(function () {
+    Api.login(callback);
 });
