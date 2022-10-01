@@ -77,29 +77,35 @@ let Api = {
         const token = localStorage.getItem('PRELUDE_ACCOUNT_TOKEN');
         return {
             host: host || 'http://localhost:3000',
-            account: account || Api.createAccount(),
+            account: account || '',
             token: token || ''
         };
     },
-    setCredentials(host, account, token) {
+    setCredentials: (host, account, token) => {
         localStorage.setItem('PRELUDE_SERVER', host);
         localStorage.setItem('PRELUDE_ACCOUNT_ID', account);
         localStorage.setItem('PRELUDE_ACCOUNT_TOKEN', token);
     },
-    login: () => {
+    login: (callback) => {
         const creds = Api.credentials();
-        Api.setCredentials(creds.host, creds.account, creds.token);
-        Api.ttp = new TTPRoutes(creds.host, creds.account, creds.token);
-        Api.dcf = new DCFRoutes(creds.host, creds.account, creds.token);
+        Api.register(creds).then(accountID => {
+            Api.setCredentials(creds.host, accountID, creds.token);
+            Api.ttp = new TTPRoutes(creds.host, accountID, creds.token);
+            Api.dcf = new DCFRoutes(creds.host, accountID, creds.token);
+        }).finally(() => {
+           callback();
+        });
+    },
+    register: (creds) => {
+        return fetch(`${creds.host}/register`, {method: 'POST', headers: {account: creds.account}})
+            .then(res => res.json())
+            .then(res => {
+                return res['account_id'];
+            });
     },
     async ping(host, account, token) {
         const headers = {account: account, token: token};
         return fetch(`${host}/ping`, {headers: headers});
-    },
-    async createAccount() {
-        return Array.from(
-            Array(20), () => Math.floor(Math.random() * 36).toString(36)
-        ).join('');
     }
 };
 

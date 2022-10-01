@@ -1,3 +1,5 @@
+import uuid
+
 from vertebrae.service import Service
 
 from backend.queries.query import Query
@@ -8,6 +10,7 @@ class DCF:
 
     def __init__(self, account_id: str):
         self.account_id = account_id
+        self.log = Service.create_log('dcf')
         self.file = Service.db(store='directory')
         self.relational = Service.db(store='relational')
         self._accounts_bucket = f'{self.file.name}/{account_id}'
@@ -15,14 +18,17 @@ class DCF:
 
     async def select(self, name: str) -> str:
         """ Locate a single DCF """
+        self.log.debug(f'[{self.account_id}] Viewing DCF: {name}')
         return await self.file.read(filename=f'{self._accounts_bucket}/src/{name}')
 
     async def add(self, name: str, code: str) -> None:
         """ Upload a new or updated DCF """
+        self.log.debug(f'[{self.account_id}] Updating DCF: {name}')
         await self.file.write(filename=f'{self._accounts_bucket}/src/{name}', contents=code)
 
     async def remove(self, name: str) -> None:
         """ Remove a DCF """
+        self.log.debug(f'[{self.account_id}] Deleting DCF: {name}')
         await self.file.delete(filename=f'{self._accounts_bucket}/src/{name}')
 
     async def links(self, name: str) -> [Link]:
@@ -33,6 +39,7 @@ class DCF:
 
     async def code_files(self, ttp_id: str):
         """ Find all code files for a given TTP """
+        self.log.debug(f'[{self.account_id}] Viewing TTP: {ttp_id}')
         return [dcf async for dcf in self.file.walk(bucket=f'{self._accounts_bucket}/src', prefix=ttp_id)]
 
 
@@ -40,6 +47,7 @@ class Manifest:
 
     def __init__(self, account_id: str):
         self.account_id = account_id
+        self.log = Service.create_log('manifest')
         self.database = Service.db(store='relational')
         self.query = Query()
 
@@ -51,11 +59,13 @@ class Manifest:
 
     async def add(self, ttp_id: str, name: str, classification='unknown') -> None:
         """ Add an entry to the manifest """
+        self.log.debug(f'[{self.account_id}] Adding TTP: {ttp_id} ({classification})')
         params = dict(account_id=self.account_id, id=ttp_id, name=name, classification=classification)
         await self.database.execute(self.query.update_manifest(), params)
 
     async def remove(self, ttp_id: str) -> None:
         """ Remove an entry from the manifest """
+        self.log.debug(f'[{self.account_id}] Deleting TTP: {ttp_id}')
         params = dict(account_id=self.account_id, id=ttp_id)
         await self.database.execute(self.query.remove_manifest(), params)
 
@@ -65,3 +75,7 @@ class Account:
     def __init__(self, account_id: str):
         self.dcf = DCF(account_id=account_id)
         self.manifest = Manifest(account_id=account_id)
+
+    @staticmethod
+    def register():
+        return Service.hash(s=str(uuid.uuid4()), algo='md5')
