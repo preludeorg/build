@@ -2,10 +2,10 @@ import resource
 from functools import wraps
 
 from aiohttp import web
-from vertebrae.config import Config
 from vertebrae.core import create_log, strip_request
 
 from backend.modules.account import Account
+from backend.util.authentication import Simple
 
 log = create_log('api')
 
@@ -14,11 +14,11 @@ def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
-            account_id = args[1].headers.get('account')
+            account_id, token = args[1].headers.get('account'), args[1].headers.get('token')
             if not account_id:
                 log.warning(f'{account_id} is missing a required header')
                 return web.Response(status=412, text='Missing account')
-            elif Config.find('token', '') != args[1].headers.get('token'):
+            elif not Simple(account_id=account_id, token=token).validate():
                 log.warning(f'{account_id} performed an unauthorized request')
                 return web.Response(status=403, text='Unauthorized request')
 
