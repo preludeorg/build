@@ -73,6 +73,8 @@ class Manifest:
 class Account:
 
     def __init__(self, account_id: str):
+        self.account_id = account_id
+        # internal modules
         self.dcf = DCF(account_id=account_id)
         self.manifest = Manifest(account_id=account_id)
 

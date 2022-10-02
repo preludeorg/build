@@ -78,7 +78,7 @@ let Api = {
         return {
             host: host || 'http://localhost:3000',
             account: account || '',
-            token: token || ''
+            token: token || 'goober'
         };
     },
     setCredentials: (host, account, token) => {
@@ -97,9 +97,17 @@ let Api = {
         });
     },
     register: (creds) => {
-        return fetch(`${creds.host}/register`, {method: 'POST', headers: {account: creds.account}})
-            .then(res => res.json())
+        const hd = {account: creds.account, token: creds.token};
+        return fetch(`${creds.host}/register`, {method: 'POST', headers: hd})
             .then(res => {
+                if (!res.ok) {
+                    localStorage.removeItem('PRELUDE_SERVER');
+                    localStorage.removeItem('PRELUDE_ACCOUNT_ID');
+                    localStorage.removeItem('PRELUDE_ACCOUNT_TOKEN');
+                    location.reload();
+                }
+                return res.json();
+            }).then(res => {
                 return res['account_id'];
             });
     },

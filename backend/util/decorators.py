@@ -5,7 +5,7 @@ from aiohttp import web
 from vertebrae.core import create_log, strip_request
 
 from backend.modules.account import Account
-from backend.util.authentication import Simple
+from backend.util.authentication import Local, Detect
 
 log = create_log('api')
 
@@ -14,12 +14,17 @@ def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
-            account_id, token = args[1].headers.get('account'), args[1].headers.get('token')
-            if not account_id:
-                log.warning(f'{account_id} is missing a required header')
-                return web.Response(status=412, text='Missing account')
-            elif not Simple(account_id=account_id, token=token).validate():
-                log.warning(f'{account_id} performed an unauthorized request')
+            account_id = args[1].headers.get('account') or Account.register()
+            token = args[1].headers.get('token')
+
+            exists, valid = await Detect(account_id=account_id, token=token).validate()
+            if not exists:
+                _, valid = await Local(account_id=account_id, token=token).validate()
+                if not valid:
+                    log.warning(f'[{account_id}] Invalid Local login attempted')
+                    return web.Response(status=403, text='Unauthorized request')
+            elif exists and not valid:
+                log.warning(f'[{account_id}] Invalid Detect login attempted')
                 return web.Response(status=403, text='Unauthorized request')
 
             params['account'] = Account(account_id=account_id)
