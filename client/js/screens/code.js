@@ -46,22 +46,27 @@ class Code {
     }
     test() {
         $('#spinner').show();
-        Api.dcf.submit(this.name).then(() => {
-            const action = $('<button>').text('Click to refresh results');
-            action.on('click', (ev) => {
-                ev.stopPropagation();
-                ev.preventDefault();
+        $('#dcf-results').empty()
+            .append($('<pre>')
+                .text(`.......... [${new Date().toLocaleTimeString()}] Compiling attack\n\n`)
+                .addClass('result-system'));
 
-                Api.dcf.history(this.name).then(links => {
-                    links.forEach(link => {
-                       console.log(link);
-                    });
-                });
+        Api.dcf.submit(this.name).then(res => res.json()).then(links => {
+            links.forEach(link => {
+                const status = link.status ? 'failed' : 'completed';
+                const cpu = link['cpu'].toFixed(3);
+                $('#dcf-results').append($('<pre>')
+                    .text(`\n.......... [${new Date().toLocaleTimeString()}] ${status} (${cpu}s CPU used)`)
+                    .addClass(`result-${link.status}`)
+                    .addClass('result-system'));
             });
-            $('#dcf-results').append(action);
         }).catch(err => {
-            $('#dcf-result').text(err);
+            $('#dcf-results').text(err);
         }).finally(() => {
+            $('#dcf-results')
+                .append($('<pre>')
+                .text(`.......... [${new Date().toLocaleTimeString()}] Complete`)
+                .addClass('result-system'));
             $('#spinner').hide();
         });
     }

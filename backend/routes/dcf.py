@@ -1,5 +1,3 @@
-import asyncio
-
 from aiohttp import web
 from vertebrae.core import Route
 from vertebrae.service import Service
@@ -41,11 +39,8 @@ class DCFRoutes:
 
     @allowed
     async def _submit_dcf(self, account: Account, data: dict) -> web.Response:
-        async def _submission_process():
-            binary = await Service.find('compile').compile(name=data['name'])
-            links = await Service.find('testbench').test(name=data['name'], binary=binary)
-            if all([li.status == 0 for li in links]):
-                await Service.find('signing').sign(binary=binary)
-
-        asyncio.create_task(_submission_process())
-        return web.Response(status=200, text='Submission received')
+        binary = await Service.find('compile').compile(account_id=account.account_id, name=data['name'])
+        links = await Service.find('testbench').test(name=data['name'], binary=binary)
+        if all([li.status == 0 for li in links]):
+            await Service.find('signing').sign(binary=binary)
+        return web.json_response(links)
