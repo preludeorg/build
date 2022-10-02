@@ -67,7 +67,7 @@ let RightClick = {
                 selector: '.dcf-template',
                 callback: function (key, options) {
                     if (key === 'delete') {
-                        Api.dcf.save($(this).find('#platform').data('name')).then(() => {
+                        Api.dcf.delete($(this).find('#platform').data('name')).then(() => {
                             $(this).remove();
                         });
                     }
