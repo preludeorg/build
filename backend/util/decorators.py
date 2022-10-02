@@ -5,7 +5,7 @@ from aiohttp import web
 from vertebrae.core import create_log, strip_request
 
 from backend.modules.account import Account
-from backend.util.authentication import Local, Detect
+from backend.util.authentication import check
 
 log = create_log('api')
 
@@ -17,15 +17,9 @@ def allowed(func):
             account_id = args[1].headers.get('account') or Account.register()
             token = args[1].headers.get('token')
 
-            exists, valid = await Detect(account_id=account_id, token=token).validate()
-            if not exists:
-                _, valid = await Local(account_id=account_id, token=token).validate()
-                if not valid:
-                    log.warning(f'[{account_id}] Invalid Local login attempted')
-                    return web.Response(status=403, text='Unauthorized request')
-            elif exists and not valid:
-                log.warning(f'[{account_id}] Invalid Detect login attempted')
-                return web.Response(status=403, text='Unauthorized request')
+            valid_creds = await check(account_id=account_id, token=token)
+            if not valid_creds:
+                return web.Response(status=403)
 
             params['account'] = Account(account_id=account_id)
             params['data'] = await strip_request(args[1])

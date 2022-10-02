@@ -13,8 +13,8 @@ class Server {
             'You can host alternative Server instances and log in below.' +
             `You are logged into ${creds.host} as ${creds.account}.`);
 
-        const ip = $('<input id="i-ip" class="plugin-input" placeholder="Enter an IP">');
-        const account = $('<input id="i-account" class="plugin-input" placeholder="Enter account ID" type="text">');
+        const ip = $('<input id="i-ip" class="plugin-input" placeholder="Enter an IP" spellcheck="false">');
+        const account = $('<input id="i-account" class="plugin-input" placeholder="Enter account ID" type="text" spellcheck="false">');
         const token = $('<input id="i-token" class="plugin-input" placeholder="Enter a token" type="password">');
         const submit = $('<button class="plugin-button">').text('Login').on('click', (ev) => {
             ev.stopPropagation();
