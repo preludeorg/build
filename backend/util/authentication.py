@@ -19,13 +19,6 @@ class Authentication(ABC):
         pass
 
 
-class Anonymous(Authentication):
-    """ Anonymous auth allows arbitrary account registration """
-
-    async def validate(self):
-        return True
-
-
 class Local(Authentication):
     """ Local auth validates the global token is being used """
 
