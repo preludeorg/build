@@ -88,28 +88,19 @@ let Api = {
     },
     login: (callback) => {
         const creds = Api.credentials();
-        Api.register(creds).then(accountID => {
+        Api.register(creds).then(res => {
+            const accountID = res['account_id'];
             Api.setCredentials(creds.host, accountID, creds.token);
             Api.ttp = new TTPRoutes(creds.host, accountID, creds.token);
             Api.dcf = new DCFRoutes(creds.host, accountID, creds.token);
-        }).finally(() => {
-           callback();
+            callback();
+        }).catch(() => {
+            $('#spinner').hide();
         });
     },
     register: (creds) => {
-        const hd = {account: creds.account, token: creds.token};
-        return fetch(`${creds.host}/register`, {method: 'POST', headers: hd})
-            .then(res => {
-                if (!res.ok) {
-                    localStorage.removeItem('PRELUDE_SERVER');
-                    localStorage.removeItem('PRELUDE_ACCOUNT_ID');
-                    localStorage.removeItem('PRELUDE_ACCOUNT_TOKEN');
-                    location.reload();
-                }
-                return res.json();
-            }).then(res => {
-                return res['account_id'];
-            });
+        const routes = new Routes(creds.host, creds.account, creds.token);
+        return routes.handleRoute(`${creds.host}/register`, {method: 'POST'}, true);
     },
     async ping(host, account, token) {
         const headers = {account: account, token: token};

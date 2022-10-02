@@ -1,7 +1,6 @@
 import Api from "/client/js/api.js";
 import Templates from "/client/js/dom/templates.js";
 import RightClick from "/client/js/dom/rightclick.js";
-import Server from "/client/js/plugins/server.js";
 import Code from "/client/js/screens/code.js";
 
 let Page = {
@@ -10,16 +9,12 @@ let Page = {
         code: new Code(),
     },
     build: () => {
-        $('#manifest').empty();
-        $('#plugins').empty();
-
         Api.ttp.manifest().then(manifest => {
             Object.values(manifest).forEach(ttp => {
                 Page.addTTP(ttp);
             });
         }).finally(() => {
             RightClick.attach();
-            Page.addPlugin(new Server());
             $('#spinner').hide();
         });
     },

@@ -1,5 +1,6 @@
 import Api from "/client/js/api.js";
 import Page from "/client/js/page.js";
+import Server from "/client/js/plugins/server.js";
 
 window.onload = () => {
     if ('serviceWorker' in navigator) {
@@ -15,5 +16,6 @@ const callback = function() {
 };
 
 $(document).ready(function () {
+    Page.addPlugin(new Server());
     Api.login(callback);
 });

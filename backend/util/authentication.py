@@ -55,10 +55,11 @@ class Detect(Authentication):
                 elif resp.status in [403, 412]:
                     self.log.warning(f'[{self.account_id}] Invalid Detect login attempted')
                     return True, False
+                else:
+                    return False, False
         except aiohttp.ClientConnectionError or aiohttp.ClientConnectorError:
-            self.log.error(f'Prelude Service is offline ({urlparse(url).netloc})')
+            raise ConnectionError(f'Prelude Service is offline ({urlparse(url).netloc})')
         except aiohttp.InvalidURL:
-            self.log.error(f'Prelude Service invalid ({urlparse(url).netloc})')
+            raise FileNotFoundError(f'Prelude Service invalid ({urlparse(url).netloc})')
         except asyncio.TimeoutError:
-            self.log.error(f'Prelude Service timed out ({urlparse(url).netloc})')
-        return False, False
+            raise TimeoutError(f'Prelude Service timed out ({urlparse(url).netloc})')
