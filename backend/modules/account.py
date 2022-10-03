@@ -35,6 +35,7 @@ class Manifest:
         del manifest[ttp_id]
         await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
 
+
 class DCF:
 
     def __init__(self, account_id: str):
