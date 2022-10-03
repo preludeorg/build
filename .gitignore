@@ -3,5 +3,9 @@
 *.pyc
 *__pycache__*
 /node_modules
-/client/dist
 *.lock
+
+# do not commit auto-generated files
+/client/dist
+client/css/app.css
+client/css/app.css.map
