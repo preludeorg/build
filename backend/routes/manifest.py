@@ -28,13 +28,13 @@ class ManifestRoutes:
         if ttp:
             await account.manifest.add(
                 ttp_id=identifier,
-                name=data.get('name', ttp.get(identifier).get('name')),
-                classification=data.get('classification', ttp.get(identifier).get('classification'))
+                name=data.get('name', ttp.get('name')),
+                classification=data.get('classification', ttp.get('classification'))
             )
         else:
             await account.manifest.add(ttp_id=identifier, name=data.get('name'))
             ttp = await account.manifest.select(ttp_id=identifier)
-        return web.json_response(ttp.get(identifier))
+        return web.json_response(ttp)
 
     @allowed
     async def _get_manifest_entry(self, account: Account, data: dict) -> web.Response:
