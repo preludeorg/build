@@ -2,13 +2,13 @@ import resource
 from functools import wraps
 
 from aiohttp import web
-from vertebrae.core import create_log, strip_request
+from vertebrae.core import strip_request
 from vertebrae.service import Service
 
 from backend.modules.account import Account
 from backend.util.authentication import check
 
-log = create_log('api')
+log = Service.create_log('api')
 cache = Service.db('cache')
 
 
