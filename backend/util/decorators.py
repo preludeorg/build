@@ -3,11 +3,13 @@ from functools import wraps
 
 from aiohttp import web
 from vertebrae.core import create_log, strip_request
+from vertebrae.service import Service
 
 from backend.modules.account import Account
 from backend.util.authentication import check
 
 log = create_log('api')
+cache = Service.db('cache')
 
 
 def allowed(func):
@@ -17,9 +19,12 @@ def allowed(func):
             account_id = args[1].headers.get('account') or Account.register()
             token = args[1].headers.get('token')
 
-            valid_creds = await check(account_id=account_id, token=token)
-            if not valid_creds:
-                return web.Response(status=403)
+            cached = await cache.get(account_id)
+            if not cached:
+                valid_creds = await check(account_id=account_id, token=token)
+                if not valid_creds:
+                    return web.Response(status=403)
+                await cache.set(account_id, Service.hash(token), ex=60)
 
             params['account'] = Account(account_id=account_id)
             params['data'] = await strip_request(args[1])

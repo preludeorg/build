@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 import aiohttp
 from vertebrae.config import Config
-from vertebrae.service import Service
+from vertebrae.core import create_log
 
 
 async def check(account_id, token):
@@ -23,7 +23,7 @@ class Authentication(ABC):
     def __init__(self, account_id: str, token: str):
         self.account_id = account_id
         self.token = token
-        self.log = Service.create_log('auth')
+        self.log = create_log('auth')
 
     @abstractmethod
     async def validate(self):
