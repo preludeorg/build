@@ -3,44 +3,6 @@ import uuid
 from vertebrae.service import Service
 
 from backend.queries.query import Query
-from backend.util.link import Link
-
-
-class DCF:
-
-    def __init__(self, account_id: str):
-        self.account_id = account_id
-        self.log = Service.create_log('dcf')
-        self.file = Service.db(store='directory')
-        self.relational = Service.db(store='relational')
-        self._accounts_bucket = f'{self.file.name}/{account_id}'
-        self.query = Query()
-
-    async def select(self, name: str) -> str:
-        """ Locate a single DCF """
-        self.log.debug(f'[{self.account_id}] Viewing DCF: {name}')
-        return await self.file.read(filename=f'{self._accounts_bucket}/src/{name}')
-
-    async def add(self, name: str, code: str) -> None:
-        """ Upload a new or updated DCF """
-        self.log.debug(f'[{self.account_id}] Updating DCF: {name}')
-        await self.file.write(filename=f'{self._accounts_bucket}/src/{name}', contents=code)
-
-    async def remove(self, name: str) -> None:
-        """ Remove a DCF """
-        self.log.debug(f'[{self.account_id}] Deleting DCF: {name}')
-        await self.file.delete(filename=f'{self._accounts_bucket}/src/{name}')
-
-    async def links(self, name: str) -> [Link]:
-        """ Get results for a given DCF """
-        params = dict(account_id=self.account_id, name=name)
-        hits = await self.relational.fetch(self.query.activity(), params)
-        return [Link(name=h[0], status=h[1], cpu=h[2], created=h[3]) for h in hits]
-
-    async def code_files(self, ttp_id: str):
-        """ Find all code files for a given TTP """
-        self.log.debug(f'[{self.account_id}] Viewing TTP: {ttp_id}')
-        return [dcf async for dcf in self.file.walk(bucket=f'{self._accounts_bucket}/src', prefix=ttp_id)]
 
 
 class Manifest:
@@ -70,13 +32,44 @@ class Manifest:
         await self.database.execute(self.query.remove_manifest(), params)
 
 
+class DCF:
+
+    def __init__(self, account_id: str):
+        self.account_id = account_id
+        self.log = Service.create_log('dcf')
+        self.file = Service.db(store='directory')
+        self.relational = Service.db(store='relational')
+        self._accounts_bucket = f'{self.file.name}/{account_id}'
+        self.query = Query()
+
+    async def select(self, name: str) -> str:
+        """ Locate a single DCF """
+        self.log.debug(f'[{self.account_id}] Viewing DCF: {name}')
+        return await self.file.read(filename=f'{self._accounts_bucket}/src/{name}')
+
+    async def add(self, name: str, code: str) -> None:
+        """ Upload a new or updated DCF """
+        self.log.debug(f'[{self.account_id}] Updating DCF: {name}')
+        await self.file.write(filename=f'{self._accounts_bucket}/src/{name}', contents=code)
+
+    async def remove(self, name: str) -> None:
+        """ Remove a DCF """
+        self.log.debug(f'[{self.account_id}] Deleting DCF: {name}')
+        await self.file.delete(filename=f'{self._accounts_bucket}/src/{name}')
+
+    async def code_files(self, ttp_id: str):
+        """ Find all code files for a given TTP """
+        self.log.debug(f'[{self.account_id}] Viewing TTP: {ttp_id}')
+        return [dcf async for dcf in self.file.walk(bucket=f'{self._accounts_bucket}/src', prefix=ttp_id)]
+
+
 class Account:
 
     def __init__(self, account_id: str):
         self.account_id = account_id
         # internal modules
-        self.dcf = DCF(account_id=account_id)
         self.manifest = Manifest(account_id=account_id)
+        self.dcf = DCF(account_id=account_id)
 
     @staticmethod
     def register():

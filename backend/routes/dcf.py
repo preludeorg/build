@@ -13,7 +13,6 @@ class DCFRoutes:
             Route('GET', '/dcf/{name}', self._get_dcf),
             Route('POST', '/dcf/{name}', self._post_dcf),
             Route('DELETE', '/dcf/{name}', self._del_dcf),
-            Route('GET', '/dcf/{name}/links', self._get_links),
             Route('POST', '/dcf/{name}/submit', self._submit_dcf)
         ]
 
@@ -31,11 +30,6 @@ class DCFRoutes:
     async def _del_dcf(self, account: Account, data: dict) -> web.Response:
         await account.dcf.remove(name=data['name'])
         return web.Response(status=200)
-
-    @allowed
-    async def _get_links(self, account: Account, data: dict) -> web.json_response:
-        links = await account.dcf.links(name=data['name'])
-        return web.json_response([link.display for link in links])
 
     @allowed
     async def _submit_dcf(self, account: Account, data: dict) -> web.Response:
