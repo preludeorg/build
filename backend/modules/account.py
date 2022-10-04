@@ -4,8 +4,6 @@ import uuid
 from vertebrae.config import Config
 from vertebrae.service import Service
 
-from backend.queries.query import Query
-
 
 class Manifest:
 
@@ -14,7 +12,6 @@ class Manifest:
         self.log = Service.create_log(name='manifest')
         self.file = Service.db(store='s3')
         self._accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{account_id}'
-        self.query = Query()
 
     async def select(self, ttp_id=None):
         """ Get a copy of the manifest """
@@ -47,7 +44,6 @@ class DCF:
         self.file = Service.db(store='directory')
         self.relational = Service.db(store='relational')
         self._accounts_bucket = f'{self.file.name}/{account_id}'
-        self.query = Query()
 
     async def select(self, name: str) -> str:
         """ Locate a single DCF """
