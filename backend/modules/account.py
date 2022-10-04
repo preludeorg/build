@@ -1,5 +1,7 @@
+import json
 import uuid
 
+from vertebrae.config import Config
 from vertebrae.service import Service
 
 from backend.queries.query import Query
@@ -9,27 +11,32 @@ class Manifest:
 
     def __init__(self, account_id: str):
         self.account_id = account_id
-        self.log = Service.create_log('manifest')
-        self.database = Service.db(store='relational')
+        self.log = Service.create_log(name='manifest')
+        self.file = Service.db(store='s3')
+        self._accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{account_id}'
         self.query = Query()
 
-    async def select(self, ttp_id=None) -> dict:
+    async def select(self, ttp_id=None):
         """ Get a copy of the manifest """
-        query = self.query.single_manifest() if ttp_id else self.query.manifest()
-        hits = await self.database.fetch(query, dict(account_id=self.account_id, id=ttp_id))
-        return {hit[0]: dict(id=hit[0], name=hit[1], classification=hit[2]) for hit in hits}
+        try:
+            manifest = json.loads(await self.file.read(filename=f'{self._accounts_bucket}/manifest.json'))
+            return manifest.get(ttp_id, manifest)
+        except FileNotFoundError:
+            await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps({}))
 
     async def add(self, ttp_id: str, name: str, classification='unknown') -> None:
         """ Add an entry to the manifest """
         self.log.debug(f'[{self.account_id}] Adding TTP: {ttp_id} ({classification})')
-        params = dict(account_id=self.account_id, id=ttp_id, name=name, classification=classification)
-        await self.database.execute(self.query.update_manifest(), params)
+        manifest = await self.select()
+        manifest.append(dict(id=ttp_id, name=name, classification=classification))
+        await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
 
     async def remove(self, ttp_id: str) -> None:
         """ Remove an entry from the manifest """
         self.log.debug(f'[{self.account_id}] Deleting TTP: {ttp_id}')
-        params = dict(account_id=self.account_id, id=ttp_id)
-        await self.database.execute(self.query.remove_manifest(), params)
+        manifest = await self.select()
+        del manifest[ttp_id]
+        await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
 
 
 class DCF:
