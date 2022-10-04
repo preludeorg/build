@@ -262,6 +262,7 @@ ul {
 }
 
 #ttp-template {
+  position: relative;
   margin: 4px 0 0 0;
   padding: 4px 8px;
   font-size: 16px;
@@ -272,6 +273,15 @@ ul {
 #ttp-template:hover {
   background-color: var(--color-selection);
   border-radius: 4px;
+}
+#ttp-template .vertical-ellipsis {
+  height: 16px;
+  width: 16px;
+  filter: var(--filter-icon-color);
+  top: 8px;
+  right: 4px;
+  position: absolute;
+  background: none;
 }
 #ttp-template #ttp-row {
   display: flex;
@@ -302,11 +312,6 @@ ul {
   transform: rotate(135deg);
   border-top: 2px solid #fff;
   border-right: 2px solid #fff;
-}
-#ttp-template #ttp-row .more-icon {
-  height: 16px;
-  width: 16px;
-  filter: var(--filter-icon-color);
 }
 #ttp-template #ttp-row .image-active {
   filter: invert(100%);

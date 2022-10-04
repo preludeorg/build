@@ -28,12 +28,15 @@ class TTP {
     }
     setClick() {
         this.dom.on('click', (ev) => {
-            ev.stopPropagation();
+            if (!$(ev.target).hasClass("vertical-ellipsis")) {
+                this.dom.toggleClass('ttp-highlight');
+            }
+        })
+        this.dom.find('#ttp-row').on('click', (ev) => {
             ev.preventDefault();
 
             this.dom.find('.dropdown-arrow').toggleClass('dropdown-arrow-active');
             this.dom.find('img').toggleClass('image-active');
-            this.dom.toggleClass('ttp-highlight');
 
             const visibleDCF = this.dom.find('#dcf-listing');
             if (visibleDCF.children().length > 0) {
