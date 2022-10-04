@@ -1,13 +1,15 @@
 body {
   --color-main: #21252B;
-  --color-secondary: #272B33;
+  --color-secondary:#272B33;
   --color-accent: #32353c;
   --color-button: #DDDDDD;
   --color-theme: #272B33;
-  --color-selection: #313640;
-  --color-lighter-selection: #4f576a;
+  --color-selection: #323844;
+  --color-open: #444C5B;
+  --color-lighter-selection: #38597A;
   --color-success: #46C227;
-  --filter-icon-color: invert(99%) sepia(4%) saturate(805%) hue-rotate(198deg) brightness(114%) contrast(73%);
+  --filter-icon-color: invert(60%) sepia(19%) saturate(407%) hue-rotate(166deg) brightness(93%) contrast(88%);
+  --filter-color: #7E95A9;
   font-family: "IBM Plex Sans", sans-serif;
   font-size: 16px;
   height: 100vh;
@@ -93,7 +95,7 @@ ul {
   flex: 0 0 auto;
   height: 100%;
   width: 20%;
-  padding: 20px 8px 20px 20px;
+  padding: 16px 4px 16px 16px;
   box-sizing: border-box;
   color: white;
 }
@@ -219,9 +221,16 @@ ul {
   flex: 0 0 auto;
   padding: 0px;
   background: var(--color-secondary);
-  border: 1px solid var(--color-accent);
-  border-radius: 8px;
+  border: 1px solid var(--color-lighter-selection);
+  border-radius: 4px;
   align-items: center;
+  column-gap: 12px;
+}
+#directory-listing .panel-filter #search {
+  height: 16px;
+  width: 16px;
+  filter: var(--filter-icon-color);
+  padding-left: 12px;
 }
 #directory-listing .panel-filter #manifest-filter {
   background: var(--color-secondary);
@@ -230,22 +239,22 @@ ul {
   display: block;
   font-size: 14px;
   font-weight: 100;
-  padding: 1rem;
+  padding: 0px;
   outline: none;
   width: 100%;
-  border-radius: 8px;
 }
-#directory-listing .panel-filter #add-ttp-container:hover {
-  background-color: var(--color-selection);
-  border-radius: 0px 8px 8px 0;
-  border: none;
+#directory-listing .panel-filter #manifest-filter::placeholder {
+  color: var(--filter-color);
+}
+#directory-listing .panel-filter #add-ttp-container {
+  background-color: var(--color-lighter-selection);
+  cursor: pointer;
 }
 #directory-listing .panel-filter #add-ttp-container #add-ttp {
   height: 20px;
   width: 20px;
-  padding: 14px 16px;
-  filter: var(--filter-icon-color);
-  cursor: pointer;
+  padding: 8px 12px;
+  filter: invert(100%);
 }
 #directory-listing #manifest {
   margin: 0px;
@@ -253,62 +262,80 @@ ul {
 }
 
 #ttp-template {
-  margin: 5px 0 0;
-  padding: 10px 10px 10px 5px;
+  margin: 4px 0 0 0;
+  padding: 4px 8px;
   font-size: 16px;
+  border: 1px solid var(--color-main);
+  border-radius: 4px;
   cursor: pointer;
 }
 #ttp-template:hover {
   background-color: var(--color-selection);
-  border-radius: 8px;
+  border-radius: 4px;
 }
 #ttp-template #ttp-row {
   display: flex;
   flex-direction: row;
   align-items: center;
+  column-gap: 6px;
 }
 #ttp-template #ttp-row .ttp-classification {
   transform: scale(0.75);
-  filter: invert(99%) sepia(4%) saturate(805%) hue-rotate(198deg) brightness(114%) contrast(73%);
-  margin-right: 5px;
+  filter: var(--filter-icon-color);
 }
 #ttp-template #ttp-row #ttp-name {
   margin: 0px;
+  font-size: 14px;
   flex-grow: 1;
 }
+#ttp-template #ttp-row #ttp-name:focus {
+  outline: none;
+  color: var(--filter-color);
+}
 #ttp-template #ttp-row .dropdown-arrow {
-  padding: 3px;
-  border-top: 2px solid var(--color-button);
-  border-right: 2px solid var(--color-button);
+  padding: 2px;
+  border-top: 2px solid var(--filter-color);
+  border-right: 2px solid var(--filter-color);
   transform: rotate(45deg);
 }
 #ttp-template #ttp-row .dropdown-arrow-active {
   transform: rotate(135deg);
+  border-top: 2px solid #fff;
+  border-right: 2px solid #fff;
+}
+#ttp-template #ttp-row .more-icon {
+  height: 16px;
+  width: 16px;
+  filter: var(--filter-icon-color);
+}
+#ttp-template #ttp-row .image-active {
+  filter: invert(100%);
 }
 #ttp-template #dcf-listing {
-  padding-left: 20px;
+  padding: 0;
 }
 
 .dcf-template {
   display: flex;
   flex-direction: row;
-  column-gap: 10px;
+  column-gap: 6px;
   font-size: 14px;
+  margin-top: 2px;
   cursor: pointer;
 }
 .dcf-template:first-child {
-  margin-top: 10px;
+  margin-top: 4px;
 }
 .dcf-template:hover {
-  background-color: var(--color-lighter-selection);
-  box-shadow: -20px 0 0 var(--color-lighter-selection);
-  border-radius: 8px;
+  background-color: var(--color-selection);
+  border-radius: 4px;
 }
 .dcf-template #dcf-row {
   display: flex;
   flex-direction: row;
   align-items: center;
   column-gap: 10px;
+  padding-left: 32px;
 }
 .dcf-template #dcf-row #platform-logo {
   width: 15px;
@@ -319,18 +346,19 @@ ul {
   filter: var(--filter-icon-color);
 }
 .dcf-template #dcf-row p {
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 .ttp-highlight {
-  background-color: var(--color-selection);
-  border-radius: 8px;
+  border: 1px solid var(--color-open) !important;
+}
+.ttp-highlight:hover {
+  background-color: transparent !important;
 }
 
 .dcf-highlight {
   background-color: var(--color-lighter-selection);
-  box-shadow: -20px 0 0 var(--color-lighter-selection);
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .plugin-box {

@@ -32,6 +32,7 @@ class TTP {
             ev.preventDefault();
 
             this.dom.find('.dropdown-arrow').toggleClass('dropdown-arrow-active');
+            this.dom.find('img').toggleClass('image-active');
             this.dom.toggleClass('ttp-highlight');
 
             const visibleDCF = this.dom.find('#dcf-listing');

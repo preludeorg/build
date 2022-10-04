@@ -30,9 +30,10 @@
 		<div id="directory-listing" class="panel-left">
 		  <div class="panel-container-vertical">
 			<div class="panel-filter">
+			  <img id="search" src="/client/assets/search.svg"/>
 			  <input id="manifest-filter" placeholder="Looking for a TTP?" spellcheck="false"/>
 			  <div id="add-ttp-container">
-				<img id="add-ttp" alt="Add TTP" src="/client/assets/add-circle.svg"/>
+				<img id="add-ttp" alt="Add TTP" src="/client/assets/file-add-line.svg"/>
 			  </div>
 			</div>
 			<ul id="manifest"></ul>
@@ -52,7 +53,7 @@
 				</div>
 				<div id="welcome-splitter"></div>
 				<div class="welcome-steps">
-				  <img src="/client/assets/add-circle.svg"/>
+				  <img src="/client/assets/file-add-line.svg"/>
 				  <span>Create a TTP</span>
 				</div>
 				<div class="welcome-steps">
@@ -106,9 +107,10 @@
 
 <li id="ttp-template" class="ttp-template">
   <div id="ttp-row">
+	<div class="dropdown-arrow"></div>
 	<img class="ttp-classification"/>
 	<p id="ttp-name" spellcheck="false" class="file"></p>
-	<div class="dropdown-arrow"></div>
+	<img class="more-icon" src="/client/assets/more.svg"/>
   </div>
   <ul id="dcf-listing"></ul>
 </li>

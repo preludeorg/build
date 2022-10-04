@@ -18,15 +18,14 @@
 .context-menu-list {
   position: absolute; 
   display: inline-block;
-  min-width: 13em;
-  max-width: 26em;
-  padding: 0 5px;
+  width: 260px;
+  padding: 0 4px;
   margin: 0.3em 12px;
   font-family: inherit;
   font-size: 14px;
   list-style-type: none;
-  background-color: var(--color-selection);
-  border-left: 2px solid rgba(0, 0, 0, .5) ;
+  background-color: var(--color-main);
+  border: 1px solid var(--color-open);
   filter: opacity(0.98);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, .5);
@@ -35,17 +34,17 @@
 .context-menu-item {
   position: relative;
   box-sizing: content-box;
-  padding: 10px 10px 10px 30px;
-  margin: 5px 0;
-  border-radius: 8px;
+  padding: 10px 14px 10px 34px;
+  margin: 4px 0;
+  border-radius: 4px;
   color: #2f2f2f;
-  background: var(--color-selection);
+  background: var(--color-main);
   color: #fff;
 }
 
 .context-menu-separator {
   padding: 0; 
-  margin: 5px 5px;
+  margin: 5px 2px;
   border-bottom: 1px solid var(--color-button);
   filter: opacity(0.3);
 }
@@ -53,7 +52,11 @@
 .context-menu-item.context-menu-hover {
   color: #fff;
   cursor: pointer; 
-  background-color: var(--color-lighter-selection);
+  background-color: var(--color-selection);
+}
+
+.context-menu-submenu {
+  padding: 10px;
 }
 
 .context-menu-submenu:after {
@@ -64,7 +67,7 @@
   width: 0;
   height: 0;
   content: '';
-  border-color: transparent transparent transparent #fff;
+  border-color: transparent transparent transparent var(--filter-color);
   border-style: solid;
   border-width: .25em 0 .25em .25em;
   transform: translateY(-50%);
@@ -76,10 +79,10 @@
   position: absolute;
   width: 24px;
   height: 24px;
-  top: 15%;
-  left: 0;
+  top: 18%;
+  left: 2%;
   margin-left: 0;
-  transform: scale(0.75);
+  transform: scale(0.65);
   filter: var(--filter-icon-color);
   background-repeat: no-repeat;
 }

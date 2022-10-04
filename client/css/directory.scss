@@ -13,9 +13,17 @@
         flex: 0 0 auto;
         padding: 0px;
         background: var(--color-secondary);
-        border: 1px solid var(--color-accent);
-        border-radius: 8px;
+        border: 1px solid var(--color-lighter-selection);
+        border-radius: 4px;
         align-items: center;
+        column-gap: 12px;
+
+        #search {
+            height: 16px;
+            width: 16px;
+            filter: var(--filter-icon-color);
+            padding-left: 12px;
+        }
 
         #manifest-filter {
             background: var(--color-secondary);
@@ -24,25 +32,24 @@
             display: block;
             font-size: 14px;
             font-weight: 100;
-            padding: 1rem;
+            padding: 0px;
             outline: none;
             width: 100%;
-            border-radius: 8px;
+
+            &::placeholder {
+                color: var(--filter-color);
+            }
         }
 
         #add-ttp-container {
-            &:hover {
-                background-color: var(--color-selection);
-                border-radius: 0px 8px 8px 0;
-                border: none;
-            }
+            background-color: var(--color-lighter-selection);
+            cursor: pointer;
 
             #add-ttp {
                 height: 20px;
                 width: 20px;
-                padding: 14px 16px;
-                filter: var(--filter-icon-color);
-                cursor: pointer;
+                padding: 8px 12px;
+                filter: invert(100%);
             }
         }
     }
@@ -54,64 +61,84 @@
 }
 
 #ttp-template {
-    margin: 5px 0 0;
-    padding: 10px 10px 10px 5px;
+    margin: 4px 0 0 0;
+    padding: 4px 8px;
     font-size: 16px;
+    border: 1px solid var(--color-main);
+    border-radius: 4px;
     cursor: pointer;
 
     &:hover {
         background-color: var(--color-selection);
-        border-radius: 8px;
+        border-radius: 4px;
     }
 
     #ttp-row {
         display: flex;
         flex-direction: row;
         align-items: center;
+        column-gap: 6px;
 
         .ttp-classification {
             transform: scale(0.75);
-            filter: invert(99%) sepia(4%) saturate(805%) hue-rotate(198deg) brightness(114%) contrast(73%);
-            margin-right: 5px;
+            filter: var(--filter-icon-color);
         }
 
         #ttp-name {
             margin: 0px;
+            font-size: 14px;
             flex-grow: 1;
+
+            &:focus {
+                outline: none;
+                color: var(--filter-color);
+            }
         }
 
         .dropdown-arrow {
-            padding: 3px;
-            border-top: 2px solid var(--color-button);
-            border-right: 2px solid var(--color-button);
+            padding: 2px;
+            border-top: 2px solid var(--filter-color);
+            border-right: 2px solid var(--filter-color);
             transform: rotate(45deg);
         }
 
         .dropdown-arrow-active {
             transform: rotate(135deg);
+            border-top: 2px solid #fff;
+            border-right: 2px solid #fff;
+        }
+
+        .more-icon {
+            height: 16px;
+            width: 16px;
+            filter: var(--filter-icon-color);
+        }
+
+        .image-active {
+            filter: invert(100%);
         }
     }
 
     #dcf-listing {
-        padding-left: 20px;
+        padding: 0;
     }
 }
 
 .dcf-template {
     display: flex;
     flex-direction: row;
-    column-gap: 10px;
+    column-gap: 6px;
     font-size: 14px;
+    margin-top: 2px;
     cursor: pointer;
 
     &:first-child {
-        margin-top: 10px;
+        margin-top: 4px;
     }
 
     &:hover {
-        background-color: var(--color-lighter-selection);
-        box-shadow: -20px 0 0 var(--color-lighter-selection);
-        border-radius: 8px;
+        background-color: var(--color-selection);
+        border-radius: 4px;
     }
 
     #dcf-row {
@@ -119,6 +146,7 @@
         flex-direction: row;
         align-items: center;
         column-gap: 10px;
+        padding-left: 32px;
 
         #platform-logo {
             width: 15px;
@@ -130,18 +158,20 @@
         }
 
         p {
-            margin: 10px 0;
+            margin: 8px 0;
         }
     }
 }
 
 .ttp-highlight {
-    background-color: var(--color-selection);
-    border-radius: 8px;
+    border: 1px solid var(--color-open) !important;
+
+    &:hover {
+        background-color: transparent !important;
+    }
 }
 
 .dcf-highlight {
     background-color: var(--color-lighter-selection);
-    box-shadow: -20px 0 0 var(--color-lighter-selection);
-    border-radius: 8px;
+    border-radius: 4px;
 }
