@@ -10,6 +10,11 @@ pip install -r requirements.txt
 python server.py
 ```
 
+To compile your CSS:
+```
+sass client/css/app.scss client/css/app.css
+```
+
 ## Advanced
 
 ### Back End
