@@ -6,6 +6,7 @@ from vertebrae.service import Service
 
 from pathlib import Path
 
+
 class Manifest:
 
     def __init__(self, account_id: str):
