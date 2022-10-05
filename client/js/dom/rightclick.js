@@ -20,7 +20,7 @@ let openContextMenu = (selector, trigger='right') => {
                         .removeClass('context-menu-active');
                     menu.find(`li.context-menu-item.context-menu-icon.context-menu-icon-${key.substring(key.indexOf('!') + 1)}`)
                         .addClass('context-menu-active');
-                    $(this).find('.ttp-classification').attr("src", `/client/assets/classifications/${classification}.svg`);
+                    $(this).find('.ttp-classification').attr("src", `/static/assets/classifications/${classification}.svg`);
                 });
             } else {
                 const name = `${Page.id}_${key}`;
