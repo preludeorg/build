@@ -43,6 +43,7 @@
 
         #add-ttp-container {
             background-color: var(--color-lighter-selection);
+            font-size: 0;
             cursor: pointer;
 
             #add-ttp {
@@ -87,7 +88,7 @@
     #ttp-row {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         column-gap: 6px;
 
         .ttp-classification {
@@ -96,6 +97,8 @@
         }
 
         #ttp-name {
+            max-width: 75%;
+            word-wrap: break-word;
             margin: 0px;
             font-size: 14px;
             flex-grow: 1;
@@ -107,6 +110,7 @@
         }
 
         .dropdown-arrow {
+            margin-top: 8px;
             padding: 2px;
             border-top: 2px solid var(--filter-color);
             border-right: 2px solid var(--filter-color);
