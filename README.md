@@ -13,7 +13,7 @@ python server.py
 
 To compile your CSS:
 ```
-sass client/css/app.scss client/css/app.css
+yarn run sass:compile
 ```
 
 ## Advanced
