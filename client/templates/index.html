@@ -1,5 +1,4 @@
-<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-<html>
+<!DOCTYPE html>
 	<head>
 		<title>Prelude Operator</title>
 		<!-- PWA requirements -->
@@ -9,16 +8,17 @@
 		<meta name="theme-color" content="black">
 		<link rel="manifest" href="/client/manifest.json">
 		<!-- base CSS and jQuery -->
-		<link rel="stylesheet" href="/client/css/app.css">
-		<script src="/client/js/lib/jquery-3.6.0.js"></script>
+		<link rel="stylesheet" href="/static/css/app.css">
+		<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+		<script src="/static/js/lib/jquery-3.6.0.js"></script>
 		<!-- code mirror -->
-		<script src="/client/js/lib/codemirror.js"></script>
-		<link rel="stylesheet" href="/client/css/codemirror.css" />
-		<link rel="stylesheet" href="/client/css/codemirror-material-darker.css" />
+		<script src="/static/js/lib/codemirror.js"></script>
+		<link rel="stylesheet" href="/static/css/codemirror.css" />
+		<link rel="stylesheet" href="/static/css/codemirror-material-darker.css" />
 		<!-- embedded external libraries -->
-		<link rel="stylesheet" href="/client/css/contextmenu.css">
-		<script src="/client/js/lib/resizable.js"></script>
-		<script src="/client/js/lib/contextmenu.js"></script>
+		<link rel="stylesheet" href="/static/css/contextmenu.css">
+		<script src="/static/js/lib/resizable.js"></script>
+		<script src="/static/js/lib/contextmenu.js"></script>
 	</head>
 	<body>
 	  <div id="spinner" class="simple-spinner">
@@ -33,7 +33,7 @@
 			  <img id="search" src="/client/assets/search.svg"/>
 			  <input id="manifest-filter" placeholder="Looking for a TTP?" spellcheck="false"/>
 			  <div id="add-ttp-container">
-				<img id="add-ttp" alt="Add TTP" src="/client/assets/file-add-line.svg"/>
+				<img id="add-ttp" alt="Add TTP" src="/static/assets/file-add-line.svg"/>
 			  </div>
 			</div>
 			<ul id="manifest"></ul>
@@ -48,20 +48,20 @@
 			  <div id="screen-welcome" class="screen">
 				<div id="welcome-line">Welcome to Operator</div>
 				<div class="welcome-steps">
-				  <img src="/client/assets/book.svg"/>
+				  <img src="/static/assets/book.svg"/>
 				  <span>Read our <a href="https://docs.prelude.org">Documentation</a></span>
 				</div>
 				<div id="welcome-splitter"></div>
 				<div class="welcome-steps">
-				  <img src="/client/assets/file-add-line.svg"/>
+				  <img src="/static/assets/file-add-line.svg"/>
 				  <span>Create a TTP</span>
 				</div>
 				<div class="welcome-steps">
-				  <img src="/client/assets/pointer.svg"/>
+				  <img src="/static/assets/pointer.svg"/>
 				  <span>Add a procedure</span>
 				</div>
 				<div class="welcome-steps">
-				  <img src="/client/assets/play.svg"/>
+				  <img src="/static/assets/play.svg"/>
 				  <span>Test</span>
 				</div>
 			  </div>
@@ -77,7 +77,7 @@
 			  <div class="control-bar">
 			  <div id="deploy-dcf" class="deploy-button">
 				<span>Test DCF</span>
-				<img src="/client/assets/play.svg" />
+				<img src="/static/assets/play.svg" />
 			  </div>
 			  </div>
 			  <div id="dcf-results"></div>
@@ -110,8 +110,9 @@
 	<div class="dropdown-arrow"></div>
 	<img class="ttp-classification"/>
 	<p id="ttp-name" spellcheck="false" class="file"></p>
+	<img class="more-icon" src="/static/assets/more.svg"/>
   </div>
-  <img class="vertical-ellipsis" src="/client/assets/vertical-ellipsis.svg"/>
+  <img class="vertical-ellipsis" src="/static/assets/vertical-ellipsis.svg"/>
   <ul id="dcf-listing"></ul>
 </li>
 
@@ -122,8 +123,6 @@
   </div>
 </li>
 
-<!-- Start the app by loading the main JS -->
-<script type="module" src="/client/js/main.js"></script>
 <!-- Ensure all panels can resize -->
 <script>
 	$(".panel-left").resizable({

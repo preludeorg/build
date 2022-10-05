@@ -1,5 +1,5 @@
-import Api from "/client/js/api.js";
-import Page from "/client/js/page.js";
+import Api from "api.js";
+import Page from "page.js";
 
 class TTP {
     constructor(ttp) {
@@ -22,7 +22,7 @@ class TTP {
                 }
             });
         this.dom.find('.ttp-classification')
-            .attr("src",`/client/assets/classifications/${this.ttp.classification}.svg`);
+            .attr("src",`/static/assets/classifications/${this.ttp.classification}.svg`);
         $('ul.context-menu-list').find(`li.context-menu-item.context-menu-icon.context-menu-icon-${this.ttp.classification}`)
             .addClass('context-menu-active');
     }
@@ -68,7 +68,7 @@ class DCF {
     }
     write() {
         this.dom.find('#platform-logo')
-            .attr("src",`/client/assets/logos/${this.platform.substr(0, this.platform.indexOf('-'))}.svg`);
+            .attr("src",`/static/assets/logos/${this.platform.substr(0, this.platform.indexOf('-'))}.svg`);
         this.dom.find('#platform').data('name', this.name).text(this.platform);
     }
     setClick() {

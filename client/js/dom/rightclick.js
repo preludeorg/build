@@ -1,5 +1,5 @@
-import Api from "/client/js/api.js";
-import Page from "/client/js/page.js";
+import Api from "api.js";
+import Page from "page.js";
 
 let openContextMenu = (selector, trigger='right') => {
     $.contextMenu({

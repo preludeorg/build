@@ -1,7 +1,7 @@
-import Api from "/client/js/api.js";
-import Templates from "/client/js/dom/templates.js";
-import RightClick from "/client/js/dom/rightclick.js";
-import Code from "/client/js/screens/code.js";
+import Api from "api.js";
+import Templates from "dom/templates.js";
+import RightClick from "dom/rightclick.js";
+import Code from "screens/code.js";
 
 let Page = {
     id: null,
