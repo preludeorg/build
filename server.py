@@ -16,7 +16,7 @@ if __name__ == '__main__':
                 WebRoutes(),
                 ManifestRoutes(),
                 DCFRoutes()
-            ], html_template_directory='dist')
+            ], template_directory='dist')
         ],
         services=[
             SigningService(name='signing'),

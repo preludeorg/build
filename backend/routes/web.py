@@ -15,7 +15,7 @@ class WebRoutes:
         return [
             Route('GET', '/', self._get_index),
             Route('POST', '/register', self._register),
-            StaticRoute('/static', '/dist/static')
+            StaticRoute('/static', 'client/dist/static')
         ]
 
     @template('index.html')
