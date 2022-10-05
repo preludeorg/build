@@ -39,7 +39,7 @@ let openContextMenu = (selector, trigger='right') => {
             fold1: {
                 name: "Apply classification",
                 items: {
-                    '!undefined': {name: 'Unclassified', icon: 'undefined'},
+                    '!unknown': {name: 'Unclassified', icon: 'unknown'},
                     '!security': {name: 'Security', icon: 'security'},
                     '!network': {name: 'Network', icon: 'network'},
                     '!user': {name: 'User Account', icon: 'user'},
