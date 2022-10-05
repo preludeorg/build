@@ -1,43 +1,47 @@
-import Api from "api.js";
-import Templates from "dom/templates.js";
-import C from "screens/lang/c.js";
-import Python from "screens/lang/py.js";
+import Api from "/client/js/api.js";
+import Templates from "/client/js/dom/templates.js";
+import C from "/client/js/screens/lang/c.js";
+import Python from "/client/js/screens/lang/py.js";
+import {basicSetup} from "codemirror"
+import {EditorView, keymap} from "@codemirror/view"
+import {EditorState, Compartment} from "@codemirror/state"
+import {indentWithTab} from "@codemirror/commands"
+import {oneDark} from "@codemirror/theme-one-dark"
 
 class Code {
     constructor() {
         this.name = null;
-        this.editor = null;
-        this.setUpEditor();
+        this.errors = [];
+        this.editor = new EditorView({parent: $('#screen-code')[0]});
     }
     write(data) {
         $('.panel-top').css('height', '75%');
         const ext = data.name.split('.').pop();
         this.name = data.name;
-        this.editor.setValue(data.code);
-        this.editor.setOption('mode', this.language(ext).mode());
+        // this.editor.setValue(data.code);
+        // this.editor.setOption('mode', this.language(ext).mode());
         Templates.tab(data.name).write();
-    }
-    setUpEditor() {
-        this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {
-            lineNumbers: true,
-            autoRefresh: true,
-            tabMode: 'indent',
-            theme: 'material-darker',
-            mode: new C().mode(),
-            indentWithTabs: false,
-            smartIndent: true,
-            tabSize: 2
-        });
-        this.editor.setSize('100%', '100%');
-        this.editor.on('keyup', (editor, ev) => {
-            if (ev.keyCode !== 27) {
-                try {
-                    Api.dcf.save(this.name, editor.doc.getValue()).then(() => { });
-                } catch(ex){
-                    console.error(`Error saving code file: ${ex}`);
-                }
-            }
-        });
+
+        this.editor.setState(EditorState.create({
+            doc: data.code,
+            parent: $('#screen-code')[0],
+            extensions: [
+                basicSetup,
+                keymap.of([indentWithTab]),
+                oneDark,
+                new Compartment().of(EditorState.tabSize.of(2)),
+
+                // TODO save on change
+                // EditorView.updateListener.of(vu => {
+                //     if(vu.docChanged) {
+                //         Api.routes.dcf.save(this.name, vu.state.doc.toString());
+                //     }
+                // }),
+
+                ...this.language(ext).mode(this.errors)
+            ]
+        }));
+
     }
     language(ext) {
         if (ext === 'c') {
