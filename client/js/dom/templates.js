@@ -35,6 +35,7 @@ class TTP {
         this.dom.find('#ttp-row').on('click', (ev) => {
             ev.preventDefault();
 
+            Page.id = this.ttp.id;
             this.dom.find('.dropdown-arrow').toggleClass('dropdown-arrow-active');
             this.dom.find('img').toggleClass('image-active');
 
@@ -50,7 +51,6 @@ class TTP {
                     dcf.setClick();
                     this.dom.find('#dcf-listing').append(dcf.dom);
                 });
-                Page.id = this.ttp.id;
             }).catch(err => {
                 console.error(err);
             });
