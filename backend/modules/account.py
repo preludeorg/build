@@ -15,13 +15,14 @@ class Manifest:
         self.file = Service.db(store='s3')
         self._accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{account_id}'
 
-    async def select(self, ttp_id=None):
+    async def select(self, ttp_id=None) -> dict:
         """ Get a copy of the manifest """
         try:
             manifest = json.loads(await self.file.read(filename=f'{self._accounts_bucket}/manifest.json'))
             return manifest.get(ttp_id, manifest)
         except TypeError:
             await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps({}))
+            return {}
 
     async def add(self, ttp_id: str, name: str, classification='unknown') -> None:
         """ Add an entry to the manifest """
