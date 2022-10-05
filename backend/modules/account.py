@@ -18,7 +18,7 @@ class Manifest:
         try:
             manifest = json.loads(await self.file.read(filename=f'{self._accounts_bucket}/manifest.json'))
             return manifest.get(ttp_id, manifest)
-        except FileNotFoundError:
+        except TypeError:
             await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps({}))
 
     async def add(self, ttp_id: str, name: str, classification='unknown') -> None:
