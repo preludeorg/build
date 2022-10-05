@@ -6,26 +6,19 @@ Operator Server is an authoring and testing application designed specifically fo
 
 Install the requirements and start the server:
 ```
-yarn build
 pip install -r requirements.txt
+yarn build
 python server.py
 ```
 
+To do development, you must compile all static resources (/client directory) as they are changed. You can do this
+automatically by running this command in a separate terminal:
 To compile your CSS:
 ```
-yarn run sass:compile
+yarn run dev
 ```
 
 ## Advanced
-
-### Development
-
-To make development easier the following command line watches for changes and automatically reload modules
-```
-yarn dev
-pip install -r requirements.txt
-python server.py
-```
 
 ### Back End
 

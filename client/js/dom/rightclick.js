@@ -6,6 +6,7 @@ let openContextMenu = (selector, trigger='right') => {
         selector: selector,
         trigger: trigger,
         callback: function (key, options) {
+            Page.id = $(this).find('#ttp-name').data('id');
             if (key === 'delete') {
                 Api.ttp.delete($(this).find('#ttp-name').data('id')).then(() => {
                     $(this).remove();
