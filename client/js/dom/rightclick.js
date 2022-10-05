@@ -2,6 +2,17 @@ import Api from "api.js";
 import Page from "page.js";
 
 let openContextMenu = (selector, trigger='right') => {
+    Api.ttp.get($(this).find('#ttp-name').data('id')).then(entry => {
+        entry.dcf.forEach(name => {
+            const dcf = new DCF(name);
+            dcf.write();
+            dcf.setClick();
+            this.dom.find('#dcf-listing').append(dcf.dom);
+        });
+        Page.id = this.ttp.id;
+    }).catch(err => {
+        console.error(err);
+    });
     $.contextMenu({
         selector: selector,
         trigger: trigger,
@@ -38,7 +49,7 @@ let openContextMenu = (selector, trigger='right') => {
             fold1: {
                 name: "Apply classification",
                 items: {
-                    '!unknown': {name: 'Unclassified', icon: 'unknown'},
+                    '!undefined': {name: 'Unclassified', icon: 'undefined'},
                     '!security': {name: 'Security', icon: 'security'},
                     '!network': {name: 'Network', icon: 'network'},
                     '!user': {name: 'User Account', icon: 'user'},
