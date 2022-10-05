@@ -23,7 +23,8 @@ module.exports = {
                 { from: "client/assets", to: "static/assets" },
                 { from: "client/css/font", to: "static/css/font" },
                 { from: "client/css/*.css", to: "static/css/[name][ext]" },
-                { from: "client/js/lib", to: "static/js/lib" }
+                { from: "client/js/lib", to: "static/js/lib" },
+                { from: "client/serviceworker.js", to: "static/serviceworker.js" }
             ],
         }),
     ],
