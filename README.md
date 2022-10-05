@@ -24,10 +24,9 @@ yarn run dev
 
 Built on top of the Vertebrae framework, the backend is structured in the standard design (Routes, Services, databases).
 
-The backend leverages two databases:
+The backend leverages one database:
 
-* Relational: Postgres stores all TTP manifest and results from testing.
-* S3: AWS S3 storage contains all source and compiled code samples.
+* S3: file storage contains all source and compiled code samples.
 
 ### Front End
 
