@@ -4,7 +4,7 @@ import Server from "plugins/server.js";
 
 window.onload = () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/client/serviceworker.js').then(() => {
+        navigator.serviceWorker.register('/static/serviceworker.js').then(() => {
            console.log('ServiceWorker registered');
         });
     }

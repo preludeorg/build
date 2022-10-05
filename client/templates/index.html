@@ -6,7 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<meta name="apple-mobile-web-app-status-bar" content="#aa7700">
 		<meta name="theme-color" content="black">
-		<link rel="manifest" href="/client/manifest.json">
+		<link rel="manifest" href="/static/manifest.json">
 		<!-- base CSS and jQuery -->
 		<link rel="stylesheet" href="/static/css/app.css">
 		<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
@@ -30,7 +30,7 @@
 		<div id="directory-listing" class="panel-left">
 		  <div class="panel-container-vertical">
 			<div class="panel-filter">
-			  <img id="search" src="/client/assets/search.svg"/>
+			  <img id="search" src="/static/assets/search.svg"/>
 			  <input id="manifest-filter" placeholder="Looking for a TTP?" spellcheck="false"/>
 			  <div id="add-ttp-container">
 				<img id="add-ttp" alt="Add TTP" src="/static/assets/file-add-line.svg"/>
@@ -110,7 +110,6 @@
 	<div class="dropdown-arrow"></div>
 	<img class="ttp-classification"/>
 	<p id="ttp-name" spellcheck="false" class="file"></p>
-	<img class="more-icon" src="/static/assets/more.svg"/>
   </div>
   <img class="vertical-ellipsis" src="/static/assets/vertical-ellipsis.svg"/>
   <ul id="dcf-listing"></ul>

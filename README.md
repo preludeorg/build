@@ -18,6 +18,15 @@ yarn run sass:compile
 
 ## Advanced
 
+### Development
+
+To make development easier the following command line watches for changes and automatically reload modules
+```
+yarn dev
+pip install -r requirements.txt
+python server.py
+```
+
 ### Back End
 
 Built on top of the Vertebrae framework, the backend is structured in the standard design (Routes, Services, databases).

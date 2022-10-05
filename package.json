@@ -21,6 +21,7 @@
   },
   "scripts": {
     "sass:compile": "sass client/css/app.scss client/css/app.css",
+    "dev": "yarn sass:compile && webpack watch --config client/webpack.config.js",
     "build": "yarn sass:compile && webpack --config client/webpack.config.js"
   }
 }
