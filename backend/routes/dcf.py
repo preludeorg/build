@@ -33,13 +33,11 @@ class DCFRoutes:
 
     @allowed
     async def _submit_dcf(self, account: Account, data: dict) -> web.Response:
-        logging.debug('about to compile' + data['name'])
         res = await Service.find('compile').compile(dcf=account.dcf, name=data['name'])
         if res.get('err'):
             raise Exception(res['err'])
-        logging.debug('done')
 
-        links = await Service.find('testbench').test(name=data['name'], binary=res['lib'])
+        links = await Service.find('testbench').test(name=data['name'], binary=res)
         if all([li.status == 0 for li in links]):
-            await Service.find('signing').sign(binary=res['lib'])
+            await Service.find('signing').sign(binary=res)
         return web.json_response(links)

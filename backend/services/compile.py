@@ -8,12 +8,13 @@ from vertebrae.service import Service
 
 
 class CompileService(Service):
-    targets = dict(
-        linux_amd64='x86_64-linux-gnu',
+    NAME_REGEX = re.compile('([^_]+)_([^-]+)-([^\.]+).(.+)')
+    TARGETS = dict(
+        linux_x86='x86_64-linux-gnu',
         linux_arm64='aarch64-linux-gnu',
-        darwin_amd64='x86_64-macos',
+        darwin_x86='x86_64-macos',
         darwin_arm64='aarch64-macos',
-        windows_amd64='x86_64-windows',
+        windows_x86='x86_64-windows',
         windows_arm64='aarch64-windows',
     )
 
@@ -21,21 +22,19 @@ class CompileService(Service):
         super().__init__(name)
         self.s3 = self.db(store='s3')
 
-    def compile(self, dcf: DCF, name: str) -> str:
+    async def compile(self, dcf: DCF, name: str) -> str:
         """ Compile a DCF and write it back to S3 (as a library and as an executable) """
-        platform, arch, ext = re.split('\.-_', name.split('_', 1).pop())
-        self.log.debug(f'{platform}  {arch}  {ext}')
+        self.log.debug(f'[{dcf.account_id}] Compiling DCF: {name}')
+        ttp_id, platform, arch, ext = re.match(CompileService.NAME_REGEX, name).groups()
 
         if arch == 'python':
-            # compile python to bytestream? to executable? to library?
-            return dict()
+            out = dict(script=f'{dcf.accounts_bucket}/dst/{name}')
+            await self.s3.write(out['script'], await self.s3.read(f'{dcf.accounts_bucket}/src/{name}'))
+            return out
 
         with tempfile.TemporaryDirectory() as dir:
-            self.log.debug(f'temporary dir: {dir}')
             self.s3.download_file(f'{dcf.accounts_bucket}/src/{name}', f'{dir}/{name}')
-            self.log.debug('downloaded from s3')
             res = self._compile_file(dir, name, platform, arch, ext)
-            self.log.debug(f'compiled. {res}')
             if res.get('err'):
                 return res
 
@@ -43,15 +42,12 @@ class CompileService(Service):
                 lib=f'{dcf.accounts_bucket}/dst/{res["lib"]}',
                 exe=f'{dcf.accounts_bucket}/dst/{res["exe"]}'
             )
-            self.log.debug('about to upload')
             self.s3.upload_file(f'{dir}/{res["lib"]}', out['lib'])
             self.s3.upload_file(f'{dir}/{res["exe"]}', out['exe'])
-            self.log.debug('uploaded')
             return out
 
     def _compile_file(self, dir: str, name: str, platform: str, arch: str, ext: str):
-        target = self.targets.get(f'{platform}_{arch}')
-        self.log.debug(f'target: {target}')
+        target = CompileService.TARGETS.get(f'{platform}_{arch}')
 
         out_lib = name.replace(f'.{ext}', '.so')
         err = subprocess.run([
