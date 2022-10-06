@@ -17,6 +17,7 @@ class CompileService(Service):
         windows_x86='x86_64-windows',
         windows_arm64='aarch64-windows',
     )
+    SCRIPTING_LANGUAGES = ['python']
 
     def __init__(self, name):
         super().__init__(name)
@@ -27,7 +28,7 @@ class CompileService(Service):
         self.log.debug(f'[{dcf.account_id}] Compiling DCF: {name}')
         ttp_id, platform, arch, ext = re.match(CompileService.NAME_REGEX, name).groups()
 
-        if arch == 'python':
+        if arch in CompileService.SCRIPTING_LANGUAGES:
             out = dict(script=f'{dcf.accounts_bucket}/dst/{name}')
             await self.s3.write(out['script'], await self.s3.read(f'{dcf.accounts_bucket}/src/{name}'))
             return out
