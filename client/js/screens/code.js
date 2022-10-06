@@ -18,7 +18,7 @@ class Code {
         $('.panel-top').css('height', '75vh');
         this.name = data.name;
         Templates.tab(data.name).write();
-
+        const ext = data.name.split('.').pop();
         this.editor.setState(EditorState.create({
             doc: data.code,
             parent: $('#screen-code')[0],
@@ -32,7 +32,7 @@ class Code {
                         Api.dcf.save(this.name, vu.state.doc.toString());
                     }
                 }),
-                ...this.language(data.name.split('.').pop()).mode(this.errors),
+                ...this.language(ext).mode(this.errors),
                 EditorView.theme({
                     "&": {height: "75vh", fontSize: "13px"},
                     ".cm-scroller": {overflow: "auto"},
