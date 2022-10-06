@@ -1,4 +1,5 @@
 import Api from "api.js";
+import Templates from "dom/templates.js";
 import C from "screens/lang/c.js";
 import Python from "screens/lang/py.js";
 
@@ -14,6 +15,7 @@ class Code {
         this.name = data.name;
         this.editor.setValue(data.code);
         this.editor.setOption('mode', this.language(ext).mode());
+        Templates.tab(data.name).write();
     }
     setUpEditor() {
         this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {

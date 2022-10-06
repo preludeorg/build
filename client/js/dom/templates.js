@@ -109,6 +109,17 @@ class Plugin {
     }
 }
 
+class Tab {
+    constructor(name) {
+        this.name = name.split('_')[1];
+        this.platform = this.name.split('-')[0];
+    }
+    write() {
+        $('#dcf-name').text(this.name);
+        $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform}.svg`);
+    }
+}
+
 let Templates = {
     ttp: (ttp) => {
         return new TTP(ttp);
@@ -118,6 +129,9 @@ let Templates = {
     },
     plugin: (plugin) => {
         return new Plugin(plugin);
+    },
+    tab: (name) => {
+        return new Tab(name);
     }
 };
 

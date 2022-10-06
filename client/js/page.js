@@ -22,6 +22,8 @@ let Page = {
         Page.id = id;
         $('.screen').each(function(i, obj) { $(this).hide() });
         $('#screen-code').show();
+        $('.panel-bottom').show();
+        $('.splitter-horizontal').show();
         Page.screens.code.write(data);
     },
     addTTP: (ttp) => {
@@ -63,6 +65,12 @@ let Page = {
                 }
             });
         });
+        $("#dcf-close").click(function(){
+            $('.screen').each(function(i, obj) { $(this).hide() });
+            $('.panel-bottom').hide();
+            $('.splitter-horizontal').hide();
+            $('#screen-welcome').show();
+        })
     }
 };
 
