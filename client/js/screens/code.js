@@ -12,16 +12,18 @@ class Code {
     constructor() {
         this.name = null;
         this.errors = [];
-        this.editor = new EditorView({parent: $('#dcf-contents')[0]});
+        this.editor = new EditorView({parent: $('#dcf-content')[0]});
     }
     write(data) {
-        $('.panel-top').css('height', '75vh');
+        const panelElem = $('.panel-top');
+        const height = `${panelElem.css('height', '75vh').height() + $('.tab-row').height()}px`;
+        panelElem.css('height', height);
         this.name = data.name;
         Templates.tab(data.name).write();
         const ext = data.name.split('.').pop();
         this.editor.setState(EditorState.create({
             doc: data.code,
-            parent: $('#screen-code')[0],
+            parent: $('#dcf-content')[0],
             extensions: [
                 basicSetup,
                 keymap.of([indentWithTab]),
