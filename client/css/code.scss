@@ -13,7 +13,7 @@
         flex-direction: row;
         align-items: center;
         column-gap: 8px;
-        padding: 16px 8px;
+        padding: 12px 8px;
         border-right: 2px solid var(--color-accent);
 
         #dcf-platform {
@@ -30,6 +30,7 @@
         #dcf-close {
             height: 20px;
             width: 20px;
+            padding-left: 16px;
             filter: var(--filter-icon-color);
             cursor: pointer;
         }
