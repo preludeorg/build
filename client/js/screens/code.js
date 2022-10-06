@@ -12,7 +12,7 @@ class Code {
     constructor() {
         this.name = null;
         this.errors = [];
-        this.editor = new EditorView({parent: $('#screen-code')[0]});
+        this.editor = new EditorView({parent: $('#dcf-contents')[0]});
     }
     write(data) {
         $('.panel-top').css('height', '75vh');
