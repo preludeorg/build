@@ -3,7 +3,6 @@ import uuid
 
 from vertebrae.config import Config
 from vertebrae.service import Service
-from vertebrae.config import Config
 
 from pathlib import Path
 
@@ -14,7 +13,7 @@ class Manifest:
         self.account_id = account_id
         self.log = Service.create_log(name='manifest')
         self.file = Service.db(store='s3')
-        self._accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{account_id}'
+        self.accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{account_id}'
 
     async def select(self, ttp_id=None) -> dict:
         """ Get a copy of the manifest """
