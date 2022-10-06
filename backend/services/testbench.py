@@ -27,7 +27,7 @@ class TestBenchService(Service):
         # TODO: POST REQUEST TO TEST CONTAINER -> response will have a uuid.
         # TODO: Check the status endpoint status/uuid -> if status is "done" then get the results
         # TODO: when status is "done" the resulting json will have a list of links
-        # SUDO_CODE:
+        #  PSEUDO CODE:
         # job_uuid = postresponse["uuid"]
         # while True: 
         #   resp = request(f"{address}/status/{job_uuid}")
