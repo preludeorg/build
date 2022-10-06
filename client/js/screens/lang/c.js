@@ -1,25 +1,15 @@
 import {c} from "@codemirror/legacy-modes/mode/clike"
-import {EditorView} from "@codemirror/view";
 import {StreamLanguage} from "@codemirror/language";
-import {displayLangErrors} from "/client/js/screens/lang/prelude"
+import {createPreludeLangChecks} from "/client/js/screens/lang/prelude"
 
 class C {
     mode(langErrors) {
         return [StreamLanguage.define(c),
-            EditorView.updateListener.of(vu => {
-                if(vu.docChanged) {
-                    const errors = [];
-                    const doc = vu.state.doc.toString();
-                    if(!doc.match(/int\s+attack\(.*\)/g)) {
-                        errors.push('Required attack method missing: int attack()');
-                    }
-                    if(!doc.match(/int\s+cleanup\(.*\)/g)) {
-                        errors.push('Required cleanup method missing: int cleanup()');
-                    }
-                    langErrors = errors;
-                    displayLangErrors(errors);
-                }
-            })
+            createPreludeLangChecks(
+                /int\s+attack\(.*\)/g,
+                /int\s+cleanup\(.*\)/g,
+                langErrors
+            )
         ];
     }
     bootstrap() {
