@@ -18,8 +18,6 @@ class Code {
         $('.panel-top').css('height', '75%');
         const ext = data.name.split('.').pop();
         this.name = data.name;
-        // this.editor.setValue(data.code);
-        // this.editor.setOption('mode', this.language(ext).mode());
         Templates.tab(data.name).write();
 
         this.editor.setState(EditorState.create({
@@ -30,14 +28,11 @@ class Code {
                 keymap.of([indentWithTab]),
                 oneDark,
                 new Compartment().of(EditorState.tabSize.of(2)),
-
-                // TODO save on change
-                // EditorView.updateListener.of(vu => {
-                //     if(vu.docChanged) {
-                //         Api.routes.dcf.save(this.name, vu.state.doc.toString());
-                //     }
-                // }),
-
+                EditorView.updateListener.of(vu => {
+                    if(vu.docChanged) {
+                        Api.dcf.save(this.name, vu.state.doc.toString());
+                    }
+                }),
                 ...this.language(ext).mode(this.errors)
             ]
         }));
