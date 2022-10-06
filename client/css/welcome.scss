@@ -4,6 +4,7 @@
     height: 100%;
     font-weight: 300;
     cursor: default;
+    background-color: var(--color-main);
 
     #welcome-line {
         font-size: 40px;
@@ -23,7 +24,7 @@
             margin-bottom: 32px;
             column-gap: 20px;
             padding: 0 0 32px;
-            border-bottom: 1px solid var(--color-open);
+            border-bottom: 1px solid var(--color-accent);
     
             img {
                 height: 24px;

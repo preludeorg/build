@@ -25,7 +25,7 @@
   font-size: 14px;
   list-style-type: none;
   background-color: var(--color-main);
-  border: 1px solid var(--color-open);
+  border: 1px solid var(--color-accent);
   filter: opacity(0.98);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, .5);
