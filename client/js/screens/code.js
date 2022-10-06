@@ -15,6 +15,7 @@ class Code {
         this.editor = new EditorView({parent: $('#screen-code')[0]});
     }
     write(data) {
+        $('.panel-top').css('height', '75vh');
         this.name = data.name;
         Templates.tab(data.name).write();
 
