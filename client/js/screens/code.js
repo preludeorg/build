@@ -14,6 +14,13 @@ class Code {
         this.name = data.name;
         this.editor.setValue(data.code);
         this.editor.setOption('mode', this.language(ext).mode());
+        $('#dcf-name').text(this.name.substring(
+            this.name.indexOf("_") + 1, 
+        ));
+        $('#dcf-platform').attr("src",`/static/assets/logos/${this.name.substring(
+            this.name.indexOf("_") + 1, 
+            this.name.lastIndexOf("-")
+        )}.svg`);
     }
     setUpEditor() {
         this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {
