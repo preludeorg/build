@@ -6,6 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<meta name="apple-mobile-web-app-status-bar" content="#aa7700">
 		<meta name="theme-color" content="black">
+		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
 		<link rel="manifest" href="/static/manifest.json">
 		<!-- base CSS and jQuery -->
 		<link rel="stylesheet" href="/static/css/app.css">
@@ -46,23 +47,24 @@
 		  <div class="panel-container-vertical">
 			<div class="panel-top">
 			  <div id="screen-welcome" class="screen">
-				<div id="welcome-line">Welcome to Operator</div>
-				<div class="welcome-steps">
-				  <img src="/static/assets/book.svg"/>
-				  <span>Read our <a href="https://docs.prelude.org">Documentation</a></span>
-				</div>
-				<div id="welcome-splitter"></div>
-				<div class="welcome-steps">
-				  <img src="/static/assets/file-add-line.svg"/>
-				  <span>Create a TTP</span>
-				</div>
-				<div class="welcome-steps">
-				  <img src="/static/assets/pointer.svg"/>
-				  <span>Add a procedure</span>
-				</div>
-				<div class="welcome-steps">
-				  <img src="/static/assets/play.svg"/>
-				  <span>Test</span>
+				<div id="welcome-line">Welcome to Prelude Operator</div>
+				<div class="welcome-container">
+				  <div class="welcome-steps">
+				    <img src="/static/assets/file-add-line.svg"/>
+				    <span>Create a TTP</span>
+				  </div>
+				  <div class="welcome-steps">
+				    <img src="/static/assets/file-edit-line.svg"/>
+				    <span>Add a code file</span>
+				  </div>
+				  <div class="welcome-steps">
+				    <img src="/static/assets/play-large.svg"/>
+				    <span>Test</span>
+				  </div>
+				  <div class="welcome-steps welcome-documentation">
+				    <img src="/static/assets/book.svg"/>
+				    <span>Read our <a href="https://docs.prelude.org" target="_blank">Documentation</a></span>
+				  </div>
 				</div>
 			  </div>
 
