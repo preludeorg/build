@@ -22,6 +22,7 @@ let Page = {
         Page.id = id;
         $('.screen').each(function(i, obj) { $(this).hide() });
         $('#screen-code').show();
+        $('#dcf-results').empty();
         $('.panel-bottom').show();
         $('.splitter-horizontal').show();
         Page.screens.code.write(data);
