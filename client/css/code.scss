@@ -1,10 +1,14 @@
 #screen-code {
     padding: 0;
 }
-
+#screen-code::-webkit-scrollbar-thumb {
+    background-color: var(--color-main);
+    border-radius: 20px;
+    border: 3px solid var(--color-theme);
+}
 .tab-row {
     display: flex;
-    flex-direction: row;        
+    flex-direction: row;
     border-bottom: 2px solid var(--color-accent);
     background-color: var(--filter-selection);
 
@@ -35,14 +39,6 @@
             cursor: pointer;
         }
     }
-}
-.CodeMirror {
-    font-size: 13px;
-}
-.CodeMirror-vscrollbar::-webkit-scrollbar-thumb {
-    background-color: var(--color-main);
-    border-radius: 20px;
-    border: 3px solid var(--color-theme);
 }
 .deployment {
     background-color: inherit;

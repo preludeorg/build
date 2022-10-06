@@ -15,8 +15,6 @@ class Code {
         this.editor = new EditorView({parent: $('#screen-code')[0]});
     }
     write(data) {
-        $('.panel-top').css('height', '75%');
-        const ext = data.name.split('.').pop();
         this.name = data.name;
         Templates.tab(data.name).write();
 
@@ -33,10 +31,13 @@ class Code {
                         Api.dcf.save(this.name, vu.state.doc.toString());
                     }
                 }),
-                ...this.language(ext).mode(this.errors)
+                ...this.language(data.name.split('.').pop()).mode(this.errors),
+                EditorView.theme({
+                    "&": {height: "75vh", fontSize: "13px"},
+                    ".cm-scroller": {overflow: "auto"},
+                })
             ]
         }));
-
     }
     language(ext) {
         if (ext === 'c') {
