@@ -4,7 +4,7 @@ from vertebrae.service import Service
 
 from backend.modules.account import Account
 from backend.util.decorators import allowed
-import logging
+
 
 class DCFRoutes:
 
