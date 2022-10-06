@@ -4,7 +4,7 @@ from vertebrae.service import Service
 
 from backend.modules.account import Account
 from backend.util.decorators import allowed
-
+import logging
 
 class DCFRoutes:
 
@@ -33,9 +33,11 @@ class DCFRoutes:
 
     @allowed
     async def _submit_dcf(self, account: Account, data: dict) -> web.Response:
-        res = await Service.find('compile').compile(account_id=account.account_id, name=data['name'])
+        logging.debug('about to compile' + data['name'])
+        res = await Service.find('compile').compile(dcf=account.dcf, name=data['name'])
         if res.get('err'):
-            return web.Response(status=500, text=res['err'])
+            raise Exception(res['err'])
+        logging.debug('done')
 
         links = await Service.find('testbench').test(name=data['name'], binary=res['lib'])
         if all([li.status == 0 for li in links]):

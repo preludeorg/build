@@ -13,7 +13,7 @@ class Manifest:
         self.account_id = account_id
         self.log = Service.create_log(name='manifest')
         self.file = Service.db(store='s3')
-        self.accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{account_id}'
+        self._accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{account_id}'
 
     async def select(self, ttp_id=None) -> dict:
         """ Get a copy of the manifest """
@@ -46,27 +46,27 @@ class DCF:
         self.log = Service.create_log('dcf')
         self.s3 = Service.db(store='s3')
         self.relational = Service.db(store='relational')
-        self._accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{self.account_id}'
+        self.accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{self.account_id}'
 
     async def select(self, name: str) -> str:
         """ Locate a single DCF """
         self.log.debug(f'[{self.account_id}] Viewing DCF: {name}')
-        return (await self.s3.read(filename=f'{self._accounts_bucket}/src/{name}')).decode('utf-8')
+        return (await self.s3.read(filename=f'{self.accounts_bucket}/src/{name}')).decode('utf-8')
 
     async def add(self, name: str, code: str) -> None:
         """ Upload a new or updated DCF """
         self.log.debug(f'[{self.account_id}] Updating DCF: {name}')
-        await self.s3.write(filename=f'{self._accounts_bucket}/src/{name}', contents=code)
+        await self.s3.write(filename=f'{self.accounts_bucket}/src/{name}', contents=code)
 
     async def remove(self, name: str) -> None:
         """ Remove a DCF """
         self.log.debug(f'[{self.account_id}] Deleting DCF: {name}')
-        await self.s3.delete(filename=f'{self._accounts_bucket}/src/{name}')
+        await self.s3.delete(filename=f'{self.accounts_bucket}/src/{name}')
 
     async def code_files(self, ttp_id: str):
         """ Find all code files for a given TTP """
         self.log.debug(f'[{self.account_id}] Viewing TTP: {ttp_id}')
-        files = await self.s3.walk(bucket=self._accounts_bucket.split('/')[0], prefix=f'{self.account_id}/src/{ttp_id}')
+        files = await self.s3.walk(bucket=self.accounts_bucket.split('/')[0], prefix=f'{self.account_id}/src/{ttp_id}')
         return [Path(f).name for f in files]
 
 
