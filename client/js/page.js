@@ -25,6 +25,14 @@ let Page = {
         $('#dcf-results').empty();
         $('.panel-bottom').show();
         $('.splitter-horizontal').show();
+        $(".panel-top").resizable('destroy');
+        $(".panel-top").resizable({
+            handleSelector: ".splitter-horizontal",
+            resizeWidth: false,
+            onDragEnd: function (event, el, opt) {
+                Page.screens.code.resize(data);
+            }
+        });
         Page.screens.code.write(data);
     },
     addTTP: (ttp) => {
