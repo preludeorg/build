@@ -16,8 +16,9 @@ def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
-            account_id = args[1].headers.get('account') or Account.register()
-            token = args[1].headers.get('token')
+            account_id, token = args[1].headers.get('account'), args[1].headers.get('token')
+            if not all([account_id, token]):
+                account_id, token = await Account.register()
 
             cached = await cache.get(account_id)
             if not cached:

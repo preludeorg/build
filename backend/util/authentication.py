@@ -1,5 +1,7 @@
 import asyncio
+import uuid
 from abc import ABC, abstractmethod
+from functools import wraps
 from urllib.parse import urlparse
 
 import aiohttp
@@ -16,6 +18,21 @@ async def check(account_id, token):
     else:
         _, valid = await Local(account_id=account_id, token=token).validate()
         return valid
+
+
+def works(func):
+    @wraps(func)
+    async def helper(*args, **params):
+        url = Config.find("prelude_service")
+        try:
+            return await func(*args, **params)
+        except aiohttp.ClientConnectionError or aiohttp.ClientConnectorError:
+            raise ConnectionError(f'Prelude Service is offline ({urlparse(url).netloc})')
+        except aiohttp.InvalidURL:
+            raise FileNotFoundError(f'Prelude Service invalid ({urlparse(url).netloc})')
+        except asyncio.TimeoutError:
+            raise TimeoutError(f'Prelude Service timed out ({urlparse(url).netloc})')
+    return helper
 
 
 class Authentication(ABC):
@@ -44,22 +61,27 @@ class Local(Authentication):
 class Detect(Authentication):
     """ Check if requester is a valid Detect account """
 
+    @works
     async def validate(self):
         url = f'{Config.find("prelude_service")}/valid'
         hd = dict(account=self.account_id, token=self.token)
-        try:
-            async with aiohttp.ClientSession(headers=hd) as session:
-                resp = await session.post(url=url, timeout=aiohttp.ClientTimeout(total=10))
-                if resp.status == 200:
-                    return True, True
-                elif resp.status in [403, 412]:
-                    self.log.warning(f'[{self.account_id}] Invalid Detect login attempted')
-                    return True, False
-                else:
-                    return False, False
-        except aiohttp.ClientConnectionError or aiohttp.ClientConnectorError:
-            raise ConnectionError(f'Prelude Service is offline ({urlparse(url).netloc})')
-        except aiohttp.InvalidURL:
-            raise FileNotFoundError(f'Prelude Service invalid ({urlparse(url).netloc})')
-        except asyncio.TimeoutError:
-            raise TimeoutError(f'Prelude Service timed out ({urlparse(url).netloc})')
+        async with aiohttp.ClientSession(headers=hd) as session:
+            resp = await session.post(url=url, timeout=aiohttp.ClientTimeout(total=10))
+            if resp.ok:
+                return True, True
+            elif resp.status in [403, 412]:
+                self.log.warning(f'[{self.account_id}] Invalid Detect login attempted')
+                return True, False
+            else:
+                return False, False
+
+    @staticmethod
+    @works
+    async def register() -> dict:
+        url = f'{Config.find("prelude_service")}/account'
+        async with aiohttp.ClientSession() as session:
+            params = dict(product='detect-community')
+            resp = await session.post(url=url, json=params, timeout=aiohttp.ClientTimeout(total=10))
+            if resp.ok:
+                return await resp.json()
+        return dict(account_id=Service.hash(s=str(uuid.uuid4()), algo='md5'), token=Config.find('token'))
