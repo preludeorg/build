@@ -14,12 +14,7 @@ class Code {
         this.errors = [];
         this.editor = new EditorView({parent: $('#dcf-content')[0]});
     }
-    write(data) {
-        const panelElem = $('.panel-top');
-        const height = `${panelElem.css('height', '75vh').height() + $('.tab-row').height()}px`;
-        panelElem.css('height', height);
-        this.name = data.name;
-        Templates.tab(data.name).write();
+    resetEditor(data, height) {
         const ext = data.name.split('.').pop();
         this.editor.setState(EditorState.create({
             doc: data.code,
@@ -36,11 +31,25 @@ class Code {
                 }),
                 ...this.language(ext).mode(this.errors),
                 EditorView.theme({
-                    "&": {height: "75vh", fontSize: "13px"},
+                    "&": {height: height, fontSize: "13px"},
                     ".cm-scroller": {overflow: "auto"},
                 })
             ]
         }));
+    }
+    resize(data) {
+        const tabRowHeight = $('.tab-row').height();
+        const newPanelTopHeight = $('body').height() - $('.panel-bottom').height() - tabRowHeight;
+        $('.panel-top').css('height', `${newPanelTopHeight + tabRowHeight}px`)
+        this.resetEditor(data, `${newPanelTopHeight}px`);
+    }
+    write(data) {
+        this.name = data.name;
+        Templates.tab(data.name).write();
+        const panelTop = $('.panel-top');
+        const newPanelTopHeight = `${panelTop.css('height', '75vh').height() + $('.tab-row').height()}px`;
+        panelTop.css('height', newPanelTopHeight);
+        this.resetEditor(data, "75vh");
     }
     language(ext) {
         if (ext === 'c') {
