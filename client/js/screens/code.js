@@ -38,6 +38,8 @@ class Code {
                 EditorView.theme({
                     "&": {height: "75vh", fontSize: "13px"},
                     ".cm-scroller": {overflow: "auto"},
+                    ".cm-gutters": {backgroundColor: "#323844 !important"},
+                    ".cm-activeLineGutter": {backgroundColor: "#323844 !important"}
                 })
             ]
         }));
