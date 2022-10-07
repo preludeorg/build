@@ -1,4 +1,5 @@
 import {EditorView} from "@codemirror/view";
+import Api from "/client/js/api";
 
 function displayLangErrors(errors) {
     const dcfResults = $('#dcf-results');
@@ -7,7 +8,7 @@ function displayLangErrors(errors) {
     $("#deploy-dcf").parent().css('pointer-events', errors.length === 0 ? '' : 'none');
 }
 
-function createPreludeLangChecks(attackRegex, cleanupRegex, langErrors) {
+function createPreludeLangChecks(attackRegex, cleanupRegex, name) {
     return EditorView.updateListener.of(vu => {
         if (vu.docChanged) {
             const errors = [];
@@ -18,8 +19,10 @@ function createPreludeLangChecks(attackRegex, cleanupRegex, langErrors) {
             if (!doc.match(cleanupRegex)) {
                 errors.push('Required cleanup method missing');
             }
-            langErrors.count = errors.length;
             displayLangErrors(errors);
+            if(errors.length === 0) {
+                Api.dcf.save(name, vu.state.doc.toString());
+            }
         }
     })
 }

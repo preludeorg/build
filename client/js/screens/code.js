@@ -11,7 +11,6 @@ import {oneDark} from "@codemirror/theme-one-dark"
 class Code {
     constructor() {
         this.name = null;
-        this.errors = {count: 0};
         this.editor = new EditorView({parent: $('#dcf-content')[0]});
     }
     write(data) {
@@ -29,12 +28,7 @@ class Code {
                 keymap.of([indentWithTab]),
                 oneDark,
                 new Compartment().of(EditorState.tabSize.of(2)),
-                ...this.language(ext).mode(this.errors),
-                EditorView.updateListener.of(vu => {
-                    if(vu.docChanged && this.errors.count === 0) {
-                        Api.dcf.save(this.name, vu.state.doc.toString());
-                    }
-                }),
+                ...this.language(ext).mode(this.name),
                 EditorView.theme({
                     "&": {height: "75vh", fontSize: "13px"},
                     ".cm-scroller": {overflow: "auto"},
