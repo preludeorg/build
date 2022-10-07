@@ -3,12 +3,12 @@ import {StreamLanguage} from "@codemirror/language";
 import {createPreludeLangChecks} from "/client/js/screens/lang/prelude"
 
 class C {
-    mode(langErrors) {
+    mode(name) {
         return [StreamLanguage.define(c),
             createPreludeLangChecks(
                 /int\s+attack\(.*\)/g,
                 /int\s+cleanup\(.*\)/g,
-                langErrors
+                name
             )
         ];
     }
