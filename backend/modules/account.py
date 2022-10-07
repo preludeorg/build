@@ -1,10 +1,10 @@
 import json
-import uuid
+from pathlib import Path
 
 from vertebrae.config import Config
 from vertebrae.service import Service
 
-from pathlib import Path
+from backend.util.authentication import Detect
 
 
 class Manifest:
@@ -79,5 +79,7 @@ class Account:
         self.dcf = DCF(account_id=account_id)
 
     @staticmethod
-    def register():
-        return Service.hash(s=str(uuid.uuid4()), algo='md5')
+    async def register() -> tuple:
+        """ Create a new Detect Account """
+        info = await Detect.register()
+        return info['account_id'], info['token']
