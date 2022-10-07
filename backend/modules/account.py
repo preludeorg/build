@@ -4,8 +4,6 @@ from pathlib import Path
 from vertebrae.config import Config
 from vertebrae.service import Service
 
-from backend.util.authentication import Detect
-
 
 class Manifest:
 
@@ -77,9 +75,3 @@ class Account:
         # internal modules
         self.manifest = Manifest(account_id=account_id)
         self.dcf = DCF(account_id=account_id)
-
-    @staticmethod
-    async def register() -> tuple:
-        """ Create a new Detect Account """
-        info = await Detect.register()
-        return info['account_id'], info['token']
