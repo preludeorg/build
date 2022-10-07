@@ -69,13 +69,7 @@
 			  </div>
 
 				<div id="screen-code" class="screen">
-				  <div class="tab-row">
-					<div id="dcf-tab">
-					  <img id="dcf-platform"/>
-					  <span id="dcf-name"></span>
-					  <img id="dcf-close" src="/static/assets/close-line.svg"/>
-					</div>
-				  </div>
+				  <ul id="tab-container"></ul>
 				  <textarea id="dcf-contents"></textarea>
 				</div>
 			</div>
@@ -129,6 +123,11 @@
 	<img id="platform-logo" />
 	<p id="platform" spellcheck="false" class="file"></p>
   </div>
+</li>
+<li id="dcf-tab-template">
+	<img id="dcf-platform"/>
+	<span id="dcf-name"></span>
+	<img id="dcf-close" src="/static/assets/close-line.svg"/>
 </li>
 
 <!-- Ensure all panels can resize -->

@@ -2,13 +2,15 @@
     padding: 0;
 }
 
-.tab-row {
+#tab-container {
     display: flex;
     flex-direction: row;        
+    padding: 0;
+    margin: 0;
     border-bottom: 2px solid var(--color-accent);
     background-color: var(--filter-selection);
 
-    #dcf-tab {
+    #dcf-tab-template {
         display: flex;
         flex-direction: row;
         align-items: center;

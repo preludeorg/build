@@ -15,7 +15,6 @@ class Code {
         this.name = data.name;
         this.editor.setValue(data.code);
         this.editor.setOption('mode', this.language(ext).mode());
-        Templates.tab(data.name).write();
     }
     setUpEditor() {
         this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {

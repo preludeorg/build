@@ -80,6 +80,9 @@ class DCF {
             this.dom.addClass('dcf-highlight');
 
             Api.dcf.get(this.name).then(dcf => {
+                let tab = new Tab(this.name);
+                tab.write(tab, this);
+                tab.setClick(this);          
                 Page.show(this.id, {name: this.name, code: dcf.code});
             }).catch(err => {
                 console.error(err);
@@ -113,10 +116,37 @@ class Tab {
     constructor(name) {
         this.name = name.split('_')[1];
         this.platform = this.name.split('-')[0];
+        this.dom = $('#dcf-tab-template').clone().data('refName', this.name).show();
     }
-    write() {
-        $('#dcf-name').text(this.name);
+    write(tab, codeFile) {
+        // $('#tab-container').children("li").length < 6 && 
+        console.log(check)
+        $('#tab-container').children("li").each(function(key, li) {
+            if (check.includes(codeFile.platform)) {
+                return
+            } else {
+                check.push($(li).data('refName'));
+            }
+        })
+        if (check.includes(codeFile.platform)) {
+            console.log(check.includes(codeFile.platform))
+            // $('#tab-container').children("li")[5].remove();
+        } else {
+            $('#tab-container').prepend(tab.dom);
+            console.log('false', check.includes(codeFile.platform))
+            // $('#tab-container').prepend(tab.dom);
+        }
+        $('#dcf-name').data('name', this.name).text(this.name);
         $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform}.svg`);
+    }
+    setClick(dcf) {
+        this.dom.on('click', (ev) => {
+            Api.dcf.get(dcf.name).then(dcf => {
+                Page.show(this.name.split('_')[0], {name: this.name, code: dcf.code});
+            }).catch(err => {
+                console.error(err);
+            });
+        })
     }
 }
 
