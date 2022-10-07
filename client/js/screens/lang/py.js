@@ -3,11 +3,12 @@ import {StreamLanguage} from "@codemirror/language";
 import {createPreludeLangChecks} from "./prelude";
 
 class Python {
-    mode() {
+    mode(langErrors) {
         return [StreamLanguage.define(python),
             createPreludeLangChecks(
                 /def\s+attack\(.*\)( -> int){0,1}:/g,
-                /def\s+cleanup\(.*\)( -> int){0,1}:/g
+                /def\s+cleanup\(.*\)( -> int){0,1}:/g,
+                langErrors
             )
         ];
     }
