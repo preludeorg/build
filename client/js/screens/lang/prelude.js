@@ -8,20 +8,20 @@ function displayLangErrors(errors) {
 }
 
 function createPreludeLangChecks(attackRegex, cleanupRegex, langErrors) {
-     return EditorView.updateListener.of(vu => {
-         if(vu.docChanged) {
-             const errors = [];
-             const doc = vu.state.doc.toString();
-             if (!doc.match(attackRegex)) {
-                 errors.push('Required attack method missing');
-             }
-             if (!doc.match(cleanupRegex)) {
-                 errors.push('Required cleanup method missing');
-             }
-             langErrors = errors;
-             displayLangErrors(errors);
-         }
-     })
+    return EditorView.updateListener.of(vu => {
+        if (vu.docChanged) {
+            const errors = [];
+            const doc = vu.state.doc.toString();
+            if (!doc.match(attackRegex)) {
+                errors.push('Required attack method missing');
+            }
+            if (!doc.match(cleanupRegex)) {
+                errors.push('Required cleanup method missing');
+            }
+            langErrors.count = errors.length;
+            displayLangErrors(errors);
+        }
+    })
 }
 
 export {displayLangErrors, createPreludeLangChecks};
