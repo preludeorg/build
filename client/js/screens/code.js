@@ -27,6 +27,10 @@ class Code {
                 EditorView.theme({
                     "&": {height: height, fontSize: "13px"},
                     ".cm-scroller": {overflow: "auto"},
+                    ".cm-content": {backgroundColor: "#272B33 !important", padding: "0 0 4px"},
+                    ".cm-gutters": {backgroundColor: "#323844 !important"},
+                    ".cm-activeLineGutter": {backgroundColor: "#323844 !important"},
+                    ".cm-gutterElement": {marginTop: "0px"}
                 })
             ]
         }));
