@@ -77,11 +77,10 @@ class Detect(Authentication):
 
     @staticmethod
     @works
-    async def register() -> tuple:
+    async def register(email: str) -> tuple:
         url = f'{Config.find("prelude_service")}/account'
         async with aiohttp.ClientSession() as session:
-            params = dict(product='detect-community')
-            resp = await session.post(url=url, json=params, timeout=aiohttp.ClientTimeout(total=10))
+            resp = await session.post(url=url, json=dict(email=email), timeout=aiohttp.ClientTimeout(total=10))
             if resp.ok:
-                return await resp.json()
+                return (await resp.json()).values()
         return Service.hash(s=str(uuid.uuid4()), algo='md5'), Config.find('token')

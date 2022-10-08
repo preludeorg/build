@@ -18,7 +18,7 @@ def allowed(func):
         try:
             account_id, token = args[1].headers.get('account'), args[1].headers.get('token')
             if not all([account_id, token]):
-                account_id, token = await Detect.register()
+                account_id, token = await Detect.register(email='operator@prelude.org')
 
             cached = await cache.get(account_id)
             if not cached:
