@@ -49,7 +49,7 @@ let Page = {
         return template;
     },
     addPlugin: (plugin) => {
-        const template = Templates.plugin(plugin);
+    const template = Templates.plugin(plugin);
         template.setClick();
         $('#plugins').append(template.dom);
     },
