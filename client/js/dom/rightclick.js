@@ -37,24 +37,30 @@ let openContextMenu = (selector, trigger='right') => {
         },
         items: {
             fold1: {
-                name: "Apply classification",
+                name: "Assign targets",
                 items: {
-                    '!unknown': {name: 'Unclassified', icon: 'unknown'},
-                    '!security': {name: 'Security', icon: 'security'},
-                    '!network': {name: 'Network', icon: 'network'},
-                    '!user': {name: 'User Account', icon: 'user'},
-                    '!fs': {name: 'File System', icon: 'fs'},
-                    '!application': {name: 'Application', icon: 'application'},
-                    '!process': {name: 'Process', icon: 'process'},
-                    '!behavior': {name: 'Behavior', icon: 'behavior'}
+                    '!unknown': {name: 'unclassified', icon: 'unknown'},
+                    '!server': {name: 'server', icon: 'unknown'},
+                    '!workstation': {name: 'workstation', icon: 'unknown'},
+                    '!container': {name: 'container', icon: 'unknown'},
                 }
             },
             sep1: '---------',
-            'linux-python.py': {name: 'Attach Linux - python', icon: 'linux'},
-            'linux-x86.c': {name: 'Attach Linux - x86', icon: 'linux'},
-            'darwin-python.py': {name: 'Attach MacOS - python', icon: 'apple'},
-            'darwin-x86.c': {name: 'Attach MacOS - x86', icon: 'apple'},
-            'darwin-arm64.c': {name: 'Attach MacOS - arm64', icon: 'apple'},
+            fold2: {
+                name: "Attach Linux test",
+                items: {
+                    'linux-x86.c': {name: 'linux-x86.c', icon: 'linux'},
+                    'centos-x86.c': {name: 'centos-x86.c', icon: 'linux'},
+                    'ubuntu-x86.c': {name: 'ubuntu-x86.c', icon: 'linux'}
+                }
+            },
+            fold3: {
+                name: "Attach MacOS test",
+                items: {
+                    'darwin-x86.c': {name: 'darwin-x86.c', icon: 'apple'},
+                    'darwin-arm64.c': {name: 'darwin-arm64.c', icon: 'apple'}
+                }
+            },
             sep2: '---------',
             rename: {name: 'Rename', icon: 'edit'},
             delete: {name: 'Delete', icon: 'delete'}

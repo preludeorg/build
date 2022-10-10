@@ -24,7 +24,7 @@ class Manifest:
 
     async def add(self, ttp_id: str, name: str, classification='unknown') -> None:
         """ Add an entry to the manifest """
-        self.log.debug(f'[{self.account_id}] Adding TTP: {ttp_id} ({classification})')
+        self.log.debug(f'[{self.account_id}] Updating TTP: {ttp_id} ({classification})')
         manifest = await self.select()
         manifest[ttp_id] = dict(id=ttp_id, name=name, classification=classification)
         await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))

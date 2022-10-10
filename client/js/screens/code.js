@@ -1,7 +1,6 @@
 import Api from "/client/js/api.js";
 import Templates from "/client/js/dom/templates.js";
 import C from "/client/js/screens/lang/c.js";
-import Python from "/client/js/screens/lang/py.js";
 import {basicSetup} from "codemirror"
 import {EditorView, keymap} from "@codemirror/view"
 import {EditorState, Compartment} from "@codemirror/state"
@@ -50,11 +49,7 @@ class Code {
         this.resetEditor(data, "75vh");
     }
     language(ext) {
-        if (ext === 'c') {
-            return new C();
-        } else if (ext === 'py') {
-            return new Python();
-        }
+        return new C();
     }
     test() {
         $('#spinner').show();
