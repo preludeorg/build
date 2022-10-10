@@ -43,30 +43,6 @@ class Code {
     }
     write(data) {
         this.name = data.name;
-        this.editor.setValue(data.code);
-        this.editor.setOption('mode', this.language(ext).mode());
-    }
-    setUpEditor() {
-        this.editor = CodeMirror.fromTextArea($('#dcf-contents')[0], {
-            lineNumbers: true,
-            autoRefresh: true,
-            tabMode: 'indent',
-            theme: 'material-darker',
-            mode: new C().mode(),
-            indentWithTabs: false,
-            smartIndent: true,
-            tabSize: 2
-        });
-        this.editor.setSize('100%', '100%');
-        this.editor.on('keyup', (editor, ev) => {
-            if (ev.keyCode !== 27) {
-                try {
-                    Api.dcf.save(this.name, editor.doc.getValue()).then(() => { });
-                } catch(ex){
-                    console.error(`Error saving code file: ${ex}`);
-                }
-            }
-        });
         Templates.tab(data.name).write();
         const panelTop = $('.panel-top');
         const newPanelTopHeight = `${panelTop.css('height', '75vh').height() + $('.tab-row').height()}px`;
