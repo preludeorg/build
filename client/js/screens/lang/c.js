@@ -1,6 +1,16 @@
+import {c} from "@codemirror/legacy-modes/mode/clike"
+import {StreamLanguage} from "@codemirror/language";
+import {createPreludeLangChecks} from "/client/js/screens/lang/prelude"
+
 class C {
-    mode() {
-        return 'text/x-csrc';
+    mode(name) {
+        return [StreamLanguage.define(c),
+            createPreludeLangChecks(
+                /int\s+attack\(.*\)/g,
+                /int\s+cleanup\(.*\)/g,
+                name
+            )
+        ];
     }
     bootstrap() {
             return ('#include <stdlib.h>\n' +

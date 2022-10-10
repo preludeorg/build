@@ -9,6 +9,8 @@
   "private": true,
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.1",
+    "@codemirror/language": "^6.2.1",
+    "@codemirror/legacy-modes": "^6.1.0",
     "@codemirror/theme-one-dark": "^6.0.0",
     "codemirror": "^6.0.1"
   },

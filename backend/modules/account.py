@@ -1,10 +1,8 @@
 import json
-import uuid
+from pathlib import Path
 
 from vertebrae.config import Config
 from vertebrae.service import Service
-
-from pathlib import Path
 
 
 class Manifest:
@@ -77,7 +75,3 @@ class Account:
         # internal modules
         self.manifest = Manifest(account_id=account_id)
         self.dcf = DCF(account_id=account_id)
-
-    @staticmethod
-    def register():
-        return Service.hash(s=str(uuid.uuid4()), algo='md5')

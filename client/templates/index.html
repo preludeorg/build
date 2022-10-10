@@ -1,32 +1,33 @@
 <!DOCTYPE html>
-	<head>
-		<title>Prelude Operator</title>
-		<!-- PWA requirements -->
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<meta name="apple-mobile-web-app-status-bar" content="#aa7700">
-		<meta name="theme-color" content="black">
-		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
-		<link rel="manifest" href="/static/manifest.json">
-		<!-- base CSS and jQuery -->
-		<link rel="stylesheet" href="/static/css/app.css">
-		<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-		<script src="/static/js/lib/jquery-3.6.0.js"></script>
-		<!-- code mirror -->
-		<script src="/static/js/lib/codemirror.js"></script>
-		<link rel="stylesheet" href="/static/css/codemirror.css" />
-		<link rel="stylesheet" href="/static/css/codemirror-material-darker.css" />
-		<!-- embedded external libraries -->
-		<link rel="stylesheet" href="/static/css/contextmenu.css">
-		<script src="/static/js/lib/resizable.js"></script>
-		<script src="/static/js/lib/contextmenu.js"></script>
-	</head>
-	<body>
-	  <div id="spinner" class="simple-spinner">
-		<span></span>
-	  </div>
+<head>
+  <title>Prelude Operator</title>
+  <!-- PWA requirements -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="apple-mobile-web-app-status-bar" content="#aa7700">
+  <meta name="theme-color" content="black">
+  <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&display=swap"
+      rel="stylesheet"/>
+  <link rel="manifest" href="/static/manifest.json">
+  <!-- base CSS and jQuery -->
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script>if (typeof module === 'object') {
+      window.module = module;
+      module = undefined;
+  }</script>
+  <script src="/static/js/lib/jquery-3.6.0.js"></script>
+  <!-- embedded external libraries -->
+  <link rel="stylesheet" href="/static/css/contextmenu.css">
+  <script src="/static/js/lib/resizable.js"></script>
+  <script src="/static/js/lib/contextmenu.js"></script>
+</head>
+<body>
+<div id="spinner" class="simple-spinner">
+  <span></span>
+</div>
 
-	  <div class="panel-container">
+<div class="panel-container">
 
 		<div id="directory-listing" class="panel-left">
 		  <div class="panel-container-vertical">
@@ -74,45 +75,81 @@
 				</div>
 			</div>
 
-			<div class="splitter-horizontal"></div>
+  <div class="splitter"></div>
 
-			<div class="panel-bottom">
-			  <div class="control-bar">
-			  <div id="deploy-dcf" class="deploy-button">
-				<span>Test DCF</span>
-				<img src="/static/assets/play.svg" />
-			  </div>
-			  </div>
-			  <div id="dcf-results"></div>
-			</div>
-		  </div>
-		</div>
+  <div class="panel-right">
+    <div class="panel-container-vertical">
+      <div class="panel-top">
+        <div id="screen-welcome" class="screen">
+          <div id="welcome-line">Welcome to Prelude Operator</div>
+          <div class="welcome-container">
+            <div class="welcome-steps">
+              <img src="/static/assets/file-add-line.svg"/>
+              <span>Create a TTP</span>
+            </div>
+            <div class="welcome-steps">
+              <img src="/static/assets/file-edit-line.svg"/>
+              <span>Add a code file</span>
+            </div>
+            <div class="welcome-steps">
+              <img src="/static/assets/play-large.svg"/>
+              <span>Test</span>
+            </div>
+            <div class="welcome-steps welcome-documentation">
+              <img src="/static/assets/book.svg"/>
+              <span>Read our <a href="https://docs.prelude.org" target="_blank">Documentation</a></span>
+            </div>
+          </div>
+        </div>
+        <div id="screen-code" class="screen">
+          <div class="tab-row">
+            <div id="dcf-tab">
+              <img id="dcf-platform"/>
+              <span id="dcf-name"></span>
+              <img id="dcf-close" src="/static/assets/close-line.svg"/>
+            </div>
+          </div>
+          <div id="dcf-content"></div>
+        </div>
+      </div>
+      <div class="splitter-horizontal"></div>
+      <div class="panel-bottom">
+        <div class="control-bar">
+          <div id="deploy-dcf" class="deploy-button">
+            <span>Test DCF</span>
+            <img src="/static/assets/play.svg"/>
+          </div>
+        </div>
+        <div id="dcf-results"></div>
+      </div>
+    </div>
+  </div>
 
-		<div id="plugin-template" class="plugin-box" style="display: none">
-		  <div class="container">
-			<h2 id="plugin-name"></h2>
-			<p id="plugin-description"></p>
-			<br>
-			<div id="plugin-contents"></div>
-		  </div>
-		</div>
+  <div id="plugin-template" class="plugin-box" style="display: none">
+    <div class="container">
+      <h2 id="plugin-name"></h2>
+      <p id="plugin-description"></p>
+      <br>
+      <div id="plugin-contents"></div>
+    </div>
+  </div>
 
-		<div class="plugin-bar">
-		  <ul id="plugins"></ul>
-		</div>
+  <div class="plugin-bar">
+    <ul id="plugins"></ul>
+  </div>
 
-	  </div>
+</div>
 
-	</body>
+</body>
 </html>
 
 <!-- TEMPLATES -->
 
 <li id="ttp-template" class="ttp-template">
   <div id="ttp-row">
-	<div class="dropdown-arrow"></div>
-	<img class="ttp-classification"/>
-	<p id="ttp-name" spellcheck="false" class="file"></p>
+    <div class="dropdown-arrow"></div>
+    <img class="ttp-classification"/>
+    <p id="ttp-name" spellcheck="false" class="file"></p>
   </div>
   <img class="vertical-ellipsis" src="/static/assets/vertical-ellipsis.svg"/>
   <ul id="dcf-listing"></ul>
@@ -120,8 +157,8 @@
 
 <li id="dcf-template" class="dcf-template">
   <div id="dcf-row">
-	<img id="platform-logo" />
-	<p id="platform" spellcheck="false" class="file"></p>
+    <img id="platform-logo"/>
+    <p id="platform" spellcheck="false" class="file"></p>
   </div>
 </li>
 <li id="dcf-tab-template">
@@ -132,12 +169,8 @@
 
 <!-- Ensure all panels can resize -->
 <script>
-	$(".panel-left").resizable({
-		handleSelector: ".splitter",
-		resizeHeight: false
-	});
-	$(".panel-top").resizable({
-		handleSelector: ".splitter-horizontal",
-		resizeWidth: false
-	});
+    $(".panel-left").resizable({
+        handleSelector: ".splitter",
+        resizeHeight: false
+    });
 </script>

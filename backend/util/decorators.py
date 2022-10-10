@@ -6,7 +6,7 @@ from vertebrae.core import strip_request
 from vertebrae.service import Service
 
 from backend.modules.account import Account
-from backend.util.authentication import check
+from backend.util.authentication import check, Detect
 
 log = Service.create_log('api')
 cache = Service.db('cache')
@@ -16,8 +16,9 @@ def allowed(func):
     @wraps(func)
     async def helper(*args, **params):
         try:
-            account_id = args[1].headers.get('account') or Account.register()
-            token = args[1].headers.get('token')
+            account_id, token = args[1].headers.get('account'), args[1].headers.get('token')
+            if not all([account_id, token]):
+                account_id, token = await Detect.register(email='operator@prelude.org')
 
             cached = await cache.get(account_id)
             if not cached:

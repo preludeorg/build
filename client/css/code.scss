@@ -1,14 +1,18 @@
 #screen-code {
     padding: 0;
 }
-
+#screen-code::-webkit-scrollbar-thumb {
+    background-color: var(--color-main);
+    border-radius: 20px;
+    border: 3px solid var(--color-theme);
+}
 #tab-container {
     display: flex;
     flex-direction: row;        
     padding: 0;
     margin: 0;
     border-bottom: 2px solid var(--color-accent);
-    background-color: var(--filter-selection);
+    background-color: var(--color-selection);
 
     #dcf-tab-template {
         display: flex;
@@ -37,14 +41,6 @@
             cursor: pointer;
         }
     }
-}
-.CodeMirror {
-    font-size: 13px;
-}
-.CodeMirror-vscrollbar::-webkit-scrollbar-thumb {
-    background-color: var(--color-main);
-    border-radius: 20px;
-    border: 3px solid var(--color-theme);
 }
 .deployment {
     background-color: inherit;
