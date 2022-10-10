@@ -24,4 +24,4 @@ class TestBenchService(Service):
     async def run(self, address: str, binary):
         """ Execute test and record the CPU cycles used """
         # TODO: 1) upload binary to test container 2) execute 3) get link back
-        return Link(name='', status=0, cpu=0.002, output='', created=datetime.now())
+        return Link(name='', status=0, cpu=0.002, output='', effects=[], created=datetime.now())
