@@ -37,18 +37,17 @@ class CompileService(Service):
         with tempfile.TemporaryDirectory() as dir:
             self.s3.download_file(src, f'{dir}/{name}')
             res = self._compile_file(dir, name, platform, arch, ext)
-            out = dict(
-                lib=f'{dcf.accounts_bucket}/dst/{res["lib"]}',
-                exe=f'{dcf.accounts_bucket}/dst/{res["exe"]}'
-            )
-            self.s3.upload_file(f'{dir}/{res["lib"]}', out['lib'])
-            self.s3.upload_file(f'{dir}/{res["exe"]}', out['exe'])
+            out = dict()
+            for k in res.keys():
+                out[k] = f'{dcf.accounts_bucket}/dst/{res[k]}'
+                self.s3.upload_file(f'{dir}/{res[k]}', out[k])
             return out
 
     def _compile_file(self, dir: str, name: str, platform: str, arch: str, ext: str) -> dict:
         target = CompileService.TARGETS.get(f'{platform}_{arch}')
+        out = dict(lib=name.replace(f'.{ext}', '.so'),
+                   exe=name.replace(f'.{ext}', '.exe' if platform == 'windows' else ''))
 
-        out_lib = name.replace(f'.{ext}', '.so')
         err = subprocess.run([
             sys.executable,
             '-m',
@@ -61,11 +60,10 @@ class CompileService(Service):
             'c',
             '-target',
             f'{target}',
-            f'-femit-bin={dir}/{out_lib}'
+            f'-femit-bin={dir}/{out["lib"]}'
         ], capture_output=True, text=True).stderr
 
         if not err:
-            out_exe = name.replace(f'.{ext}', '.exe' if platform == 'windows' else '')
             err = subprocess.run([
                 sys.executable,
                 '-m',
@@ -76,9 +74,13 @@ class CompileService(Service):
                 '-target',
                 f'{target}',
                 '-o',
-                f'{dir}/{out_exe}'
+                f'{dir}/{out["exe"]}'
             ], capture_output=True, text=True).stderr
+
+            if 'MissingMainEntrypoint' in err:
+                err = None
+                del out["exe"]
 
         if err:
             raise Exception(err)
-        return dict(lib=out_lib, exe=out_exe)
+        return out
