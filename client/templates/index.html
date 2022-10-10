@@ -29,18 +29,51 @@
 
 <div class="panel-container">
 
-  <div id="directory-listing" class="panel-left">
-    <div class="panel-container-vertical">
-      <div class="panel-filter">
-        <img id="search" src="/static/assets/search.svg"/>
-        <input id="manifest-filter" placeholder="Looking for a TTP?" spellcheck="false"/>
-        <div id="add-ttp-container">
-          <img id="add-ttp" alt="Add TTP" src="/static/assets/file-add-line.svg"/>
-        </div>
-      </div>
-      <ul id="manifest"></ul>
-    </div>
-  </div>
+		<div id="directory-listing" class="panel-left">
+		  <div class="panel-container-vertical">
+			<div class="panel-filter">
+			  <img id="search" src="/static/assets/search.svg"/>
+			  <input id="manifest-filter" placeholder="Looking for a TTP?" spellcheck="false"/>
+			  <div id="add-ttp-container">
+				<img id="add-ttp" alt="Add TTP" src="/static/assets/file-add-line.svg"/>
+			  </div>
+			</div>
+			<ul id="manifest"></ul>
+		  </div>
+		</div>
+
+		<div class="splitter"></div>
+
+		<div class="panel-right">
+		  <div class="panel-container-vertical">
+			<div class="panel-top">
+			  <div id="screen-welcome" class="screen">
+				<div id="welcome-line">Welcome to Prelude Operator</div>
+				<div class="welcome-container">
+				  <div class="welcome-steps">
+				    <img src="/static/assets/file-add-line.svg"/>
+				    <span>Create a TTP</span>
+				  </div>
+				  <div class="welcome-steps">
+				    <img src="/static/assets/file-edit-line.svg"/>
+				    <span>Add a code file</span>
+				  </div>
+				  <div class="welcome-steps">
+				    <img src="/static/assets/play-large.svg"/>
+				    <span>Test</span>
+				  </div>
+				  <div class="welcome-steps welcome-documentation">
+				    <img src="/static/assets/book.svg"/>
+				    <span>Read our <a href="https://docs.prelude.org" target="_blank">Documentation</a></span>
+				  </div>
+				</div>
+			  </div>
+
+				<div id="screen-code" class="screen">
+				  <ul id="tab-container"></ul>
+				  <textarea id="dcf-contents"></textarea>
+				</div>
+			</div>
 
   <div class="splitter"></div>
 
@@ -127,6 +160,13 @@
     <img id="platform-logo"/>
     <p id="platform" spellcheck="false" class="file"></p>
   </div>
+</li>
+<li id="dcf-tab-template">
+  <div id="dcf-tab-info">
+	  <img id="dcf-platform"/>
+	  <span id="dcf-name"></span>
+  </div>
+	<img id="dcf-close" src="/static/assets/close-line.svg"/>
 </li>
 
 <!-- Ensure all panels can resize -->
