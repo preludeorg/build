@@ -22,11 +22,11 @@ class Manifest:
             await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps({}))
             return {}
 
-    async def add(self, ttp_id: str, name: str, classification='unknown') -> None:
+    async def add(self, ttp_id: str, name: str, tags: [str]) -> None:
         """ Add an entry to the manifest """
-        self.log.debug(f'[{self.account_id}] Updating TTP: {ttp_id} ({classification})')
+        self.log.debug(f'[{self.account_id}] Updating TTP: {ttp_id}')
         manifest = await self.select()
-        manifest[ttp_id] = dict(id=ttp_id, name=name, classification=classification)
+        manifest[ttp_id] = dict(id=ttp_id, name=name, tags=tags)
         await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
 
     async def remove(self, ttp_id: str) -> None:
