@@ -109,17 +109,17 @@
 
 .context-menu-item.context-menu-icon-security::before {
   content: '';
-  background-image: url('../assets/targets/container.svg');
+  background-image: url('../assets/tags/container.svg');
 }
 
 .context-menu-item.context-menu-icon-user::before {
   content: '';
-  background-image: url('../assets/targets/workstation.svg');
+  background-image: url('../assets/tags/workstation.svg');
 }
 
 .context-menu-item.context-menu-icon-application::before {
   content: '';
-  background-image: url('../assets/targets/server.svg');
+  background-image: url('../assets/tags/server.svg');
 }
 
 .context-menu-active {
