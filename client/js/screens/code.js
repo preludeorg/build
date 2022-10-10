@@ -1,6 +1,6 @@
 import Api from "/client/js/api.js";
 import Templates from "/client/js/dom/templates.js";
-import C from "/client/js/screens/lang/c.js";
+import Swift from "/client/js/screens/lang/swift.js";
 import {basicSetup} from "codemirror"
 import {EditorView, keymap} from "@codemirror/view"
 import {EditorState, Compartment} from "@codemirror/state"
@@ -49,13 +49,13 @@ class Code {
         this.resetEditor(data, "75vh");
     }
     language(ext) {
-        return new C();
+        return new Swift();
     }
     test() {
         $('#spinner').show();
         $('#dcf-results').empty()
             .append($('<pre>')
-                .text(`.......... [${new Date().toLocaleTimeString()}] Compiling attack\n\n`)
+                .text(`.......... [${new Date().toLocaleTimeString()}] Compiling test\n\n`)
                 .addClass('result-system'));
 
         Api.dcf.submit(this.name).then(res => res.json()).then(links => {

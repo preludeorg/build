@@ -47,16 +47,16 @@ let openContextMenu = (selector, trigger='right') => {
             fold2: {
                 name: "Attach Linux test",
                 items: {
-                    'linux-x86.c': {name: 'linux-x86.c', icon: 'linux'},
-                    'centos-x86.c': {name: 'centos-x86.c', icon: 'linux'},
-                    'ubuntu-x86.c': {name: 'ubuntu-x86.c', icon: 'linux'}
+                    'linux-x86.swift': {name: 'linux-x86.swift', icon: 'linux'},
+                    'centos-x86.swift': {name: 'centos-x86.swift', icon: 'linux'},
+                    'ubuntu-x86.swift': {name: 'ubuntu-x86.swift', icon: 'linux'}
                 }
             },
             fold3: {
                 name: "Attach MacOS test",
                 items: {
-                    'darwin-x86.c': {name: 'darwin-x86.c', icon: 'apple'},
-                    'darwin-arm64.c': {name: 'darwin-arm64.c', icon: 'apple'}
+                    'darwin-x86.swift': {name: 'darwin-x86.swift', icon: 'apple'},
+                    'darwin-arm64.swift': {name: 'darwin-arm64.swift', icon: 'apple'}
                 }
             },
             sep2: '---------',
