@@ -21,10 +21,6 @@ class TTP {
                     $(this).blur();
                 }
             });
-        this.dom.find('.ttp-classification')
-            .attr("src",`/static/assets/classifications/${this.ttp.classification}.svg`);
-        $('ul.context-menu-list').find(`li.context-menu-item.context-menu-icon.context-menu-icon-${this.ttp.classification}`)
-            .addClass('context-menu-active');
     }
     setClick() {
         this.dom.on('click', (ev) => {

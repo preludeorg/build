@@ -14,14 +14,13 @@ let openContextMenu = (selector, trigger='right') => {
             } else if (key === 'rename') {
                 $(this).find('#ttp-name').attr('contentEditable', 'true').focus();
             } else if (key.startsWith('!')) {
-                const classification = key.substring(key.indexOf('!') + 1);
-                Api.ttp.save({id: Page.id, classification: classification}).then(() => {
+                const tags = key.substring(key.indexOf('!') + 1);
+                Api.ttp.save({id: Page.id, tags: [tags]}).then(() => {
                     let menu = $('ul.context-menu-list');
                     menu.find(`li.context-menu-item.context-menu-icon`)
                         .removeClass('context-menu-active');
                     menu.find(`li.context-menu-item.context-menu-icon.context-menu-icon-${key.substring(key.indexOf('!') + 1)}`)
                         .addClass('context-menu-active');
-                    $(this).find('.ttp-classification').attr("src", `/static/assets/classifications/${classification}.svg`);
                 });
             } else {
                 const name = `${Page.id}_${key}`;
@@ -37,24 +36,29 @@ let openContextMenu = (selector, trigger='right') => {
         },
         items: {
             fold1: {
-                name: "Apply classification",
+                name: "Assign endpoint tags",
                 items: {
-                    '!unknown': {name: 'Unclassified', icon: 'unknown'},
-                    '!security': {name: 'Security', icon: 'security'},
-                    '!network': {name: 'Network', icon: 'network'},
-                    '!user': {name: 'User Account', icon: 'user'},
-                    '!fs': {name: 'File System', icon: 'fs'},
-                    '!application': {name: 'Application', icon: 'application'},
-                    '!process': {name: 'Process', icon: 'process'},
-                    '!behavior': {name: 'Behavior', icon: 'behavior'}
+                    '!server': {name: 'server', icon: 'unknown'},
+                    '!workstation': {name: 'workstation', icon: 'unknown'},
+                    '!container': {name: 'container', icon: 'unknown'},
                 }
             },
             sep1: '---------',
-            'linux-python.py': {name: 'Attach Linux - python', icon: 'linux'},
-            'linux-x86.c': {name: 'Attach Linux - x86', icon: 'linux'},
-            'darwin-python.py': {name: 'Attach MacOS - python', icon: 'apple'},
-            'darwin-x86.c': {name: 'Attach MacOS - x86', icon: 'apple'},
-            'darwin-arm64.c': {name: 'Attach MacOS - arm64', icon: 'apple'},
+            fold2: {
+                name: "Attach Linux test",
+                items: {
+                    'linux-x86.c': {name: 'linux-x86.c', icon: 'linux'},
+                    'centos-x86.c': {name: 'centos-x86.c', icon: 'linux'},
+                    'ubuntu-x86.c': {name: 'ubuntu-x86.c', icon: 'linux'}
+                }
+            },
+            fold3: {
+                name: "Attach MacOS test",
+                items: {
+                    'darwin-x86.c': {name: 'darwin-x86.c', icon: 'apple'},
+                    'darwin-arm64.c': {name: 'darwin-arm64.c', icon: 'apple'}
+                }
+            },
             sep2: '---------',
             rename: {name: 'Rename', icon: 'edit'},
             delete: {name: 'Delete', icon: 'delete'}

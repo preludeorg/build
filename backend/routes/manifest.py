@@ -29,7 +29,7 @@ class ManifestRoutes:
             await account.manifest.add(
                 ttp_id=identifier,
                 name=data.get('name', ttp.get('name')),
-                classification=data.get('classification', ttp.get('classification'))
+                tags=data.get('tags', ttp.get('tags', []))
             )
         else:
             await account.manifest.add(ttp_id=identifier, name=data.get('name'))

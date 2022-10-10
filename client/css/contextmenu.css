@@ -107,44 +107,19 @@
   background-image: url('../assets/trash-bin.svg');
 }
 
-.context-menu-item.context-menu-icon-unknown::before {
-  content: '';
-  background-image: url('../assets/classifications/unknown.svg');
-}
-
 .context-menu-item.context-menu-icon-security::before {
   content: '';
-  background-image: url('../assets/classifications/security.svg');
-}
-
-.context-menu-item.context-menu-icon-network::before {
-  content: '';
-  background-image: url('../assets/classifications/network.svg');
+  background-image: url('../assets/tags/container.svg');
 }
 
 .context-menu-item.context-menu-icon-user::before {
   content: '';
-  background-image: url('../assets/classifications/user.svg');
-}
-
-.context-menu-item.context-menu-icon-fs::before {
-  content: '';
-  background-image: url('../assets/classifications/fs.svg');
+  background-image: url('../assets/tags/workstation.svg');
 }
 
 .context-menu-item.context-menu-icon-application::before {
   content: '';
-  background-image: url('../assets/classifications/application.svg');
-}
-
-.context-menu-item.context-menu-icon-process::before {
-  content: '';
-  background-image: url('../assets/classifications/process.svg');
-}
-
-.context-menu-item.context-menu-icon-behavior::before {
-  content: '';
-  background-image: url('../assets/classifications/behavior.svg');
+  background-image: url('../assets/tags/server.svg');
 }
 
 .context-menu-active {
