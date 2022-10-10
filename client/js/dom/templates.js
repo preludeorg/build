@@ -76,7 +76,7 @@ class DCF {
             this.dom.addClass('dcf-highlight');
 
             Api.dcf.get(this.name).then(dcf => {
-                if (!Page.dcfTabs.includes(this.name)) {
+                if (!Page.codeTabs.includes(this.name)) {
                     let tab = new Tab(this.name);
                     tab.write(this, tab);
                     tab.setClick(this, tab);  
@@ -118,7 +118,7 @@ class Tab {
     }
     write(dcf, tab) {
         $('#tab-container').prepend(tab.dom);     
-        Page.dcfTabs.push(dcf.name);
+        Page.codeTabs.push(dcf.name);
 
         $('#dcf-name').data('name', this.name).text(this.name);
         $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform}.svg`);
@@ -138,7 +138,7 @@ class Tab {
                 $('.splitter-horizontal').hide();
                 $('#screen-welcome').show();
             }
-            Page.dcfTabs.pop(tab.name);
+            Page.codeTabs.pop(tab.name);
             this.dom.remove();
         })
     }

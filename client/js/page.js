@@ -8,7 +8,7 @@ let Page = {
     screens: {
         code: new Code(),
     },
-    dcfTabs: [],
+    codeTabs: [],
     build: () => {
         Api.ttp.manifest().then(manifest => {
             Object.values(manifest).forEach(ttp => {
