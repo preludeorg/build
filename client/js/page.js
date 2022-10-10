@@ -8,6 +8,7 @@ let Page = {
     screens: {
         code: new Code(),
     },
+    dcfTabs: [],
     build: () => {
         Api.ttp.manifest().then(manifest => {
             Object.values(manifest).forEach(ttp => {
@@ -74,12 +75,6 @@ let Page = {
                 }
             });
         });
-        $("#dcf-close").click(function(){
-            $('.screen').each(function(i, obj) { $(this).hide() });
-            $('.panel-bottom').hide();
-            $('.splitter-horizontal').hide();
-            $('#screen-welcome').show();
-        })
     }
 };
 
