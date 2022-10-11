@@ -14,13 +14,17 @@ class WebRoutes:
     def routes(self) -> [Union[Route, StaticRoute]]:
         return [
             Route('GET', '/', self._get_index),
+            Route('GET', '/serviceworker.js', self._serviceworker),
             Route('POST', '/register', self._register),
-            StaticRoute('/', 'client/dist')
+            StaticRoute('/static', 'client/dist/static'),
         ]
 
     @template('index.html')
     async def _get_index(self, request: web.Request) -> dict:
         return dict()
+
+    async def _serviceworker(self, req):
+        return web.FileResponse('client/dist/serviceworker.js')
 
     @allowed
     async def _register(self, account: Account, data: dict) -> web.Response:

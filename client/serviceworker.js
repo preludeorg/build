@@ -11,13 +11,19 @@ self.addEventListener('install', function(e) {
       return cache.addAll(filesToCache);
     })
   );
+  console.log("---SW INSTALLED---")
 });
 
 /* Serve cached content when offline */
 self.addEventListener('fetch', function(e) {
+    console.log('[FETCH]', e.request.url)
   e.respondWith(
     caches.match(e.request).then(function(response) {
       return response || fetch(e.request);
     })
   );
 });
+
+self.addEventListener('activate', function(e) {
+    self.clients.claim().then(() => console.log('CLAIMED'))
+})

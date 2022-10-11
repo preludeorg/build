@@ -19,7 +19,7 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-                { from: "client/manifest.json", to: "static"},
+                { from: "client/manifest.json", to: "static" },
                 { from: "client/assets", to: "static/assets" },
                 { from: "client/css/font", to: "static/css/font" },
                 { from: "client/css/*.css", to: "static/css/[name][ext]" },
@@ -29,7 +29,7 @@ module.exports = {
         }),
     ],
     output: {
-        filename: '[name].[contenthash].js',
+        filename: 'static/[name].[contenthash].js',
         path: path.resolve(__dirname, 'dist'),
         clean: true,
     },
