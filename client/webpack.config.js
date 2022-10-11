@@ -12,7 +12,6 @@ module.exports = {
     },
     entry: {
         index: './client/js/main.js',
-        serviceworker: './client/serviceworker.js',
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -25,11 +24,12 @@ module.exports = {
                 { from: "client/css/font", to: "static/css/font" },
                 { from: "client/css/*.css", to: "static/css/[name][ext]" },
                 { from: "client/js/lib", to: "static/js/lib" },
+                { from: "client/serviceworker.js", to: "serviceworker.js"},
             ],
         }),
     ],
     output: {
-        filename: '[name].js',
+        filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, 'dist'),
         clean: true,
     },
