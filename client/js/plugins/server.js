@@ -37,7 +37,7 @@ class Server {
         const ip = $('<input id="i-ip" class="plugin-input" placeholder="Enter an IP" spellcheck="false">');
         const account = $('<input id="i-account" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">');
         const token = $('<input id="i-token" class="plugin-input" placeholder="Enter a token" type="password">');
-        const submit = $('<button class="plugin-button">').text('Connect to custom server').on('click', (ev) => {
+        const submit = $('<button id="custom-submit" class="plugin-button">').text('Connect to custom server').on('click', (ev) => {
             ev.stopPropagation();
             ev.preventDefault();
 
@@ -62,16 +62,24 @@ class Server {
         $("#default-server").on('click', (ev) => {
             $('#custom-container').hide();
             $('#default-container').show();
-            $('#default-server').toggleClass('active-server')
-            $('#custom-server').toggleClass('active-server')
+            $('#default-server').addClass('active-server');
+            $('#custom-server').removeClass('active-server');
         })
 
         $("#custom-server").on('click', (ev) => {
             $('#custom-container').show();
             $('#default-container').hide();
-            $('#default-server').toggleClass('active-server')
-            $('#custom-server').toggleClass('active-server')
+            $('#custom-server').addClass('active-server');
+            $('#default-server').removeClass('active-server');
         })
+
+        if (creds.host.includes('localhost')) {
+            $('#default-submit').text('Connected to Prelude server');
+            $('#custom-submit').text('Connect to custom server');
+        } else {
+            $('#custom-submit').text('Connected to custom server');
+            $('#default-submit').text('Connect to Prelude server');
+        }
     }
 }
 
