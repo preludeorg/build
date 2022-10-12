@@ -38,7 +38,7 @@
         padding: 8px 12px;
         outline: none;
         width: 100%;
-        margin-top: 24px;
+        margin-top: 8px;
         box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
 
         &::placeholder {
@@ -63,6 +63,12 @@
             background-color: var(--color-selection);
             border: 1px solid var(--filter-color);
         }
+    }
+
+    .input-label {
+        display: flex;
+        margin-top: 24px;
+        color: #fff;
     }
 
     #custom-container {

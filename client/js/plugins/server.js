@@ -9,7 +9,7 @@ class Server {
         let contents = sidebar.find('#plugin-contents').empty();
         sidebar.find('#plugin-name').html(this.name());
         sidebar.find('#plugin-description').text('' +
-            'By default, Operator is backed by the managed Prelude Server. ' +
+            'By default, Operator is backed by the hosted Prelude Server. ' +
             'You can host alternative Server instances and log in below.');
 
         contents.append($('<div id="server-selection">'))
@@ -19,13 +19,17 @@ class Server {
         contents.append($('<div id="prelude-container">'));
         contents.append($('<div id="custom-container">'));
 
+        $('#prelude-container').append($('<label class="input-label">IP Address</label>'));
         $('#prelude-container').append($('<input id="i-ip-prelude" class="plugin-input" placeholder="127.0.0.1:3000" readonly>'));
+        $('#prelude-container').append($('<label class="input-label">Account ID</label>'));
         $('#prelude-container').append($('<input id="i-account-prelude" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">'));
+        $('#prelude-container').append($('<label class="input-label">Token</label>'));
+        $('#prelude-container').append($('<input id="i-token-prelude" class="plugin-input" placeholder="Enter a token" type="password">'));
         $('#prelude-container').append($('<div id="prelude-submit" class="plugin-button">').text('Connect to Prelude server'));
         $('#prelude-submit').on('click', (ev) => {
             const host = "";
             const account = $('#i-account-prelude').val();
-            const token = "";
+            const token = $('#i-token-prelude').val();;
             Api.ping(host, account, token).then(() => {
                 Api.setCredentials(host, account, token);
                 location.reload();
@@ -36,8 +40,11 @@ class Server {
             });
         });
 
+        $('#custom-container').append($('<label class="input-label">IP Address</label>'));
         $('#custom-container').append($('<input id="i-ip" class="plugin-input" placeholder="Enter an IP" spellcheck="false">'));
+        $('#custom-container').append($('<label class="input-label">Account ID</label>'));
         $('#custom-container').append($('<input id="i-account" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">'));
+        $('#custom-container').append($('<label class="input-label">Token</label>'));
         $('#custom-container').append($('<input id="i-token" class="plugin-input" placeholder="Enter a token" type="password">'));
         $('#custom-container').append($('<button id="custom-submit" class="plugin-button">').text('Connect to custom server'));
         $('#custom-submit').on('click', (ev) => {
