@@ -32,7 +32,7 @@ class ManifestRoutes:
                 tags=data.get('tags', ttp.get('tags', []))
             )
         else:
-            await account.manifest.add(ttp_id=identifier, name=data.get('name'))
+            await account.manifest.add(ttp_id=identifier, name=data.get('name'), tags=[])
             ttp = await account.manifest.select(ttp_id=identifier)
         return web.json_response(ttp)
 
