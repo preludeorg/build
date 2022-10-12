@@ -62,7 +62,7 @@ ul {
 .plugin-bar {
     background-color: var(--color-main);
     border-left: 1px solid var(--color-accent);
-    width: 30px;
+    width: 40px;
 
     ul {
         writing-mode: vertical-rl;
@@ -73,6 +73,8 @@ ul {
         width: 100%;
 
         li {
+            display: flex;
+            align-items: center;
             padding: 20px 0;
             font-size: 16px;
             float: left;
@@ -82,6 +84,14 @@ ul {
             &:hover {
                 background: var(--color-selection);
                 cursor: pointer;
+            }
+
+            img {
+                filter: var(--filter-icon-color);
+            }
+
+            span {
+                padding-top: 8px;
             }
         }
     }

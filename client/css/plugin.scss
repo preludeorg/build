@@ -2,21 +2,28 @@
     background-color: var(--color-main);
     height: 100%;
     width: 25%;
-    right: 30px;
+    right: 40px;
     border-left: 1px solid rgba(0, 0, 0, .5);   
     box-shadow: -6px 2px 6px rgba(0, 0, 0, .3);
     position: absolute;
     z-index: 999;
 
     #plugin-name {
-        justify-content: center;
+        text-align: center;
         font-size: 28px;
-        margin: 0;
+        margin: 0 auto;
+
+        img {
+            height: 24px;
+            width: 24px;
+            filter: var(--filter-icon-color);
+            padding-right: 12px;
+        }
     }
 
     #plugin-description {
         font-size: 14px;
-        margin: 20px 0 0;
+        margin: 24px 0;
     }
 
     .plugin-input {

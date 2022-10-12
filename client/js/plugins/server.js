@@ -2,7 +2,7 @@ import Api from "api.js";
 
 class Server {
     name() {
-        return '&#9678; Server';
+        return $('<img src="/static/assets/servers.svg"></img> <span>Servers</span>');
     }
     write(sidebar) {
         const creds = Api.credentials();
@@ -10,8 +10,7 @@ class Server {
         sidebar.find('#plugin-name').html(this.name());
         sidebar.find('#plugin-description').text('' +
             'By default, Operator is backed by the managed Prelude Server. ' +
-            'You can host alternative Server instances and log in below.' +
-            `You are logged into ${creds.host} as ${creds.account}.`);
+            'You can host alternative Server instances and log in below.');
 
         contents.append($('<div id="server-selection">'))
         $('#server-selection').append($('<div id="default-server" class="active-server">').text("Default"));
@@ -20,10 +19,13 @@ class Server {
         contents.append($('<div id="default-container">'));
         contents.append($('<div id="custom-container">'));
 
-        $('#default-container').append($('<div id="default-submit" class="plugin-button">').text('Connect to Prelude server')).on('click', (ev) => {
-            const host = '';
-            const account = '';
-            const token = '';
+        $('#default-container').append($('<input id="i-ip-prelude" class="plugin-input" placeholder="127.0.0.1:3000" readonly>'));
+        $('#default-container').append($('<input id="i-account-prelude" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">'));
+        $('#default-container').append($('<div id="default-submit" class="plugin-button">').text('Connect to Prelude server'));
+        $('#default-submit').on('click', (ev) => {
+            const host = "";
+            const account = $('#i-account-prelude').val();
+            const token = "";
             Api.ping(host, account, token).then(() => {
                 Api.setCredentials(host, account, token);
                 location.reload();
@@ -34,10 +36,11 @@ class Server {
             });
         });
 
-        const ip = $('<input id="i-ip" class="plugin-input" placeholder="Enter an IP" spellcheck="false">');
-        const account = $('<input id="i-account" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">');
-        const token = $('<input id="i-token" class="plugin-input" placeholder="Enter a token" type="password">');
-        const submit = $('<button id="custom-submit" class="plugin-button">').text('Connect to custom server').on('click', (ev) => {
+        $('#custom-container').append($('<input id="i-ip" class="plugin-input" placeholder="Enter an IP" spellcheck="false">'));
+        $('#custom-container').append($('<input id="i-account" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">'));
+        $('#custom-container').append($('<input id="i-token" class="plugin-input" placeholder="Enter a token" type="password">'));
+        $('#custom-container').append($('<button id="custom-submit" class="plugin-button">').text('Connect to custom server'));
+        $('#custom-submit').on('click', (ev) => {
             ev.stopPropagation();
             ev.preventDefault();
 
@@ -54,10 +57,6 @@ class Server {
                $('#spinner').hide();
             });
         });
-        $('#custom-container').append(ip);
-        $('#custom-container').append(account);
-        $('#custom-container').append(token);
-        $('#custom-container').append(submit);
 
         $("#default-server").on('click', (ev) => {
             $('#custom-container').hide();
