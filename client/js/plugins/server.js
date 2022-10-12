@@ -13,16 +13,16 @@ class Server {
             'You can host alternative Server instances and log in below.');
 
         contents.append($('<div id="server-selection">'))
-        $('#server-selection').append($('<div id="default-server" class="active-server">').text("Default"));
+        $('#server-selection').append($('<div id="prelude-server" class="active-server">').text("Prelude"));
         $('#server-selection').append($('<div id="custom-server">').text("Custom"));
 
-        contents.append($('<div id="default-container">'));
+        contents.append($('<div id="prelude-container">'));
         contents.append($('<div id="custom-container">'));
 
-        $('#default-container').append($('<input id="i-ip-prelude" class="plugin-input" placeholder="127.0.0.1:3000" readonly>'));
-        $('#default-container').append($('<input id="i-account-prelude" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">'));
-        $('#default-container').append($('<div id="default-submit" class="plugin-button">').text('Connect to Prelude server'));
-        $('#default-submit').on('click', (ev) => {
+        $('#prelude-container').append($('<input id="i-ip-prelude" class="plugin-input" placeholder="127.0.0.1:3000" readonly>'));
+        $('#prelude-container').append($('<input id="i-account-prelude" class="plugin-input" placeholder="Enter a username" type="text" spellcheck="false">'));
+        $('#prelude-container').append($('<div id="prelude-submit" class="plugin-button">').text('Connect to Prelude server'));
+        $('#prelude-submit').on('click', (ev) => {
             const host = "";
             const account = $('#i-account-prelude').val();
             const token = "";
@@ -42,7 +42,7 @@ class Server {
         $('#custom-container').append($('<button id="custom-submit" class="plugin-button">').text('Connect to custom server'));
         $('#custom-submit').on('click', (ev) => {
             ev.stopPropagation();
-            ev.preventDefault();
+            ev.preventprelude();
 
             $('#spinner').show();
             const host = $('#i-ip').val();
@@ -58,26 +58,26 @@ class Server {
             });
         });
 
-        $("#default-server").on('click', (ev) => {
+        $("#prelude-server").on('click', (ev) => {
             $('#custom-container').hide();
-            $('#default-container').show();
-            $('#default-server').addClass('active-server');
+            $('#prelude-container').show();
+            $('#prelude-server').addClass('active-server');
             $('#custom-server').removeClass('active-server');
         })
 
         $("#custom-server").on('click', (ev) => {
             $('#custom-container').show();
-            $('#default-container').hide();
+            $('#prelude-container').hide();
             $('#custom-server').addClass('active-server');
-            $('#default-server').removeClass('active-server');
+            $('#prelude-server').removeClass('active-server');
         })
 
         if (creds.host.includes('localhost')) {
-            $('#default-submit').text('Connected to Prelude server');
+            $('#prelude-submit').text('Connected to Prelude server');
             $('#custom-submit').text('Connect to custom server');
         } else {
             $('#custom-submit').text('Connected to custom server');
-            $('#default-submit').text('Connect to Prelude server');
+            $('#prelude-submit').text('Connect to Prelude server');
         }
     }
 }
