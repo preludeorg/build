@@ -2,13 +2,14 @@
     background-color: var(--color-main);
     height: 100%;
     width: 25%;
-    right: 2%;
+    right: 30px;
     border-left: 1px solid rgba(0, 0, 0, .5);   
     box-shadow: -6px 2px 6px rgba(0, 0, 0, .3);
     position: absolute;
     z-index: 999;
 
     #plugin-name {
+        justify-content: center;
         font-size: 28px;
         margin: 0;
     }
@@ -19,31 +20,79 @@
     }
 
     .plugin-input {
+        box-sizing: border-box;
         background-color: var(--color-secondary);
-        border: 1px solid var(--color-accent);
-        border-radius: 8px;
+        border: 1px solid var(--color-theme);
+        border-radius: 4px;
         color: #fff;
         display: block;
         font-size: 14px;
         font-weight: 100;
-        padding: 1rem;
+        padding: 8px 12px;
         outline: none;
         width: 100%;
-        margin-top: 10px;
+        margin-top: 24px;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+
+        &::placeholder {
+            color: var(--filter-color);
+        }
     }
 
     .plugin-button {
-        height: 30px;
+        box-sizing: border-box;
+        padding: 8px 0;
         width: 100%;
-        background-color: var(--color-selection);
-        border: none;
-        border-radius: 8px;
+        background-color: var(--color-lighter-selection);
+        border: 1px solid var(--color-lighter-selection);
+        border-radius: 4px;
         color: white;
         font-size: 16px;
-        margin: 15px 0;
+        margin-top: 24px;
+        text-align: center;
 
         &:hover {
             cursor: pointer;
+            background-color: var(--color-selection);
+            border: 1px solid var(--filter-color);
+        }
+    }
+
+    #custom-container {
+        display: none;
+    }
+
+    #server-selection {
+        display: flex;
+        flex-direction: row;
+        width: max-content;
+        border: 1px solid var(--color-accent);
+        border-radius: 8px;
+        column-gap: 4px;
+        padding: 4px;
+        margin: 0 auto;
+
+        #default-server {
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-accent);
+            }
+        }
+
+        #custom-server {
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-accent);
+            }
+        }
+
+        .active-server {
             background-color: var(--color-lighter-selection);
         }
     }
