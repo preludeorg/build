@@ -7,7 +7,7 @@ class Swift {
         return [StreamLanguage.define(swift),
             createPreludeLangChecks(
                 /\s+test\(.*\)/g,
-                /\s+cleanup\(.*\)/g,
+                /\s+clean\(.*\)/g,
                 name
             )
         ];
@@ -18,12 +18,12 @@ class Swift {
                 '    print("testing")\n' +
                 '}\n' +
                 '\n' +
-                'func cleanup() {\n' +
+                'func clean() {\n' +
                 '    print("cleaning up")\n' +
                 '}\n' +
                 '\n' +
-                'if CommandLine.arguments.contains("cleanup") {\n' +
-                '    cleanup()\n' +
+                'if CommandLine.arguments.contains("clean") {\n' +
+                '    clean()\n' +
                 '} else {\n' +
                 '    test()\n' +
                 '}'
