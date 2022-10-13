@@ -64,7 +64,7 @@ class DCF {
     }
     write() {
         this.dom.find('#platform-logo')
-            .attr("src",`/static/assets/logos/${this.platform.substr(0, this.platform.indexOf('-'))}.svg`);
+            .attr("src",`/static/assets/logos/${this.platform.split('.')[0]}.svg`);
         this.dom.find('#platform').data('name', this.name).text(this.platform);
     }
     setClick() {
@@ -76,6 +76,12 @@ class DCF {
             this.dom.addClass('dcf-highlight');
 
             Api.dcf.get(this.name).then(dcf => {
+                if (!Page.codeTabs.includes(this.name)) {
+                    let tab = new Tab(this.name);
+                    Page.codeTabs.push(this.name);
+                    $('#tab-container').append(tab.dom);     
+                    tab.setClick(this, tab);
+                };
                 Page.show(this.id, {name: this.name, code: dcf.code});
             }).catch(err => {
                 console.error(err);
@@ -109,10 +115,30 @@ class Tab {
     constructor(name) {
         this.name = name.split('_')[1];
         this.platform = this.name.split('-')[0];
+        this.dom = $('#dcf-tab-template').clone().show();
     }
     write() {
         $('#dcf-name').text(this.name);
-        $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform}.svg`);
+        $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform.split('.')[0]}.svg`);
+    }
+    setClick(dcf, tab) {
+        tab.dom.find("#dcf-tab-info").on('click', (ev) => {
+            Api.dcf.get(dcf.name).then(d => {
+                Page.show(dcf.name.split('_')[0], {name: dcf.name, code: d.code});
+            }).catch(err => {
+                console.error(err);
+            });
+        })
+        this.dom.find("#dcf-close").on('click', (ev) => {
+            if ($('#tab-container').children("li").length === 1) {
+                $('.screen').each(function(i, obj) { $(this).hide() });
+                $('.panel-bottom').hide();
+                $('.splitter-horizontal').hide();
+                $('#screen-welcome').show();
+            }
+            Page.codeTabs.pop(tab.name);
+            this.dom.remove();
+        })
     }
 }
 
