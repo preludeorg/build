@@ -4,13 +4,14 @@ import Page from "page.js";
 class TTP {
     constructor(ttp) {
         this.ttp = ttp;
+        this.tags = ttp.tags;
         this.dom = $('#ttp-template').clone()
             .data('tokens', JSON.stringify(this.ttp).toLowerCase())
             .show();
     }
     write() {
         let self = this;
-        this.dom.find('#ttp-name').data('id', this.ttp.id).text(this.ttp.name)
+        this.dom.find('#ttp-name').data('id', this.ttp.id).data('tags', this.tags).text(this.ttp.name)
             .blur(function() {
                 Api.ttp.save({id: self.ttp.id, name: $(this).text()}).then(() => {
                     $(this).attr('contentEditable', 'false');

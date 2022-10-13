@@ -14,8 +14,14 @@ let openContextMenu = (selector, trigger='right') => {
             } else if (key === 'rename') {
                 $(this).find('#ttp-name').attr('contentEditable', 'true').focus();
             } else if (key.startsWith('!')) {
-                const tags = key.substring(key.indexOf('!') + 1);
-                Api.ttp.save({id: Page.id, tags: [tags]}).then(() => {
+                let tags = $(this).find('#ttp-name').data('tags');
+                if (tags.includes(key.substring(key.indexOf('!') + 1))) {
+                    tags = tags.filter(t => t !== key.substring(key.indexOf('!') + 1));
+                } else {
+                    tags.push(key.substring(key.indexOf('!') + 1));
+                }
+
+                Api.ttp.save({id: Page.id, tags: tags}).then(() => {
                     let menu = $('ul.context-menu-list');
                     menu.find(`li.context-menu-item.context-menu-icon`)
                         .removeClass('context-menu-active');
