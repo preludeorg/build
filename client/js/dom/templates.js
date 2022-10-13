@@ -74,13 +74,13 @@ class DCF {
 
             $('.dcf-template').removeClass('dcf-highlight');
             this.dom.addClass('dcf-highlight');
-
+            
             Api.dcf.get(this.name).then(dcf => {
-                if (!Page.codeTabs.includes(this.name)) {
-                    let tab = new Tab(this.name);
-                    Page.codeTabs.push(this.name);
-                    $('#tab-container').append(tab.dom);     
-                    tab.setClick(this, tab);
+                if (!Page.codeTabs.has(this.name)) {
+                    const tab = new Tab(this.name);
+                    $('#tab-container').append(tab.dom);
+                    tab.setClick(this); //look it tup
+                    Page.codeTabs.set(this.name, tab);
                 };
                 Page.show(this.id, {name: this.name, code: dcf.code});
             }).catch(err => {
@@ -115,20 +115,22 @@ class Tab {
     constructor(name) {
         this.name = name.split('_')[1];
         this.platform = this.name.split('-')[0];
-        this.dom = $('#dcf-tab-template').clone().show();
+        this.dom = $('#dcf-tab-template').clone().removeAttr('id');
     }
     write() {
-        $('#dcf-name').text(this.name);
-        $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform.split('.')[0]}.svg`);
+        $('.dcf-tab').removeClass('active-tab');
+        this.dom.addClass('active-tab');
+        this.dom.find('#dcf-tab-info > #dcf-name').text(this.name);
+        this.dom.find('#dcf-tab-info > #dcf-platform').attr("src",`/static/assets/logos/${this.platform.split('.')[0]}.svg`);
     }
-    setClick(dcf, tab) {
-        tab.dom.find("#dcf-tab-info").on('click', (ev) => {
+    setClick(dcf) {
+        this.dom.find("#dcf-tab-info").on('click', (ev) => {
             Api.dcf.get(dcf.name).then(d => {
                 Page.show(dcf.name.split('_')[0], {name: dcf.name, code: d.code});
             }).catch(err => {
                 console.error(err);
             });
-        })
+        });
         this.dom.find("#dcf-close").on('click', (ev) => {
             if ($('#tab-container').children("li").length === 1) {
                 $('.screen').each(function(i, obj) { $(this).hide() });
@@ -136,9 +138,9 @@ class Tab {
                 $('.splitter-horizontal').hide();
                 $('#screen-welcome').show();
             }
-            Page.codeTabs.pop(tab.name);
+            Page.codeTabs.delete(dcf.name);
             this.dom.remove();
-        })
+        });
     }
 }
 

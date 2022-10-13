@@ -1,5 +1,5 @@
 import Api from "/client/js/api.js";
-import Templates from "/client/js/dom/templates.js";
+import Page from "../page";
 import C from "/client/js/screens/lang/c.js";
 import CS from "/client/js/screens/lang/cs.js";
 import Swift from "/client/js/screens/lang/swift.js";
@@ -44,7 +44,7 @@ class Code {
     }
     write(data) {
         this.name = data.name;
-        Templates.tab(data.name).write();
+        Page.codeTabs.get(data.name).write();
         const panelTop = $('.panel-top');
         const newPanelTopHeight = `${panelTop.css('height', '75vh').height() + $('.tab-row').height()}px`;
         panelTop.css('height', newPanelTopHeight);
