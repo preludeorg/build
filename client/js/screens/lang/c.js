@@ -14,6 +14,7 @@ class C {
     }
     bootstrap() {
             return ('#include <stdlib.h>\n' +
+                '#include <string.h>\n' +
                 '\n' +
                 'int test(void)\n' +
                 '{\n' +
