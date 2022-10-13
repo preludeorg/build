@@ -51,7 +51,7 @@ class Code {
         this.resetEditor(data, "75vh");
     }
     language(ext) {
-        if (ext === 'CS') {
+        if (ext === 'cs') {
             return new CS();
         } else if (ext === 'swift') {
             return new Swift();

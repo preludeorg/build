@@ -26,13 +26,13 @@ class CS {
                 '        return 0;\n' +
                 '    }\n' +
                 '\n' +
-                '    static void Main(string[] args) {\n' +
-                '        if (args[0].Contains("clean")) {\n' +
-                '            Clean();\n' +
-                '        } else {\n' +
-                '            Test();\n' +
-                '        }\n' +
-                '    }\n' +
+            '    static void Main(string[] args) {\n' +
+            '        if (args[0].Contains("clean")) {\n' +
+            '            Clean();\n' +
+            '        } else {\n' +
+            '            Test();\n' +
+            '        }\n' +
+            '    }\n' +
                 '}');
         }
 }

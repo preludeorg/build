@@ -28,11 +28,11 @@ class C {
                 '\n' +
                 'int main(int argc, char *argv[])\n' +
                 '{\n' +
-            '        if (strcmp(argv[1], "clean") == 0) {\n' +
-            '            return clean();\n' +
-            '        } else {\n' +
-            '            return test();\n' +
-            '        }\n' +
+                '    if (strcmp(argv[1], "clean") == 0) {\n' +
+                '        return clean();\n' +
+                '    } else {\n' +
+                '        return test();\n' +
+                '    }\n' +
                 '}'
             );
         }
