@@ -1,5 +1,7 @@
 import Api from "/client/js/api.js";
 import Templates from "/client/js/dom/templates.js";
+import C from "/client/js/screens/lang/c.js";
+import CS from "/client/js/screens/lang/cs.js";
 import Swift from "/client/js/screens/lang/swift.js";
 import {basicSetup} from "codemirror"
 import {EditorView, keymap} from "@codemirror/view"
@@ -49,7 +51,13 @@ class Code {
         this.resetEditor(data, "75vh");
     }
     language(ext) {
-        return new Swift();
+        if (ext === 'CS') {
+            return new CS();
+        } else if (ext === 'swift') {
+            return new Swift();
+        } else {
+            return new C();
+        }
     }
     test() {
         $('#spinner').show();

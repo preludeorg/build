@@ -8,7 +8,7 @@ function displayLangErrors(errors) {
     $("#deploy-dcf").parent().css('pointer-events', errors.length === 0 ? '' : 'none');
 }
 
-function createPreludeLangChecks(testRegex, cleanupRegex, name) {
+function createPreludeLangChecks(testRegex, cleanRegex, name) {
     return EditorView.updateListener.of(vu => {
         if (vu.docChanged) {
             const errors = [];
@@ -16,8 +16,8 @@ function createPreludeLangChecks(testRegex, cleanupRegex, name) {
             if (!doc.match(testRegex)) {
                 errors.push('Required test method missing');
             }
-            if (!doc.match(cleanupRegex)) {
-                errors.push('Required cleanup method missing');
+            if (!doc.match(cleanRegex)) {
+                errors.push('Required clean method missing');
             }
             displayLangErrors(errors);
             if(errors.length === 0) {
