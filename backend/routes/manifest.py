@@ -5,7 +5,7 @@ from vertebrae.core import Route
 
 from backend.modules.account import Account
 from backend.util.decorators import allowed
-
+import logging
 
 class ManifestRoutes:
 

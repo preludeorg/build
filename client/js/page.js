@@ -3,6 +3,8 @@ import Templates from "dom/templates.js";
 import RightClick from "dom/rightclick.js";
 import Code from "screens/code.js";
 
+import { v4 as uuidv4 } from 'uuid';
+
 let Page = {
     id: null,
     screens: {
@@ -55,7 +57,8 @@ let Page = {
     },
     listen() {
         $("#add-ttp").click(function(){
-            Api.ttp.save({name: 'Change me'}).then(ttp => {
+            console.log(uuidv4());
+            Api.ttp.save({id: uuidv4(), name: 'Change me'}).then(ttp => {
                 let template = Page.addTTP(ttp);
                 template.dom.find('#ttp-name').attr('contentEditable', 'true').focus();
             });
