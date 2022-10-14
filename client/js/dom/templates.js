@@ -7,37 +7,41 @@ class TTP {
         this.dom = $('#ttp-template').clone()
             .data('tokens', JSON.stringify(this.ttp).toLowerCase())
             .show();
+        this.allowToggle = true
     }
     write() {
         let self = this;
         this.dom.find('#ttp-name').data('id', this.ttp.id).text(this.ttp.name)
-            .blur(function() {
-                Api.ttp.save({id: self.ttp.id, name: $(this).text()}).then(() => {
+            .blur(function () {
+                Api.ttp.save({ id: self.ttp.id, name: $(this).text() }).then(() => {
                     $(this).attr('contentEditable', 'false');
                 });
-            }).on('keydown',function(e){
+            }).on('keydown', function (e) {
                 let key = e.keyCode || e.charCode;
                 if (key === 13) {
                     $(this).blur();
                 }
             });
     }
+
     setClick() {
-        this.dom.on('click', (ev) => {
-            if (!$(ev.target).hasClass("vertical-ellipsis")) {
-                this.dom.toggleClass('ttp-highlight');
-            }
-        })
         this.dom.find('#ttp-row').on('click', (ev) => {
             ev.preventDefault();
+            if (!this.allowToggle) {
+                return
+            }
+
+            this.allowToggle = false;
 
             Page.id = this.ttp.id;
+            this.dom.toggleClass('ttp-highlight');
             this.dom.find('.dropdown-arrow').toggleClass('dropdown-arrow-active');
             this.dom.find('img').toggleClass('image-active');
 
             const visibleDCF = this.dom.find('#dcf-listing');
             if (visibleDCF.children().length > 0) {
                 visibleDCF.empty();
+                this.allowToggle = true
                 return;
             }
             Api.ttp.get(this.ttp.id).then(entry => {
@@ -49,6 +53,8 @@ class TTP {
                 });
             }).catch(err => {
                 console.error(err);
+            }).finally(() => {
+                this.allowToggle = true
             });
         });
     }
@@ -64,7 +70,7 @@ class DCF {
     }
     write() {
         this.dom.find('#platform-logo')
-            .attr("src",`/static/assets/logos/${this.platform.substr(0, this.platform.indexOf('-'))}.svg`);
+            .attr("src", `/static/assets/logos/${this.platform.substr(0, this.platform.indexOf('-'))}.svg`);
         this.dom.find('#platform').data('name', this.name).text(this.platform);
     }
     setClick() {
@@ -76,7 +82,7 @@ class DCF {
             this.dom.addClass('dcf-highlight');
 
             Api.dcf.get(this.name).then(dcf => {
-                Page.show(this.id, {name: this.name, code: dcf.code});
+                Page.show(this.id, { name: this.name, code: dcf.code });
             }).catch(err => {
                 console.error(err);
             });
@@ -112,7 +118,7 @@ class Tab {
     }
     write() {
         $('#dcf-name').text(this.name);
-        $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform}.svg`);
+        $('#dcf-platform').attr("src", `/static/assets/logos/${this.platform}.svg`);
     }
 }
 
