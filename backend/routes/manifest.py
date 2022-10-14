@@ -26,13 +26,9 @@ class ManifestRoutes:
         identifier = data.get('id', str(uuid.uuid4()))
         ttp = await account.manifest.select(ttp_id=identifier)
         if ttp:
-            await account.manifest.add(
-                ttp_id=identifier,
-                name=data.get('name', ttp.get('name')),
-                tags=data.get('tags', ttp.get('tags', []))
-            )
+            await account.manifest.add(ttp_id=identifier, name=data.get('name', ttp.get('name')))
         else:
-            await account.manifest.add(ttp_id=identifier, name=data.get('name'), tags=[])
+            await account.manifest.add(ttp_id=identifier, name=data.get('name'))
             ttp = await account.manifest.select(ttp_id=identifier)
         return web.json_response(ttp)
 
