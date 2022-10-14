@@ -107,21 +107,6 @@
   background-image: url('../assets/trash-bin.svg');
 }
 
-.context-menu-item.context-menu-icon-security::before {
-  content: '';
-  background-image: url('../assets/tags/container.svg');
-}
-
-.context-menu-item.context-menu-icon-user::before {
-  content: '';
-  background-image: url('../assets/tags/workstation.svg');
-}
-
-.context-menu-item.context-menu-icon-application::before {
-  content: '';
-  background-image: url('../assets/tags/server.svg');
-}
-
 .context-menu-active {
   background-color: var(--color-lighter-selection);
 }
