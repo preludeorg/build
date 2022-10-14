@@ -64,7 +64,7 @@ class DCF {
     }
     write() {
         this.dom.find('#platform-logo')
-            .attr("src",`/static/assets/logos/${this.platform.substr(0, this.platform.indexOf('-'))}.svg`);
+            .attr("src",`/static/assets/logos/${this.platform.split('.')[0]}.svg`);
         this.dom.find('#platform').data('name', this.name).text(this.platform);
     }
     setClick() {
@@ -112,7 +112,7 @@ class Tab {
     }
     write() {
         $('#dcf-name').text(this.name);
-        $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform}.svg`);
+        $('#dcf-platform').attr("src",`/static/assets/logos/${this.platform.split('.')[0]}.svg`);
     }
 }
 
