@@ -112,22 +112,26 @@
 
 <!-- TEMPLATES -->
 
-<li id="ttp-template" class="ttp-template">
-  <div id="ttp-row">
-    <div class="dropdown-arrow"></div>
-    <img class="ttp-classification"/>
-    <p id="ttp-name" spellcheck="false" class="file"></p>
-  </div>
-  <img class="vertical-ellipsis" src="/static/assets/vertical-ellipsis.svg"/>
-  <ul id="dcf-listing"></ul>
-</li>
+<template id="ttp-template">
+  <li class="ttp-template">
+    <div id="ttp-row">
+      <div class="dropdown-arrow"></div>
+      <img class="ttp-classification"/>
+      <p id="ttp-name" spellcheck="false" class="file"></p>
+    </div>
+    <img class="vertical-ellipsis" src="/static/assets/vertical-ellipsis.svg"/>
+    <ul id="dcf-listing"></ul>
+  </li>
+</template>
 
-<li id="dcf-template" class="dcf-template">
-  <div id="dcf-row">
-    <img id="platform-logo"/>
-    <p id="platform" spellcheck="false" class="file"></p>
-  </div>
-</li>
+<template id="dcf-template">
+  <li class="dcf-template">
+    <div id="dcf-row">
+      <img id="platform-logo"/>
+      <p id="platform" spellcheck="false" class="file"></p>
+    </div>
+  </li>
+</template>
 
 <!-- Ensure all panels can resize -->
 <script>

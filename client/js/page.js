@@ -18,9 +18,9 @@ let Page = {
             $('#spinner').hide();
         });
     },
-    show: (id=null, data=null) => {
+    show: (id = null, data = null) => {
         Page.id = id;
-        $('.screen').each(function(i, obj) { $(this).hide() });
+        $('.screen').each(function (i, obj) { $(this).hide() });
         $('#screen-code').show();
         $('#dcf-results').empty();
         $('.panel-bottom').show();
@@ -54,28 +54,31 @@ let Page = {
         $('#plugins').append(template.dom);
     },
     listen() {
-        $("#add-ttp").click(function(){
-            Api.ttp.save({name: 'Change me'}).then(ttp => {
+        $("#add-ttp").click(function () {
+            Api.ttp.save({ name: 'Change me' }).then(ttp => {
+                console.log("dd", ttp)
                 let template = Page.addTTP(ttp);
-                template.dom.find('#ttp-name').attr('contentEditable', 'true').focus();
+                const element = template.dom.querySelector('#ttp-name')
+                element.setAttribute('contentEditable', 'true')
+                element.focus()
             });
         });
-        $("#deploy-dcf").click(function(){
+        $("#deploy-dcf").click(function () {
             Page.screens.code.test();
         });
-        $('#manifest-filter').keyup(function() {
+        $('#manifest-filter').keyup(function () {
             let filter = $(this).val().toLowerCase();
-            $("#manifest > li").each(function() {
+            $("#manifest > li").each(function () {
                 let match = $(this).data('tokens').includes(filter);
-                if (match)  {
+                if (match) {
                     $(this).show();
                 } else {
                     $(this).hide();
                 }
             });
         });
-        $("#dcf-close").click(function(){
-            $('.screen').each(function(i, obj) { $(this).hide() });
+        $("#dcf-close").click(function () {
+            $('.screen').each(function (i, obj) { $(this).hide() });
             $('.panel-bottom').hide();
             $('.splitter-horizontal').hide();
             $('#screen-welcome').show();
