@@ -18,8 +18,7 @@ class DCFRoutes:
 
     @allowed
     async def _get_dcf(self, account: Account, data: dict) -> web.json_response:
-        code = await account.dcf.select(name=data['name'])
-        return web.json_response(dict(code=code))
+        return web.Response(body=await account.dcf.select(name=data['name']))
 
     @allowed
     async def _post_dcf(self, account: Account, data: dict) -> web.Response:
