@@ -2,6 +2,8 @@ import Api from "api.js";
 import Templates from "dom/templates.js";
 import RightClick from "dom/rightclick.js";
 import Code from "screens/code.js";
+import { hideElements, showElements } from "./dom/helpers";
+
 
 let Page = {
     id: null,
@@ -15,16 +17,17 @@ let Page = {
             });
         }).finally(() => {
             RightClick.attach();
-            $('#spinner').hide();
+            hideElements('#spinner')
         });
     },
     show: (id = null, data = null) => {
         Page.id = id;
-        $('.screen').each(function (i, obj) { $(this).hide() });
-        $('#screen-code').show();
-        $('#dcf-results').empty();
-        $('.panel-bottom').show();
-        $('.splitter-horizontal').show();
+        hideElements('.screen')
+        document.querySelector('#screen-code').style.display = "block"
+        document.querySelector('#dcf-results').replaceChildren();
+        showElements('.panel-bottom')
+        showElements('.splitter-horizontal')
+
         $(".panel-top").resizable('destroy');
         $(".panel-top").resizable({
             handleSelector: ".splitter-horizontal",
@@ -39,7 +42,7 @@ let Page = {
         const template = Templates.ttp(ttp);
         template.write();
         template.setClick();
-        $('#manifest').prepend(template.dom);
+        document.querySelector('#manifest').prepend(template.dom);
         return template;
     },
     addDCF: (name) => {
@@ -51,37 +54,40 @@ let Page = {
     addPlugin: (plugin) => {
         const template = Templates.plugin(plugin);
         template.setClick();
-        $('#plugins').append(template.dom);
+        document.querySelector('#plugins').append(template.dom);
     },
     listen() {
-        $("#add-ttp").click(function () {
+        document.querySelector('#add-ttp').addEventListener('click', function () {
             Api.ttp.save({ name: 'Change me' }).then(ttp => {
-                console.log("dd", ttp)
                 let template = Page.addTTP(ttp);
-                const element = template.dom.querySelector('#ttp-name')
-                element.setAttribute('contentEditable', 'true')
-                element.focus()
+                const nameElem = template.dom.querySelector('#ttp-name')
+                nameElem.setAttribute('contentEditable', 'true');
+                nameElem.focus()
             });
         });
-        $("#deploy-dcf").click(function () {
+
+        document.querySelector('#deploy-dcf').addEventListener('click', function () {
             Page.screens.code.test();
         });
-        $('#manifest-filter').keyup(function () {
-            let filter = $(this).val().toLowerCase();
-            $("#manifest > li").each(function () {
-                let match = $(this).data('tokens').includes(filter);
+
+        document.querySelector('#manifest-filter').addEventListener("keyup", function (e) {
+            let filter = e.target.value.toLowerCase();
+
+            document.querySelectorAll("#manifest > li").forEach(el => {
+                let match = el.dataset.tokens.includes(filter)
                 if (match) {
-                    $(this).show();
+                    el.style.display = ""
                 } else {
-                    $(this).hide();
+                    el.style.display = "none"
                 }
-            });
+            })
         });
-        $("#dcf-close").click(function () {
-            $('.screen').each(function (i, obj) { $(this).hide() });
-            $('.panel-bottom').hide();
-            $('.splitter-horizontal').hide();
-            $('#screen-welcome').show();
+
+        document.querySelector('#dcf-close').addEventListener('click', function () {
+            hideElements('.screen')
+            hideElements('.panel-bottom')
+            hideElements('.splitter-horizontal')
+            showElements('#screen-welcome')
         })
     }
 };

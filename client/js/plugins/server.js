@@ -1,4 +1,5 @@
 import Api from "api.js";
+import { hideElements, htmlToElement, showElements } from "../dom/helpers";
 
 class Server {
     name() {
@@ -6,37 +7,44 @@ class Server {
     }
     write(sidebar) {
         const creds = Api.credentials();
-        let contents = sidebar.find('#plugin-contents').empty();
-        sidebar.find('#plugin-name').html(this.name());
-        sidebar.find('#plugin-description').text('' +
+        const contents = sidebar.querySelector('#plugin-contents')
+        contents.replaceChildren()
+
+        sidebar.querySelector('#plugin-name').innerHTML = this.name();
+        sidebar.querySelector('#plugin-description').textContent = '' +
             'By default, Operator is backed by the managed Prelude Server. ' +
             'You can host alternative Server instances and log in below.' +
-            `You are logged into ${creds.host} as ${creds.account}.`);
+            `You are logged into ${creds.host} as ${creds.account}.`;
 
-        const ip = $('<input id="i-ip" class="plugin-input" placeholder="Enter an IP" spellcheck="false">');
-        const account = $('<input id="i-account" class="plugin-input" placeholder="Enter account ID" type="text" spellcheck="false">');
-        const token = $('<input id="i-token" class="plugin-input" placeholder="Enter a token" type="password">');
-        const submit = $('<button class="plugin-button">').text('Login').on('click', (ev) => {
-            ev.stopPropagation();
-            ev.preventDefault();
+        const formElem = htmlToElement(`
+         <form>
+            <input name="i-ip" class="plugin-input" placeholder="Enter an IP" spellcheck="false">
+            <input name="i-account" class="plugin-input" placeholder="Enter account ID" type="text" spellcheck="false">
+            <input name="i-token" class="plugin-input" placeholder="Enter a token" type="password">
+            <button type="submit" class="plugin-button">Login</button>
+         </form>
+        `)
 
-            $('#spinner').show();
-            const host = $('#i-ip').val();
-            const account = $('#i-account').val();
-            const token = $('#i-token').val();
+        formElem.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            showElements("#spinner")
+            const host = formData.get("i-ip");
+            const account = formData.get('i-account');
+            const token = formData.get('i-token');
+
             Api.ping(host, account, token).then(() => {
                 Api.setCredentials(host, account, token);
                 location.reload();
             }).catch(err => {
-               console.error(`Unable to connect to ${host}, ${err}`);
+                console.error(`Unable to connect to ${host}, ${err}`);
             }).finally(() => {
-               $('#spinner').hide();
+                hideElements('#spinner')
             });
         });
-        contents.append(ip);
-        contents.append(account);
-        contents.append(token);
-        contents.append(submit);
+
+        contents.append(formElem);
     }
 }
 

@@ -1,3 +1,5 @@
+import { hideElements } from "./dom/helpers";
+
 class Routes {
     constructor(host, account, token) {
         this.host = host;
@@ -7,7 +9,7 @@ class Routes {
             'content-type': 'application/json'
         }
     }
-    async handleRoute(route, options, json=true) {
+    async handleRoute(route, options, json = true) {
         options['headers'] = this.headers;
         const promise = fetch(route, options).catch(err => {
             console.error(`Error fetching ${route}: ${err}`);
@@ -32,7 +34,7 @@ class TTPRoutes extends Routes {
     }
     async save(procedure) {
         const data = JSON.stringify(procedure);
-        return await this.handleRoute(`${this.host}/manifest`, {method: 'PUT', body: data});
+        return await this.handleRoute(`${this.host}/manifest`, { method: 'PUT', body: data });
     }
     async delete(id) {
         return await this.handleRoute(`${this.host}/manifest/${id}`, {
@@ -50,17 +52,17 @@ class DCFRoutes extends Routes {
         return await this.handleRoute(`${this.host}/dcf/${name}`, {});
     }
     async save(name, code) {
-        const data = JSON.stringify({code: code});
+        const data = JSON.stringify({ code: code });
         return await this.handleRoute(`${this.host}/dcf/${name}`, {
             method: 'POST',
             body: data
         }, false);
     }
     async delete(name) {
-        return await this.handleRoute(`${this.host}/dcf/${name}`, {method: 'DELETE'}, false);
+        return await this.handleRoute(`${this.host}/dcf/${name}`, { method: 'DELETE' }, false);
     }
     async submit(name) {
-        return await this.handleRoute(`${this.host}/dcf/${name}/submit`,{
+        return await this.handleRoute(`${this.host}/dcf/${name}/submit`, {
             method: 'POST',
             body: JSON.stringify({})
         }, false);
@@ -95,16 +97,16 @@ let Api = {
             Api.dcf = new DCFRoutes(creds.host, accountID, creds.token);
             callback();
         }).catch(() => {
-            $('#spinner').hide();
+            hideElements('#spinner')
         });
     },
     register: (creds) => {
         const routes = new Routes(creds.host, creds.account, creds.token);
-        return routes.handleRoute(`${creds.host}/register`, {method: 'POST'}, true);
+        return routes.handleRoute(`${creds.host}/register`, { method: 'POST' }, true);
     },
     async ping(host, account, token) {
-        const headers = {account: account, token: token};
-        return fetch(`${host}/ping`, {headers: headers});
+        const headers = { account: account, token: token };
+        return fetch(`${host}/ping`, { headers: headers });
     }
 };
 

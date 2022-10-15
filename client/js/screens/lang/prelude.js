@@ -1,11 +1,12 @@
-import {EditorView} from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
 import Api from "/client/js/api";
+import { htmlToElement } from '../../dom/helpers'
 
 function displayLangErrors(errors) {
-    const dcfResults = $('#dcf-results');
-    dcfResults.empty();
-    errors.forEach(err => dcfResults.append($('<pre class="result-1">').text(err)));
-    $("#deploy-dcf").parent().css('pointer-events', errors.length === 0 ? '' : 'none');
+    const dcfResults = document.querySelector('#dcf-results');
+    dcfResults.replaceChildren();
+    errors.forEach(err => dcfResults.append(htmlToElement(`<pre class="result-1">${err.toString()}</pre>`)));
+    document.querySelector('#deploy-dcf').parentNode.style.pointerEvents = errors.length === 0 ? '' : 'none'
 }
 
 function createPreludeLangChecks(testRegex, cleanRegex, name) {
@@ -20,11 +21,11 @@ function createPreludeLangChecks(testRegex, cleanRegex, name) {
                 errors.push('Required clean method missing');
             }
             displayLangErrors(errors);
-            if(errors.length === 0) {
+            if (errors.length === 0) {
                 Api.dcf.save(name, vu.state.doc.toString());
             }
         }
     })
 }
 
-export {displayLangErrors, createPreludeLangChecks};
+export { displayLangErrors, createPreludeLangChecks };

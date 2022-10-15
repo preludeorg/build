@@ -18,7 +18,6 @@ class TTP {
     write() {
         let self = this;
         const nameElement = this.dom.querySelector('#ttp-name')
-        console.log(this.ttp)
         nameElement.dataset.id = this.ttp.id
         nameElement.textContent = this.ttp.name
 
@@ -114,18 +113,18 @@ class Plugin {
     constructor(plugin) {
         this.plugin = plugin;
         this.dom = document.createElement("li")
-        this.dom.append(this.plugin.name());
+        this.dom.innerHTML = this.plugin.name()
     }
     setClick() {
         this.dom.addEventListener('click', (ev) => {
             ev.stopPropagation();
             ev.preventDefault();
 
-            const sidebar = $('#plugin-template');
-            if (sidebar.is(":visible")) {
-                sidebar.hide();
+            const sidebar = document.querySelector('#plugin-template');
+            if (sidebar.offsetWidth > 0 || sidebar.offsetHeight > 0) {
+                sidebar.style.display = "none"
             } else {
-                sidebar.show();
+                sidebar.style.display = ""
                 this.plugin.write(sidebar);
             }
         });
@@ -138,8 +137,8 @@ class Tab {
         this.platform = this.name.split('-')[0];
     }
     write() {
-        $('#dcf-name').text(this.name);
-        $('#dcf-platform').attr("src", `/static/assets/logos/${this.platform}.svg`);
+        document.querySelector('#dcf-name').textContent = this.name
+        document.querySelector('#dcf-platform').setAttribute("src", `/static/assets/logos/${this.platform}.svg`);
     }
 }
 
