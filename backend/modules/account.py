@@ -31,10 +31,11 @@ class Manifest:
 
     async def remove(self, ttp_id: str) -> None:
         """ Remove an entry from the manifest """
-        self.log.debug(f'[{self.account_id}] Deleting TTP: {ttp_id}')
         manifest = await self.select()
-        del manifest[ttp_id]
-        await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
+        if ttp_id in manifest:
+            self.log.debug(f'[{self.account_id}] Deleting TTP: {ttp_id}')
+            del manifest[ttp_id]
+            await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
 
 
 class DCF:
