@@ -57,4 +57,4 @@ class CompileService(Service):
 
             with tempfile.NamedTemporaryFile(prefix=account_id) as dst:
                 async for dos in self.compilers[extension].run(src=src.name, dst=dst.name):
-                    yield f'{name}_{dos}'
+                    yield f'{pathlib.Path(name).stem}_{dos}'
