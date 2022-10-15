@@ -46,9 +46,9 @@ class Code {
         this.name = data.name;
         Templates.tab(data.name).write();
         const panelTop = $('.panel-top');
-        const newPanelTopHeight = `${panelTop.css('height', '75vh').height() + $('.tab-row').height()}px`;
+        const newPanelTopHeight = `${panelTop.css('height', '60vh').height() + $('.tab-row').height()}px`;
         panelTop.css('height', newPanelTopHeight);
-        this.resetEditor(data, "75vh");
+        this.resetEditor(data, "60vh");
     }
     language(ext) {
         if (ext === 'cs') {
@@ -66,7 +66,7 @@ class Code {
                 .text(`.......... [${new Date().toLocaleTimeString()}] Compiling test\n\n`)
                 .addClass('result-system'));
 
-        Api.dcf.submit(this.name).then(res => res.json()).then(links => {
+        Api.dcf.test(this.name).then(res => res.json()).then(links => {
             links.forEach(link => {
                 const status = link.status ? 'failed' : 'completed';
                 const cpu = link['cpu'].toFixed(3);

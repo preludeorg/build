@@ -13,7 +13,7 @@ class DCFRoutes:
             Route('GET', '/dcf/{name}', self._get_dcf),
             Route('POST', '/dcf/{name}', self._post_dcf),
             Route('DELETE', '/dcf/{name}', self._del_dcf),
-            Route('POST', '/dcf/{name}/submit', self._submit_dcf)
+            Route('POST', '/dcf/{name}/test', self._test_dcf)
         ]
 
     @allowed
@@ -32,9 +32,8 @@ class DCFRoutes:
         return web.Response(status=200)
 
     @allowed
-    async def _submit_dcf(self, account: Account, data: dict) -> web.Response:
-        binary = await Service.find('compile').compile(account_id=account.account_id, name=data['name'])
-        links = await Service.find('testbench').test(name=data['name'], binary=binary)
-        if all([li.status == 0 for li in links]):
-            await Service.find('signing').sign(binary=binary)
-        return web.json_response(links)
+    async def _test_dcf(self, account: Account, data: dict) -> web.Response:
+        async for binary in Service.find('compile').compile(account_id=account.account_id, name=data['name']):
+            print(binary)
+        #links = await Service.find('testbench').test(name=data['name'], binary=binary)
+        return web.json_response([])
