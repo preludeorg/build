@@ -7,7 +7,7 @@ let filesToCache = [
 ];
 
 self.addEventListener('install', function(e) {
-    Database.connect()
+    Database.connect();
     e.waitUntil(
         caches.open(cacheName)
             .then(cache => cache.addAll(filesToCache))
@@ -21,12 +21,11 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('fetch', function(e) {
     e.respondWith((async () => {
+        const url = new URL(e.request.url);
         if (e.request.headers.has('nocache')) {
-            console.log('SKIPPING CACHE')
+            console.log('[FETCH] Intentionally skipping cache.', url.pathname);
             return fetch(e.request);
         }
-
-        const url = new URL(e.request.url);
         if (url.pathname.startsWith('/dcf')) {
             return fetchDCF(e.request, url.pathname);
         }
@@ -54,17 +53,14 @@ async function fetchDCF(request, path) {
             })
         case 'POST':
             return fetch(request.clone()).then((async (resp) => {
-                let dcf = {
-                    key: path,
-                    code: (await request.json()).code
-                }
+                let dcf = { key: path, code: (await request.json()).code }
                 Database.set(dcf);
                 console.log('[FETCH/POST] wrote to server then cache:', path);
                 return resp;
             }));
         case 'DELETE':
             return fetch(request).then(resp => {
-                Database.delete(path)
+                Database.delete(path);
                 console.log('[FETCH/DELETE] deleted from server and cache:', path);
                 return resp;
             });
@@ -105,14 +101,14 @@ async function fetchManifest(request, path) {
                     id : dcf.id,
                     name : dcf.name,
                     tags : dcf.tags,
-                }
+                };
                 await Database.set(ttp);
                 console.log(`[FETCH/PUT] wrote to server then cache: ${path}/${dcf.id}`);
                 return resp;
             }));
         case 'DELETE':
             return fetch(request).then(resp => {
-                Database.delete(path)
+                Database.delete(path);
                 console.log('[FETCH/DELETE] deleted from server and cache:', path);
                 return resp;
             });

@@ -6,12 +6,12 @@ import Server from "plugins/server.js";
 window.onload = () => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('../serviceworker.js', {type: 'module'})
-            .then((sw) => { console.log('ServiceWorker registered. Scope:', sw.scope) });
+            .then(sw => console.log('ServiceWorker registered. Scope:', sw.scope));
     }
 }
 
 const callback = async function() {
-    await Database.sync().catch(e => console.log('Did not sync database.', e));
+    await Database.sync().catch(e => console.log('Database sync failed.', e));
     Page.build();
     Page.listen();
 };

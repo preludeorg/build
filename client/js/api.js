@@ -27,7 +27,7 @@ class TTPRoutes extends Routes {
     async manifest(nocache=false) {
         let options = {};
         if (nocache) {
-            options['headers'] = {'nocache': '-'}
+            options['headers'] = {'nocache': '-'};
         }
         return await this.handleRoute(`${this.host}/manifest`, options);
     }

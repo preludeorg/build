@@ -4,6 +4,7 @@
 *__pycache__*
 /node_modules
 *.lock
+package-lock.json
 
 # do not commit auto-generated files
 /client/dist

@@ -51,13 +51,12 @@ let Page = {
         return template;
     },
     addPlugin: (plugin) => {
-    const template = Templates.plugin(plugin);
+        const template = Templates.plugin(plugin);
         template.setClick();
         $('#plugins').append(template.dom);
     },
     listen() {
         $("#add-ttp").click(function(){
-            console.log(uuidv4());
             Api.ttp.save({id: uuidv4(), name: 'Change me'}).then(ttp => {
                 let template = Page.addTTP(ttp);
                 template.dom.find('#ttp-name').attr('contentEditable', 'true').focus();

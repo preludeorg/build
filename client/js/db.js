@@ -30,7 +30,7 @@ let Database = {
         });
     },
     sync: async () => {
-        await Database.connect()
+        await Database.connect();
         if (!Database.db) {
             return new Promise((resolve, reject) => reject('Database not found'));
         }
@@ -38,24 +38,24 @@ let Database = {
 
         await Api.ttp.manifest(true).then(manifest => {
             Object.values(manifest).forEach(ttp => {
-                ttp.key=`/manifest/${ttp.id}`
+                ttp.key=`/manifest/${ttp.id}`;
                 Database.set(ttp);
             });
-            console.log('-- MANIFEST SYNCED --')
+            console.log('-- MANIFEST SYNCED --');
         }).catch( e => console.log('Syncing manifest to server failed.', e) )
 
         await Api.dcf.list().then(dcfs => {
             Object.entries(dcfs).forEach(([k,v]) => {
-                let dcf = { key: `/dcf/${k}`, code: v }
+                let dcf = { key: `/dcf/${k}`, code: v };
                 Database.set(dcf);
             })
-            console.log('-- DCFS SYNCED --')
+            console.log('-- DCFS SYNCED --');
         }).catch( e => console.log('Syncing dcfs to server failed.', e) )
     },
     get: async (key) => {
         return new Promise((resolve, reject) => {
             if (!Database.db) reject('Database not found');
-            let txn = Database.db.transaction(DB_STORE_NAME, 'readonly').objectStore(DB_STORE_NAME)
+            let txn = Database.db.transaction(DB_STORE_NAME, 'readonly').objectStore(DB_STORE_NAME);
             txn = txn.get(key);
             txn.onsuccess = (r) => {
                 if (r.target.result === undefined) {
@@ -108,7 +108,7 @@ let Database = {
     delete: async (key) => {
         return new Promise((resolve, reject) => {
             if (!Database.db) reject('Database not found');
-            let txn = Database.db.transaction(DB_STORE_NAME, 'readwrite').objectStore(DB_STORE_NAME)
+            let txn = Database.db.transaction(DB_STORE_NAME, 'readwrite').objectStore(DB_STORE_NAME);
             txn = txn.delete(key);
             txn.onsuccess = () => resolve();
             txn.onerror = (e) => reject(e);
