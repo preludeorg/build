@@ -8,7 +8,7 @@ class Routes {
         }
     }
     async handleRoute(route, options, json=true) {
-        options['headers'] = this.headers;
+        options['headers'] = Object.assign(options['headers'] || {}, this.headers);
         const promise = fetch(route, options).catch(err => {
             console.error(`Error fetching ${route}: ${err}`);
             return {};
@@ -24,8 +24,12 @@ class TTPRoutes extends Routes {
     constructor(host, account, token) {
         super(host, account, token);
     }
-    async manifest() {
-        return await this.handleRoute(`${this.host}/manifest`, {});
+    async manifest(nocache=false) {
+        let options = {};
+        if (nocache) {
+            options['headers'] = {'nocache': '-'}
+        }
+        return await this.handleRoute(`${this.host}/manifest`, options);
     }
     async get(id) {
         return await this.handleRoute(`${this.host}/manifest/${id}`, {});
@@ -45,6 +49,10 @@ class TTPRoutes extends Routes {
 class DCFRoutes extends Routes {
     constructor(host, account, token) {
         super(host, account, token);
+    }
+    async list() {
+        let options = {'headers': {'nocache': '-'}};
+        return await this.handleRoute(`${this.host}/dcf`, options);
     }
     async get(name) {
         return await this.handleRoute(`${this.host}/dcf/${name}`, {});

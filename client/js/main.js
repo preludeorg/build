@@ -1,16 +1,17 @@
 import Api from "api.js";
+import Database from "db.js";
 import Page from "page.js";
 import Server from "plugins/server.js";
 
 window.onload = () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('../serviceworker.js').then((sw) => {
-           console.log('ServiceWorker registered. Scope:', sw.scope);
-        });
+        navigator.serviceWorker.register('../serviceworker.js', {type: 'module'})
+            .then((sw) => { console.log('ServiceWorker registered. Scope:', sw.scope) });
     }
 }
 
-const callback = function() {
+const callback = async function() {
+    await Database.sync().catch(e => console.log('Did not sync database.', e));
     Page.build();
     Page.listen();
 };

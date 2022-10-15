@@ -5,16 +5,20 @@ from vertebrae.service import Service
 from backend.modules.account import Account
 from backend.util.decorators import allowed
 
-
 class DCFRoutes:
 
     def routes(self) -> [Route]:
         return [
+            Route('GET', '/dcf', self._list_dcfs),
             Route('GET', '/dcf/{name}', self._get_dcf),
             Route('POST', '/dcf/{name}', self._post_dcf),
             Route('DELETE', '/dcf/{name}', self._del_dcf),
             Route('POST', '/dcf/{name}/submit', self._submit_dcf)
         ]
+
+    @allowed
+    async def _list_dcfs(self, account: Account, data: dict) -> web.json_response:
+        return web.json_response(await account.dcf.code_files())
 
     @allowed
     async def _get_dcf(self, account: Account, data: dict) -> web.json_response:

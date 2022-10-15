@@ -22,12 +22,13 @@ class Manifest:
             await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps({}))
             return {}
 
-    async def add(self, ttp_id: str, name: str) -> None:
+    async def add(self, ttp_id: str, name: str) -> dict:
         """ Add an entry to the manifest """
         self.log.debug(f'[{self.account_id}] Updating TTP: {ttp_id}')
         manifest = await self.select()
         manifest[ttp_id] = dict(id=ttp_id, name=name)
         await self.file.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
+        return manifest[ttp_id]
 
     async def remove(self, ttp_id: str) -> None:
         """ Remove an entry from the manifest """
@@ -67,6 +68,10 @@ class DCF:
         files = await self.s3.walk(bucket=self._accounts_bucket.split('/')[0], prefix=f'{self.account_id}/src/{ttp_id}')
         return [Path(f).name for f in files]
 
+    async def code_files(self):
+        self.log.debug(f'[{self.account_id}] Viewing all DCFs')
+        code_files = await self.s3.read_all(bucket=self._accounts_bucket.split('/')[0], prefix=f'{self.account_id}/src/')
+        return {k: v.decode('utf-8') for k, v in code_files.items()}
 
 class Account:
 

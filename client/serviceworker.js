@@ -1,35 +1,31 @@
-// import {Api} from './static/js/api.js';
-importScripts(
-    'static/js/db.js',
-)
+import Database from '/static/js/db.js';
 
 let cacheName = 'operator';
 let filesToCache = [
-    '/index.html',
+    '/',
     '/static/css/app.css'
 ];
 
-/* Start the service worker and cache the app's content */
 self.addEventListener('install', function(e) {
-    Database.connect();
+    Database.connect()
     e.waitUntil(
-        caches.open(cacheName).then(function(cache) {
-            return cache.addAll(filesToCache);
-    }).catch(err => console.log(err))
-  );
+        caches.open(cacheName)
+            .then(cache => cache.addAll(filesToCache))
+            .catch(err => console.log(err))
+    );
 });
 
 self.addEventListener('activate', function (e) {
     e.waitUntil(self.clients.claim());
-
-    // Api.ttp.manifest().then(manifest => {
-    //         console.log(manifest)
-    //         });
 })
-
 
 self.addEventListener('fetch', function(e) {
     e.respondWith((async () => {
+        if (e.request.headers.has('nocache')) {
+            console.log('SKIPPING CACHE')
+            return fetch(e.request);
+        }
+
         const url = new URL(e.request.url);
         if (url.pathname.startsWith('/dcf')) {
             return fetchDCF(e.request, url.pathname);
@@ -50,7 +46,7 @@ async function fetchDCF(request, path) {
     switch (request.method) {
         case 'GET':
             return Database.get(path).then((value) => {
-                console.log('[FETCH/GET] responding from cache:', value);
+                console.log('[FETCH/GET] responding from cache:', path);
                 return new Response(JSON.stringify(value));
             }).catch((err) => {
                 console.log('[FETCH/GET] not in cache. Going to server:', path);
@@ -79,31 +75,31 @@ async function fetchManifest(request, path) {
     switch (request.method) {
         case 'GET':
             if (path === '/manifest') {
-                return Database.getObjects('/manifest/0', '/manifest/z').then((objs) => {
-                    console.log('[FETCH/GET] responding from cache:', objs);
-                    return new Response(JSON.stringify(objs));
+                return Database.getObjects('/manifest/')
+                    .then((entries) => {
+                        console.log('[FETCH/GET] responding from cache:', path);
+                        return new Response(JSON.stringify(entries));
+                    }).catch((err) => {
+                        console.log(`[FETCH/GET] not in cache. Going to server: ${path}. ${err}`);
+                        return fetch(request);
+                    })
+            }
+
+            return Database.get(path)
+                .then((ttp) => {
+                    let id = path.split('/')[2];
+                    return Database.getKeys(`/dcf/${id}`).then((keys) => {
+                        ttp.dcf = keys.map(k => k.split('/').pop());
+                        console.log('[FETCH/GET] responding from cache:', path);
+                        return new Response(JSON.stringify(ttp));
+                    })
                 }).catch((err) => {
                     console.log('[FETCH/GET] not in cache. Going to server:', path);
                     return fetch(request);
                 })
-            }
-
-            return Database.get(path).then((ttp) => {
-                let id = path.split('/')[2];
-                return Database.getKeys(`/dcf/${id}_0`, `/dcf/${id}_z`).then((keys) => {
-                    ttp.dcf = keys.map(k => k.split('/').pop());
-                    console.log('[FETCH/GET] responding from cache:', ttp);
-                    return new Response(JSON.stringify(ttp));
-                })
-            }).catch((err) => {
-                console.log('[FETCH/GET] not in cache. Going to server:', path);
-                return fetch(request);
-            })
         case 'PUT':
-            // SOmething weird happening -not sure if my code, but after PUTing a new ttp, the GETs think the id is undefined
             return fetch(request.clone()).then((async (resp) => {
-                let dcf = await request.json();
-                console.log(dcf)
+                let dcf = await resp.clone().json();
                 let ttp = {
                     key : `${path}/${dcf.id}`,
                     id : dcf.id,
@@ -111,7 +107,7 @@ async function fetchManifest(request, path) {
                     tags : dcf.tags,
                 }
                 await Database.set(ttp);
-                console.log('[FETCH/PUT] wrote to server then cache:', resp);
+                console.log(`[FETCH/PUT] wrote to server then cache: ${path}/${dcf.id}`);
                 return resp;
             }));
         case 'DELETE':
