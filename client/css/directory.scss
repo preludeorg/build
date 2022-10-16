@@ -80,7 +80,7 @@
         height: 16px;
         width: 16px;
         filter: var(--filter-icon-color);
-        top: 8px;
+        top: 5px;
         right: 4px;
         position: absolute;
         background: none;
@@ -89,7 +89,7 @@
     #ttp-row {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
         column-gap: 6px;
 
         .ttp-classification {
@@ -111,7 +111,6 @@
         }
 
         .dropdown-arrow {
-            margin-top: 8px;
             padding: 2px;
             border-top: 2px solid var(--filter-color);
             border-right: 2px solid var(--filter-color);
