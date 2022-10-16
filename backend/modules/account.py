@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-from datetime import datetime
 
 from vertebrae.config import Config
 from vertebrae.service import Service
