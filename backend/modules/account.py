@@ -35,10 +35,12 @@ class Manifest:
     async def remove(self, ttp_id: str) -> None:
         """ Remove an entry from the manifest """
         manifest = await self.select()
-        if ttp_id in manifest:
-            self.log.debug(f'[{self.account_id}] Deleting TTP: {ttp_id}')
-            del manifest[ttp_id]
-            await self.s3.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
+        if ttp_id not in manifest:
+            raise FileNotFoundError(f'{ttp_id} not in manifest')
+
+        self.log.debug(f'[{self.account_id}] Deleting TTP: {ttp_id}')
+        del manifest[ttp_id]
+        await self.s3.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
 
     async def redirects(self, ttp_id: str) -> dict:
         """ Generate redirect URLs for each compiled DCF """

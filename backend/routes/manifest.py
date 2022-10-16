@@ -43,10 +43,6 @@ class ManifestRoutes:
 
     @allowed
     async def _del_manifest_entry(self, account: Account, data: dict) -> web.Response:
-        ttp = await account.manifest.select(ttp_id=data['id'])
-        if not ttp:
-            raise FileNotFoundError(f'{data["id"]} not in manifest')
-
         await account.manifest.remove(ttp_id=data['id'])
         for code_file in await account.dcf.code_files(ttp_id=data['id']):
             await account.dcf.remove(name=code_file)
