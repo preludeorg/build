@@ -5,8 +5,6 @@ from backend.routes.dcf import DCFRoutes
 from backend.routes.manifest import ManifestRoutes
 from backend.routes.web import WebRoutes
 from backend.services.compile import CompileService
-from backend.services.signing import SigningService
-from backend.services.testbench import TestBenchService
 
 if __name__ == '__main__':
     Config.load(Config.strip(env='conf/env.yml'))
@@ -19,8 +17,6 @@ if __name__ == '__main__':
             ], template_directory='dist')
         ],
         services=[
-            SigningService(name='signing'),
-            TestBenchService(name='testbench'),
             CompileService(name='compile')
         ])
     server.run()
