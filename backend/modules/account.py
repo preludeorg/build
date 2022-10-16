@@ -29,7 +29,7 @@ class Manifest:
         """ Add an entry to the manifest """
         self.log.debug(f'[{self.account_id}] Upsert TTP: {ttp_id}')
         manifest = await self.select()
-        manifest[ttp_id] = dict(name=name, updated=str(datetime.now()))
+        manifest[ttp_id] = name
         await self.s3.write(filename=f'{self._accounts_bucket}/manifest.json', contents=json.dumps(manifest))
 
     async def remove(self, ttp_id: str) -> None:
