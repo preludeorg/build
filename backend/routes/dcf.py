@@ -16,7 +16,7 @@ class DCFRoutes:
             Route('GET', '/dcf/{name}', self._get_dcf),
             Route('POST', '/dcf/{name}', self._post_dcf),
             Route('DELETE', '/dcf/{name}', self._del_dcf),
-            Route('POST', '/dcf/{name}/test', self._test_dcf)
+            Route('POST', '/dcf/{name}/compile', self._compile_dcf)
         ]
 
     @allowed
@@ -43,7 +43,8 @@ class DCFRoutes:
         raise FileNotFoundError(f'{data["name"]} does not exist')
 
     @allowed
-    async def _test_dcf(self, account: Account, data: dict) -> web.Response:
-        async for redirect in Service.find('compile').compile(account_id=account.account_id, name=data['name']):
-            print(redirect)
-        return web.json_response([])
+    async def _compile_dcf(self, account: Account, data: dict) -> web.Response:
+        names = []
+        async for name in Service.find('compile').compile(account_id=account.account_id, name=data['name']):
+            names.append(name)
+        return web.json_response(names)

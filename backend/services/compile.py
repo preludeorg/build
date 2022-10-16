@@ -50,6 +50,10 @@ class CompileService(Service):
         """ Compile a code file into all supported platforms """
         code = await self.file.read(f'{self._accounts_bucket}/{account_id}/src/{name}')
         extension = pathlib.Path(name).suffix
+        if not self.compilers.get(extension):
+            self.log.warning(f'Compiler not available for {extension}')
+            return
+
         with tempfile.NamedTemporaryFile(prefix=account_id, suffix=extension) as src:
             self.log.debug(f'Compiling {src.name}')
             src.write(code)
@@ -57,7 +61,7 @@ class CompileService(Service):
 
             with tempfile.NamedTemporaryFile(prefix=account_id) as dst:
                 async for dos in self.compilers[extension].run(src=src.name, dst=dst.name):
-                    relative = f'{account_id}/dst/{pathlib.Path(name).stem}_{dos}'
-                    absolute = f'{self._accounts_bucket}/{relative}'
+                    relative = f'{pathlib.Path(name).stem}_{dos}'
+                    absolute = f'{self._accounts_bucket}/{account_id}/dst/{relative}'
                     await self.file.write(filename=absolute, contents=code)
-                    yield self.file.redirect_url(bucket=self._accounts_bucket, object_name=relative)
+                    yield relative
