@@ -47,7 +47,7 @@ class CompileService(Service):
             self.log.debug(f'[{compiler.get_extension()}] compiler: loaded')
 
     async def compile(self, account_id: str, name: str) -> str:
-        """ Compile arbitrary code file into all supported platforms """
+        """ Compile a code file into all supported platforms """
         code = await self.file.read(f'{self._accounts_bucket}/{account_id}/src/{name}')
         extension = pathlib.Path(name).suffix
         with tempfile.NamedTemporaryFile(prefix=account_id, suffix=extension) as src:
@@ -57,4 +57,7 @@ class CompileService(Service):
 
             with tempfile.NamedTemporaryFile(prefix=account_id) as dst:
                 async for dos in self.compilers[extension].run(src=src.name, dst=dst.name):
-                    yield f'{pathlib.Path(name).stem}_{dos}'
+                    relative = f'{account_id}/dst/{pathlib.Path(name).stem}_{dos}'
+                    absolute = f'{self._accounts_bucket}/{relative}'
+                    await self.file.write(filename=absolute, contents=code)
+                    yield self.file.redirect_url(bucket=self._accounts_bucket, object_name=relative)

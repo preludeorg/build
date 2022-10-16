@@ -1,3 +1,6 @@
+import re
+from pathlib import Path
+
 from aiohttp import web
 from vertebrae.core import Route
 from vertebrae.service import Service
@@ -22,17 +25,25 @@ class DCFRoutes:
 
     @allowed
     async def _post_dcf(self, account: Account, data: dict) -> web.Response:
+        valid = re.compile('[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}..+?')
+        if not valid.match(data['name']):
+            raise TypeError(f'{data["name"]} is not a valid file name')
+
+        if not await account.manifest.select(ttp_id=Path(data['name']).stem):
+            raise FileNotFoundError(f'{Path(data["name"]).stem} not in manifest')
+
         await account.dcf.add(name=data['name'], code=data['code'])
         return web.Response(status=200)
 
     @allowed
     async def _del_dcf(self, account: Account, data: dict) -> web.Response:
-        await account.dcf.remove(name=data['name'])
-        return web.Response(status=200)
+        if data['name'] in await account.dcf.code_files(ttp_id=Path(data['name']).stem):
+            await account.dcf.remove(name=data['name'])
+            return web.Response(status=200)
+        raise FileNotFoundError(f'{data["name"]} does not exist')
 
     @allowed
     async def _test_dcf(self, account: Account, data: dict) -> web.Response:
-        async for binary in Service.find('compile').compile(account_id=account.account_id, name=data['name']):
-            print(binary)
-        #links = await Service.find('testbench').test(name=data['name'], binary=binary)
+        async for redirect in Service.find('compile').compile(account_id=account.account_id, name=data['name']):
+            print(redirect)
         return web.json_response([])
