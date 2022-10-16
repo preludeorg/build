@@ -3,7 +3,6 @@ from pathlib import Path
 
 from aiohttp import web
 from vertebrae.core import Route
-from vertebrae.service import Service
 
 from backend.modules.account import Account
 from backend.util.decorators import allowed
@@ -15,8 +14,7 @@ class DCFRoutes:
         return [
             Route('GET', '/dcf/{name}', self._get_dcf),
             Route('POST', '/dcf/{name}', self._post_dcf),
-            Route('DELETE', '/dcf/{name}', self._del_dcf),
-            Route('POST', '/dcf/{name}/compile', self._compile_dcf)
+            Route('DELETE', '/dcf/{name}', self._del_dcf)
         ]
 
     @allowed
@@ -41,10 +39,3 @@ class DCFRoutes:
             await account.dcf.remove(name=data['name'])
             return web.Response(status=200)
         raise FileNotFoundError(f'{data["name"]} does not exist')
-
-    @allowed
-    async def _compile_dcf(self, account: Account, data: dict) -> web.Response:
-        names = []
-        async for name in Service.find('compile').compile(account_id=account.account_id, name=data['name']):
-            names.append(name)
-        return web.json_response(names)

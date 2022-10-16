@@ -3,6 +3,7 @@ import re
 
 from aiohttp import web
 from vertebrae.core import Route
+from vertebrae.service import Service
 
 from backend.modules.account import Account
 from backend.util.decorators import allowed
@@ -16,7 +17,8 @@ class ManifestRoutes:
             Route('PUT', '/manifest', self._put_manifest),
             Route('GET', '/manifest/{id}', self._get_manifest_entry),
             Route('DELETE', '/manifest/{id}', self._del_manifest_entry),
-            Route('GET', '/manifest/{id}/url', self._redirects)
+            Route('GET', '/manifest/{id}/url', self._redirects),
+            Route('POST', '/manifest/{id}/compile', self._compile)
         ]
 
     @allowed
@@ -52,3 +54,11 @@ class ManifestRoutes:
     async def _redirects(self, account: Account, data: dict) -> web.Response:
         urls = await account.manifest.redirects(ttp_id=data['id'])
         return web.json_response(urls)
+
+    @allowed
+    async def _compile(self, account: Account, data: dict) -> web.Response:
+        compiled_names = []
+        for code_file in await account.dcf.code_files(data['id']):
+            async for name in Service.find('compile').compile(account_id=account.account_id, name=code_file):
+                compiled_names.append(name)
+        return web.json_response(compiled_names)

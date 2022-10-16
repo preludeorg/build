@@ -75,7 +75,7 @@ class DCF:
 
     async def code_files(self, ttp_id: str):
         """ Find all code files for a given TTP """
-        self.log.debug(f'[{self.account_id}] Fetching code files: {ttp_id}')
+        self.log.debug(f'[{self.account_id}] Locating code files: {ttp_id}')
         bucket = Path(self._accounts_bucket).parts[0]
         code_files = await self.s3.walk(bucket=bucket, prefix=f'{self.account_id}/src/{ttp_id}')
         return [Path(f).name for f in code_files]
