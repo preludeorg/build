@@ -11,7 +11,8 @@ module.exports = {
         ]
     },
     entry: {
-        index: './client/js/main.js'
+        index: './client/js/main.js',
+        serviceworker: {import: './client/serviceworker.js', filename: '[name].js'},
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -23,9 +24,7 @@ module.exports = {
                 { from: "client/assets", to: "static/assets" },
                 { from: "client/css/font", to: "static/css/font" },
                 { from: "client/css/*.css", to: "static/css/[name][ext]" },
-                { from: "client/js/*.js", to: "static/js/[name].js" },
                 { from: "client/js/lib", to: "static/js/lib" },
-                { from: "client/serviceworker.js", to: "serviceworker.js" }
             ],
         }),
     ],

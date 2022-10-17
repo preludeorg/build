@@ -1,4 +1,4 @@
-import Database from '/static/js/db.js';
+import Database from '/client/js/db.js'
 
 let cacheName = 'operator';
 let filesToCache = [

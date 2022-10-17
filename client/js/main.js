@@ -5,8 +5,9 @@ import Server from "plugins/server.js";
 
 window.onload = () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('../serviceworker.js', {type: 'module'})
-            .then(sw => console.log('ServiceWorker registered. Scope:', sw.scope));
+        navigator.serviceWorker.register('serviceworker.js', {type: 'module'})
+            .then(sw => console.log('ServiceWorker registered. Scope:', sw.scope))
+            .catch(e => console.error('Failed to register service work', e));
     }
 }
 
