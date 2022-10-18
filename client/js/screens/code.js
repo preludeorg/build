@@ -60,29 +60,61 @@ class Code {
         }
     }
     test() {
+        const totalCPU = [];
+        const fakeDatas = {
+            fakeDataOne : {
+                name: 'Can we catch a thief?',
+                status: 1,
+                cpu: '0.005',
+                output: 'this is the output',
+                created: 'time of creation',
+                containerName: 'Container PR-12'
+            },
+            fakeDataTwo : {
+                name: 'Can we catch a thief?',
+                status: 0,
+                cpu: '0.100',
+                output: 'this is the output 2',
+                created: 'time of creation 2',
+                containerName: 'Container PR-9'
+            }
+        };
+
         $('#spinner').show();
         $('#dcf-results').empty()
             .append($('<pre>')
-                .text(`.......... [${new Date().toLocaleTimeString()}] Compiling test\n\n`)
-                .addClass('result-system'));
+                .text(`.......... [${new Date().toLocaleTimeString()}] Compiling test\n\n`));
 
-        Api.dcf.submit(this.name).then(res => res.json()).then(links => {
+        Api.dcf.submit(this.name).then(res => Object.values(fakeDatas)).then(links => {
+            $('.deploy-button > img').attr("src", `/static/assets/loader.svg`).toggleClass('deploy-image');
+            $('#dcf-results').empty()
+                .append($('<pre>')
+                    .text(`Compiling "${links[0].name}" - ${this.name.split('_')[1]}...`));
             links.forEach(link => {
-                const status = link.status ? 'failed' : 'completed';
-                const cpu = link['cpu'].toFixed(3);
-                $('#dcf-results').append($('<pre>')
-                    .text(`\n.......... [${new Date().toLocaleTimeString()}] ${status} (${cpu}s CPU used)`)
-                    .addClass(`result-${link.status}`)
-                    .addClass('result-system'));
+                const container = $($('#test-container-template').html());
+                container.find('.test-output').text(link.output);
+                container.find('.test-container-name > span').text(link.containerName);
+                container.find('.test-cpu').text(`${link.cpu}s`);
+
+                const status = link.status ? 'Completed' : 'Failed';
+                container.find('.test-results').find('.test-status').addClass(`result-${link.status}`);
+                container.find('.test-results > span').text(status);
+                container.find('.test-results-button').on('click', (ev) => {
+                    container.find('.test-results-button > .dropdown-arrow').toggleClass('dropdown-arrow-active');
+                    container.find('.test-output').toggle();                
+                });
+                $('#dcf-results').append(container);
+                totalCPU.push(link.cpu);
             });
         }).catch(err => {
             $('#dcf-results').text(err);
         }).finally(() => {
             $('#dcf-results')
                 .append($('<pre>')
-                .text(`.......... [${new Date().toLocaleTimeString()}] Complete`)
-                .addClass('result-system'));
+                    .text(`Completed in ${totalCPU.reduce((acc, a) => (acc + a), 0)}`)
+                    .addClass('test-completion'));
             $('#spinner').hide();
+            $('.deploy-button > img').attr("src", `/static/assets/play.svg`).toggleClass('deploy-image');
         });
     }
 }

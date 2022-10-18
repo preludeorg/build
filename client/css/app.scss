@@ -22,11 +22,11 @@ ul {
     list-style-type: none;
 }
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 4px;
  }
 ::-webkit-scrollbar-thumb {
-    background-color: #32353CB3;
-    border-radius: 20px;
+    background-color: var(--color-selection);
+    border-radius: 8px;
 }
 ::-webkit-scrollbar-corner {
     background: transparent;
@@ -94,7 +94,7 @@ ul {
     flex: 0 0 auto;
     height: 100%;
     width: 20%;
-    padding: 16px 4px 16px 16px;
+    padding: 16px 12px 16px 16px;
     box-sizing: border-box;
     color: white;
 }
@@ -126,7 +126,7 @@ ul {
 }
 .splitter-horizontal {
     flex: 0 0 auto;
-    height: 3px;
+    height: 4px;
     background-color: var(--color-accent);
     cursor: col-resize;
 }

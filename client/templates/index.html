@@ -80,14 +80,18 @@
         </div>
       </div>
       <div class="splitter-horizontal"></div>
-      <div class="panel-bottom">
-        <div class="control-bar">
-          <div id="deploy-dcf" class="deploy-button">
-            <span>Execute</span>
-            <img src="/static/assets/play.svg"/>
+      <div class="panel-bottom results-panel-bottom">
+        <div class="results-container">
+          <div class="control-bar">
+            <div id="deploy-dcf" class="deploy-button">
+              <img src="/static/assets/play.svg"/>
+              <span>Execute</span>
+            </div>
+          </div>
+          <div id="dcf-results-container">
+            <div id="dcf-results"></div>
           </div>
         </div>
-        <div id="dcf-results"></div>
       </div>
     </div>
   </div>
@@ -128,6 +132,27 @@
     <p id="platform" spellcheck="false" class="file"></p>
   </div>
 </li>
+
+<template id="test-container-template">
+  <li class="test-container-template">
+    <div class="test-container-row">
+      <div class="test-container-name">
+        <img src="/static/assets/testContainer.svg"/>
+        <span/>
+      </div>
+      <span class="test-cpu"></span>
+      <div class="test-results">
+        <div class="test-status"></div> 
+        <span></span>
+        <button class="test-results-button">
+          <span>View Results</span>
+          <div class="dropdown-arrow"></div>
+        </button>
+      </div>
+    </div>
+    <div class="test-output"></div>
+  </li>
+</template>
 
 <!-- Ensure all panels can resize -->
 <script>

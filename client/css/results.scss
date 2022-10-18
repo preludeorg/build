@@ -1,54 +1,177 @@
-.control-bar {
-  display: flex;
-  flex-direction: row;
-  padding: 8px 0;
-  margin: 0 0 12px 12px;
-  border-bottom: 1px solid var(--color-accent);
+.results-panel-bottom {
+  background-color: var(--color-accent);
+  overflow: visible;
+}
 
-  .deploy-button {
+.results-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-accent);
+
+  .control-bar {
+    display: flex;
+    flex-direction: row;
+    padding: 8px;
+    background-color: var(--color-selection);
+    flex-grow: 1;
+    
+    .deploy-button {
       display: flex;
       flex-direction: row;
       align-items: center;
       width: max-content;
       padding: 8px 12px;
       border-radius: 8px;
-      background-color: var(--color-selection);
-      border: 1px solid var(--color-lighter-selection);
-      column-gap: 12px;
-
-      span {
-          font-size: 16px;
-      }
-
+      background-color: var(--color-lighter-selection);
+      column-gap: 8px;
+  
       img {
-          filter: var(--filter-icon-color);
+        filter: invert(1);
       }
 
+      .deploy-image {
+        animation: spinner 1.2s linear infinite;
+      }
+  
       &:hover {
-          background: var(--color-lighter-selection);
-          cursor: pointer;
+        background: var(--color-lighter-selection);
+        cursor: pointer;
       }
+
+      @keyframes spinner {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+
+  #dcf-results-container {
+    display: flex;
+    height: 100%;
+    background-color: var(--color-accent);
+    padding: 16px 12px 16px 16px;
+    overflow: scroll;
+  
+    #dcf-results {
+      width: 100%;
+      font-size: 14px;
+    
+      pre {
+        margin: 0;
+        border-bottom: 1px solid var(--filter-color);
+        padding: 0 0 16px;
+        font-family: 'IBM Plex Mono', monospace;
+        margin-bottom: 2px;
+      }
+
+      .test-completion {
+        border-top: 1px solid var(--filter-color);
+        border-bottom: none;
+        padding: 16px 0 0;
+      }
+    }
   }
 }
 
-#dcf-results {
-  font-size: 14px;
+.test-container-template {
+  display: flex;
+  flex-direction: column;
 
-  pre {
-    margin: 0;
-    padding: 8px 0 0 16px;
-    font-family: 'IBM Plex Mono', monospace;
+  .test-container-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-top: 1px solid var(--filter-color);
+
+    .test-container-name {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      max-width: 240px;
+      column-gap: 8px;
+      flex-grow: 1;
+      margin-right: auto;
+      border-right: 1px solid var(--filter-color);
+      padding: 8px 16px 8px 0;
+  
+      img {
+        height: 16px;
+        width: 16px;
+        filter: invert(100%);
+      }
+    }
+  
+    .test-cpu {
+      display: flex;
+      justify-content: center;
+      width: 60px;
+      border-left: 1px solid var(--filter-color);
+      border-right: 1px solid var(--filter-color);
+      padding: 8px 16px;
+    }
+  
+    .test-results {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 240px;
+      padding: 12px 0 12px 16px;
+      column-gap: 16px;
+  
+      .test-status {
+        padding: 4px;
+        border-radius: 50%;
+      }
+  
+      span {
+        flex-grow: 1;
+      }
+  
+      .test-results-button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--filter-color);
+        border-radius: 4px;
+        background-color: transparent;
+        color: #fff;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--color-selection);
+        }
+  
+        .dropdown-arrow {
+          padding: 2px;
+          border-top: 2px solid #fff;
+          border-right: 2px solid #fff;
+          transform: rotate(135deg);
+        }
+
+        .dropdown-arrow-active {
+          transform: rotate(315deg);
+        }
+      }
+    }
   }
-}
 
-.result-system {
-  font-weight: 700;
-}
-
-.result-0 {
-  color: #32CD32;
+  .test-output {
+    display: none;
+    padding: 12px 0;
+    border-top: 1px dashed var(--filter-color);
+  }
 }
 
 .result-1 {
-  color: red;
+  background-color: #73B762;
+}
+
+.result-0 {
+  background-color: #F28C8C;
 }
