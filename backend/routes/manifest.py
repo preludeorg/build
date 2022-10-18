@@ -6,6 +6,7 @@ from vertebrae.core import Route
 from backend.modules.account import Account
 from backend.util.decorators import allowed
 
+import logging
 
 class ManifestRoutes:
 
@@ -25,12 +26,12 @@ class ManifestRoutes:
     async def _put_manifest(self, account: Account, data: dict) -> web.json_response:
         identifier = data.get('id', str(uuid.uuid4()))
         ttp = await account.manifest.select(ttp_id=identifier)
-        return web.json_response(
-            await account.manifest.add(
+        ttp = await account.manifest.add(
                 ttp_id=identifier,
                 name=data.get('name', ttp.get('name'))
             )
-        )
+        await account.push_message(ttp, f'/manifest/{identifier}', 'SET')
+        return web.json_response(ttp)
 
     @allowed
     async def _get_manifest_entry(self, account: Account, data: dict) -> web.Response:
@@ -43,4 +44,5 @@ class ManifestRoutes:
     @allowed
     async def _del_manifest_entry(self, account: Account, data: dict) -> web.Response:
         await account.manifest.remove(ttp_id=data['id'])
+        await account.push_message(dict(), f'/manifest/{data["id"]}', 'DELETE')
         return web.Response(status=200)

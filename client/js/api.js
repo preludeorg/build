@@ -9,6 +9,7 @@ class Routes {
     }
     async handleRoute(route, options, json=true) {
         options['headers'] = Object.assign(options['headers'] || {}, this.headers);
+        console.log(options)
         const promise = fetch(route, options).catch(err => {
             console.error(`Error fetching ${route}: ${err}`);
             return {};
@@ -109,6 +110,14 @@ let Api = {
     register: (creds) => {
         const routes = new Routes(creds.host, creds.account, creds.token);
         return routes.handleRoute(`${creds.host}/register`, {method: 'POST'}, true);
+    },
+    subscribeToPush: async (subscription) => {
+        const creds = Api.credentials();
+        const routes = new Routes(creds.host, creds.account, creds.token);
+        return await routes.handleRoute(`${creds.host}/push/subscribe`, {
+            method: 'POST',
+            body: JSON.stringify({subscription: subscription})
+        }, false);
     },
     async ping(host, account, token) {
         const headers = {account: account, token: token};

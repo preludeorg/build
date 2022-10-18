@@ -4,6 +4,8 @@ from pathlib import Path
 from vertebrae.config import Config
 from vertebrae.service import Service
 
+from pywebpush import webpush, WebPushException
+
 
 class Manifest:
 
@@ -44,7 +46,6 @@ class DCF:
         self.account_id = account_id
         self.log = Service.create_log('dcf')
         self.s3 = Service.db(store='s3')
-        self.relational = Service.db(store='relational')
         self._accounts_bucket = f'{Config.find("aws")["buckets"]["accounts"]}/{self.account_id}'
 
     async def select(self, name: str) -> str:
@@ -73,10 +74,44 @@ class DCF:
         code_files = await self.s3.read_all(bucket=self._accounts_bucket.split('/')[0], prefix=f'{self.account_id}/src/')
         return {k: v.decode('utf-8') for k, v in code_files.items()}
 
+
 class Account:
+
+    # This would be better in a db, though op-server doesnt have a db yet, so reluctant to add just for this
+    push_subscriptions = dict()
 
     def __init__(self, account_id: str):
         self.account_id = account_id
+        self.log = Service.create_log(name='account')
+        if account_id not in Account.push_subscriptions:
+            self.log.debug('adding account to push_subscriptions dict')
+            Account.push_subscriptions[account_id] = dict()
         # internal modules
         self.manifest = Manifest(account_id=account_id)
         self.dcf = DCF(account_id=account_id)
+
+    def add_push_subscription(self, subscription: dict):
+        Account.push_subscriptions[self.account_id][subscription['endpoint']] = subscription
+        self.log.debug(Account.push_subscriptions[self.account_id])
+
+    def remove_push_subscription(self, subscription: dict):
+        del Account.push_subscriptions[self.account_id][subscription['endpoint']]
+
+    async def push_message(self, payload: dict, key: str, method: str):
+        self.log.debug('push_message')
+        self.log.debug(Account.push_subscriptions)
+        payload['key'] = key
+        payload['method'] = method
+        self.log.debug('payload')
+        self.log.debug(payload)
+        for _, sub in Account.push_subscriptions[self.account_id].items():
+            try:
+                self.log.debug('sending push message')
+                webpush(subscription_info=sub,
+                        data=json.dumps(payload),
+                        vapid_private_key=f'{Config.find("vapid_keys")["private"]}',
+                        vapid_claims={
+                            "sub": "mailto:mahina@prelude.org"
+                        })
+            except WebPushException as ex:
+                self.log.debug('failed to send notification: ', ex)

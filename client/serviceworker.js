@@ -41,6 +41,30 @@ self.addEventListener('fetch', function(e) {
     })());
 });
 
+self.addEventListener('push', function(e) {
+    try {
+        const payload = e.data.json();
+        console.log('got push event')
+        console.log(payload);
+
+        let method = payload.method
+        delete payload.method
+        switch (method) {
+            case 'SET':
+                console.log('setting')
+                Database.set(payload)
+                return
+            case 'DELETE':
+                console.log('deleting')
+                Database.delete(payload.key)
+                return
+        }
+
+    } catch (e) {
+        console.log('exception', e)
+    }
+});
+
 async function fetchDCF(request, path) {
     switch (request.method) {
         case 'GET':

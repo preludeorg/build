@@ -29,11 +29,13 @@ class DCFRoutes:
     @allowed
     async def _post_dcf(self, account: Account, data: dict) -> web.Response:
         await account.dcf.add(name=data['name'], code=data['code'])
+        await account.push_message(dict(code=data['code']), f'/dcf/{data["name"]}', 'SET')
         return web.Response(status=200)
 
     @allowed
     async def _del_dcf(self, account: Account, data: dict) -> web.Response:
         await account.dcf.remove(name=data['name'])
+        await account.push_message(dict(), f'/dcf/{data["name"]}', 'DELETE')
         return web.Response(status=200)
 
     @allowed
