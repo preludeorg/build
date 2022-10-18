@@ -65,7 +65,7 @@ class Code {
             fakeDataOne : {
                 name: 'Can we catch a thief?',
                 status: 1,
-                cpu: '0.005',
+                cpu: 0.005,
                 output: 'this is the output',
                 created: 'time of creation',
                 containerName: 'Container PR-12'
@@ -73,7 +73,7 @@ class Code {
             fakeDataTwo : {
                 name: 'Can we catch a thief?',
                 status: 0,
-                cpu: '0.100',
+                cpu: 0.100,
                 output: 'this is the output 2',
                 created: 'time of creation 2',
                 containerName: 'Container PR-9'
@@ -111,7 +111,7 @@ class Code {
         }).finally(() => {
             $('#dcf-results')
                 .append($('<pre>')
-                    .text(`Completed in ${totalCPU.reduce((acc, a) => (acc + a), 0)}`)
+                    .text(`Completed in ${totalCPU.reduce((acc, a) => acc + a, 0).toFixed(3)}s`)
                     .addClass('test-completion'));
             $('#spinner').hide();
             $('.deploy-button > img').attr("src", `/static/assets/play.svg`).toggleClass('deploy-image');
