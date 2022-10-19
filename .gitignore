@@ -2,10 +2,10 @@
 .DS_Store
 *.pyc
 *__pycache__*
-/node_modules
+node_modules
 *.lock
 
-# do not commit auto-generated files
-/client/dist
-client/css/app.css
-client/css/app.css.map
+yarn-debug.log*
+yarn-error.log*
+
+client/dist
