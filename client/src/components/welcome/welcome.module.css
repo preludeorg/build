@@ -1,0 +1,73 @@
+/* Welcome Screen */
+
+.welcome {
+    padding: 1.5rem 1rem;
+}
+
+.header {
+    font-size: var(--text-xxxl);
+    margin: 0;
+}
+
+.tagline {
+    margin: 0;
+}
+
+.blockContainer {
+    display: flex;
+    flex-direction: row;
+    column-gap: 2rem;
+    row-gap: 2rem;
+    margin: 2rem 0;
+    width: 100%;
+}
+
+/* Welcome Blocks */
+
+.block {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    width: 100%;
+    height: 17rem;
+    background-color: var(--color-secondary-30);
+    border: 1px solid var(--color-secondary-10);
+    text-decoration: none;
+    color: #fff;
+}
+
+.title {
+    margin: 0 0 16px;
+}
+
+.image {
+    width: 100%;
+    height: 7.5rem;
+}
+
+.description {
+    font-size: var(--text-base);
+    margin: 16px 0 0;
+}
+
+/* Documentation Block */
+
+.docs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 auto;
+    border: 1px solid var(--color-secondary-10);
+    padding: 0.5rem 0.75rem;
+    column-gap: 0.5rem;
+    width: max-content;
+    cursor: pointer;
+}
+
+.text {
+    margin: 0;
+}
+
+.rightArrow {
+    fill: #fff;
+}
