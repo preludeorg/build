@@ -12,6 +12,7 @@ interface Props {
   buffer: string;
   currentTab: Tab;
   updateBuffer: (buffer: string) => void;
+  setNavigation: () => void;
 }
 
 const EditorWindow: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const EditorWindow: React.FC<Props> = ({
   buffer,
   currentTab,
   updateBuffer,
+  setNavigation,
 }) => {
   return (
     <div className={styles.window}>
@@ -46,6 +48,9 @@ const EditorWindow: React.FC<Props> = ({
                   className={styles.close}
                   onClick={() => {
                     closeTab(id);
+                    if (Object.keys(tabs).length > 1) {
+                      setNavigation("welcome")
+                    }
                   }}
                 >
                   <CloseIcon />

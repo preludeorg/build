@@ -32,6 +32,7 @@ function App() {
             closeTab={editor.closeTab}
             switchTab={editor.switchTab}
             updateBuffer={editor.updateCurrentBuffer}
+            setNavigation={setNavigation}
           />
         )}
       </main>
