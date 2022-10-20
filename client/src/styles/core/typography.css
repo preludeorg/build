@@ -16,7 +16,7 @@
 }
 
 body {
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   font-family: var(--font-primary);
   color: var(--color-text);
 }
