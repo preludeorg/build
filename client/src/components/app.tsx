@@ -10,25 +10,29 @@ function App() {
   return (
     <div className={styles.app}>
       <main>
-        {!editor.hasTabs && <Welcome />}
-        {editor.hasTabs && (
-          <EditorWindow
-            tabs={editor.tabs}
-            buffer={editor.buffer}
-            currentTab={editor.currentTab}
-            closeTab={editor.closeTab}
-            switchTab={editor.switchTab}
-            updateBuffer={editor.updateCurrentBuffer}
+        <section>
+          {!editor.hasTabs && <Welcome />}
+          {editor.hasTabs && (
+            <EditorWindow
+              tabs={editor.tabs}
+              buffer={editor.buffer}
+              currentTab={editor.currentTab}
+              closeTab={editor.closeTab}
+              switchTab={editor.switchTab}
+              updateBuffer={editor.updateCurrentBuffer}
+            />
+          )}
+        </section>
+        <footer>
+          <Terminal
+            openTab={() => {
+              editor.openTab({
+                name: `linux-${Date.now()}-x84.swift`,
+                code: new Swift().bootstrap(),
+              });
+            }}
           />
-        )}
-        <Terminal
-          openTab={() => {
-            editor.openTab({
-              name: `linux-${Date.now()}-x84.swift`,
-              code: new Swift().bootstrap(),
-            });
-          }}
-        />
+        </footer>
       </main>
     </div>
   );

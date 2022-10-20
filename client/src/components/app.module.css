@@ -1,11 +1,18 @@
 .app {
-  height: 100vh; 
+  height: 100vh;
 }
-
 
 .app main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+}
+
+.app main section {
+  flex: 2;
+}
+
+.app main footer {
+  flex: 1;
 }

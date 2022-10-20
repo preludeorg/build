@@ -1,10 +1,16 @@
 .editor,
 .window {
   font-family: var(--font-code);
-  height: 100%;
+}
+
+.editor {
+  flex: 1;
 }
 
 .window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   & nav {
     background-color: var(--color-secondary-20);
     border-bottom: solid var(--color-secondary-10) 1px;
