@@ -11,13 +11,19 @@ const theme = EditorView.theme({
   "&": {
     height: "100%",
     fontSize: "var(--text-sm)",
-    fontFamily: "var(--font-code)",
   },
   ".cm-scroller": { overflow: "auto" },
+  "&.cm-focused": { outline: "none !important" },
   ".cm-content": {
     padding: "0 0 4px",
+    fontFamily: "var(--font-code)",
+    lineHeight: "20px",
   },
-  ".cm-gutters": { backgroundColor: "var(--color-secondary-20) !important" },
+  ".cm-gutters": {
+    backgroundColor: "var(--color-secondary-20) !important",
+    fontFamily: "var(--font-code)",
+    lineHeight: "20px",
+  },
   ".cm-activeLineGutter": {
     backgroundColor: "var(--color-secondary-20) !important",
   },
@@ -59,7 +65,9 @@ const Editor: React.FC<{
           ...defaultExtensions,
           ...extensions,
           EditorView.updateListener.of((view) => {
-            onChange(view.state.doc.toString());
+            if (view.docChanged) {
+              onChange(view.state.doc.toString());
+            }
           }),
         ],
       })
