@@ -1,0 +1,48 @@
+.terminal {
+  padding: 1rem 0 1rem 1rem;
+  height: 22rem;
+  background: rgba(0, 0, 0, 0.3);
+  font-family: var(--font-code);
+
+  text-align: left;
+  overflow-wrap: break-word;
+  overflow-y: scroll;
+  outline: none;
+  line-height: 22px;
+}
+
+.terminal a {
+  color: #1a87b5;
+}
+
+.lineText {
+  display: inline;
+  position: relative;
+  top: -1px;
+  margin-left: 8px;
+}
+
+.preWhiteSpace {
+  white-space: pre-wrap;
+}
+
+.caret {
+  position: relative;
+  /* animation: blink 0.75s steps(2) infinite; */
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+.caretAfter {
+  content: "";
+  position: absolute;
+  top: 0px;
+  width: 10px;
+  height: 1.25rem;
+  z-index: 10;
+  background-color: rgba(126, 149, 169, 0.7);
+}
