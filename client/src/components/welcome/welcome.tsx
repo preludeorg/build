@@ -33,7 +33,11 @@ const Welcome = () => {
           link={"/"}
         />
       </div>
-      <a className={styles.docs}>
+      <a
+        className={styles.docs}
+        href="https://docs.prelude.org"
+        target="_blank"
+      >
         <p className={styles.text}>More guides & documentation</p>
         <ArrowRight className={styles.rightArrow} />
       </a>
