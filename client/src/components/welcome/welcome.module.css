@@ -4,12 +4,12 @@
     padding: 1.5rem 1rem;
 }
 
-.welcomeHeader {
+.header {
     font-size: var(--text-xxxl);
     margin: 0;
 }
 
-.welcomeTagline {
+.tagline {
     margin: 0;
 }
 
@@ -24,7 +24,7 @@
 
 /* Welcome Blocks */
 
-.welcomeBlock {
+.block {
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
@@ -36,22 +36,23 @@
     color: #fff;
 }
 
-.blockTitle {
+.title {
     margin: 0 0 16px;
 }
 
-.blockImage {
+.image {
     width: 100%;
     height: 7.5rem;
 }
 
-.blockDescription {
+.description {
+    font-size: var(--text-base);
     margin: 16px 0 0;
 }
 
 /* Documentation Block */
 
-.docsBlock {
+.docs {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -63,7 +64,7 @@
     cursor: pointer;
 }
 
-.docsBlockText {
+.text {
     margin: 0;
 }
 
