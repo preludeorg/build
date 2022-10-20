@@ -1,9 +1,12 @@
+import styles from "./app.module.css";
+import EditorWindow from "./editor/window";
+
 function App() {
   return (
-    <div className="App">
-      <h1>Prelude Operator</h1>
+    <div className={styles.app}>
+      <EditorWindow />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
