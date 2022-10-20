@@ -2,22 +2,24 @@
 
 .welcome {
     padding: 1.5rem 1rem;
+   
 }
 
 .header {
     font-size: var(--text-xxxl);
     margin: 0;
+    line-height: 3.5rem;
 }
 
 .tagline {
     margin: 0;
+    line-height: 2rem;
 }
 
 .blockContainer {
     display: flex;
     flex-direction: row;
     column-gap: 2rem;
-    row-gap: 2rem;
     margin: 2rem 0;
     width: 100%;
 }

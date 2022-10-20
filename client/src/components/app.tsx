@@ -8,16 +8,6 @@ function App() {
   const editor = useEditor();
   return (
     <div className={styles.app}>
-      <button
-        onClick={() => {
-          editor.openTab({
-            name: `linux-x86-${Date.now()}.swift`,
-            code: new Swift().bootstrap(),
-          });
-        }}
-      >
-        Add Tab
-      </button>
       {!editor.hasTabs && <Welcome />}
       {editor.hasTabs && (
         <EditorWindow

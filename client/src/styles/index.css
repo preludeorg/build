@@ -4,5 +4,5 @@
 @import "core/fonts.css";
 
 body {
-  background-color: var(--black);
+  background-color: var(--color-secondary-40);
 }
