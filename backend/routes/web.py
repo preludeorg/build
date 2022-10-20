@@ -16,6 +16,7 @@ class WebRoutes:
             Route('GET', '/', self._get_index),
             Route('GET', '/serviceworker.js', self._serviceworker),
             Route('POST', '/register', self._register),
+            StaticRoute('/static', 'client/public')
         ]
 
     @template('index.html')

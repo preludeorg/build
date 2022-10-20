@@ -2,6 +2,7 @@ import { useEditor } from "../hooks/editor";
 import Swift from "../lib/lang/swift";
 import styles from "./app.module.css";
 import EditorWindow from "./editor/window";
+import Welcome from "./welcome/welcome";
 
 function App() {
   const editor = useEditor();
@@ -17,6 +18,7 @@ function App() {
       >
         Add Tab
       </button>
+      {!editor.hasTabs && <Welcome />}
       {editor.hasTabs && (
         <EditorWindow
           tabs={editor.tabs}
