@@ -1,45 +1,35 @@
-import { useEditor } from "../hooks/editor";
-import { useState } from "react";
 import Swift from "../lib/lang/swift";
 import styles from "./app.module.css";
-import EditorWindow from "./editor/window";
 import Terminal from "./terminal/terminal";
 import Navbar from "./navbar/navbar";
 import Welcome from "./welcome/welcome";
-import EditorIntro from "./editor/editor-intro";
+import useEditorStore from "../hooks/editor-store";
+import EditorPanel from "./editor/editor-panel";
+import useNavigationStore from "../hooks/navigation-store";
 import Servers from "./servers/servers";
 
 function App() {
-  const editor = useEditor();
-  const [navigation, setNavigation] = useState("welcome");
-  const [showServerPanel, setShowServerPanel] = useState(false);
-  const toggleServerPanel = () => {
-    setShowServerPanel(!showServerPanel);
-  };
+  const panel = useNavigationStore((state) => state.panel);
+  const navigate = useNavigationStore((state) => state.navigate);
+  const serverPanelVisible = useNavigationStore(
+    (state) => state.serverPanelVisible
+  );
+  const toggleServerPanel = useNavigationStore(
+    (state) => state.toggleServerPanel
+  );
+
+  const openTab = useEditorStore((state) => state.openTab);
   return (
     <div className={styles.app}>
       <Navbar
-        navigation={navigation}
-        setNavigation={setNavigation}
+        navigation={panel}
+        setNavigation={navigate}
         toggleServerPanel={toggleServerPanel}
       />
       <main>
         <section>
-          {navigation === "welcome" && <Welcome />}
-          {navigation === "editor" &&
-            (editor.hasTabs ? (
-              <EditorWindow
-                tabs={editor.tabs}
-                buffer={editor.buffer}
-                currentTab={editor.currentTab}
-                closeTab={editor.closeTab}
-                switchTab={editor.switchTab}
-                updateBuffer={editor.updateCurrentBuffer}
-                setNavigation={setNavigation}
-              />
-            ) : (
-              <EditorIntro />
-            ))}
+          {panel === "welcome" && <Welcome />}
+          {panel === "editor" && <EditorPanel />}
         </section>
         <footer>
           <Terminal
@@ -51,9 +41,9 @@ function App() {
                 return `command not implemented`;
               },
               open: () => {
-                setNavigation("editor");
+                navigate("editor");
                 const filename = `linux-${Date.now()}-x84.swift`;
-                editor.openTab({
+                openTab({
                   name: filename,
                   code: new Swift().bootstrap(),
                 });
@@ -64,7 +54,7 @@ function App() {
           />
         </footer>
       </main>
-      {showServerPanel && <Servers toggleServerPanel={toggleServerPanel} />}
+      {serverPanelVisible && <Servers toggleServerPanel={toggleServerPanel} />}
     </div>
   );
 }

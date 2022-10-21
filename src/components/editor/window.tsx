@@ -3,70 +3,70 @@ import styles from "./editor.module.pcss";
 import CloseIcon from "../icons/close-icon";
 import AppleIcon from "../icons/apple-icon";
 import LinuxIcon from "../icons/linux-icon";
-import { Tab } from "../../hooks/editor";
+import useEditorStore from "../../hooks/editor-store";
+import shallow from "zustand/shallow";
+import useNavigationStore from "../../hooks/navigation-store";
+import cx from "classnames";
+import useTerminalStore from "../../hooks/terminal-store";
 
-interface Props {
-  tabs: Record<string, Tab>;
-  switchTab: (id: string) => void;
-  closeTab: (id: string) => boolean;
-  buffer: string;
-  currentTab: Tab;
-  updateBuffer: (buffer: string) => void;
-  setNavigation: (n: string) => void;
-}
+const EditorWindow: React.FC = () => {
+  const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
+  const buffer = useEditorStore((state) => state.buffer);
+  const extensions = useEditorStore(
+    (state) => state.tabs[state.currentTabId].extensions,
+    shallow
+  );
+  const updateBuffer = useEditorStore((state) => state.updateCurrentBuffer);
 
-const EditorWindow: React.FC<Props> = ({
-  tabs,
-  switchTab,
-  closeTab,
-  buffer,
-  currentTab,
-  updateBuffer,
-  setNavigation,
-}) => {
   return (
     <div className={styles.window}>
       <nav>
         <ul>
-          {Object.keys(tabs).map((id) => {
-            const tab = tabs[id];
-            return (
-              <li
-                onClick={(e) => {
-                  switchTab(id);
-                }}
-                key={tab.dcf.name}
-              >
-                {tab.dcf.name.startsWith("darwin") ? (
-                  <AppleIcon className={styles.icon} />
-                ) : (
-                  <LinuxIcon className={styles.icon} />
-                )}
-                <span>{tab.dcf.name}</span>
-                <button
-                  className={styles.close}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const hasTabs = closeTab(id);
-                    if (!hasTabs) {
-                      setNavigation("welcome");
-                    }
-                  }}
-                >
-                  <CloseIcon />
-                </button>
-              </li>
-            );
-          })}
+          {tabKeys.map((id) => (
+            <Tab key={id} tabId={id} />
+          ))}
         </ul>
       </nav>
-      <Editor
-        buffer={buffer}
-        extensions={currentTab.extensions}
-        onChange={updateBuffer}
-      />
+      <Editor buffer={buffer} extensions={extensions} onChange={updateBuffer} />
     </div>
   );
 };
 
 export default EditorWindow;
+
+const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
+  const tabName = useEditorStore((state) => state.tabs[tabId].dcf.name);
+  const currentTabId = useEditorStore((state) => state.currentTabId);
+  const switchTab = useEditorStore((state) => state.switchTab);
+  const closeTab = useEditorStore((state) => state.closeTab);
+  const navigate = useNavigationStore((state) => state.navigate);
+  const write = useTerminalStore((state) => state.write);
+  return (
+    <li
+      className={cx({ [styles.active]: tabId === currentTabId })}
+      onClick={(e) => {
+        switchTab(tabId);
+        write(<span style={{ color: "green" }}>switching to tab {tabId}</span>);
+      }}
+    >
+      {tabName.startsWith("darwin") ? (
+        <AppleIcon className={styles.icon} />
+      ) : (
+        <LinuxIcon className={styles.icon} />
+      )}
+      <span>{tabName}</span>
+      <button
+        className={styles.close}
+        onClick={(e) => {
+          e.stopPropagation();
+          const hasTabs = closeTab(tabName);
+          if (!hasTabs) {
+            navigate("welcome");
+          }
+        }}
+      >
+        <CloseIcon />
+      </button>
+    </li>
+  );
+};
