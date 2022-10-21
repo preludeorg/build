@@ -7,6 +7,7 @@ import Terminal from "./terminal/terminal";
 import Navbar from "./navbar/navbar";
 import Welcome from "./welcome/welcome";
 import EditorIntro from "./editor/editor-intro";
+import Servers from "./servers/servers";
 
 function App() {
   const editor = useEditor();
@@ -63,6 +64,7 @@ function App() {
           />
         </footer>
       </main>
+      {showServerPanel && <Servers toggleServerPanel={toggleServerPanel} />}
     </div>
   );
 }
