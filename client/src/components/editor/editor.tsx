@@ -44,22 +44,11 @@ const Editor: React.FC<{
   onChange: (newBuffer: string) => void;
 }> = ({ extensions, buffer, onChange }) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
-  const viewRef = useRef<EditorView | null>(null);
 
   useEffect(() => {
     if (editorRef.current === null) return;
-    viewRef.current = new EditorView({
-      parent: editorRef.current,
-    });
-
-    return () => {
-      viewRef.current?.destroy();
-    };
-  }, [editorRef.current]);
-
-  useEffect(() => {
-    viewRef.current?.setState(
-      EditorState.create({
+    const view = new EditorView({
+      state: EditorState.create({
         doc: buffer,
         extensions: [
           ...defaultExtensions,
@@ -70,9 +59,16 @@ const Editor: React.FC<{
             }
           }),
         ],
-      })
-    );
-  }, [viewRef.current, buffer, extensions]);
+      }),
+      parent: editorRef.current,
+    });
+
+    view.focus();
+
+    return () => {
+      view.destroy();
+    };
+  }, [buffer, extensions]);
 
   return <div className={styles.editor} ref={editorRef} />;
 };

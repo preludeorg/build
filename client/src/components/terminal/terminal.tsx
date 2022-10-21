@@ -17,8 +17,9 @@ const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
 };
 
 function useTerminal({ openTab }) {
+  const ref = React.useRef<HTMLDivElement>(null);
   const prompt = "$";
-  const consoleFocused = true;
+  const [consoleFocused, setConsoleFocused] = React.useState(true);
   const [editorInput, setEditorInput] = React.useState("");
   const [processCurrentLine, setProcessCurrentLine] = React.useState(false);
   const [caretPosition, setCaretPosition] = React.useState(0);
@@ -70,6 +71,7 @@ function useTerminal({ openTab }) {
         openTab();
         setEditorInput("");
         setCaretPosition(0);
+        setConsoleFocused(false);
       }
       return;
     }
@@ -136,12 +138,25 @@ function useTerminal({ openTab }) {
     setProcessCurrentLine(false);
   };
 
+  const handleClick = () => {
+    setConsoleFocused(document.activeElement === ref.current);
+  };
+
   React.useEffect(() => {
     // Bind the event listener
-    document.addEventListener("keydown", handleKeyDownEvent);
+    ref.current?.addEventListener("keydown", handleKeyDownEvent);
     return () => {
       // Unbind the event listener on clean up
-      document.removeEventListener("keydown", handleKeyDownEvent);
+      ref.current?.removeEventListener("keydown", handleKeyDownEvent);
+    };
+  });
+
+  React.useEffect(() => {
+    // Bind the event listener
+    document.addEventListener("mouseup", handleClick);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mouseup", handleClick);
     };
   });
 
@@ -154,13 +169,13 @@ function useTerminal({ openTab }) {
     setAfterCaretText(caretTextAfter);
   }, [editorInput, caretPosition]);
 
-  return { currentLine, welcomeMessage };
+  return { currentLine, welcomeMessage, ref };
 }
 
 const Terminal = ({ openTab }) => {
-  const { currentLine, welcomeMessage } = useTerminal({ openTab });
+  const { currentLine, welcomeMessage, ref } = useTerminal({ openTab });
   return (
-    <div className={styles.terminal}>
+    <div tabIndex={0} ref={ref} className={styles.terminal}>
       {welcomeMessage}
       {currentLine}
     </div>

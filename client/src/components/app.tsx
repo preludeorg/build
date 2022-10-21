@@ -1,3 +1,4 @@
+import React from "react";
 import { useEditor } from "../hooks/editor";
 import Swift from "../lib/lang/swift";
 import styles from "./app.module.css";
@@ -7,6 +8,7 @@ import Welcome from "./welcome/welcome";
 
 function App() {
   const editor = useEditor();
+
   return (
     <div className={styles.app}>
       <main>
