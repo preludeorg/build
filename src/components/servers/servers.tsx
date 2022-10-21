@@ -4,11 +4,13 @@ import CloseIcon from "../icons/close-icon";
 import styles from "./servers.module.css";
 import cx from "classnames";
 import { InputGroup } from "../forms/input";
+import useTerminalStore from "../../hooks/terminal-store";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   toggleServerPanel,
 }) => {
   const [serverType, setServerType] = useState("prelude");
+  const write = useTerminalStore((state) => state.write);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -16,6 +18,13 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     const server = formData.get("server");
     const username = formData.get("username");
     const token = formData.get("token");
+
+    write(
+      <span style={{ color: "green" }}>
+        connecting to server {server as string}
+      </span>
+    );
+    toggleServerPanel();
   };
 
   return (
