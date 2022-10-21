@@ -1,6 +1,9 @@
 import ArrowRight from "../icons/arrow-right";
 import WelcomeBlock from "./welcome-block";
 import styles from "./welcome.module.css";
+import rectangle from "../../assets/rectangle.png";
+import rectangle2 from "../../assets/rectangle2.png";
+import rectangle3 from "../../assets/rectangle3.png";
 
 const Welcome = () => {
   return (
@@ -13,7 +16,7 @@ const Welcome = () => {
           description={
             "Learn about the basic concepts and go over the default TTP sets."
           }
-          image={"/static/images/rectangle.png"}
+          image={rectangle}
           link={"/"}
         />
         <WelcomeBlock
@@ -21,7 +24,7 @@ const Welcome = () => {
           description={
             "Learn about the basic concepts and go over the default TTP sets."
           }
-          image={"/static/images/rectangle2.png"}
+          image={rectangle2}
           link={"/"}
         />
         <WelcomeBlock
@@ -29,7 +32,7 @@ const Welcome = () => {
           description={
             "Learn about the basic concepts and go over the default TTP sets."
           }
-          image={"/static/images/rectangle3.png"}
+          image={rectangle3}
           link={"/"}
         />
       </div>
