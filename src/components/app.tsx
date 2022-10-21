@@ -6,10 +6,14 @@ import Welcome from "./welcome/welcome";
 import useEditorStore from "../hooks/editor-store";
 import EditorPanel from "./editor/editor-panel";
 import useNavigationStore from "../hooks/navigation-store";
+import Servers from "./servers/servers";
 
 function App() {
   const panel = useNavigationStore((state) => state.panel);
   const navigate = useNavigationStore((state) => state.navigate);
+  const serverPanelVisible = useNavigationStore(
+    (state) => state.serverPanelVisible
+  );
   const toggleServerPanel = useNavigationStore(
     (state) => state.toggleServerPanel
   );
@@ -50,6 +54,7 @@ function App() {
           />
         </footer>
       </main>
+      {serverPanelVisible && <Servers toggleServerPanel={toggleServerPanel} />}
     </div>
   );
 }
