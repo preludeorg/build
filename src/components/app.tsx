@@ -42,12 +42,23 @@ function App() {
         </section>
         <footer>
           <Terminal
-            openTab={() => {
-              setNavigation("editor");
-              editor.openTab({
-                name: `linux-${Date.now()}-x84.swift`,
-                code: new Swift().bootstrap(),
-              });
+            commands={{
+              "list-manifest": () => {
+                return `command not implemented`;
+              },
+              search: () => {
+                return `command not implemented`;
+              },
+              open: () => {
+                setNavigation("editor");
+                const filename = `linux-${Date.now()}-x84.swift`;
+                editor.openTab({
+                  name: filename,
+                  code: new Swift().bootstrap(),
+                });
+
+                return `opened ${filename} in editor`;
+              },
             }}
           />
         </footer>

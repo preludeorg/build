@@ -11,20 +11,26 @@ function splitStringAtIndex(value: string, index: number) {
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
     if (!wrapperRef.current) return;
-    // eslint-disable-next-line no-param-reassign
     wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
   }, [changesToWatch]);
 };
 
-function useTerminal({ openTab }) {
+interface Props {
+  commands: Record<string, (args: string) => string | JSX.Element>;
+}
+
+function useTerminal({ commands }: Props) {
   const ref = React.useRef<HTMLDivElement>(null);
   const prompt = "$";
-  const [consoleFocused, setConsoleFocused] = React.useState(true);
+  const [consoleFocused, setConsoleFocused] = React.useState(false);
   const [editorInput, setEditorInput] = React.useState("");
   const [processCurrentLine, setProcessCurrentLine] = React.useState(false);
   const [caretPosition, setCaretPosition] = React.useState(0);
   const [beforeCaretText, setBeforeCaretText] = React.useState("");
   const [afterCaretText, setAfterCaretText] = React.useState("");
+  const [bufferedContent, setBufferedContent] = React.useState<
+    JSX.Element | string
+  >("");
 
   const welcomeMessage = (
     <span>
@@ -35,6 +41,7 @@ function useTerminal({ openTab }) {
       <br />
       <br />
       Type “search” to search <br />
+      Type “open” to open a file <br />
       Type “list-manifest” to list
       <br />
       <br />
@@ -56,7 +63,7 @@ function useTerminal({ openTab }) {
     </>
   );
 
-  const handleKeyDownEvent = (event: any) => {
+  const handleKeyDownEvent = (event: KeyboardEvent) => {
     if (!consoleFocused) {
       return;
     }
@@ -67,12 +74,6 @@ function useTerminal({ openTab }) {
 
     if (eventKey === "Enter") {
       setProcessCurrentLine(true);
-      if (editorInput === "open") {
-        openTab();
-        setEditorInput("");
-        setCaretPosition(0);
-        setConsoleFocused(false);
-      }
       return;
     }
 
@@ -138,7 +139,7 @@ function useTerminal({ openTab }) {
     setProcessCurrentLine(false);
   };
 
-  const handleClick = () => {
+  const handleFocus = () => {
     setConsoleFocused(document.activeElement === ref.current);
   };
 
@@ -153,10 +154,12 @@ function useTerminal({ openTab }) {
 
   React.useEffect(() => {
     // Bind the event listener
-    document.addEventListener("mouseup", handleClick);
+    document.addEventListener("focusin", handleFocus, true);
+    document.addEventListener("blur", handleFocus, true);
     return () => {
       // Unbind the event listener on clean up
-      document.removeEventListener("mouseup", handleClick);
+      document.removeEventListener("focusin", handleFocus, true);
+      document.removeEventListener("blur", handleFocus, true);
     };
   });
 
@@ -169,14 +172,95 @@ function useTerminal({ openTab }) {
     setAfterCaretText(caretTextAfter);
   }, [editorInput, caretPosition]);
 
-  return { currentLine, welcomeMessage, ref };
+  React.useEffect(() => {
+    if (!processCurrentLine) {
+      return;
+    }
+
+    const processCommand = async (text: string) => {
+      const [command, ...rest] = text.trim().split(" ");
+      let output: string | JSX.Element = "";
+
+      if (command === "clear") {
+        setBufferedContent("");
+        setEditorInput("");
+        setProcessCurrentLine(false);
+        setCaretPosition(0);
+        setBeforeCaretText("");
+        setAfterCaretText("");
+        return;
+      }
+
+      const waiting = (
+        <>
+          {bufferedContent}
+          <span>{prompt}</span>
+          <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
+            {editorInput}
+          </span>
+          <br />
+        </>
+      );
+
+      setBufferedContent(waiting);
+      setEditorInput("");
+      setCaretPosition(0);
+      setBeforeCaretText("");
+      setAfterCaretText("");
+
+      if (text) {
+        const commandArguments = rest.join(" ");
+
+        if (command && commands[command]) {
+          const executor = commands[command];
+
+          if (typeof executor === "function") {
+            output = await executor(commandArguments);
+          } else {
+            output = executor;
+          }
+        } else {
+          output = `command "${command}" is not recognized`;
+        }
+      }
+
+      const nextBufferedContent = (
+        <>
+          {bufferedContent}
+          <span>{prompt}</span>
+          <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
+            {editorInput}
+          </span>
+          {output ? (
+            <span>
+              <br />
+              {output}
+            </span>
+          ) : null}
+          <br />
+        </>
+      );
+
+      setBufferedContent(nextBufferedContent);
+      setProcessCurrentLine(false);
+    };
+
+    processCommand(editorInput);
+  }, [processCurrentLine]);
+
+  useScrollToBottom(bufferedContent, ref);
+
+  return { currentLine, welcomeMessage, bufferedContent, ref };
 }
 
-const Terminal = ({ openTab }) => {
-  const { currentLine, welcomeMessage, ref } = useTerminal({ openTab });
+const Terminal: React.FC<Props> = ({ commands }) => {
+  const { currentLine, welcomeMessage, ref, bufferedContent } = useTerminal({
+    commands,
+  });
   return (
     <div tabIndex={0} ref={ref} className={styles.terminal}>
       {welcomeMessage}
+      {bufferedContent}
       {currentLine}
     </div>
   );

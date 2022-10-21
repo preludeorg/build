@@ -31,22 +31,22 @@ const EditorWindow: React.FC<Props> = ({
           {Object.keys(tabs).map((id) => {
             const tab = tabs[id];
             return (
-              <li key={tab.dcf.name}>
+              <li
+                onClick={(e) => {
+                  switchTab(id);
+                }}
+                key={tab.dcf.name}
+              >
                 {tab.dcf.name.startsWith("darwin") ? (
                   <AppleIcon className={styles.icon} />
                 ) : (
                   <LinuxIcon className={styles.icon} />
                 )}
-                <span
-                  onClick={() => {
-                    switchTab(id);
-                  }}
-                >
-                  {tab.dcf.name}
-                </span>
+                <span>{tab.dcf.name}</span>
                 <button
                   className={styles.close}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     const hasTabs = closeTab(id);
                     if (!hasTabs) {
                       setNavigation("welcome");
