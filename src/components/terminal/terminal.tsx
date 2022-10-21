@@ -1,4 +1,6 @@
 import React from "react";
+import shallow from "zustand/shallow";
+import useTerminalStore from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
 
 function splitStringAtIndex(value: string, index: number) {
@@ -22,38 +24,26 @@ interface Props {
 function useTerminal({ commands }: Props) {
   const ref = React.useRef<HTMLDivElement>(null);
   const prompt = "$";
-  const [consoleFocused, setConsoleFocused] = React.useState(false);
-  const [editorInput, setEditorInput] = React.useState("");
-  const [processCurrentLine, setProcessCurrentLine] = React.useState(false);
-  const [caretPosition, setCaretPosition] = React.useState(0);
-  const [beforeCaretText, setBeforeCaretText] = React.useState("");
-  const [afterCaretText, setAfterCaretText] = React.useState("");
-  const [bufferedContent, setBufferedContent] = React.useState<
-    JSX.Element | string
-  >("");
 
-  const welcomeMessage = (
-    <span>
-      Welcome to Operator 2.0
-      <br />
-      <br />
-      Connected to testserver.prelude.org
-      <br />
-      <br />
-      Type “search” to search <br />
-      Type “open” to open a file <br />
-      Type “list-manifest” to list
-      <br />
-      <br />
-    </span>
-  );
+  const {
+    focused,
+    input,
+    processInput,
+    caretPosition,
+    beforeCaretText,
+    afterCaretText,
+    bufferedContent,
+  } = useTerminalStore((state) => state, shallow);
+  const setProperty = useTerminalStore((state) => state.setProperty);
+  const clear = useTerminalStore((state) => state.clear);
+  const wait = useTerminalStore((state) => state.wait);
 
   const currentLine = (
     <>
       <span className={styles.prompt}>{prompt}</span>
       <div className={styles.lineText}>
         <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-        {consoleFocused ? (
+        {focused ? (
           <span className={styles.caret}>
             <span className={styles.caretAfter} />
           </span>
@@ -64,7 +54,7 @@ function useTerminal({ commands }: Props) {
   );
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
-    if (!consoleFocused) {
+    if (!focused) {
       return;
     }
 
@@ -73,7 +63,7 @@ function useTerminal({ commands }: Props) {
     const eventKey = event.key;
 
     if (eventKey === "Enter") {
-      setProcessCurrentLine(true);
+      setProperty("processInput", true);
       return;
     }
 
@@ -81,12 +71,12 @@ function useTerminal({ commands }: Props) {
 
     if (eventKey === "Backspace") {
       const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-        editorInput,
+        input,
         caretPosition
       );
       nextInput = caretTextBefore.slice(0, -1) + caretTextAfter;
-      if (editorInput && editorInput.length !== 0)
-        setCaretPosition(caretPosition - 1);
+      if (input && input.length !== 0)
+        setProperty("caretPosition", caretPosition - 1);
     } else if (eventKey === "ArrowUp") {
       // nextInput = getPreviousCommand();
       // if (nextInput) setCaretPosition(nextInput.length);
@@ -95,24 +85,24 @@ function useTerminal({ commands }: Props) {
       // if (nextInput) setCaretPosition(nextInput.length);
       // else setCaretPosition(0);
     } else if (eventKey === "ArrowLeft") {
-      if (caretPosition > 0) setCaretPosition(caretPosition - 1);
-      nextInput = editorInput;
+      if (caretPosition > 0) setProperty("caretPosition", caretPosition - 1);
+      nextInput = input;
     } else if (eventKey === "ArrowRight") {
-      if (caretPosition < editorInput.length)
-        setCaretPosition(caretPosition + 1);
-      nextInput = editorInput;
+      if (caretPosition < input.length)
+        setProperty("caretPosition", caretPosition + 1);
+      nextInput = input;
     } else if (
       (event.metaKey || event.ctrlKey) &&
       eventKey.toLowerCase() === "v"
     ) {
       navigator.clipboard.readText().then((pastedText) => {
         const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-          editorInput || "",
+          input || "",
           caretPosition
         );
         nextInput = caretTextBefore + pastedText + caretTextAfter;
-        setCaretPosition(caretPosition + pastedText.length);
-        setEditorInput(nextInput);
+        setProperty("caretPosition", caretPosition + pastedText.length);
+        setProperty("input", nextInput);
       });
     } else if (
       (event.metaKey || event.ctrlKey) &&
@@ -121,26 +111,26 @@ function useTerminal({ commands }: Props) {
       const selectedText = window.getSelection()?.toString();
       if (!selectedText) return;
       navigator.clipboard.writeText(selectedText).then(() => {
-        nextInput = editorInput;
-        setEditorInput(nextInput);
+        nextInput = input;
+        setProperty("input", nextInput);
       });
     } else {
       if (eventKey && eventKey.length === 1) {
         const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-          editorInput,
+          input,
           caretPosition
         );
         nextInput = caretTextBefore + eventKey + caretTextAfter;
-        setCaretPosition(caretPosition + 1);
-      } else nextInput = editorInput;
+        setProperty("caretPosition", caretPosition + 1);
+      } else nextInput = input;
     }
 
-    setEditorInput(nextInput ?? "");
-    setProcessCurrentLine(false);
+    setProperty("input", nextInput ?? "");
+    setProperty("processInput", false);
   };
 
   const handleFocus = () => {
-    setConsoleFocused(document.activeElement === ref.current);
+    setProperty("focused", document.activeElement === ref.current);
   };
 
   React.useEffect(() => {
@@ -165,15 +155,15 @@ function useTerminal({ commands }: Props) {
 
   React.useEffect(() => {
     const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-      editorInput,
+      input,
       caretPosition
     );
-    setBeforeCaretText(caretTextBefore);
-    setAfterCaretText(caretTextAfter);
-  }, [editorInput, caretPosition]);
+    setProperty("beforeCaretText", caretTextBefore);
+    setProperty("afterCaretText", caretTextAfter);
+  }, [input, caretPosition]);
 
   React.useEffect(() => {
-    if (!processCurrentLine) {
+    if (!processInput) {
       return;
     }
 
@@ -182,12 +172,7 @@ function useTerminal({ commands }: Props) {
       let output: string | JSX.Element = "";
 
       if (command === "clear") {
-        setBufferedContent("");
-        setEditorInput("");
-        setProcessCurrentLine(false);
-        setCaretPosition(0);
-        setBeforeCaretText("");
-        setAfterCaretText("");
+        clear();
         return;
       }
 
@@ -196,17 +181,13 @@ function useTerminal({ commands }: Props) {
           {bufferedContent}
           <span>{prompt}</span>
           <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
-            {editorInput}
+            {input}
           </span>
           <br />
         </>
       );
 
-      setBufferedContent(waiting);
-      setEditorInput("");
-      setCaretPosition(0);
-      setBeforeCaretText("");
-      setAfterCaretText("");
+      wait(waiting);
 
       if (text) {
         const commandArguments = rest.join(" ");
@@ -229,7 +210,7 @@ function useTerminal({ commands }: Props) {
           {bufferedContent}
           <span>{prompt}</span>
           <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
-            {editorInput}
+            {input}
           </span>
           {output ? (
             <span>
@@ -241,28 +222,46 @@ function useTerminal({ commands }: Props) {
         </>
       );
 
-      setBufferedContent(nextBufferedContent);
-      setProcessCurrentLine(false);
+      setProperty("bufferedContent", nextBufferedContent);
+      setProperty("processInput", false);
     };
 
-    processCommand(editorInput);
-  }, [processCurrentLine]);
+    processCommand(input);
+  }, [processInput]);
 
   useScrollToBottom(bufferedContent, ref);
 
-  return { currentLine, welcomeMessage, bufferedContent, ref };
+  return { currentLine, bufferedContent, ref };
 }
 
 const Terminal: React.FC<Props> = ({ commands }) => {
-  const { currentLine, welcomeMessage, ref, bufferedContent } = useTerminal({
+  const { currentLine, ref, bufferedContent } = useTerminal({
     commands,
   });
   return (
     <div tabIndex={0} ref={ref} className={styles.terminal}>
-      {welcomeMessage}
+      <WelcomeMessage />
       {bufferedContent}
       {currentLine}
     </div>
+  );
+};
+
+const WelcomeMessage = () => {
+  return (
+    <span>
+      Welcome to Operator 2.0
+      <br />
+      <br />
+      Connected to testserver.prelude.org
+      <br />
+      <br />
+      Type “search” to search <br />
+      Type “open” to open a file <br />
+      Type “list-manifest” to list
+      <br />
+      <br />
+    </span>
   );
 };
 
