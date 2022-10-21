@@ -6,6 +6,7 @@ import LinuxIcon from "../icons/linux-icon";
 import useEditorStore from "../../hooks/editor-store";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
+import cx from "classnames";
 
 const EditorWindow: React.FC = () => {
   const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
@@ -34,11 +35,13 @@ export default EditorWindow;
 
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const tabName = useEditorStore((state) => state.tabs[tabId].dcf.name);
+  const currentTabId = useEditorStore((state) => state.currentTabId);
   const switchTab = useEditorStore((state) => state.switchTab);
   const closeTab = useEditorStore((state) => state.closeTab);
   const navigate = useNavigationStore((state) => state.navigate);
   return (
     <li
+      className={cx({ [styles.active]: tabId === currentTabId })}
       onClick={(e) => {
         switchTab(tabId);
       }}
