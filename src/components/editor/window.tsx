@@ -7,6 +7,7 @@ import useEditorStore from "../../hooks/editor-store";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
 import cx from "classnames";
+import useTerminalStore from "../../hooks/terminal-store";
 
 const EditorWindow: React.FC = () => {
   const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
@@ -39,11 +40,13 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const switchTab = useEditorStore((state) => state.switchTab);
   const closeTab = useEditorStore((state) => state.closeTab);
   const navigate = useNavigationStore((state) => state.navigate);
+  const write = useTerminalStore((state) => state.write);
   return (
     <li
       className={cx({ [styles.active]: tabId === currentTabId })}
       onClick={(e) => {
         switchTab(tabId);
+        write(<span style={{ color: "green" }}>switching to tab {tabId}</span>);
       }}
     >
       {tabName.startsWith("darwin") ? (
