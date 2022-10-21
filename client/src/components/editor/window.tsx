@@ -8,11 +8,11 @@ import { Tab } from "../../hooks/editor";
 interface Props {
   tabs: Record<string, Tab>;
   switchTab: (id: string) => void;
-  closeTab: (id: string) => void;
+  closeTab: (id: string) => boolean;
   buffer: string;
   currentTab: Tab;
   updateBuffer: (buffer: string) => void;
-  setNavigation: () => void;
+  setNavigation: (n: string) => void;
 }
 
 const EditorWindow: React.FC<Props> = ({
@@ -47,9 +47,9 @@ const EditorWindow: React.FC<Props> = ({
                 <button
                   className={styles.close}
                   onClick={() => {
-                    closeTab(id);
-                    if (Object.keys(tabs).length > 1) {
-                      setNavigation("welcome")
+                    const hasTabs = closeTab(id);
+                    if (!hasTabs) {
+                      setNavigation("welcome");
                     }
                   }}
                 >

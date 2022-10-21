@@ -4,7 +4,17 @@
   flex-direction: row;
 }
 
-.main {
-  width: 100%;
+.app main {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  flex: 1;
+}
+
+.app main section {
+  flex: 2;
+}
+
+.app main footer {
+  flex: 1;
 }

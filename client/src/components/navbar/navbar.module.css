@@ -3,7 +3,7 @@
 .navbar {
   display: flex;
   flex-direction: column;
-  padding: 1rem .75rem;
+  padding: 1rem 0.75rem;
   border-right: 1px solid var(--color-secondary-10);
   row-gap: 1.5rem;
 }
@@ -25,19 +25,17 @@
   justify-content: center;
 }
 
-.iconWrapper:hover {
+.iconWrapper:hover,
+.active {
   background-color: var(--color-secondary-10);
   cursor: pointer;
 }
 
-.iconWrapper:hover .icon {
+.iconWrapper:hover .icon,
+.active .icon {
   fill: #fff;
 }
 
 .icon {
   fill: var(--color-primary-10);
-}
-
-.active {
-  fill: #fff;
 }
