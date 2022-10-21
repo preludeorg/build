@@ -2,7 +2,6 @@
 
 .welcome {
     padding: 1.5rem 1rem;
-   
 }
 
 .header {
@@ -65,6 +64,8 @@
     width: max-content;
     cursor: pointer;
     border-radius: 0.25rem ;
+    text-decoration: none;
+    color: #fff;
 }
 
 .text {

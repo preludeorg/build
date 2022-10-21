@@ -38,6 +38,8 @@ export function useEditor(defaultTabs = {}) {
         setBuffer(newTabs[nextId].buffer);
       }
     }
+
+    return Object.keys(newTabs).length !== 0;
   };
 
   const openTab = (dcf: DCF) => {
