@@ -1,5 +1,5 @@
 import { Extension } from "@codemirror/state";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { DCF } from "../lib/dcf";
 import { getLanguageMode } from "../lib/lang";
 
