@@ -15,7 +15,6 @@ function App() {
   const toggleServerPanel = () => {
     setShowServerPanel(!showServerPanel);
   };
-
   return (
     <div className={styles.app}>
       <Navbar
