@@ -47,8 +47,8 @@
 
 .input:focus-visible {
   outline: 1px solid var(--form-element-border);
-  box-shadow: 0px 0px 8px var(--white);
-  border-color: var(--white);
+  box-shadow: 0px 0px 8px var(--color-primary-10);
+  border-color: var(--color-primary-10);
 }
 
 .input:-webkit-autofill,
