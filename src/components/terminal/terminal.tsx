@@ -2,6 +2,7 @@ import React from "react";
 import shallow from "zustand/shallow";
 import useTerminalStore from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
+import cx from "classnames";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -120,11 +121,9 @@ const CurrentLine = () => {
       <span className={styles.prompt}>{prompt}</span>
       <div className={styles.lineText}>
         <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-        {focused ? (
-          <span className={styles.caret}>
-            <span className={styles.caretAfter} />
-          </span>
-        ) : null}
+        <span className={cx(styles.caret, { [styles.focused]: focused })}>
+          <span className={styles.caretAfter} />
+        </span>
         <span className={styles.preWhiteSpace}>{afterCaretText}</span>
       </div>
     </>
