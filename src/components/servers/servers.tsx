@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { InputGroup } from "../forms/input";
 import HostsIcon from "../icons/hosts-icon";
 import CloseIcon from "../icons/close-icon";
+import CopyIcon from "../icons/copy-icon";
 import styles from "./servers.module.css";
 import cx from "classnames";
-import { InputGroup } from "../forms/input";
 import useTerminalStore from "../../hooks/terminal-store";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
@@ -109,7 +110,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
                 className={styles.input}
                 placeholder="Enter an account ID"
                 required
-                after={<CloseIcon className={styles.icon} />}
+                after={<CopyIcon className={styles.inputIcon} />}
               />
             </div>
             <div>
@@ -122,7 +123,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
                 className={styles.input}
                 placeholder="Enter a Token"
                 required
-                after={<CloseIcon className={styles.icon} />}
+                after={<CopyIcon className={styles.inputIcon} />}
               />
             </div>
             <button type="submit" className={styles.connect}>

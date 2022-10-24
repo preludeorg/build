@@ -21,6 +21,10 @@
   height: 1.25rem;
   width: 1.25rem;
   margin-left: auto;
+}
+
+.closeIcon:hover .icon {
+  fill: #fff;
   cursor: pointer;
 }
 
@@ -113,6 +117,11 @@ label {
   fill: var(--color-primary-10);
   height: 1rem;
   width: 1rem;
+}
+
+.inputIcon:hover {
+  fill: #fff;
+  cursor: pointer;
 }
 
 .connect {
