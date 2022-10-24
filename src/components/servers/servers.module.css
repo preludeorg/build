@@ -1,9 +1,13 @@
+/* Blacked overlay */
+
 .overlay {
   position: absolute;
   height: 100vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+/* Server Panel */
 
 .servers {
   position: absolute;
@@ -138,4 +142,32 @@ label {
 .connect:hover {
   background-color: var(--color-primary-30);
   cursor: pointer;
+}
+
+/* Connected Server Overlay */
+
+.container {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 0.25rem 0.5rem;
+  background-color: var(--black);
+  border-radius: 0 0 0.75rem 0.75rem;
+  width: max-content;
+  column-gap: 0.5rem;
+  align-items: center;
+}
+
+.status {
+  padding: 4px;
+  background-color: var(--color-success);
+  border-radius: 50%;
+}
+
+.serverName {
+  font-size: var(--text-xs);
+  color: #fff;
 }

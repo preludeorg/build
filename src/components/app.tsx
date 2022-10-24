@@ -1,6 +1,7 @@
 import Swift from "../lib/lang/swift";
 import styles from "./app.module.css";
 import Terminal from "./terminal/terminal";
+import ConnectedServer from "./servers/connected-server";
 import Navbar from "./navbar/navbar";
 import Welcome from "./welcome/welcome";
 import useEditorStore from "../hooks/editor-store";
@@ -21,6 +22,7 @@ function App() {
   const openTab = useEditorStore((state) => state.openTab);
   return (
     <div className={styles.app}>
+      <ConnectedServer/>
       <Navbar
         navigation={panel}
         setNavigation={navigate}
