@@ -8,6 +8,8 @@ import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
 import cx from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
+import PlayIcon from "../icons/play-icon";
+import ChevronIcon from "../icons/chevron-icon";
 
 const EditorWindow: React.FC = () => {
   const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
@@ -28,6 +30,16 @@ const EditorWindow: React.FC = () => {
         </ul>
       </nav>
       <Editor buffer={buffer} extensions={extensions} onChange={updateBuffer} />
+      <div className={styles.controlPanel}>
+        <button className={styles.test}>
+          <PlayIcon className={styles.playIcon} />
+          <span>Test</span>
+        </button>
+        <button className={styles.deploy}>
+          <span>Deploy</span>
+          <ChevronIcon className={styles.chevronIcon} />
+        </button>
+      </div>
     </div>
   );
 };
