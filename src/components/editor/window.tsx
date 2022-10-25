@@ -48,7 +48,6 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       className={cx({ [styles.active]: tabId === currentTabId })}
       onClick={(e) => {
         switchTab(tabId);
-        write(<span style={{ color: "green" }}>switching to tab {tabId}</span>);
       }}
     >
       {tabName.startsWith("darwin") ? (
