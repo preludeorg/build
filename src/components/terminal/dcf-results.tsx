@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ChevronIcon from "../icons/chevron-icon";
 import ContainerIcon from "../icons/container-icon";
-import styles from "./terminal.module.css";
+import styles from "./dcf-results.module.css";
 import cx from "classnames";
 
 interface Props {
