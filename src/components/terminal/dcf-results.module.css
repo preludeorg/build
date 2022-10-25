@@ -1,0 +1,98 @@
+.resultsContainer {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-xs);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-top: 1px solid var(--color-primary-10);
+}
+
+.containerIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+}
+
+.name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 240px;
+  column-gap: 0.5rem;
+  margin-right: auto;
+  padding: 0.5rem 1rem 0.5rem 0;
+}
+
+img {
+  height: 1rem;
+  width: 1rem;
+  filter: invert(100%);
+}
+
+.cpu {
+  display: flex;
+  justify-content: center;
+  border-left: 1px solid var(--color-primary-10);
+  border-right: 1px solid var(--color-primary-10);
+  padding: 0.5rem 1rem;
+  width: 5.75rem;
+}
+
+.results {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.75rem 0 0.75rem 1rem;
+  column-gap: 1rem;
+  width: 17rem;
+}
+
+.statusComplete {
+  padding: 0.25rem;
+  border-radius: 50%;
+  background-color: var(--color-success);
+}
+
+.statusFailed {
+  padding: 0.25rem;
+  border-radius: 50%;
+  background-color: var(--color-error);
+}
+
+.resultsButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-primary-10);
+  border-radius: 0.25rem;
+  margin-left: auto;
+  width: max-content;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.resultsButton:hover {
+  background-color: var(--color-secondary-20);
+}
+
+.chevronIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--color-primary-10);
+}
+
+.activeChevron {
+  transform: rotate(180deg);
+}
+
+.output {
+  padding: 0.75rem 0;
+  border-top: 1px dashed var(--color-primary-10);
+}
