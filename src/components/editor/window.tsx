@@ -1,4 +1,5 @@
 import Editor from "./editor";
+import ControlPanel from "./control-panel";
 import styles from "./editor.module.pcss";
 import CloseIcon from "../icons/close-icon";
 import AppleIcon from "../icons/apple-icon";
@@ -28,6 +29,7 @@ const EditorWindow: React.FC = () => {
         </ul>
       </nav>
       <Editor buffer={buffer} extensions={extensions} onChange={updateBuffer} />
+      <ControlPanel />
     </div>
   );
 };
