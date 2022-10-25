@@ -1,0 +1,176 @@
+.editor,
+.window {
+  font-family: var(--font-code);
+}
+
+.editor {
+  flex: 1;
+}
+
+.window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  & nav {
+    background-color: var(--color-secondary-20);
+    border-bottom: solid var(--color-secondary-10) 1px;
+
+    & ul {
+      display: flex;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      & li {
+        padding: 0.75rem 0.5rem;
+        border-right: solid var(--color-secondary-10) 1px;
+        border-bottom: 2px solid var(--color-secondary-20);
+        display: flex;
+        gap: 0.5rem;
+        cursor: pointer;
+
+        &.active {
+          border-bottom: 2px solid var(--color-aero);
+
+          & .close {
+            visibility: visible;
+          }
+
+          &:hover {
+            border-bottom: 2px solid var(--color-aero);
+          }
+        }
+
+        &:hover {
+          border-bottom: 2px solid var(--color-secondary-10);
+        }
+      }
+
+      & li span {
+        margin: auto 0;
+      }
+    }
+  }
+}
+
+li:hover .close {
+  visibility: visible;
+}
+
+.close {
+  visibility: hidden;
+  background: none;
+  border: none;
+  padding: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+
+  & svg {
+    fill: var(--color-primary-10);
+  }
+}
+
+.close:hover {
+  border-radius: 0.25rem;
+  background-color: var(--black);
+
+  & svg {
+    fill: var(--white);
+  }
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: var(--white);
+}
+
+.intro {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.intro h2 {
+  margin: auto;
+}
+
+.controlPanel {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--color-secondary-20);
+  border-top: 1px solid var(--color-secondary-10);
+  padding: 0.5rem;
+}
+
+.test {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: max-content;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-primary-20);
+  border: 1px solid var(--color-primary-20);
+  column-gap: 0.75rem;
+  color: #fff;
+}
+
+.test:hover {
+  background-color: var(--color-primary-30);
+  cursor: pointer;
+}
+
+.playIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+}
+
+.loaderIcon {
+  width: 1rem;
+  height: 1rem;
+  animation: loader 1s linear infinite;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.deploy {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: max-content;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-secondary-30);
+  border: 1px solid var(--gray-30);
+  column-gap: 0.75rem;
+  color: #fff;
+  margin-left: auto;
+  color: var(--color-primary-10);
+}
+
+.chevronIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--color-primary-10);
+}
+
+.deploy:hover {
+  background-color: var(--color-primary-30);
+  border: 1px solid var(--color-primary-20);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.deploy:hover .chevronIcon {
+  fill: var(--white);
+}
