@@ -21,6 +21,7 @@
   --color-success: #73b762;
   --color-error: #f28c8c;
   --color-warning: #ffbf44;
+  --color-aero: #78B6ED;
 
   /* typography */
   --color-text: var(--white);
