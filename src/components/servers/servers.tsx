@@ -28,6 +28,10 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     toggleServerPanel();
   };
 
+  const copyText = (text: string) => {
+    navigator.clipboard.writeText((document.getElementsByName(text)[0] as HTMLInputElement).value);
+  };
+
   return (
     <div
       className={styles.overlay}
@@ -110,7 +114,11 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
                 className={styles.input}
                 placeholder="Enter an account ID"
                 required
-                after={<CopyIcon className={styles.inputIcon} />}
+                after={
+                  <div onClick={() => copyText("username")}>
+                    <CopyIcon className={styles.inputIcon} />
+                  </div>
+                }
               />
             </div>
             <div>
@@ -118,12 +126,16 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
                 Token
               </label>
               <InputGroup
-                type="text"
+                type="password"
                 name={"token"}
                 className={styles.input}
                 placeholder="Enter a Token"
                 required
-                after={<CopyIcon className={styles.inputIcon} />}
+                after={
+                  <div onClick={() => copyText("token")}>
+                    <CopyIcon className={styles.inputIcon} />
+                  </div>
+                }
               />
             </div>
             <button type="submit" className={styles.connect}>
