@@ -15,7 +15,7 @@ export type Commands = Record<string, Command>;
 
 export const commands: Commands = {
   login: {
-    title: "login [email]",
+    title: "login <email>",
     desc: "logs into the default prelude instance with an email address",
     async exec(args) {
       try {
@@ -42,6 +42,7 @@ export const commands: Commands = {
     },
   },
   "list-manifest": {
+    desc: "lists the manifest of ttps accesible by your account",
     exec() {
       return `command not implemented`;
     },
