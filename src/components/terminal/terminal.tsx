@@ -3,6 +3,7 @@ import shallow from "zustand/shallow";
 import useTerminalStore from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
 import cx from "classnames";
+import { Commands } from "./commands";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -11,12 +12,7 @@ const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   }, [changesToWatch]);
 };
 
-type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
-interface Props {
-  commands: Record<string, (args: string) => CommandReturn>;
-}
-
-function useTerminal({ commands }: Props) {
+function useTerminal() {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const { bufferedContent } = useTerminalStore(
@@ -35,7 +31,7 @@ function useTerminal({ commands }: Props) {
 
     const eventKey = event.key;
     if (eventKey === "Enter") {
-      processCommand(commands);
+      processCommand();
       return;
     }
 
@@ -71,10 +67,8 @@ function useTerminal({ commands }: Props) {
   return { bufferedContent, ref };
 }
 
-const Terminal: React.FC<Props> = ({ commands }) => {
-  const { ref, bufferedContent } = useTerminal({
-    commands,
-  });
+const Terminal: React.FC = () => {
+  const { ref, bufferedContent } = useTerminal();
   return (
     <div tabIndex={0} ref={ref} className={styles.terminal}>
       <WelcomeMessage />

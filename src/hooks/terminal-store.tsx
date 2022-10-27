@@ -1,4 +1,5 @@
 import create from "zustand";
+import { commands } from "../components/terminal/commands";
 import styles from "../components/terminal/terminal.module.css";
 
 function splitStringAtIndex(value: string, index: number) {
@@ -20,7 +21,7 @@ interface TerminalStore {
   setFocus: (focused: boolean) => void;
   clear: () => void;
   handleKey: (event: KeyboardEvent) => Promise<void>;
-  processCommand: (commands: any) => void;
+  processCommand: () => void;
   write: (content: string | JSX.Element) => void;
 }
 
@@ -137,7 +138,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       historyPointer,
     }));
   },
-  async processCommand(commands) {
+  async processCommand() {
     const { input, bufferedContent, prompt, commandsHistory } = get();
     const [command, ...rest] = input.trim().split(" ");
     let output: string | JSX.Element = "";
@@ -182,7 +183,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       const commandArguments = rest.join(" ");
 
       if (command && commands[command]) {
-        const executor = commands[command];
+        const executor = commands[command].exec;
 
         if (typeof executor === "function") {
           output = await executor(commandArguments);
@@ -260,3 +261,5 @@ const getNextCommand = (historyPointer: number, commandsHistory: string[]) => {
 };
 
 export default useTerminalStore;
+
+export const terminalState = () => useTerminalStore.getState();

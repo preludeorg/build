@@ -19,3 +19,5 @@ const useNavigationStore = create<NavigationStore>((set) => ({
 }));
 
 export default useNavigationStore;
+
+export const navigatorState = () => useNavigationStore.getState();

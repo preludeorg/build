@@ -6,7 +6,7 @@ interface AuthStore {
   isConnected: boolean;
   serverType: "prelude" | "custom";
   credentials?: Credentials;
-  createAccount: (email: string) => Promise<{ host: string }>;
+  createAccount: (email: string) => Promise<void>;
 }
 
 const useAuthStore = create<AuthStore>((set, get) => ({
@@ -20,9 +20,9 @@ const useAuthStore = create<AuthStore>((set, get) => ({
     const credentials = await service.iam.newAccount(email);
 
     set(() => ({ credentials, isConnected: true }));
-
-    return { host };
   },
 }));
 
 export default useAuthStore;
+
+export const authState = () => useAuthStore.getState();

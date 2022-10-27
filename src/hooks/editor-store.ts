@@ -88,3 +88,5 @@ const useEditorStore = create<EditorStore>((set, get) => ({
 }));
 
 export default useEditorStore;
+
+export const editorState = () => useEditorStore.getState();

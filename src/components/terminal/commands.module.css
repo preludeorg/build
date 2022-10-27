@@ -1,0 +1,23 @@
+.help {
+}
+
+.help ul {
+  list-style-type: none;
+  padding-left: 1rem;
+  margin-top: 0.25rem;
+}
+
+.help ul li {
+  display: flex;
+}
+
+.help ul li span {
+  flex: 1;
+}
+
+.help ul li p {
+  flex: 5;
+  margin: 0;
+  padding: 0;
+  color: var(--gray-10);
+}
