@@ -1,12 +1,21 @@
+import useAuthStore from "../../hooks/auth-store";
 import styles from "./servers.module.css";
+import cx from "classnames";
+import useNavigationStore from "../../hooks/navigation-store";
 
 const ConnectedServer = () => {
-  return (
-    <div className={styles.container}>
-      <div className={styles.status}/>
-      <div className={styles.serverName}>testserver.prelude.org</div>
-    </div>
+  const host = useAuthStore((state) => state.host);
+  const isConnected = useAuthStore((state) => state.isConnected);
+  const serverName = isConnected ? host : "Disconnected";
+  const toggleServerPanel = useNavigationStore(
+    (state) => state.toggleServerPanel
   );
-}
- 
+  return (
+    <button onClick={toggleServerPanel} className={styles.container}>
+      <div className={cx(styles.status, { [styles.connected]: isConnected })} />
+      <div className={styles.serverName}>{serverName}</div>
+    </button>
+  );
+};
+
 export default ConnectedServer;

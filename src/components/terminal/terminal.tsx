@@ -11,8 +11,9 @@ const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   }, [changesToWatch]);
 };
 
+type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Props {
-  commands: Record<string, (args: string) => string | JSX.Element>;
+  commands: Record<string, (args: string) => CommandReturn>;
 }
 
 function useTerminal({ commands }: Props) {
@@ -87,14 +88,6 @@ const WelcomeMessage = () => {
   return (
     <span>
       Welcome to Operator 2.0
-      <br />
-      <br />
-      Connected to testserver.prelude.org
-      <br />
-      <br />
-      Type “search” to search <br />
-      Type “open” to open a file <br />
-      Type “list-manifest” to list
       <br />
       <br />
     </span>

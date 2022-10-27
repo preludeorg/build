@@ -159,12 +159,23 @@ label {
   width: max-content;
   column-gap: 0.5rem;
   align-items: center;
+  opacity: 0.6;
+  cursor: pointer;
+  border: none;
+}
+
+.container:hover {
+  opacity: 1;
 }
 
 .status {
   padding: 4px;
-  background-color: var(--color-success);
+  background-color: var(--color-error);
   border-radius: 50%;
+}
+
+.connected {
+  background-color: var(--color-success);
 }
 
 .serverName {

@@ -8,21 +8,18 @@ import useEditorStore from "../hooks/editor-store";
 import EditorPanel from "./editor/editor-panel";
 import useNavigationStore from "../hooks/navigation-store";
 import Servers from "./servers/servers";
+import { z, ZodError } from "zod";
+import useAuthStore from "../hooks/auth-store";
+import shallow from "zustand/shallow";
 
 function App() {
-  const panel = useNavigationStore((state) => state.panel);
-  const navigate = useNavigationStore((state) => state.navigate);
-  const serverPanelVisible = useNavigationStore(
-    (state) => state.serverPanelVisible
-  );
-  const toggleServerPanel = useNavigationStore(
-    (state) => state.toggleServerPanel
-  );
-
+  const { navigate, panel, serverPanelVisible, toggleServerPanel } =
+    useNavigationStore((state) => state, shallow);
+  const createAccount = useAuthStore((state) => state.createAccount);
   const openTab = useEditorStore((state) => state.openTab);
   return (
     <div className={styles.app}>
-      <ConnectedServer/>
+      <ConnectedServer />
       <Navbar
         navigation={panel}
         setNavigation={navigate}
@@ -36,6 +33,28 @@ function App() {
         <footer>
           <Terminal
             commands={{
+              login: async (args) => {
+                try {
+                  const email = z.string().email().parse(args);
+                  const { host } = await createAccount(email);
+
+                  return (
+                    <>
+                      <br />
+                      Connected to {host}
+                      <br />
+                      <br />
+                      Type “help” for a list of commands <br />
+                    </>
+                  );
+                } catch (e) {
+                  if (e instanceof ZodError) {
+                    return e.errors[0].message;
+                  } else {
+                    return (e as Error).message;
+                  }
+                }
+              },
               "list-manifest": () => {
                 return `command not implemented`;
               },

@@ -7,12 +7,19 @@ import styles from "./servers.module.css";
 import cx from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
 import * as Prelude from "@prelude/sdk";
+import useAuthStore from "../../hooks/auth-store";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   toggleServerPanel,
 }) => {
-  const [serverType, setServerType] = useState("prelude");
   const write = useTerminalStore((state) => state.write);
+  const { host, credentials, serverType } = useAuthStore((state) => ({
+    host: state.host,
+    credentials: state.credentials,
+    serverType: state.serverType,
+  }));
+
+  const [type, setType] = useState(serverType);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -70,20 +77,20 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
           <div className={styles.selection}>
             <p
               className={cx(styles.server, {
-                [styles.activeServer]: serverType === "prelude",
+                [styles.activeServer]: type === "prelude",
               })}
               onClick={() => {
-                setServerType("prelude");
+                setType("prelude");
               }}
             >
               Prelude
             </p>
             <p
               className={cx(styles.server, {
-                [styles.activeServer]: serverType === "custom",
+                [styles.activeServer]: type === "custom",
               })}
               onClick={() => {
-                setServerType("custom");
+                setType("custom");
               }}
             >
               Custom
@@ -94,14 +101,14 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
               <label htmlFor="server" className={styles.label}>
                 Server
               </label>
-              {serverType === "prelude" ? (
+              {type === "prelude" ? (
                 <InputGroup
                   type="url"
                   key={"prelude-server"}
                   name={"server"}
                   className={styles.input}
                   readOnly
-                  value={"testserver.prelude.org"}
+                  defaultValue={host}
                 />
               ) : (
                 <InputGroup
@@ -119,6 +126,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
                 Username
               </label>
               <InputGroup
+                defaultValue={credentials?.account ?? ""}
                 type="text"
                 name={"username"}
                 className={styles.input}
@@ -132,8 +140,9 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
                 Token
               </label>
               <InputGroup
-                type="text"
+                type="password"
                 name={"token"}
+                defaultValue={credentials?.token ?? ""}
                 className={styles.input}
                 placeholder="Enter a Token"
                 required
