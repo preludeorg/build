@@ -6,6 +6,7 @@ import CopyIcon from "../icons/copy-icon";
 import styles from "./servers.module.css";
 import cx from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
+import * as Prelude from "@prelude/sdk";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   toggleServerPanel,
@@ -13,13 +14,26 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   const [serverType, setServerType] = useState("prelude");
   const write = useTerminalStore((state) => state.write);
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    const server = formData.get("server");
-    const username = formData.get("username");
-    const token = formData.get("token");
+    const server = formData.get("server") as string;
+    const username = formData.get("username") as string;
+    const token = formData.get("token") as string;
 
+    const config: Prelude.ServiceConfig = {
+      host: server,
+      credentials: {
+        account: username,
+        token,
+      },
+    };
+
+    const service = new Prelude.Service(config);
+
+    try {
+      await service.build.listManifest();
+    } catch (err) {}
     write(
       <span style={{ color: "green" }}>
         connecting to server {server as string}
