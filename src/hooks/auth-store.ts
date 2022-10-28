@@ -12,6 +12,8 @@ interface AuthStore {
   serverType: "prelude" | "custom";
   credentials?: Credentials;
   createAccount: (email: string) => Promise<void>;
+  login: (host: string, account: string, token: string, serverType: "prelude" | "custom") => Promise<boolean>;
+  disconnect: () => void;
 }
 
 const useAuthStore = create<AuthStore>((set, get) => ({
@@ -27,6 +29,22 @@ const useAuthStore = create<AuthStore>((set, get) => ({
 
     set(() => ({ credentials, isConnected: true }));
   },
+  async login(host, account, token, serverType) {
+    const credentials = {account, token}
+    const service = new Service({ host, credentials })
+    try {
+      await service.build.listManifest();
+      set(() => ({ host, credentials, serverType, isConnected: true }));
+      return true
+    } catch (err) {
+      return false
+    }
+  },
+  disconnect() {
+    const host = "";
+    const credentials = {account: "", token: ""};
+    set(() => ({ host, credentials, isConnected: false }));
+  }
 }));
 
 export default useAuthStore;

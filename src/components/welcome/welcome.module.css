@@ -68,6 +68,10 @@
     color: #fff;
 }
 
+.docs:hover {
+    background-color: var(--color-secondary-20);
+}
+
 .text {
     margin: 0;
 }

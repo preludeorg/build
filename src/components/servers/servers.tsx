@@ -19,34 +19,29 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     serverType: state.serverType,
   }));
 
+  const isConnected = useAuthStore((state) => state.isConnected);
+  const login = useAuthStore((state) => state.login);
+  const disconnect = useAuthStore((state) => state.disconnect);
   const [type, setType] = useState(serverType);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    if (isConnected) {
+      disconnect();
+      return;
+    }
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    const server = formData.get("server") as string;
-    const username = formData.get("username") as string;
+    const host = formData.get("host") as string;
+    const accountID = formData.get("accountID") as string;
     const token = formData.get("token") as string;
-
-    const config: Prelude.ServiceConfig = {
-      host: server,
-      credentials: {
-        account: username,
-        token,
-      },
-    };
-
-    const service = new Prelude.Service(config);
-
-    try {
-      await service.build.listManifest();
-    } catch (err) {}
-    write(
-      <span style={{ color: "green" }}>
-        connecting to server {server as string}
-      </span>
-    );
-    toggleServerPanel();
+    const isLoggedIn = await login(host, accountID, token, type);
+    if (isLoggedIn) {
+      write(
+        <span style={{ color: "green" }}>
+          Connecting to server {host as string}
+        </span>
+      );
+    }
   };
 
   return (
@@ -98,14 +93,14 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
           </div>
           <form className={styles.form} onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="server" className={styles.label}>
-                Server
+              <label htmlFor="host" className={styles.label}>
+                Host
               </label>
               {type === "prelude" ? (
                 <InputGroup
                   type="url"
-                  key={"prelude-server"}
-                  name={"server"}
+                  key={"prelude-host"}
+                  name={"host"}
                   className={styles.input}
                   readOnly
                   defaultValue={host}
@@ -113,22 +108,22 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
               ) : (
                 <InputGroup
                   type="url"
-                  key={"custom-server"}
+                  key={"custom-host"}
                   className={styles.input}
-                  name={"server"}
+                  name={"host"}
                   placeholder="Enter an IP"
                   required
                 />
               )}
             </div>
             <div>
-              <label htmlFor="username" className={styles.label}>
-                Username
+              <label htmlFor="accountID" className={styles.label}>
+                Account ID
               </label>
               <InputGroup
                 defaultValue={credentials?.account ?? ""}
                 type="text"
-                name={"username"}
+                name={"accountID"}
                 className={styles.input}
                 placeholder="Enter an account ID"
                 required
@@ -149,8 +144,13 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
                 after={<CopyIcon className={styles.inputIcon} />}
               />
             </div>
-            <button type="submit" className={styles.connect}>
-              Connect
+            <button
+              type="submit"
+              className={cx(styles.connect, {
+                [styles.disconnect]: isConnected,
+              })}
+            >
+              {isConnected ? "Disconnect" : "Connect"}
             </button>
           </form>
         </div>
