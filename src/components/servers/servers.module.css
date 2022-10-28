@@ -144,6 +144,16 @@ label {
   cursor: pointer;
 }
 
+.disconnect {
+  background-color: var(--color-alert);
+  border: 1px solid var(--color-alert);
+}
+
+.disconnect:hover {
+  background-color: #A42525;
+  border: 1px solid #A42525; 
+}
+
 /* Connected Server Overlay */
 
 .container {
