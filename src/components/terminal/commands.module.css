@@ -16,7 +16,7 @@
 }
 
 .help ul li p {
-  flex: 5;
+  flex: 4;
   margin: 0;
   padding: 0;
   color: var(--gray-10);
@@ -24,4 +24,60 @@
 
 .success {
   color: var(--color-success);
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.manifest {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.manifest ol {
+  list-style: none;
+  counter-reset: li;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.manifest ol li::before {
+  content: counter(li);
+  color: var(--color-primary-10);
+  display: inline-block;
+  width: 1rem;
+  margin-left: -1em;
+}
+
+.manifest ol li {
+  counter-increment: li;
+}
+
+.manifest ol li span:nth-child(2) {
+  color: var(--gray-10);
+}
+
+.manifest input {
+  background: none;
+  border-bottom: 2px dashed var(--gray-10);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  color: var(--white);
+  width: 1rem;
+  -moz-appearance: textfield;
+}
+
+.manifest input:focus {
+  background: none;
+  outline: none;
+}
+
+.manifest input::-webkit-outer-spin-button,
+.manifest input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

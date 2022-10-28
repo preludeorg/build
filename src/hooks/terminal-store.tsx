@@ -12,6 +12,7 @@ function splitStringAtIndex(value: string, index: number) {
 interface TerminalStore {
   prompt: string;
   focused: boolean;
+  inputEnabled: boolean;
   input: string;
   caretPosition: number;
   commandsHistory: string[];
@@ -27,6 +28,7 @@ interface TerminalStore {
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
   prompt: "$",
+  inputEnabled: true,
   focused: false,
   input: "",
   caretPosition: 0,
@@ -53,7 +55,8 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     }));
   },
   async handleKey(event: KeyboardEvent) {
-    if (!get().focused) {
+    const { focused, inputEnabled } = get();
+    if (!focused || !inputEnabled) {
       return;
     }
 
@@ -72,7 +75,6 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
         caretPosition = caretPosition - 1;
       }
     } else if (eventKey === "ArrowUp") {
-      console.log(historyPointer, commandsHistory);
       nextInput = getPreviousCommand(historyPointer, commandsHistory);
       if (historyPointer > 0) {
         historyPointer = historyPointer - 1;
@@ -139,7 +141,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     }));
   },
   async processCommand() {
-    const { input, bufferedContent, prompt, commandsHistory } = get();
+    const { input, prompt, commandsHistory } = get();
     const [command, ...rest] = input.trim().split(" ");
     let output: string | JSX.Element = "";
 
@@ -162,22 +164,24 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       return;
     }
 
-    const waiting = (
-      <>
-        {bufferedContent}
-        <span>{prompt}</span>
-        <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
-          {input}
-        </span>
-        <br />
-      </>
-    );
+    set((state) => {
+      const waiting = (
+        <>
+          {state.bufferedContent}
+          <span>{prompt}</span>
+          <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
+            {input}
+          </span>
+        </>
+      );
 
-    set(() => ({
-      bufferedContent: waiting,
-      input: "",
-      caretPosition: 0,
-    }));
+      return {
+        bufferedContent: waiting,
+        input: "",
+        caretPosition: 0,
+        inputEnabled: false,
+      };
+    });
 
     if (input) {
       const commandArguments = rest.join(" ");
@@ -195,27 +199,26 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       }
     }
 
-    const nextBufferedContent = (
-      <>
-        {bufferedContent}
-        <span>{prompt}</span>
-        <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
-          {input}
-        </span>
-        {output ? (
-          <span>
-            <br />
-            {output}
-          </span>
-        ) : null}
-        <br />
-      </>
-    );
+    set((state) => {
+      const nextBufferedContent = (
+        <>
+          {state.bufferedContent}
+          {output ? (
+            <span>
+              <br />
+              {output}
+            </span>
+          ) : null}
+          <br />
+        </>
+      );
 
-    set(() => ({
-      bufferedContent: nextBufferedContent,
-      input: "",
-    }));
+      return {
+        bufferedContent: nextBufferedContent,
+        input: "",
+        inputEnabled: true,
+      };
+    });
   },
   write(content) {
     const { bufferedContent } = get();

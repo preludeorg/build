@@ -3,6 +3,10 @@ import { authState } from "../../hooks/auth-store";
 import styles from "./commands.module.css";
 import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
+import ListManifest from "./list-manifest";
+import { terminalState } from "../../hooks/terminal-store";
+import { getLanguageMode } from "../../lib/lang";
+import React from "react";
 
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
@@ -28,7 +32,7 @@ export const commands: Commands = {
             Connected to {host}
             <br />
             <br />
-            Type “help” for a list of commands <br />
+            Type “list-manifest” to show all your ttps <br />
           </>
         );
       } catch (e) {
@@ -43,16 +47,11 @@ export const commands: Commands = {
   "list-manifest": {
     desc: "lists the manifest of ttps accesible by your account",
     async exec() {
-      const { isConnected, host, credentials } = authState();
+      const { write } = terminalState();
 
-      if (!isConnected) {
-        return "login is required to execute command";
-      }
-
-      const service = new Prelude.Service({ host, credentials });
-      const manifest = await service.build.listManifest();
-
-      return JSON.stringify(manifest);
+      return new Promise((resolve) => {
+        write(<ListManifest unlock={resolve} />);
+      });
     },
   },
   "put-ttp": {
@@ -84,6 +83,36 @@ export const commands: Commands = {
         } else {
           return (e as Error).message;
         }
+      }
+    },
+  },
+  "create-code-file": {
+    title: "create-code-file <ttp> <platform> <arch> <language>",
+    desc: "creates a ttp with a given question",
+    async exec(args) {
+      try {
+        const { isConnected, host, credentials } = authState();
+        if (!isConnected) {
+          return "login is required to execute command";
+        }
+
+        const [ttpId, platform, arch, language] = args.split(" ");
+
+        const file = `${ttpId}_${platform}-${arch}.${language}`;
+
+        const service = new Prelude.Service({ host, credentials });
+        await service.build.putCodeFile(
+          `${ttpId}_${platform}-${arch}.${language}`,
+          getLanguageMode(language).bootstrap()
+        );
+
+        return <span className={styles.success}>created code file {file}</span>;
+      } catch (e) {
+        return (
+          <span className={styles.error}>
+            failed to create code file: {(e as Error).message}
+          </span>
+        );
       }
     },
   },
