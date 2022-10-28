@@ -1,18 +1,60 @@
 import PlayIcon from "../icons/play-icon";
 import ChevronIcon from "../icons/chevron-icon";
-import styles from "./editor.module.pcss";
+import HelpIcon from "../icons/help-icon";
+import CopyIcon from "../icons/copy-icon";
+import styles from "./control-panel.module.css";
+import useEditorStore from "../../hooks/editor-store";
+import { useState } from "react";
+import cx from "classnames";
+import AppleIcon from "../icons/apple-icon";
+import LinuxIcon from "../icons/linux-icon";
 
 const ControlPanel: React.FC = () => {
+  const currentTabId = useEditorStore((state) => state.currentTabId);
+  const [overlayVisible, setOverlayVisible] = useState(false);
   return (
     <div className={styles.controlPanel}>
       <button className={styles.test}>
         <PlayIcon className={styles.playIcon} />
         <span>Test</span>
       </button>
-      <button className={styles.deploy}>
-        <span>Deploy</span>
-        <ChevronIcon className={styles.chevronIcon} />
-      </button>
+      <div className={styles.deployContainer}>
+        <button
+          className={styles.deploy}
+          onClick={() => setOverlayVisible(!overlayVisible)}
+        >
+          <span>Deploy</span>
+          <ChevronIcon
+            className={cx(styles.chevronIcon, {
+              [styles.activeChevron]: overlayVisible === true,
+            })}
+          />
+        </button>
+        {overlayVisible ? (
+          <div className={styles.overlay}>
+            <div className={styles.headline}>
+              <span className={styles.target}>Deploy on</span>
+              {currentTabId.startsWith("darwin") ? (
+                <AppleIcon className={styles.platformIcon} />
+              ) : (
+                <LinuxIcon className={styles.platformIcon} />
+              )}
+              <HelpIcon className={styles.helpIcon} />
+            </div>
+            <span className={styles.description}>
+              Use curl or wget to deploy the Detect node on your instance.
+            </span>
+            <div className={styles.download}>
+              <div className={styles.link}>This is the linkja jajjajaa</div>
+              <div className={styles.copyContainer}>
+                <CopyIcon className={styles.copyIcon} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
     </div>
   );
 };
