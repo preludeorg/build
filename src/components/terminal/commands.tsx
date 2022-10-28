@@ -1,9 +1,8 @@
 import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
-import { editorState } from "../../hooks/editor-store";
-import { navigatorState } from "../../hooks/navigation-store";
-import Swift from "../../lib/lang/swift";
 import styles from "./commands.module.css";
+import * as Prelude from "@theprelude/sdk";
+import * as uuid from "uuid";
 
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
@@ -43,25 +42,51 @@ export const commands: Commands = {
   },
   "list-manifest": {
     desc: "lists the manifest of ttps accesible by your account",
-    exec() {
-      return `command not implemented`;
+    async exec() {
+      const { isConnected, host, credentials } = authState();
+
+      if (!isConnected) {
+        return "login is required to execute command";
+      }
+
+      const service = new Prelude.Service({ host, credentials });
+      const manifest = await service.build.listManifest();
+
+      return JSON.stringify(manifest);
     },
   },
-  open: {
-    exec() {
-      const { navigate } = navigatorState();
-      const { openTab } = editorState();
-      navigate("editor");
-      const filename = `linux-${Date.now()}-x84.swift`;
-      openTab({
-        name: filename,
-        code: new Swift().bootstrap(),
-      });
+  "put-ttp": {
+    title: "put-ttp <question>",
+    desc: "creates a ttp with a given question",
+    async exec(args) {
+      try {
+        const { isConnected, host, credentials } = authState();
+        if (!isConnected) {
+          return "login is required to execute command";
+        }
 
-      return `opened ${filename} in editor`;
+        const ttpId = uuid.v4();
+        const question = z
+          .string({
+            required_error: "question is required",
+            invalid_type_error: "question must be a string",
+          })
+          .min(5, { message: "question must be 5 or more characters long" })
+          .parse(args);
+
+        const service = new Prelude.Service({ host, credentials });
+        await service.build.createTTP(ttpId, question);
+
+        return <span className={styles.success}>Added: {ttpId}</span>;
+      } catch (e) {
+        if (e instanceof ZodError) {
+          return e.errors[0].message;
+        } else {
+          return (e as Error).message;
+        }
+      }
     },
   },
-
   help: {
     exec() {
       const commandsList = Object.keys(commands).map((command) => ({

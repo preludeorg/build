@@ -1,5 +1,5 @@
 import create from "zustand";
-import { Service, Credentials } from "@prelude/sdk";
+import { Service, Credentials } from "@theprelude/sdk";
 
 interface AuthStore {
   host: string;

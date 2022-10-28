@@ -21,3 +21,7 @@
   padding: 0;
   color: var(--gray-10);
 }
+
+.success {
+  color: var(--color-success);
+}
