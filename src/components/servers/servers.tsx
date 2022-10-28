@@ -25,24 +25,22 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   const [type, setType] = useState(serverType);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
-    if (!isConnected) {
-      e.preventDefault();
-      const formData = new FormData(e.target as HTMLFormElement);
-      const host = formData.get("host") as string;
-      const accountID = formData.get("accountID") as string;
-      const token = formData.get("token") as string;
-
-      const isLoggedIn = await login(host, accountID, token, type);
-
-      if (isLoggedIn) {
-        write(
-          <span style={{ color: "green" }}>
-            Connecting to server {host as string}
-          </span>
-        );
-      }
-    } else {
+    if (isConnected) {
       disconnect();
+      return;
+    }
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const host = formData.get("host") as string;
+    const accountID = formData.get("accountID") as string;
+    const token = formData.get("token") as string;
+    const isLoggedIn = await login(host, accountID, token, type);
+    if (isLoggedIn) {
+      write(
+        <span style={{ color: "green" }}>
+          Connecting to server {host as string}
+        </span>
+      );
     }
   };
 

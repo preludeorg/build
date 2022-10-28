@@ -150,8 +150,8 @@ label {
 }
 
 .disconnect:hover {
-  background-color: #A42525;
-  border: 1px solid #A42525; 
+  background-color: var(--color-darkAlert);
+  border: 1px solid var(--color-darkAlert); 
 }
 
 /* Connected Server Overlay */
