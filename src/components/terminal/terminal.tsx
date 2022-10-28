@@ -78,7 +78,9 @@ const Terminal: React.FC = () => {
   return (
     <div tabIndex={0} ref={ref} className={styles.terminal}>
       <WelcomeMessage />
-      {bufferedContent}
+      {bufferedContent.map((el, index) => {
+        return <React.Fragment key={index}>{el}</React.Fragment>;
+      })}
       <CurrentLine />
     </div>
   );

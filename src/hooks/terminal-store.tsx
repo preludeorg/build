@@ -18,7 +18,7 @@ interface TerminalStore {
   commandsHistory: string[];
   historyPointer: number;
   caretText: () => [string, string];
-  bufferedContent: string | JSX.Element;
+  bufferedContent: Array<string | JSX.Element>;
   setFocus: (focused: boolean) => void;
   clear: () => void;
   handleKey: (event: KeyboardEvent) => Promise<void>;
@@ -32,7 +32,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   focused: false,
   input: "",
   caretPosition: 0,
-  bufferedContent: "",
+  bufferedContent: [],
   commandsHistory: [],
   historyPointer: 0,
   setFocus: (focused) => {
@@ -49,7 +49,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   },
   clear() {
     set(() => ({
-      bufferedContent: "",
+      bufferedContent: [],
       input: "",
       caretPosition: 0,
     }));
@@ -157,7 +157,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
     if (command === "clear") {
       set(() => ({
-        bufferedContent: "",
+        bufferedContent: [],
         input: "",
         caretPosition: 0,
       }));
@@ -167,7 +167,6 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     set((state) => {
       const waiting = (
         <>
-          {state.bufferedContent}
           <span>{prompt}</span>
           <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
             {input}
@@ -176,7 +175,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       );
 
       return {
-        bufferedContent: waiting,
+        bufferedContent: [...state.bufferedContent, waiting],
         input: "",
         caretPosition: 0,
         inputEnabled: false,
@@ -202,7 +201,6 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     set((state) => {
       const nextBufferedContent = (
         <>
-          {state.bufferedContent}
           {output ? (
             <span>
               <br />
@@ -214,24 +212,15 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       );
 
       return {
-        bufferedContent: nextBufferedContent,
+        bufferedContent: [...state.bufferedContent, nextBufferedContent],
         input: "",
         inputEnabled: true,
       };
     });
   },
   write(content) {
-    const { bufferedContent } = get();
-    const nextBufferedContent = (
-      <>
-        {bufferedContent}
-        {content}
-        <br />
-      </>
-    );
-
-    set(() => ({
-      bufferedContent: nextBufferedContent,
+    set((state) => ({
+      bufferedContent: [...state.bufferedContent, content],
     }));
   },
 }));

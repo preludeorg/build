@@ -73,7 +73,6 @@ const ListManifest: React.FC<{ unlock: (s: string) => void }> = ({
             setFile(file);
             navigate("editor");
             openTab({ name: file, code });
-            clear();
             unlock(`opening ${file} in editor`);
           }}
           pickerRef={pickerRef}

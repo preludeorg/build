@@ -10,21 +10,28 @@ class Swift {
     ];
   }
   bootstrap() {
-    return (
-      "func test() {\n" +
-      '    print("testing")\n' +
-      "}\n" +
-      "\n" +
-      "func clean() {\n" +
-      '    print("cleaning up")\n' +
-      "}\n" +
-      "\n" +
-      'if CommandLine.arguments.contains("clean") {\n' +
-      "    clean()\n" +
-      "} else {\n" +
-      "    test()\n" +
-      "}"
-    );
+    return `/*
+NAME: $NAME
+QUESTION: $QUESTION
+CREATED: $CREATED
+*/
+import Foundation
+
+func test() {
+    print("Run test")
+    exit(100)
+}
+
+func clean() {
+    print("Clean up")
+    exit(100)
+}
+
+if CommandLine.arguments.contains("clean") {
+    clean()
+} else {
+    test()
+}`;
   }
 }
 

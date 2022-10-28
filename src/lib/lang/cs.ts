@@ -10,29 +10,32 @@ class CS {
     ];
   }
   bootstrap() {
-    return (
-      "using System;\n" +
-      "  \n" +
-      "class TTP { \n" +
-      "    static int Test() {\n" +
-      '        Console.WriteLine("Testing");\n' +
-      "        return 0;\n" +
-      "    }\n" +
-      "\n" +
-      "    static int Clean() {\n" +
-      '        Console.WriteLine("Clean");\n' +
-      "        return 0;\n" +
-      "    }\n" +
-      "\n" +
-      "    static void Main(string[] args) {\n" +
-      '        if (args[0].Contains("clean")) {\n' +
-      "            Clean();\n" +
-      "        } else {\n" +
-      "            Test();\n" +
-      "        }\n" +
-      "    }\n" +
-      "}"
-    );
+    return `/*
+NAME: $NAME
+QUESTION: $QUESTION
+CREATED: $CREATED
+*/
+using System;
+
+class TTP {
+    static void Test() {
+        Console.WriteLine("Run test");
+        Environment.Exit(100);
+    }
+
+    static void Clean() {
+        Console.WriteLine("Clean up");
+        Environment.Exit(100);
+    }
+
+    static void Main(string[] args) {
+        if (args.Length == 0) {
+            Test();
+        } else {
+            Clean();
+        }
+    }
+}`;
   }
 }
 

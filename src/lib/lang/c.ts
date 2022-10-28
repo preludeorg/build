@@ -10,30 +10,36 @@ class C {
     ];
   }
   bootstrap() {
-    return (
-      "#include <stdlib.h>\n" +
-      "#include <string.h>\n" +
-      "\n" +
-      "int test(void)\n" +
-      "{\n" +
-      '    char *command = "whoami";\n' +
-      "    return system(command);\n" +
-      "}\n" +
-      "\n" +
-      "int clean(void)\n" +
-      "{\n" +
-      "    return 0;\n" +
-      "}\n" +
-      "\n" +
-      "int main(int argc, char *argv[])\n" +
-      "{\n" +
-      '    if (strcmp(argv[1], "clean") == 0) {\n' +
-      "        return clean();\n" +
-      "    } else {\n" +
-      "        return test();\n" +
-      "    }\n" +
-      "}"
-    );
+    return `/*
+NAME: $NAME
+QUESTION: $QUESTION
+CREATED: $CREATED
+*/
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+void test(void)
+{
+    printf("Run test");
+    exit(100);
+}
+
+void clean(void)
+{
+    printf("Clean up");
+    exit(100);
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc > 1) {
+        clean();
+    } else {
+        test();
+    }
+}
+`;
   }
 }
 

@@ -6,7 +6,6 @@ import * as uuid from "uuid";
 import ListManifest from "./list-manifest";
 import { terminalState } from "../../hooks/terminal-store";
 import { getLanguageMode } from "../../lib/lang";
-import React from "react";
 
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
