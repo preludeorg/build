@@ -1,6 +1,8 @@
 import create from "zustand";
 import { commands } from "../components/terminal/commands";
+import PrimaryPrompt from "../components/terminal/primary-prompt";
 import styles from "../components/terminal/terminal.module.css";
+import { TTP } from "../lib/ttp";
 
 function splitStringAtIndex(value: string, index: number) {
   if (!value) {
@@ -9,8 +11,21 @@ function splitStringAtIndex(value: string, index: number) {
   return [value.substring(0, index), value.substring(index)];
 }
 
+const WelcomeMessage = () => {
+  return (
+    <span>
+      Welcome to Operator 2.0
+      <br />
+      <br />
+      Type "login {`<user_handle>`}" to create a new account
+      <br />
+      <br />
+    </span>
+  );
+};
+
 interface TerminalStore {
-  prompt: string;
+  currentTTP?: TTP;
   focused: boolean;
   inputEnabled: boolean;
   input: string;
@@ -27,12 +42,15 @@ interface TerminalStore {
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
-  prompt: "$",
+  currentTTP: {
+    question: "what is a ttp?",
+    id: "f81ff8d9-bfd8-4491-9cef-366f9ac3ec3b",
+  },
   inputEnabled: true,
   focused: false,
   input: "",
   caretPosition: 0,
-  bufferedContent: [],
+  bufferedContent: [<WelcomeMessage />],
   commandsHistory: [],
   historyPointer: 0,
   setFocus: (focused) => {
@@ -141,7 +159,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     }));
   },
   async processCommand() {
-    const { input, prompt, commandsHistory } = get();
+    const { input, commandsHistory } = get();
     const [command, ...rest] = input.trim().split(" ");
     let output: string | JSX.Element = "";
 
@@ -166,12 +184,9 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
     set((state) => {
       const waiting = (
-        <>
-          <span>{prompt}</span>
-          <span className={`${styles.lineText} ${styles.preWhiteSpace}`}>
-            {input}
-          </span>
-        </>
+        <PrimaryPrompt ttp={state.currentTTP}>
+          <span className={styles.preWhiteSpace}>{input}</span>
+        </PrimaryPrompt>
       );
 
       return {
@@ -199,17 +214,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     }
 
     set((state) => {
-      const nextBufferedContent = (
-        <>
-          {output ? (
-            <span>
-              <br />
-              {output}
-            </span>
-          ) : null}
-          <br />
-        </>
-      );
+      const nextBufferedContent = output ? <span>{output}</span> : <></>;
 
       return {
         bufferedContent: [...state.bufferedContent, nextBufferedContent],

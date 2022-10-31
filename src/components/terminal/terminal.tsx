@@ -3,6 +3,7 @@ import shallow from "zustand/shallow";
 import useTerminalStore from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
 import cx from "classnames";
+import PrimaryPrompt from "./primary-prompt";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -77,7 +78,6 @@ const Terminal: React.FC = () => {
   const { ref, bufferedContent } = useTerminal();
   return (
     <div tabIndex={0} ref={ref} className={styles.terminal}>
-      <WelcomeMessage />
       {bufferedContent.map((el, index) => {
         return <React.Fragment key={index}>{el}</React.Fragment>;
       })}
@@ -86,26 +86,12 @@ const Terminal: React.FC = () => {
   );
 };
 
-const WelcomeMessage = () => {
-  return (
-    <span>
-      Welcome to Operator 2.0
-      <br />
-      <br />
-      Type "login {`<email>`}" to create setup a new account
-      <br />
-      <br />
-    </span>
-  );
-};
-
 const CurrentLine = () => {
-  const prompt = "$";
-
-  const { focused, inputEnabled } = useTerminalStore(
+  const { focused, inputEnabled, currentTTP } = useTerminalStore(
     (state) => ({
       focused: state.focused,
       inputEnabled: state.inputEnabled,
+      currentTTP: state.currentTTP,
     }),
     shallow
   );
@@ -120,16 +106,13 @@ const CurrentLine = () => {
   }
 
   return (
-    <>
-      <span className={styles.prompt}>{prompt}</span>
-      <div className={styles.lineText}>
-        <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-        <span className={cx(styles.caret, { [styles.focused]: focused })}>
-          <span className={styles.caretAfter} />
-        </span>
-        <span className={styles.preWhiteSpace}>{afterCaretText}</span>
-      </div>
-    </>
+    <PrimaryPrompt ttp={currentTTP}>
+      <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
+      <span className={cx(styles.caret, { [styles.focused]: focused })}>
+        <span className={styles.caretAfter} />
+      </span>
+      <span className={styles.preWhiteSpace}>{afterCaretText}</span>
+    </PrimaryPrompt>
   );
 };
 

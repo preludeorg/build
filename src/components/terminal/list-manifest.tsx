@@ -9,21 +9,7 @@ import useEditorStore from "../../hooks/editor-store";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
 import useTerminalStore from "../../hooks/terminal-store";
-
-const getManifest = async (config: ServiceConfig) => {
-  const service = new Service(config);
-  return service.build.listManifest();
-};
-
-const getTTP = async (id: string, config: ServiceConfig) => {
-  const service = new Service(config);
-  return service.build.getTTP(id);
-};
-
-interface TTP {
-  id: string;
-  question: string;
-}
+import { getManifest, TTP } from "../../lib/ttp";
 
 const ListManifest: React.FC<{ unlock: (s: string) => void }> = ({
   unlock,
