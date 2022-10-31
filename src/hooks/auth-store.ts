@@ -1,5 +1,5 @@
 import create from "zustand";
-import { Service, Credentials } from "@theprelude/sdk";
+import { Service, Credentials, RequestOptions } from "@theprelude/sdk";
 
 const TEMP_ACCOUNT = {
   token: "d4081fd9-4146-45f1-b283-ae5074857703",
@@ -14,6 +14,7 @@ interface AuthStore {
   createAccount: (email: string) => Promise<void>;
   login: (host: string, account: string, token: string, serverType: "prelude" | "custom") => Promise<boolean>;
   disconnect: () => void;
+  deploy: (dcf: string, options?: RequestOptions) => Promise<boolean>;
 }
 
 const useAuthStore = create<AuthStore>((set, get) => ({
@@ -44,6 +45,17 @@ const useAuthStore = create<AuthStore>((set, get) => ({
     const host = "";
     const credentials = {account: "", token: ""};
     set(() => ({ host, credentials, isConnected: false }));
+  },
+  async deploy(dcf, options) {
+    const { host } = get();
+    const { credentials } = get();
+    const service = new Service({ host, credentials });
+    try {
+      service.build.deploy(dcf, options);
+      return true
+    } catch (err) {
+      return false
+    }
   }
 }));
 
