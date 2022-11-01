@@ -145,7 +145,7 @@ export const commands: Commands = {
       }
     },
   },
-  "list-files": {
+  "list-code-files": {
     desc: "lists the code files in current ttp",
     async exec() {
       return new Promise(async (resolve) => {
@@ -216,8 +216,8 @@ export const commands: Commands = {
       });
     },
   },
-  "create-file": {
-    title: "create-file <platform> <arch> <language>",
+  "create-code-file": {
+    title: "create-code-file <platform> <arch> <language>",
     desc: "creates a new code file in current ttp",
     async exec(args) {
       try {
