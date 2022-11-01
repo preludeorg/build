@@ -1,4 +1,4 @@
-import { z, ZodError } from "zod";
+import { z, ZodError, ZodInvalidEnumValueIssue } from "zod";
 import { authState } from "../../hooks/auth-store";
 import styles from "./commands.module.css";
 import * as Prelude from "@theprelude/sdk";
@@ -234,13 +234,34 @@ export const commands: Commands = {
           return "ttp is required to execute command";
         }
 
-        const [platform, arch, language] = args.split(" ");
+        const input = args.split(" ");
 
-        const file = `${currentTTP.id}_${platform}-${arch}.${language}`;
+        const { platform, arch, language } = z
+          .object({
+            platform: z.enum(["*", "darwin", "linux"]),
+            arch: z.enum(["*", "arm64", "x86_64"]),
+            language: z.enum(["c", "cs", "swift"]),
+          })
+          .parse({
+            platform: input[0] ?? "",
+            arch: input[1] ?? "",
+            language: input[2] ?? "",
+          });
+
+        let file = `${currentTTP.id}`;
+        if (platform !== "*") {
+          file += `_${platform}`;
+
+          if (arch !== "*") {
+            file += `-${arch}`;
+          }
+        }
+
+        file += `.${language}`;
 
         const service = new Prelude.Service({ host, credentials });
         await service.build.putCodeFile(
-          `${currentTTP.id}_${platform}-${arch}.${language}`,
+          file,
           getLanguageMode(language).bootstrap()
         );
 
@@ -257,11 +278,21 @@ export const commands: Commands = {
           </span>
         );
       } catch (e) {
-        return (
-          <span className={styles.error}>
-            failed to create code file: {(e as Error).message}
-          </span>
-        );
+        if (
+          e instanceof ZodError &&
+          e.errors[0].code === "invalid_enum_value"
+        ) {
+          const error = e.errors[0] as ZodInvalidEnumValueIssue;
+          return `invalid ${error.path[0]} input:  received: "${
+            error.received
+          }" expected: ${error.options.join(" | ")}`;
+        } else {
+          return (
+            <span className={styles.error}>
+              failed to create code file: {(e as Error).message}
+            </span>
+          );
+        }
       }
     },
   },
