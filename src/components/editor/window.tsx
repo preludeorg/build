@@ -4,20 +4,25 @@ import styles from "./editor.module.pcss";
 import CloseIcon from "../icons/close-icon";
 import AppleIcon from "../icons/apple-icon";
 import LinuxIcon from "../icons/linux-icon";
-import useEditorStore from "../../hooks/editor-store";
+import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
 import cx from "classnames";
-import useTerminalStore from "../../hooks/terminal-store";
+import React from "react";
+import { getLanguageMode, getLinters } from "../../lib/lang";
+import { lint } from "../../lib/lang/linter";
 
 const EditorWindow: React.FC = () => {
   const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
-  const buffer = useEditorStore((state) => state.buffer);
-  const extensions = useEditorStore(
-    (state) => state.tabs[state.currentTabId].extensions,
+  const buffer = useEditorStore(selectBuffer);
+  const ext = useEditorStore(
+    (state) => state.tabs[state.currentTabId].extension,
     shallow
   );
   const updateBuffer = useEditorStore((state) => state.updateCurrentBuffer);
+
+  const extensions = React.useMemo(() => getLanguageMode(ext).mode(), [ext]);
+  const linters = React.useMemo(() => getLinters(ext), [ext]);
 
   return (
     <div className={styles.window}>
@@ -29,6 +34,7 @@ const EditorWindow: React.FC = () => {
         </ul>
       </nav>
       <Editor buffer={buffer} extensions={extensions} onChange={updateBuffer} />
+      <Linters />
       <ControlPanel />
     </div>
   );
@@ -42,7 +48,6 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const switchTab = useEditorStore((state) => state.switchTab);
   const closeTab = useEditorStore((state) => state.closeTab);
   const navigate = useNavigationStore((state) => state.navigate);
-  const write = useTerminalStore((state) => state.write);
   return (
     <li
       className={cx({ [styles.active]: tabId === currentTabId })}
@@ -69,5 +74,25 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
         <CloseIcon />
       </button>
     </li>
+  );
+};
+
+const Linters: React.FC = () => {
+  const messages = useEditorStore((state) => {
+    const tab = state.tabs[state.currentTabId];
+    return lint(tab.buffer, getLinters(tab.extension));
+  }, shallow);
+
+  if (messages.length === 0) return null;
+
+  return (
+    <div className={styles.linters}>
+      <h3>Problems</h3>
+      <ul>
+        {messages.map((message) => (
+          <li key={message}>{message}</li>
+        ))}
+      </ul>
+    </div>
   );
 };

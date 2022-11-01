@@ -178,3 +178,30 @@ li:hover .close {
 .deploy:hover .chevronIcon {
   fill: var(--white);
 }
+
+.linters {
+  & h3 {
+    text-transform: uppercase;
+    font-size: var(--text-xs);
+    margin: 0.5rem 1rem 0 1rem;
+    font-weight: bold;
+  }
+
+  & ul {
+    margin: 0;
+    list-style: none;
+    padding-left: 1rem;
+
+    & li::before {
+      content: "x ";
+      color: var(--color-error);
+      font-weight: bold;
+      vertical-align: top;
+      line-height: 0.9rem;
+    }
+
+    & li {
+      padding: 0.25rem 0;
+    }
+  }
+}

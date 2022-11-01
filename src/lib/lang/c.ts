@@ -1,13 +1,15 @@
 import { c } from "@codemirror/legacy-modes/mode/clike";
 import { StreamLanguage } from "@codemirror/language";
-import { createPreludeLangChecks } from "./prelude";
+import { Linter } from "./linter";
 
 class C {
+  static linters: Linter[] = [
+    { regex: /void\s+test\(.*\)/g, message: "Required test method missing" },
+    { regex: /void\s+clean\(.*\)/g, message: "Required clean method missing" },
+  ];
+
   mode() {
-    return [
-      StreamLanguage.define(c),
-      createPreludeLangChecks(/int\s+test\(.*\)/g, /int\s+clean\(.*\)/g),
-    ];
+    return [StreamLanguage.define(c)];
   }
   bootstrap() {
     return `/*
