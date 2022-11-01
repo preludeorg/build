@@ -10,10 +10,24 @@ import useNavigationStore from "../../hooks/navigation-store";
 import cx from "classnames";
 import React from "react";
 import { getLanguageMode, getLinters } from "../../lib/lang";
-import { lint } from "../../lib/lang/linter";
+import { lint, validate } from "../../lib/lang/linter";
+import { debounce } from "../../lib/utils/debounce";
+import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
+import { Service, ServiceConfig } from "@theprelude/sdk";
+
+const saveFile = async (name: string, code: string, config: ServiceConfig) => {
+  try {
+    const service = new Service(config);
+    await service.build.putCodeFile(name, code);
+  } catch (e) {}
+};
+
+const processSave = debounce(saveFile, 500);
 
 const EditorWindow: React.FC = () => {
+  const serviceConfig = useAuthStore(selectServiceConfig, shallow);
   const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
+  const currentTabId = useEditorStore((state) => state.currentTabId);
   const buffer = useEditorStore(selectBuffer);
   const ext = useEditorStore(
     (state) => state.tabs[state.currentTabId].extension,
@@ -33,7 +47,17 @@ const EditorWindow: React.FC = () => {
           ))}
         </ul>
       </nav>
-      <Editor buffer={buffer} extensions={extensions} onChange={updateBuffer} />
+      <Editor
+        buffer={buffer}
+        extensions={extensions}
+        onChange={(buffer) => {
+          updateBuffer(buffer);
+          const isValid = validate(buffer, linters);
+          if (isValid) {
+            processSave(currentTabId, buffer, serviceConfig);
+          }
+        }}
+      />
       <Linters />
       <ControlPanel />
     </div>

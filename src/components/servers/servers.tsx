@@ -6,7 +6,6 @@ import CopyIcon from "../icons/copy-icon";
 import styles from "./servers.module.css";
 import cx from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
-import * as Prelude from "@theprelude/sdk";
 import useAuthStore from "../../hooks/auth-store";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
