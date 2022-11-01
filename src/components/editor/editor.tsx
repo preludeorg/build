@@ -17,7 +17,7 @@ const theme = EditorView.theme({
     position: "absolute !important",
     fontSize: "var(--text-sm)",
   },
-  ".cm-scroller": { overflow: "scroll" },
+  ".cm-scroller": { overflow: "auto" },
   "&.cm-focused": { outline: "none !important" },
   ".cm-content": {
     padding: "0 0 4px",
