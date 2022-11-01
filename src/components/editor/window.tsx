@@ -84,7 +84,10 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       ) : (
         <LinuxIcon className={styles.icon} />
       )}
-      <span>{tabName}</span>
+      <span className={styles.truncate}>
+        {tabName.split(/(?=[])|(?<=[_])/g)[0]}
+      </span>
+      <span>{tabName.split("_")[1]}</span>
       <button
         className={styles.close}
         onClick={(e) => {

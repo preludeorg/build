@@ -28,8 +28,8 @@
         border-right: solid var(--color-secondary-10) 1px;
         border-bottom: 2px solid var(--color-secondary-20);
         display: flex;
-        gap: 0.5rem;
         cursor: pointer;
+        overflow: hidden;
 
         &.active {
           border-bottom: 2px solid var(--color-aero);
@@ -50,6 +50,22 @@
 
       & li span {
         margin: auto 0;
+        white-space: nowrap;
+      }
+
+      & li span.truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      & li > svg {
+        flex-shrink: 0;
+        margin-right: 0.5rem;
+      }
+
+      & li button {
+        flex-shrink: 0;
+        margin-left: 0.5rem;
       }
     }
   }
