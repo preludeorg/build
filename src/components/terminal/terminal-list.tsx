@@ -9,6 +9,7 @@ interface Props<T> {
   keyProp: (item: T) => string;
   renderItem: (item: T) => JSX.Element;
   onSelect: (item: T) => void;
+  onExit: () => void;
 }
 
 const ITEM_PER_PAGE = 5;
@@ -19,11 +20,12 @@ const TerminalList = <T extends {}>({
   renderItem,
   keyProp,
   onSelect,
+  onExit,
 }: Props<T>): JSX.Element => {
   const pickerRef = useRef<HTMLInputElement>(null);
   const prevRef = useRef<HTMLElement | Element | null>(null);
   const [index, setValue] = useState<number | null>(null);
-  const [selection, setSelection] = useState<T | null>(null);
+  const [exited, setExited] = useState(false);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -34,20 +36,23 @@ const TerminalList = <T extends {}>({
     pickerRef.current?.focus();
   }, [pickerRef.current]);
 
-  const totalPages = Math.round(items.length / ITEM_PER_PAGE);
+  const totalPages = Math.ceil(items.length / ITEM_PER_PAGE);
   const offset = (page - 1) * ITEM_PER_PAGE;
   const pageItems = items.slice(offset, page * ITEM_PER_PAGE);
 
   const handleKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key === "e") {
       e.preventDefault();
+      setExited(true);
+      onExit();
+
       return false;
     }
 
     if (e.key === "Enter" && index !== null) {
       e.preventDefault();
       const itemIndex = index - 1 + offset;
-      setSelection(items[itemIndex]);
+      setExited(true);
       onSelect(items[itemIndex]);
       document.getElementById("terminal")?.focus();
     }
@@ -94,7 +99,7 @@ const TerminalList = <T extends {}>({
     } catch (e) {}
   };
 
-  if (selection) {
+  if (exited) {
     return <></>;
   }
 
@@ -143,6 +148,10 @@ const TerminalList = <T extends {}>({
         </span>
         <span className={styles.extra}>
           <strong>Next Page: </strong> <ArrowRight />
+        </span>
+
+        <span className={styles.extra}>
+          <strong>Exit: </strong> e
         </span>
       </div>
     </div>

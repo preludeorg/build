@@ -79,7 +79,7 @@ export const commands: Commands = {
 
         write(
           <TerminalList
-            title={<strong>Manifest</strong>}
+            title={<strong>Manifest List</strong>}
             items={ttps}
             keyProp={(ttp) => ttp.id}
             renderItem={(ttp) => (
@@ -94,6 +94,9 @@ export const commands: Commands = {
                   switched to ttp: <strong>{ttp.question}</strong> - {ttp.id}
                 </span>
               );
+            }}
+            onExit={() => {
+              resolve("no ttp selected");
             }}
           />
         );
@@ -201,6 +204,9 @@ export const commands: Commands = {
               )}
               onSelect={(file) => {
                 handleSelect(file);
+              }}
+              onExit={() => {
+                resolve("no code file selected");
               }}
             />
           );

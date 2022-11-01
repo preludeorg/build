@@ -50,7 +50,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
         switchTab(tabId);
       }}
     >
-      {tabName.startsWith("darwin") ? (
+      {tabName.includes("darwin") ? (
         <AppleIcon className={styles.icon} />
       ) : (
         <LinuxIcon className={styles.icon} />
