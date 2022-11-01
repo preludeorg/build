@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styles from "./commands.module.css";
 import { z } from "zod";
 import ArrowRight from "../icons/arrow-right";
+import cx from "classnames";
 
 interface Props<T> {
   title: string | JSX.Element;
@@ -24,7 +25,7 @@ const TerminalList = <T extends {}>({
 }: Props<T>): JSX.Element => {
   const pickerRef = useRef<HTMLInputElement>(null);
   const prevRef = useRef<HTMLElement | Element | null>(null);
-  const [index, setValue] = useState<number | null>(null);
+  const [index, setValue] = useState(1);
   const [exited, setExited] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -45,6 +46,7 @@ const TerminalList = <T extends {}>({
       e.preventDefault();
       setExited(true);
       onExit();
+      document.getElementById("terminal")?.focus();
 
       return false;
     }
@@ -66,6 +68,7 @@ const TerminalList = <T extends {}>({
       }
 
       setPage(nextPage);
+      setValue(1);
     }
 
     if (e.key === "ArrowLeft") {
@@ -77,6 +80,27 @@ const TerminalList = <T extends {}>({
       }
 
       setPage(prevPage);
+      setValue(1);
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+
+      if (index === 1) {
+        setValue(pageItems.length);
+        return;
+      }
+      setValue(index - 1);
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+
+      if (index === pageItems.length) {
+        setValue(1);
+        return;
+      }
+      setValue(index + 1);
     }
 
     return true;
@@ -85,15 +109,14 @@ const TerminalList = <T extends {}>({
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     try {
       if (e.target.value === "") {
-        setValue(null);
         return;
       }
-
+      const parse = e.target.value.split("");
       const val = z
         .number()
         .min(1)
-        .max(items.length)
-        .parse(parseInt(e.target.value, 10));
+        .max(pageItems.length)
+        .parse(parseInt(parse[parse.length - 1], 10));
 
       setValue(val);
     } catch (e) {}
@@ -113,8 +136,15 @@ const TerminalList = <T extends {}>({
       <div>
         {title}
         <ol>
-          {pageItems.map((item) => {
-            return <li key={keyProp(item)}>{renderItem(item)}</li>;
+          {pageItems.map((item, idx) => {
+            return (
+              <li
+                key={keyProp(item)}
+                className={cx({ [styles.selected]: idx + 1 === index })}
+              >
+                {renderItem(item)}
+              </li>
+            );
           })}
         </ol>
       </div>
@@ -143,11 +173,14 @@ const TerminalList = <T extends {}>({
           {page}/{totalPages}
         </span>
         <span className={styles.extra}>
-          <strong>Previous Page: </strong>
+          <strong>Change Page: </strong>
           <ArrowRight className={styles.rotate180} />
+          <ArrowRight />
         </span>
         <span className={styles.extra}>
-          <strong>Next Page: </strong> <ArrowRight />
+          <strong>Change Selection: </strong>
+          <ArrowRight className={styles.rotateNeg90} />
+          <ArrowRight className={styles.rotate90} />
         </span>
 
         <span className={styles.extra}>

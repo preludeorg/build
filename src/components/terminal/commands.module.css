@@ -46,11 +46,19 @@
 }
 
 .manifest ol li::before {
-  content: counter(li);
+  content: " " counter(li);
   color: var(--color-primary-10);
-  display: inline-block;
-  width: 1rem;
-  margin-left: -1em;
+  display: inline-flex;
+  letter-spacing: 5px;
+  justify-content: right;
+  width: 2rem;
+  margin-left: -1.5em;
+}
+
+.manifest ol li.selected::before {
+  content: ">" counter(li);
+  font-weight: bold;
+  color: var(--white);
 }
 
 .manifest ol li {
