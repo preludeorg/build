@@ -4,16 +4,19 @@
 }
 
 .editor {
-  flex: 1;
+  height: 100%;
+  position: relative;
 }
 
 .window {
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
   & nav {
     background-color: var(--color-secondary-20);
     border-bottom: solid var(--color-secondary-10) 1px;
+    height: 3em;
 
     & ul {
       display: flex;
@@ -102,6 +105,7 @@ li:hover .close {
   background-color: var(--color-secondary-20);
   border-top: 1px solid var(--color-secondary-10);
   padding: 0.5rem;
+  height: 3.25rem;
 }
 
 .test {

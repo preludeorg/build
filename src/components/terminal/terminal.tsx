@@ -77,7 +77,7 @@ function useTerminal() {
 const Terminal: React.FC = () => {
   const { ref, bufferedContent } = useTerminal();
   return (
-    <div tabIndex={0} ref={ref} className={styles.terminal}>
+    <div id="terminal" tabIndex={0} ref={ref} className={styles.terminal}>
       {bufferedContent.map((el, index) => {
         return <React.Fragment key={index}>{el}</React.Fragment>;
       })}

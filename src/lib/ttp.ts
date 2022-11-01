@@ -10,6 +10,11 @@ export const getTTP = async (id: string, config: ServiceConfig) => {
   return service.build.getTTP(id);
 };
 
+export const getCodeFile = async (file: string, config: ServiceConfig) => {
+  const service = new Service(config);
+  return service.build.getCodeFile(file);
+};
+
 export interface TTP {
   id: string;
   question: string;

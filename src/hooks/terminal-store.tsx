@@ -39,13 +39,10 @@ interface TerminalStore {
   handleKey: (event: KeyboardEvent) => Promise<void>;
   processCommand: () => void;
   write: (content: string | JSX.Element) => void;
+  switchTTP: (ttp?: TTP) => void;
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
-  currentTTP: {
-    question: "what is a ttp?",
-    id: "f81ff8d9-bfd8-4491-9cef-366f9ac3ec3b",
-  },
   inputEnabled: true,
   focused: false,
   input: "",
@@ -53,7 +50,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   bufferedContent: [<WelcomeMessage />],
   commandsHistory: [],
   historyPointer: 0,
-  setFocus: (focused) => {
+  setFocus: (focused: boolean) => {
     set(() => ({ focused }));
   },
   caretText: () => {
@@ -71,6 +68,9 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       input: "",
       caretPosition: 0,
     }));
+  },
+  switchTTP(ttp?: TTP) {
+    set(() => ({ currentTTP: ttp }));
   },
   async handleKey(event: KeyboardEvent) {
     const { focused, inputEnabled } = get();
