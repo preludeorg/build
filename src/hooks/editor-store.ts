@@ -20,6 +20,7 @@ function createTab(dcf: DCF): Tab {
 interface EditorStore {
   tabs: Record<string, Tab>;
   currentTabId: string;
+  previousTabId: string;
   buffer: string;
   openTab: (dcf: DCF) => void;
   switchTab: (tabId: string) => void;
@@ -30,6 +31,7 @@ interface EditorStore {
 const useEditorStore = create<EditorStore>((set, get) => ({
   tabs: {},
   currentTabId: "",
+  previousTabId: "",
   buffer: "",
   openTab(dcf) {
     set((state) => {
@@ -44,7 +46,7 @@ const useEditorStore = create<EditorStore>((set, get) => ({
     });
   },
   switchTab(tabId) {
-    set((state) => ({ currentTabId: tabId, buffer: state.tabs[tabId].buffer }));
+    set((state) => ({ currentTabId: tabId, previousTabId: state.currentTabId, buffer: state.tabs[tabId].buffer }));
   },
   closeTab(tabId) {
     let hasTabs = true;
@@ -55,11 +57,12 @@ const useEditorStore = create<EditorStore>((set, get) => ({
       hasTabs = Object.keys(newTabs).length !== 0;
 
       if (state.currentTabId === tabId) {
-        const nextId = Object.keys(newTabs)[0] ?? "";
+        const nextId = state.previousTabId === "" ? Object.keys(newTabs)[0] : state.previousTabId;
 
         return {
           tabs: newTabs,
           currentTabId: nextId,
+          previousTabId: "",
           buffer: newTabs[nextId]?.buffer ?? "",
         };
       }
