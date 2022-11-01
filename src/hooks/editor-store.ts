@@ -5,14 +5,14 @@ import { getLanguageMode } from "../lib/lang";
 
 export interface Tab {
   dcf: DCF;
-  extensions: Extension[];
+  extension: string;
   buffer: string;
 }
 
 function createTab(dcf: DCF): Tab {
   return {
     dcf,
-    extensions: getLanguageMode(dcf.name.split(".").pop() ?? "c").mode(),
+    extension: dcf.name.split(".").pop() ?? "c",
     buffer: dcf.code,
   };
 }
@@ -25,7 +25,6 @@ interface EditorStore {
   openTab: (dcf: DCF) => void;
   switchTab: (tabId: string) => void;
   closeTab: (tabId: string) => boolean;
-  hasTabs: () => boolean;
   updateCurrentBuffer: (buffer: string) => void;
 }
 
@@ -73,9 +72,6 @@ const useEditorStore = create<EditorStore>((set, get) => ({
 
     return hasTabs;
   },
-  hasTabs() {
-    return Object.keys(get().tabs).length !== 0;
-  },
   updateCurrentBuffer(buffer) {
     set((state) => {
       const currentTab = state.tabs[state.currentTabId];
@@ -93,3 +89,8 @@ const useEditorStore = create<EditorStore>((set, get) => ({
 export default useEditorStore;
 
 export const editorState = () => useEditorStore.getState();
+
+export const selectHasTabs = (state: EditorStore) =>
+  Object.keys(state.tabs).length !== 0;
+
+export const selectBuffer = (state: EditorStore) => state.buffer;
