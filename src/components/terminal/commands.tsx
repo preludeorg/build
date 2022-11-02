@@ -17,6 +17,7 @@ import {
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { DCF } from "../../lib/dcf";
+import { format } from "date-fns";
 
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
@@ -340,10 +341,18 @@ export const commands: Commands = {
         }
 
         file += `.${language}`;
+        const code = getLanguageMode(language)
+          .bootstrap()
+          .replaceAll("$NAME", file)
+          .replaceAll("$QUESTION", currentTTP.question)
+          .replaceAll(
+            "$CREATED",
+            format(new Date(), "yyyy-mm-dd hh:mm:ss.SSSSSS")
+          );
 
         const dcf: DCF = {
           name: file,
-          code: getLanguageMode(language).bootstrap(),
+          code,
         };
 
         const service = new Prelude.Service({ host, credentials });
