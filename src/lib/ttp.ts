@@ -22,7 +22,7 @@ export const getCodeFile = async (file: string, config: ServiceConfig) => {
 
 export const deleteTTP = async (id: string, config: ServiceConfig) => {
   const service = new Service(config);
-  return service.build.deleteCodeFile(id);
+  return service.build.deleteTTP(id);
 };
 
 export const deleteCodeFile = async (name: string, config: ServiceConfig) => {
