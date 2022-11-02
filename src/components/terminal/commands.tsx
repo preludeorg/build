@@ -16,6 +16,7 @@ import {
 } from "../../lib/ttp";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
+import { DCF } from "../../lib/dcf";
 
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
@@ -273,6 +274,7 @@ export const commands: Commands = {
 
         try {
           await deleteCodeFile(file, { host, credentials });
+
           if (closeTab(file)) {
             navigate("welcome");
           }
@@ -339,18 +341,14 @@ export const commands: Commands = {
 
         file += `.${language}`;
 
-        const service = new Prelude.Service({ host, credentials });
-        await service.build.putCodeFile(
-          file,
-          getLanguageMode(language).bootstrap(),
-          true
-        );
-
-        const code = await getCodeFile(file, { host, credentials });
-        openTab({
+        const dcf: DCF = {
           name: file,
-          code,
-        });
+          code: getLanguageMode(language).bootstrap(),
+        };
+
+        const service = new Prelude.Service({ host, credentials });
+        await service.build.putCodeFile(dcf.name, dcf.code, true);
+        openTab(dcf);
         navigate("editor");
 
         return (
