@@ -18,6 +18,37 @@ interface Command {
 }
 export type Commands = Record<string, Command>;
 
+interface ListerProps<T> {
+  title: string | JSX.Element;
+  items: T[];
+  keyProp: (item: T) => string;
+  renderItem: (item: T) => JSX.Element;
+}
+
+async function lister<T extends {}>({
+  title,
+  items,
+  keyProp,
+  renderItem,
+}: ListerProps<T>): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const { write } = terminalState();
+    write(
+      <TerminalList
+        title={title}
+        items={items}
+        keyProp={keyProp}
+        renderItem={renderItem}
+        onSelect={(ttp) => {
+          resolve(ttp);
+        }}
+        onExit={() => {
+          reject(new Error("exited"));
+        }}
+      />
+    );
+  });
+}
 export const commands: Commands = {
   login: {
     title: "login <user_handle>",
@@ -55,12 +86,12 @@ export const commands: Commands = {
   "list-manifest": {
     desc: "lists the manifest of ttps accesible by your account",
     async exec() {
-      return new Promise(async (resolve) => {
-        const { write, switchTTP } = terminalState();
+      try {
+        const { switchTTP } = terminalState();
         const { isConnected, host, credentials } = authState();
 
         if (!isConnected) {
-          return resolve("login is required to execute command");
+          return "login is required to execute command";
         }
 
         const manifest = (await getManifest({
@@ -74,33 +105,29 @@ export const commands: Commands = {
         }));
 
         if (ttps.length === 0) {
-          return resolve("no ttps in manifest");
+          return "no ttps in manifest";
         }
 
-        write(
-          <TerminalList
-            title={<strong>Manifest List</strong>}
-            items={ttps}
-            keyProp={(ttp) => ttp.id}
-            renderItem={(ttp) => (
-              <>
-                <span>{ttp.question}</span> - <span>{ttp.id}</span>
-              </>
-            )}
-            onSelect={(ttp) => {
-              switchTTP(ttp);
-              resolve(
-                <span>
-                  switched to ttp: <strong>{ttp.question}</strong> - {ttp.id}
-                </span>
-              );
-            }}
-            onExit={() => {
-              resolve("no ttp selected");
-            }}
-          />
+        const ttp = await lister({
+          title: <strong>Manifest List</strong>,
+          items: ttps,
+          keyProp: (ttp) => ttp.id,
+          renderItem: (ttp) => (
+            <>
+              <span>{ttp.question}</span> - <span>{ttp.id}</span>
+            </>
+          ),
+        });
+
+        switchTTP(ttp);
+        return (
+          <span>
+            switched to ttp: <strong>{ttp.question}</strong> - {ttp.id}
+          </span>
         );
-      });
+      } catch (e) {
+        return (e as Error).message;
+      }
     },
   },
   "put-ttp": {
