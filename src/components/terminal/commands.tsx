@@ -22,6 +22,7 @@ import { format } from "date-fns";
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
   title?: string;
+  alias?: string[];
   desc?: string | JSX.Element;
   exec: (args: string) => CommandReturn;
 }
@@ -75,6 +76,7 @@ export const commands: Commands = {
     },
   },
   "list-manifest": {
+    alias: ["lm"],
     desc: "lists the manifest of ttps accesible by your account",
     async exec() {
       try {
@@ -123,6 +125,7 @@ export const commands: Commands = {
   },
   "put-ttp": {
     title: "put-ttp <question>",
+    alias: ["pt"],
     desc: "creates a ttp with a given question",
     async exec(args) {
       try {
@@ -162,6 +165,7 @@ export const commands: Commands = {
     },
   },
   "delete-ttp": {
+    alias: ["dt"],
     desc: "deletes current ttp",
     async exec() {
       try {
@@ -194,6 +198,7 @@ export const commands: Commands = {
     },
   },
   "list-tests": {
+    alias: ["lt"],
     desc: "lists the tests in current ttp",
     async exec() {
       try {
@@ -251,6 +256,7 @@ export const commands: Commands = {
     },
   },
   "delete-test": {
+    alias: ["dts"],
     desc: "deletes a test from current ttp",
     async exec() {
       try {
@@ -309,6 +315,7 @@ export const commands: Commands = {
   },
   "create-test": {
     title: "create-test <platform> <arch> <language>",
+    alias: ["ct"],
     desc: "creates a new test in the current ttp",
     async exec(args) {
       try {
@@ -389,12 +396,12 @@ export const commands: Commands = {
       }
     },
   },
-
   help: {
     exec() {
       const commandsList = Object.keys(commands).map((command) => ({
         name: commands[command].title ?? command,
         desc: commands[command].desc ?? "",
+        alias: commands[command].alias ?? [],
       }));
       return (
         <div className={styles.help}>
@@ -402,7 +409,12 @@ export const commands: Commands = {
           <ul>
             {commandsList.map((command) => (
               <li key={command.name}>
-                <span>{command.name}</span> <p>{command.desc}</p>
+                <span>{command.name}</span> <p>{command.desc} </p>
+                {command.alias.length !== 0 ? (
+                  <strong>[aliases: {command.alias.join(", ")}]</strong>
+                ) : (
+                  ""
+                )}
               </li>
             ))}
           </ul>

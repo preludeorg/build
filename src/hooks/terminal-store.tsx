@@ -176,9 +176,11 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
     if (input) {
       const commandArguments = rest.join(" ");
-
-      if (command && commands[command]) {
-        const executor = commands[command].exec;
+      const commandName = Object.keys(commands).find(
+        (c) => command === c || commands[c].alias?.includes(command)
+      );
+      if (command && commandName) {
+        const executor = commands[commandName].exec;
 
         if (typeof executor === "function") {
           output = await executor(commandArguments);
