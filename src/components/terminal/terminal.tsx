@@ -3,6 +3,7 @@ import shallow from "zustand/shallow";
 import useTerminalStore from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
 import cx from "classnames";
+import PrimaryPrompt from "./primary-prompt";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -11,16 +12,13 @@ const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   }, [changesToWatch]);
 };
 
-interface Props {
-  commands: Record<string, (args: string) => string | JSX.Element>;
-}
-
-function useTerminal({ commands }: Props) {
+function useTerminal() {
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { bufferedContent } = useTerminalStore(
+  const { bufferedContent, inputEnabled } = useTerminalStore(
     (state) => ({
       bufferedContent: state.bufferedContent,
+      inputEnabled: state.inputEnabled,
     }),
     shallow
   );
@@ -30,11 +28,16 @@ function useTerminal({ commands }: Props) {
   const processCommand = useTerminalStore((state) => state.processCommand);
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
+    if (!inputEnabled) {
+      return;
+    }
+
     event.preventDefault();
 
     const eventKey = event.key;
+
     if (eventKey === "Enter") {
-      processCommand(commands);
+      processCommand();
       return;
     }
 
@@ -66,47 +69,29 @@ function useTerminal({ commands }: Props) {
   });
 
   useScrollToBottom(bufferedContent, ref);
+  useScrollToBottom(inputEnabled, ref);
 
   return { bufferedContent, ref };
 }
 
-const Terminal: React.FC<Props> = ({ commands }) => {
-  const { ref, bufferedContent } = useTerminal({
-    commands,
-  });
+const Terminal: React.FC = () => {
+  const { ref, bufferedContent } = useTerminal();
   return (
-    <div tabIndex={0} ref={ref} className={styles.terminal}>
-      <WelcomeMessage />
-      {bufferedContent}
+    <div id="terminal" tabIndex={0} ref={ref} className={styles.terminal}>
+      {bufferedContent.map((el, index) => {
+        return <React.Fragment key={index}>{el}</React.Fragment>;
+      })}
       <CurrentLine />
     </div>
   );
 };
 
-const WelcomeMessage = () => {
-  return (
-    <span>
-      Welcome to Operator 2.0
-      <br />
-      <br />
-      Connected to testserver.prelude.org
-      <br />
-      <br />
-      Type “search” to search <br />
-      Type “open” to open a file <br />
-      Type “list-manifest” to list
-      <br />
-      <br />
-    </span>
-  );
-};
-
 const CurrentLine = () => {
-  const prompt = "$";
-
-  const { focused } = useTerminalStore(
+  const { focused, inputEnabled, currentTTP } = useTerminalStore(
     (state) => ({
       focused: state.focused,
+      inputEnabled: state.inputEnabled,
+      currentTTP: state.currentTTP,
     }),
     shallow
   );
@@ -116,17 +101,18 @@ const CurrentLine = () => {
     shallow
   );
 
+  if (!inputEnabled) {
+    return <></>;
+  }
+
   return (
-    <>
-      <span className={styles.prompt}>{prompt}</span>
-      <div className={styles.lineText}>
-        <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-        <span className={cx(styles.caret, { [styles.focused]: focused })}>
-          <span className={styles.caretAfter} />
-        </span>
-        <span className={styles.preWhiteSpace}>{afterCaretText}</span>
-      </div>
-    </>
+    <PrimaryPrompt ttp={currentTTP}>
+      <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
+      <span className={cx(styles.caret, { [styles.focused]: focused })}>
+        <span className={styles.caretAfter} />
+      </span>
+      <span className={styles.preWhiteSpace}>{afterCaretText}</span>
+    </PrimaryPrompt>
   );
 };
 

@@ -1,30 +1,40 @@
 import { swift } from "@codemirror/legacy-modes/mode/swift";
 import { StreamLanguage } from "@codemirror/language";
-import { createPreludeLangChecks } from "./prelude";
+import { Linter } from "./linter";
 
 class Swift {
+  static linters: Linter[] = [
+    { regex: /\s+test\(.*\)/g, message: "Required test method missing" },
+    { regex: /\s+clean\(.*\)/g, message: "Required clean method missing" },
+  ];
+
   mode() {
-    return [
-      StreamLanguage.define(swift),
-      createPreludeLangChecks(/\s+test\(.*\)/g, /\s+clean\(.*\)/g),
-    ];
+    return [StreamLanguage.define(swift)];
   }
+
   bootstrap() {
-    return (
-      "func test() {\n" +
-      '    print("testing")\n' +
-      "}\n" +
-      "\n" +
-      "func clean() {\n" +
-      '    print("cleaning up")\n' +
-      "}\n" +
-      "\n" +
-      'if CommandLine.arguments.contains("clean") {\n' +
-      "    clean()\n" +
-      "} else {\n" +
-      "    test()\n" +
-      "}"
-    );
+    return `/*
+NAME: $NAME
+QUESTION: $QUESTION
+CREATED: $CREATED
+*/
+import Foundation
+
+func test() {
+    print("Run test")
+    exit(100)
+}
+
+func clean() {
+    print("Clean up")
+    exit(100)
+}
+
+if CommandLine.arguments.contains("clean") {
+    clean()
+} else {
+    test()
+}`;
   }
 }
 

@@ -9,6 +9,7 @@
   flex-direction: column;
   height: 100%;
   flex: 1;
+  overflow: hidden;
 }
 
 .app main section {
@@ -17,5 +18,5 @@
 
 .app main footer {
   flex: 1;
-  overflow-y: scroll;
+  overflow: hidden;
 }

@@ -5,14 +5,14 @@ import { getLanguageMode } from "../lib/lang";
 
 export interface Tab {
   dcf: DCF;
-  extensions: Extension[];
+  extension: string;
   buffer: string;
 }
 
 function createTab(dcf: DCF): Tab {
   return {
     dcf,
-    extensions: getLanguageMode(dcf.name.split(".").pop() ?? "c").mode(),
+    extension: dcf.name.split(".").pop() ?? "c",
     buffer: dcf.code,
   };
 }
@@ -20,17 +20,18 @@ function createTab(dcf: DCF): Tab {
 interface EditorStore {
   tabs: Record<string, Tab>;
   currentTabId: string;
+  previousTabId: string;
   buffer: string;
   openTab: (dcf: DCF) => void;
   switchTab: (tabId: string) => void;
   closeTab: (tabId: string) => boolean;
-  hasTabs: () => boolean;
   updateCurrentBuffer: (buffer: string) => void;
 }
 
 const useEditorStore = create<EditorStore>((set, get) => ({
   tabs: {},
   currentTabId: "",
+  previousTabId: "",
   buffer: "",
   openTab(dcf) {
     set((state) => {
@@ -45,7 +46,7 @@ const useEditorStore = create<EditorStore>((set, get) => ({
     });
   },
   switchTab(tabId) {
-    set((state) => ({ currentTabId: tabId, buffer: state.tabs[tabId].buffer }));
+    set((state) => ({ currentTabId: tabId, previousTabId: state.currentTabId, buffer: state.tabs[tabId].buffer }));
   },
   closeTab(tabId) {
     let hasTabs = true;
@@ -56,11 +57,12 @@ const useEditorStore = create<EditorStore>((set, get) => ({
       hasTabs = Object.keys(newTabs).length !== 0;
 
       if (state.currentTabId === tabId) {
-        const nextId = Object.keys(newTabs)[0] ?? "";
+        const nextId = state.previousTabId === "" ? Object.keys(newTabs)[0] : state.previousTabId;
 
         return {
           tabs: newTabs,
           currentTabId: nextId,
+          previousTabId: "",
           buffer: newTabs[nextId]?.buffer ?? "",
         };
       }
@@ -69,9 +71,6 @@ const useEditorStore = create<EditorStore>((set, get) => ({
     });
 
     return hasTabs;
-  },
-  hasTabs() {
-    return Object.keys(get().tabs).length !== 0;
   },
   updateCurrentBuffer(buffer) {
     set((state) => {
@@ -88,3 +87,10 @@ const useEditorStore = create<EditorStore>((set, get) => ({
 }));
 
 export default useEditorStore;
+
+export const editorState = () => useEditorStore.getState();
+
+export const selectHasTabs = (state: EditorStore) =>
+  Object.keys(state.tabs).length !== 0;
+
+export const selectBuffer = (state: EditorStore) => state.buffer;

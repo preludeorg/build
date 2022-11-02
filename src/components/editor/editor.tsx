@@ -8,8 +8,13 @@ import { keymap } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 
 const theme = EditorView.theme({
-  "&": {
+  "&.cm-editor": {
+    top: "0",
+    bottom: "0",
+    left: "0",
+    right: "0",
     height: "100%",
+    position: "absolute !important",
     fontSize: "var(--text-sm)",
   },
   ".cm-scroller": { overflow: "auto" },

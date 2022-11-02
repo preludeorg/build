@@ -6,7 +6,7 @@
 
   text-align: left;
   overflow-wrap: break-word;
-  overflow-y: scroll;
+  overflow-y: auto;
   outline: none;
   line-height: 22px;
 }
@@ -49,4 +49,24 @@
 .focused .caretAfter {
   background-color: rgba(126, 149, 169, 0.7);
   border: none;
+}
+
+.ps1 {
+  display: flex;
+}
+
+.border {
+  border-top: 1.5px solid var(--color-primary-10);
+  border-bottom: 1.5px solid var(--color-primary-10);
+  border-left: 1.5px solid var(--color-primary-10);
+  margin: 11px 0;
+  width: 0.5rem;
+}
+
+.properties {
+  font-weight: bold;
+}
+
+.properties span {
+  color: var(--color-primary-10);
 }

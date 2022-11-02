@@ -11,3 +11,13 @@ export function getLanguageMode(ext: string) {
     return new C();
   }
 }
+
+export function getLinters(ext: string) {
+  if (ext === "cs") {
+    return CS.linters;
+  } else if (ext === "swift") {
+    return Swift.linters;
+  } else {
+    return C.linters;
+  }
+}
