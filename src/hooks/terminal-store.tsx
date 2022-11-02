@@ -42,12 +42,29 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   },
   autoComplete: () => {
     const { input } = get();
-    const option = Object.keys(commands).find((o) => o.startsWith(input));
-    if (option) {
+    const options = Object.keys(commands).filter((o) => o.startsWith(input));
+    if (options.length === 1) {
       set(() => ({
-        input: option,
-        caretPosition: option.length + 1,
+        input: options[0],
+        caretPosition: options[0].length + 1,
       }));
+    } else {
+      set((state) => {
+        const waiting = (
+          <>
+            <PrimaryPrompt ttp={state.currentTTP}>
+              <span className={styles.preWhiteSpace}>{input}</span>
+            </PrimaryPrompt>
+            <div style={{ color: "var(--color-primary-10)" }}>
+              {options.join(" ")}
+            </div>
+          </>
+        );
+
+        return {
+          bufferedContent: [...state.bufferedContent, waiting],
+        };
+      });
     }
   },
   clear() {
