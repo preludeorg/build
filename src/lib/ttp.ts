@@ -20,14 +20,9 @@ export const getCodeFile = async (file: string, config: ServiceConfig) => {
   return service.build.getCodeFile(file);
 };
 
-/** This is currently broken on the sdk so doing it manually */
 export const deleteTTP = async (id: string, config: ServiceConfig) => {
-  return fetch(`${config.host}/manifest/${id}`, {
-    method: "DELETE",
-    headers: {
-      ...config.credentials,
-    },
-  });
+  const service = new Service(config);
+  return service.build.deleteCodeFile(id);
 };
 
 export const deleteCodeFile = async (name: string, config: ServiceConfig) => {

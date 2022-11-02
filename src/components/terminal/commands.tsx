@@ -342,7 +342,8 @@ export const commands: Commands = {
         const service = new Prelude.Service({ host, credentials });
         await service.build.putCodeFile(
           file,
-          getLanguageMode(language).bootstrap()
+          getLanguageMode(language).bootstrap(),
+          true
         );
 
         const code = await getCodeFile(file, { host, credentials });
