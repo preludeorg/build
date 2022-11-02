@@ -26,6 +26,7 @@ function useTerminal() {
   const setFocus = useTerminalStore((state) => state.setFocus);
   const handleKey = useTerminalStore((state) => state.handleKey);
   const processCommand = useTerminalStore((state) => state.processCommand);
+  const autoComplete = useTerminalStore((state) => state.autoComplete);
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
     if (!inputEnabled) {
@@ -38,6 +39,11 @@ function useTerminal() {
 
     if (eventKey === "Enter") {
       processCommand();
+      return;
+    }
+
+    if (eventKey === "Tab") {
+      autoComplete();
       return;
     }
 

@@ -40,6 +40,7 @@ interface TerminalStore {
   processCommand: () => void;
   write: (content: string | JSX.Element) => void;
   switchTTP: (ttp?: TTP) => void;
+  autoComplete: () => void;
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
@@ -61,6 +62,18 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     );
 
     return [beforeCaretText, afterCaretText];
+  },
+  autoComplete: () => {
+    const { input } = get();
+    const options = Object.keys(commands).filter((o) =>
+      o.substring(0, input.length).match(input)
+    );
+    if (options) {
+      set(() => ({
+        input: options[0],
+        caretPosition: options[0].length + 1,
+      }));
+    }
   },
   clear() {
     set(() => ({
