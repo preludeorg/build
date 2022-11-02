@@ -1,0 +1,110 @@
+.intro {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container {
+  margin: 0 auto;
+}
+
+/* Steps */
+
+.stepsheet {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 2rem 0;
+  column-gap: 1rem;
+  align-items: center;
+  border-bottom: 1px solid var(--color-secondary-10);
+  padding: 0 0 2rem 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--color-secondary-10);
+  border-radius: 0.75rem;
+  align-items: center;
+}
+
+.iconContainer {
+  position: relative;
+  display: flex;
+}
+
+.helpIcon {
+  height: 1rem;
+  width: 1rem;
+  fill: var(--gray-10);
+}
+
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  width: 17rem;
+  padding: 0.75rem;
+  bottom: 175%;
+  right: 50%;
+  transform: translate(50%, 0);
+  text-align: center;
+  border-radius: 0.25rem;
+  background-color: var(--color-secondary-20);
+  box-shadow: 12px 12px 15px rgba(0, 0, 0, 0.25);
+}
+
+.tooltip::before {
+  content:'';
+  visibility: hidden;
+  position: absolute;
+  padding: 0.5rem;
+  background-color: var(--color-secondary-20);
+  rotate: 45deg;
+  bottom: 0;
+  right: 45%;
+  transform: translate(0, 50%);
+}
+
+.iconContainer:hover .tooltip,
+.iconContainer:hover .tooltip::before {
+  visibility: visible;
+}
+
+.iconContainer:hover .helpIcon {
+  fill: var(--white);
+  cursor: pointer;
+}
+
+.arrowIcon {
+  fill: var(--white);
+}
+
+/* Documentation Button */
+
+.docs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 auto;
+  border: 1px solid var(--color-secondary-10);
+  padding: 0.5rem 0.75rem;
+  column-gap: 0.5rem;
+  width: max-content;
+  cursor: pointer;
+  border-radius: 0.25rem ;
+  text-decoration: none;
+  color: #fff;
+}
+
+.docs:hover {
+  background-color: var(--color-secondary-20);
+}
+
+.text {
+  margin: 0;
+}
