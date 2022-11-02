@@ -5,7 +5,7 @@ import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
 import { terminalState } from "../../hooks/terminal-store";
 import { getLanguageMode } from "../../lib/lang";
-import TerminalList from "./terminal-list";
+import TerminalList, { TerminalListProps } from "./terminal-list";
 import { getCodeFile, getManifest, getTTP, TTP } from "../../lib/ttp";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
@@ -18,13 +18,7 @@ interface Command {
 }
 export type Commands = Record<string, Command>;
 
-interface ListerProps<T> {
-  title: string | JSX.Element;
-  items: T[];
-  keyProp: (item: T) => string;
-  renderItem: (item: T) => JSX.Element;
-}
-
+type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
 async function lister<T extends {}>({
   title,
   items,
@@ -175,72 +169,62 @@ export const commands: Commands = {
   "list-code-files": {
     desc: "lists the code files in current ttp",
     async exec() {
-      return new Promise(async (resolve) => {
+      try {
+        const { navigate } = navigatorState();
+        const { openTab } = editorState();
+        const { write, currentTTP } = terminalState();
+        const { isConnected, host, credentials } = authState();
+
+        if (!isConnected) {
+          return "login is required to execute command";
+        }
+
+        if (!currentTTP) {
+          return "ttp is required to execute command";
+        }
+
+        const files = await getTTP(currentTTP.id, {
+          host,
+          credentials,
+        });
+
+        if (files.length === 0) {
+          return "no code files in ttp";
+        }
+
+        const file = await lister({
+          title: <strong>Code Files</strong>,
+          items: files,
+          keyProp: (file) => file,
+          renderItem: (file) => (
+            <>
+              <span>{file}</span>
+            </>
+          ),
+        });
+
         try {
-          const { navigate } = navigatorState();
-          const { openTab } = editorState();
-          const { write, currentTTP } = terminalState();
-          const { isConnected, host, credentials } = authState();
-
-          if (!isConnected) {
-            return resolve("login is required to execute command");
-          }
-
-          if (!currentTTP) {
-            return resolve("ttp is required to execute command");
-          }
-
-          const files = await getTTP(currentTTP.id, {
-            host,
-            credentials,
+          const code = await getCodeFile(file, { host, credentials });
+          openTab({
+            name: file,
+            code,
           });
-
-          if (files.length === 0) {
-            return resolve("no code files in ttp");
-          }
-
-          const handleSelect = async (file: string) => {
-            try {
-              const code = await getCodeFile(file, { host, credentials });
-              openTab({
-                name: file,
-                code,
-              });
-              navigate("editor");
-              resolve(
-                <span>
-                  opened code file: <strong>{file}</strong> in editor
-                </span>
-              );
-            } catch (e) {
-              resolve(
-                <span>failed to get code file: {(e as Error).message}</span>
-              );
-            }
-          };
-
-          write(
-            <TerminalList
-              title={<strong>Code Files</strong>}
-              items={files}
-              keyProp={(file) => file}
-              renderItem={(file) => (
-                <>
-                  <span>{file}</span>
-                </>
-              )}
-              onSelect={(file) => {
-                handleSelect(file);
-              }}
-              onExit={() => {
-                resolve("no code file selected");
-              }}
-            />
+          navigate("editor");
+          return (
+            <span>
+              opened code file: <strong>{file}</strong> in editor
+            </span>
           );
         } catch (e) {
-          resolve(`failed to list code files: ${(e as Error).message}`);
+          return <span>failed to get code file: {(e as Error).message}</span>;
         }
-      });
+      } catch (e) {
+        if ((e as Error).message === "exited") {
+          return "no code file selected";
+        }
+
+        return `failed to list code files: ${(e as Error).message}`;
+      }
     },
   },
   "create-code-file": {

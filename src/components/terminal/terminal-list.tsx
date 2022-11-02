@@ -4,7 +4,7 @@ import { z } from "zod";
 import ArrowRight from "../icons/arrow-right";
 import cx from "classnames";
 
-interface Props<T> {
+export interface TerminalListProps<T> {
   title: string | JSX.Element;
   items: T[];
   keyProp: (item: T) => string;
@@ -22,7 +22,7 @@ const TerminalList = <T extends {}>({
   keyProp,
   onSelect,
   onExit,
-}: Props<T>): JSX.Element => {
+}: TerminalListProps<T>): JSX.Element => {
   const pickerRef = useRef<HTMLInputElement>(null);
   const prevRef = useRef<HTMLElement | Element | null>(null);
   const [index, setValue] = useState(1);
