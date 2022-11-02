@@ -66,12 +66,17 @@ const EditorWindow: React.FC = () => {
 
 export default EditorWindow;
 
+const uuidRegex = new RegExp(
+  /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}/
+);
+
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const tabName = useEditorStore((state) => state.tabs[tabId].dcf.name);
   const currentTabId = useEditorStore((state) => state.currentTabId);
   const switchTab = useEditorStore((state) => state.switchTab);
   const closeTab = useEditorStore((state) => state.closeTab);
   const navigate = useNavigationStore((state) => state.navigate);
+  const uuid = tabName.match(uuidRegex)?.[0] ?? "";
   return (
     <li
       className={cx({ [styles.active]: tabId === currentTabId })}
@@ -84,10 +89,8 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       ) : (
         <LinuxIcon className={styles.icon} />
       )}
-      <span className={styles.truncate}>
-        {tabName.split(/(?=[])|(?<=[_])/g)[0]}
-      </span>
-      <span>{tabName.split("_")[1]}</span>
+      <span className={styles.truncate}>{uuid}</span>
+      <span>{tabName.replace(uuid, "")}</span>
       <button
         className={styles.close}
         onClick={(e) => {
