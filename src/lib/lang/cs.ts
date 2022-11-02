@@ -4,8 +4,8 @@ import { Linter } from "./linter";
 
 class CS {
   static linters: Linter[] = [
-    { regex: /int\s+Test\(.*\)/g, message: "Required test method missing" },
-    { regex: /int\s+Clean\(.*\)/g, message: "Required clean method missing" },
+    { regex: /void\s+Test\(.*\)/g, message: "Required test method missing" },
+    { regex: /void\s+Clean\(.*\)/g, message: "Required clean method missing" },
   ];
 
   mode() {

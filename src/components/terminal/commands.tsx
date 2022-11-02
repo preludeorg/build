@@ -6,7 +6,14 @@ import * as uuid from "uuid";
 import { terminalState } from "../../hooks/terminal-store";
 import { getLanguageMode } from "../../lib/lang";
 import TerminalList, { TerminalListProps } from "./terminal-list";
-import { getCodeFile, getManifest, getTTP, TTP } from "../../lib/ttp";
+import {
+  deleteCodeFile,
+  deleteTTP,
+  getCodeFile,
+  getManifest,
+  getTTP,
+  TTP,
+} from "../../lib/ttp";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 
@@ -172,7 +179,7 @@ export const commands: Commands = {
       try {
         const { navigate } = navigatorState();
         const { openTab } = editorState();
-        const { write, currentTTP } = terminalState();
+        const { currentTTP } = terminalState();
         const { isConnected, host, credentials } = authState();
 
         if (!isConnected) {
@@ -217,6 +224,68 @@ export const commands: Commands = {
           );
         } catch (e) {
           return <span>failed to get code file: {(e as Error).message}</span>;
+        }
+      } catch (e) {
+        if ((e as Error).message === "exited") {
+          return "no code file selected";
+        }
+
+        return `failed to list code files: ${(e as Error).message}`;
+      }
+    },
+  },
+  "delete-code-file": {
+    desc: "deletes a code files from current ttp",
+    async exec() {
+      try {
+        const { navigate } = navigatorState();
+        const { closeTab } = editorState();
+        const { currentTTP } = terminalState();
+        const { isConnected, host, credentials } = authState();
+
+        if (!isConnected) {
+          return "login is required to execute command";
+        }
+
+        if (!currentTTP) {
+          return "ttp is required to execute command";
+        }
+
+        const files = await getTTP(currentTTP.id, {
+          host,
+          credentials,
+        });
+
+        if (files.length === 0) {
+          return "no code files in ttp";
+        }
+
+        const file = await lister({
+          title: <strong>Choose a code file to delete</strong>,
+          items: files,
+          keyProp: (file) => file,
+          renderItem: (file) => (
+            <>
+              <span>{file}</span>
+            </>
+          ),
+        });
+
+        try {
+          await deleteCodeFile(file, { host, credentials });
+          if (closeTab(file)) {
+            navigate("welcome");
+          }
+
+          return (
+            <span>
+              code file: <strong>{file}</strong> deleted
+            </span>
+          );
+        } catch (e) {
+          return (
+            <span>failed to delete code file: {(e as Error).message}</span>
+          );
         }
       } catch (e) {
         if ((e as Error).message === "exited") {
@@ -307,6 +376,38 @@ export const commands: Commands = {
       }
     },
   },
+  "delete-ttp": {
+    desc: "deletes current ttp",
+    async exec() {
+      try {
+        const { closeTab, tabs } = editorState();
+        const { currentTTP, switchTTP } = terminalState();
+        const { isConnected, host, credentials } = authState();
+
+        if (!isConnected) {
+          return "login is required to execute command";
+        }
+
+        if (!currentTTP) {
+          return "ttp is required to execute command";
+        }
+
+        await deleteTTP(currentTTP.id, { host, credentials });
+
+        Object.keys(tabs).forEach((id) => {
+          if (tabs[id].dcf.name.startsWith(currentTTP.id)) {
+            closeTab(id);
+          }
+        });
+
+        switchTTP();
+
+        return <span>ttp: {currentTTP.id} was deleted</span>;
+      } catch (e) {
+        return `failed to delete ttp: ${(e as Error).message}`;
+      }
+    },
+  },
   help: {
     exec() {
       const commandsList = Object.keys(commands).map((command) => ({
@@ -320,7 +421,7 @@ export const commands: Commands = {
           <ul>
             {commandsList.map((command) => (
               <li key={command.name}>
-                <span>{command.name}</span> <p>{command.desc}</p>{" "}
+                <span>{command.name}</span> <p>{command.desc}</p>
               </li>
             ))}
           </ul>

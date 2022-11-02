@@ -17,7 +17,7 @@ const WelcomeMessage = () => {
       Welcome to Operator 2.0
       <br />
       <br />
-      Type "login {`<user_handle>`}" to create a new account
+      Type "login {`<handle>`}" to create a new account
       <br />
       <br />
     </span>

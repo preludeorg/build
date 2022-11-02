@@ -9,17 +9,22 @@
 
 .help ul li {
   display: flex;
+  gap: 1rem;
 }
 
 .help ul li span {
-  flex: 1;
+  width: 24rem;
+  flex-shrink: 0;
 }
 
 .help ul li p {
-  flex: 4;
+  flex: 1;
   margin: 0;
   padding: 0;
   color: var(--gray-10);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .success {
