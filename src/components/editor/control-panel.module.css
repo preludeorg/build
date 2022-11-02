@@ -1,0 +1,169 @@
+.controlPanel {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--color-secondary-20);
+  border-top: 1px solid var(--color-secondary-10);
+  padding: 0.5rem;
+}
+
+.test {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: max-content;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-primary-20);
+  border: 1px solid var(--color-primary-20);
+  column-gap: 0.75rem;
+  color: #fff;
+  margin-right: auto;
+}
+
+.test:hover {
+  background-color: var(--color-primary-30);
+  cursor: pointer;
+}
+
+.playIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+}
+
+.loaderIcon {
+  width: 1rem;
+  height: 1rem;
+  animation: loader 1s linear infinite;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.deployContainer {
+  position: relative;
+}
+
+.deploy {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: max-content;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-primary-20);
+  border: 1px solid var(--color-primary-20);
+  column-gap: 0.75rem;
+  color: #fff;
+}
+
+.chevronIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+}
+
+.activeChevron {
+transform: rotate(180deg);
+}
+
+.deploy:hover {
+  background-color: var(--color-primary-30);
+  border: 1px solid var(--color-primary-10);
+  cursor: pointer;
+}
+
+.deploy:hover .chevronIcon {
+  fill: var(--white);
+}
+
+.overlay {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 17rem;
+  padding: 0.75rem;
+  top: 110%;
+  right: 0;
+  border-radius: 0.25rem;
+  background-color: var(--color-secondary-30);
+}
+
+.headline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid var(--gray-30);
+  padding-bottom: 0.75rem;
+}
+
+.target {
+  font-size: var(--text-sm);
+  margin-right: 0.5rem;
+}
+
+.platformIcon {
+  height: 1rem;
+  width: 1rem;
+  fill: var(--white);
+}
+
+.helpIcon {
+  height: 1rem;
+  width: 1rem;
+  fill: var(--gray-10);
+  margin-left: auto;
+}
+
+.helpIcon:hover {
+  fill: var(--white);
+  cursor: pointer;
+}
+
+.description {
+  font-size: var(--text-xs);
+  padding: 0.75rem 0;
+}
+
+.download {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.75rem;
+}
+
+.link {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-primary-10);
+  font-size: var(--text-sm);
+  color: var(--white);
+  width: 12rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.copyContainer {
+  background-color: var(--gray-30);
+  border: 1px solid var(--gray-30);
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.copyContainer:hover {
+  background-color: var(--gray-40);
+  cursor: pointer;
+}
+
+.copyIcon {
+  height: 1rem;
+  width: 1rem;
+  fill: var(--white);
+}
