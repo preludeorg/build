@@ -25,6 +25,7 @@ interface Command {
   desc?: string | JSX.Element;
   exec: (args: string) => CommandReturn;
 }
+
 export type Commands = Record<string, Command>;
 
 const isConnected = () => !!authState().credentials;
