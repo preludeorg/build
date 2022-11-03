@@ -1,6 +1,6 @@
 import React from "react";
 import shallow from "zustand/shallow";
-import useTerminalStore from "../../hooks/terminal-store";
+import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
 import cx from "classnames";
 import PrimaryPrompt from "./primary-prompt";
@@ -97,7 +97,7 @@ const CurrentLine = () => {
   );
 
   const [beforeCaretText, afterCaretText] = useTerminalStore(
-    (state) => state.caretText(),
+    selectCaretText,
     shallow
   );
 

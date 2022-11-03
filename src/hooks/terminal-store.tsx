@@ -32,7 +32,6 @@ interface TerminalStore {
   caretPosition: number;
   commandsHistory: string[];
   historyPointer: number;
-  caretText: () => [string, string];
   bufferedContent: Array<string | JSX.Element>;
   setFocus: (focused: boolean) => void;
   clear: () => void;
@@ -52,15 +51,6 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   historyPointer: 0,
   setFocus: (focused: boolean) => {
     set(() => ({ focused }));
-  },
-  caretText: () => {
-    const { input, caretPosition } = get();
-    const [beforeCaretText, afterCaretText] = splitStringAtIndex(
-      input,
-      caretPosition
-    );
-
-    return [beforeCaretText, afterCaretText];
   },
   clear() {
     set(() => ({
@@ -258,5 +248,14 @@ const getNextCommand = (historyPointer: number, commandsHistory: string[]) => {
 };
 
 export default useTerminalStore;
+
+export const selectCaretText = (state: TerminalStore) => {
+  const [beforeCaretText, afterCaretText] = splitStringAtIndex(
+    state.input,
+    state.caretPosition
+  );
+
+  return [beforeCaretText, afterCaretText];
+};
 
 export const terminalState = () => useTerminalStore.getState();
