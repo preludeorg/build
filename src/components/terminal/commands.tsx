@@ -7,10 +7,10 @@ import { terminalState } from "../../hooks/terminal-store";
 import { getLanguageMode } from "../../lib/lang";
 import { teminalList } from "./terminal-list";
 import {
-  deleteCodeFile,
+  deleteTest,
   deleteTTP,
-  getCodeFile,
   getManifest,
+  getTest,
   getTTP,
   TTP,
 } from "../../lib/ttp";
@@ -99,7 +99,7 @@ export const commands: Commands = {
         switchTTP(ttp);
         return (
           <span>
-            switched context. type 'list-code-files' to choose a implementation.
+            switched context. type 'list-tests' to choose a implementation.
           </span>
         );
       } catch (e) {
@@ -134,7 +134,7 @@ export const commands: Commands = {
 
         return (
           <span>
-            switched context. type 'list-code-files' to choose a implementation.
+            switched context. type 'list-tests' to choose a implementation.
           </span>
         );
       } catch (e) {
@@ -146,8 +146,8 @@ export const commands: Commands = {
       }
     },
   },
-  "list-code-files": {
-    desc: "lists the code files in current ttp",
+  "list-tests": {
+    desc: "lists the tests in current ttp",
     async exec() {
       try {
         const { navigate } = navigatorState();
@@ -163,47 +163,47 @@ export const commands: Commands = {
           return "ttp is required to execute command";
         }
 
-        const files = await getTTP(currentTTP.id, {
+        const tests = await getTTP(currentTTP.id, {
           host,
           credentials,
         });
 
-        if (files.length === 0) {
-          return "no code files in ttp";
+        if (tests.length === 0) {
+          return "no tests in ttp";
         }
 
-        const file = await teminalList({
-          items: files,
-          keyProp: (file) => file,
-          renderItem: (file) => (
+        const test = await teminalList({
+          items: tests,
+          keyProp: (test) => test,
+          renderItem: (test) => (
             <>
-              <span>{file}</span>
+              <span>{test}</span>
             </>
           ),
         });
 
         try {
-          const code = await getCodeFile(file, { host, credentials });
+          const code = await getTest(test, { host, credentials });
           openTab({
-            name: file,
+            name: test,
             code,
           });
           navigate("editor");
-          return <span>opened code file all changes will auto-save</span>;
+          return <span>opened test all changes will auto-save</span>;
         } catch (e) {
-          return <span>failed to get code file: {(e as Error).message}</span>;
+          return <span>failed to get test: {(e as Error).message}</span>;
         }
       } catch (e) {
         if ((e as Error).message === "exited") {
-          return "no code file selected";
+          return "no test selected";
         }
 
-        return `failed to list code files: ${(e as Error).message}`;
+        return `failed to list tests: ${(e as Error).message}`;
       }
     },
   },
-  "delete-code-file": {
-    desc: "deletes a code files from current ttp",
+  "delete-test": {
+    desc: "deletes a test from current ttp",
     async exec() {
       try {
         const { navigate } = navigatorState();
@@ -219,55 +219,48 @@ export const commands: Commands = {
           return "ttp is required to execute command";
         }
 
-        const files = await getTTP(currentTTP.id, {
+        const tests = await getTTP(currentTTP.id, {
           host,
           credentials,
         });
 
-        if (files.length === 0) {
-          return "no code files in ttp";
+        if (tests.length === 0) {
+          return "no test in ttp";
         }
 
-        const file = await teminalList({
-          title: <strong>Choose a code file to delete</strong>,
-          items: files,
-          keyProp: (file) => file,
-          renderItem: (file) => (
+        const test = await teminalList({
+          items: tests,
+          keyProp: (test) => test,
+          renderItem: (test) => (
             <>
-              <span>{file}</span>
+              <span>{test}</span>
             </>
           ),
         });
 
         try {
-          await deleteCodeFile(file, { host, credentials });
+          await deleteTest(test, { host, credentials });
 
-          if (closeTab(file)) {
+          if (closeTab(test)) {
             navigate("welcome");
           }
 
-          return (
-            <span>
-              code file: <strong>{file}</strong> deleted
-            </span>
-          );
+          return <span>test deleted</span>;
         } catch (e) {
-          return (
-            <span>failed to delete code file: {(e as Error).message}</span>
-          );
+          return <span>failed to delete test: {(e as Error).message}</span>;
         }
       } catch (e) {
         if ((e as Error).message === "exited") {
-          return "no code file selected";
+          return "no test selected";
         }
 
-        return `failed to list code files: ${(e as Error).message}`;
+        return `failed to list tests: ${(e as Error).message}`;
       }
     },
   },
-  "create-code-file": {
-    title: "create-code-file <platform> <arch> <language>",
-    desc: "creates a new code file in current ttp",
+  "create-test": {
+    title: "create-test <platform> <arch> <language>",
+    desc: "creates a new test in the current ttp",
     async exec(args) {
       try {
         const { navigate } = navigatorState();
@@ -322,15 +315,11 @@ export const commands: Commands = {
         };
 
         const service = new Prelude.Service({ host, credentials });
-        await service.build.putCodeFile(dcf.name, dcf.code, true);
+        await service.build.putTest(dcf.name, dcf.code, true);
         openTab(dcf);
         navigate("editor");
 
-        return (
-          <span>
-            created and opened code file: <strong>{file}</strong>
-          </span>
-        );
+        return <span>created and opened test</span>;
       } catch (e) {
         if (
           e instanceof ZodError &&
@@ -343,7 +332,7 @@ export const commands: Commands = {
         } else {
           return (
             <span className={styles.error}>
-              failed to create code file: {(e as Error).message}
+              failed to create test: {(e as Error).message}
             </span>
           );
         }
