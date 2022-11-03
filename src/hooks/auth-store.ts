@@ -27,14 +27,14 @@ const useAuthStore = create<AuthStore>()(
         const service = new Service({ host });
         const credentials = await service.iam.newAccount(handle);
 
-        set(() => ({ credentials, isConnected: true }));
+        set(() => ({ credentials }));
       },
       async login(host, account, token, serverType) {
         const credentials = { account, token };
         const service = new Service({ host, credentials });
         try {
           await service.build.listManifest();
-          set(() => ({ host, credentials, serverType, isConnected: true }));
+          set(() => ({ host, credentials, serverType }));
           return true;
         } catch (err) {
           return false;
@@ -43,7 +43,7 @@ const useAuthStore = create<AuthStore>()(
       disconnect() {
         const host = "";
         const credentials = { account: "", token: "" };
-        set(() => ({ host, credentials, isConnected: false }));
+        set(() => ({ host, credentials }));
       },
     }),
     {
