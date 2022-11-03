@@ -6,7 +6,7 @@ import cx from "classnames";
 import { terminalState } from "../../hooks/terminal-store";
 
 export interface TerminalListProps<T> {
-  title: string | JSX.Element;
+  title?: string | JSX.Element;
   items: T[];
   keyProp: (item: T) => string;
   renderItem: (item: T) => JSX.Element;
@@ -135,7 +135,7 @@ const TerminalList = <T extends {}>({
       }}
     >
       <div>
-        {title}
+        {title ? title : null}
         <ol>
           {pageItems.map((item, idx) => {
             return (

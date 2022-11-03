@@ -14,10 +14,10 @@ function splitStringAtIndex(value: string, index: number) {
 const WelcomeMessage = () => {
   return (
     <span>
-      Welcome to Operator 2.0
+      Welcome to Prelude Build
       <br />
       <br />
-      Type "login {`<handle>`}" to create a new account
+      Type "use {`<handle>`}" to get started
       <br />
       <br />
     </span>

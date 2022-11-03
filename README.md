@@ -1,6 +1,6 @@
-# Operator Server
+# Prelude Build
 
-Operator Server is an authoring and testing application designed specifically for TTPs.
+Prelude Build is an authoring and testing application designed specifically for TTPs.
 
 ## Get started
 

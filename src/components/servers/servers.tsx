@@ -44,7 +44,9 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   };
 
   const copyText = (text: string) => {
-    navigator.clipboard.writeText((document.getElementsByName(text)[0] as HTMLInputElement).value);
+    navigator.clipboard.writeText(
+      (document.getElementsByName(text)[0] as HTMLInputElement).value
+    );
   };
 
   return (
@@ -69,7 +71,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
             <h2 className={styles.title}>Servers</h2>
           </div>
           <p className={styles.description}>
-            By default, Operator is backed by the hosted Prelude Server. You can
+            By default, Build is backed by the hosted Prelude Server. You can
             host alternative Server instances and log in below
           </p>
           <div className={styles.selection}>

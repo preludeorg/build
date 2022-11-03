@@ -28,9 +28,9 @@ interface Command {
 export type Commands = Record<string, Command>;
 
 export const commands: Commands = {
-  login: {
-    title: "login <user_handle>",
-    desc: "logs into the default prelude instance with a handle",
+  use: {
+    title: "use <handle>",
+    desc: "register a free account with a particular user ID",
     async exec(args) {
       try {
         const { createAccount, host } = authState();
@@ -87,7 +87,6 @@ export const commands: Commands = {
         }
 
         const ttp = await teminalList({
-          title: <strong>Manifest List</strong>,
           items: ttps,
           keyProp: (ttp) => ttp.id,
           renderItem: (ttp) => (
@@ -100,7 +99,7 @@ export const commands: Commands = {
         switchTTP(ttp);
         return (
           <span>
-            switched to ttp: <strong>{ttp.question}</strong> - {ttp.id}
+            switched context. type 'list-code-files' to choose a implementation.
           </span>
         );
       } catch (e) {
@@ -135,10 +134,7 @@ export const commands: Commands = {
 
         return (
           <span>
-            created and switched to ttp:{" "}
-            <strong>
-              {question} - {ttpId}
-            </strong>
+            switched context. type 'list-code-files' to choose a implementation.
           </span>
         );
       } catch (e) {
@@ -177,7 +173,6 @@ export const commands: Commands = {
         }
 
         const file = await teminalList({
-          title: <strong>Code Files</strong>,
           items: files,
           keyProp: (file) => file,
           renderItem: (file) => (
@@ -194,11 +189,7 @@ export const commands: Commands = {
             code,
           });
           navigate("editor");
-          return (
-            <span>
-              opened code file: <strong>{file}</strong> in editor
-            </span>
-          );
+          return <span>opened code file all changes will auto-save</span>;
         } catch (e) {
           return <span>failed to get code file: {(e as Error).message}</span>;
         }
