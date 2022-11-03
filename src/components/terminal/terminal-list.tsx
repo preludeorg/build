@@ -43,7 +43,7 @@ const TerminalList = <T extends {}>({
   const pageItems = items.slice(offset, page * ITEM_PER_PAGE);
 
   const handleKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "e") {
+    if (e.key === "e" || e.key === "Escape") {
       e.preventDefault();
       setExited(true);
       onExit();
@@ -172,17 +172,21 @@ const TerminalList = <T extends {}>({
           {items.length}
         </span>
         <span className={styles.extra}>
-          <strong>Exit: </strong> e
+          <strong>Filter: </strong> f
+        </span>
+        <span className={styles.extra}>
+          <strong>Exit: </strong> esc
+        </span>
+
+        <span className={styles.extra}>
+          <strong>Change Selection: </strong>
+          <ArrowRight className={styles.rotateNeg90} />
+          <ArrowRight className={styles.rotate90} />
         </span>
         <span className={styles.extra}>
           <strong>Change Page: </strong>
           <ArrowRight className={styles.rotate180} />
           <ArrowRight />
-        </span>
-        <span className={styles.extra}>
-          <strong>Change Selection: </strong>
-          <ArrowRight className={styles.rotateNeg90} />
-          <ArrowRight className={styles.rotate90} />
         </span>
       </div>
     </div>

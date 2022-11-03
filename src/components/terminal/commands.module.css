@@ -68,9 +68,6 @@
 
 .manifest ol li {
   counter-increment: li;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .manifest ol li span:nth-child(2) {
