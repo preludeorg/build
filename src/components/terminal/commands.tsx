@@ -27,6 +27,19 @@ interface Command {
 }
 export type Commands = Record<string, Command>;
 
+const isConnected = () => !!authState().credentials;
+const AUTH_REQUIRED_MESSAGE =
+  "account is required to run this command. Type use <handle>";
+
+const TTP_REQUIRED_MESSAGE =
+  "ttp is required to execute command.  Type “list-manifest” to show all your TTPs";
+
+const NO_TTP_MESSAGE =
+  "no TTPs in manifest. Type put-ttp <question> to create a TTP";
+
+const NO_TESTS_MESSAGE =
+  "no tests in TTP. Type create-test <platform> <arch> <language> to create a test";
+
 export const commands: Commands = {
   use: {
     title: "use <handle>",
@@ -44,13 +57,12 @@ export const commands: Commands = {
         await createAccount(handle);
 
         return (
-          <>
-            <br />
+          <div>
             Connected to {host}
             <br />
             <br />
-            Type “list-manifest” to show all your ttps <br />
-          </>
+            Type “list-manifest” to show all your TTPs
+          </div>
         );
       } catch (e) {
         if (e instanceof ZodError) {
@@ -66,10 +78,10 @@ export const commands: Commands = {
     async exec() {
       try {
         const { switchTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
+        const { host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         const manifest = (await getManifest({
@@ -83,7 +95,7 @@ export const commands: Commands = {
         }));
 
         if (ttps.length === 0) {
-          return "no ttps in manifest";
+          return NO_TTP_MESSAGE;
         }
 
         const ttp = await teminalList({
@@ -113,9 +125,10 @@ export const commands: Commands = {
     async exec(args) {
       try {
         const { switchTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
-        if (!isConnected) {
-          return "login is required to execute command";
+        const { host, credentials } = authState();
+
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         const ttpId = uuid.v4();
@@ -146,6 +159,38 @@ export const commands: Commands = {
       }
     },
   },
+  "delete-ttp": {
+    desc: "deletes current ttp",
+    async exec() {
+      try {
+        const { closeTab, tabs } = editorState();
+        const { currentTTP, switchTTP } = terminalState();
+        const { host, credentials } = authState();
+
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
+        }
+
+        if (!currentTTP) {
+          return TTP_REQUIRED_MESSAGE;
+        }
+
+        await deleteTTP(currentTTP.id, { host, credentials });
+
+        Object.keys(tabs).forEach((id) => {
+          if (tabs[id].dcf.name.startsWith(currentTTP.id)) {
+            closeTab(id);
+          }
+        });
+
+        switchTTP();
+
+        return <span>ttp: {currentTTP.id} was deleted</span>;
+      } catch (e) {
+        return `failed to delete ttp: ${(e as Error).message}`;
+      }
+    },
+  },
   "list-tests": {
     desc: "lists the tests in current ttp",
     async exec() {
@@ -153,14 +198,14 @@ export const commands: Commands = {
         const { navigate } = navigatorState();
         const { openTab } = editorState();
         const { currentTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
+        const { host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         if (!currentTTP) {
-          return "ttp is required to execute command";
+          return TTP_REQUIRED_MESSAGE;
         }
 
         const tests = await getTTP(currentTTP.id, {
@@ -169,7 +214,7 @@ export const commands: Commands = {
         });
 
         if (tests.length === 0) {
-          return "no tests in ttp";
+          return NO_TESTS_MESSAGE;
         }
 
         const test = await teminalList({
@@ -209,14 +254,14 @@ export const commands: Commands = {
         const { navigate } = navigatorState();
         const { closeTab } = editorState();
         const { currentTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
+        const { host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         if (!currentTTP) {
-          return "ttp is required to execute command";
+          return TTP_REQUIRED_MESSAGE;
         }
 
         const tests = await getTTP(currentTTP.id, {
@@ -225,7 +270,7 @@ export const commands: Commands = {
         });
 
         if (tests.length === 0) {
-          return "no test in ttp";
+          return NO_TESTS_MESSAGE;
         }
 
         const test = await teminalList({
@@ -265,15 +310,16 @@ export const commands: Commands = {
       try {
         const { navigate } = navigatorState();
         const { openTab } = editorState();
-        const { isConnected, host, credentials } = authState();
-        if (!isConnected) {
-          return "login is required to execute command";
+        const { host, credentials } = authState();
+
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         const { currentTTP } = terminalState();
 
         if (!currentTTP) {
-          return "ttp is required to execute command";
+          return TTP_REQUIRED_MESSAGE;
         }
 
         const input = args.split(" ");
@@ -339,38 +385,7 @@ export const commands: Commands = {
       }
     },
   },
-  "delete-ttp": {
-    desc: "deletes current ttp",
-    async exec() {
-      try {
-        const { closeTab, tabs } = editorState();
-        const { currentTTP, switchTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
-        }
-
-        if (!currentTTP) {
-          return "ttp is required to execute command";
-        }
-
-        await deleteTTP(currentTTP.id, { host, credentials });
-
-        Object.keys(tabs).forEach((id) => {
-          if (tabs[id].dcf.name.startsWith(currentTTP.id)) {
-            closeTab(id);
-          }
-        });
-
-        switchTTP();
-
-        return <span>ttp: {currentTTP.id} was deleted</span>;
-      } catch (e) {
-        return `failed to delete ttp: ${(e as Error).message}`;
-      }
-    },
-  },
   help: {
     exec() {
       const commandsList = Object.keys(commands).map((command) => ({
@@ -379,7 +394,6 @@ export const commands: Commands = {
       }));
       return (
         <div className={styles.help}>
-          <br />
           <strong>Commands</strong>
           <ul>
             {commandsList.map((command) => (
