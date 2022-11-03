@@ -102,6 +102,7 @@ export const commands: Commands = {
         const ttp = await teminalList({
           items: ttps,
           keyProp: (ttp) => ttp.id,
+          filterOn: (ttp) => ttp.question,
           renderItem: (ttp) => (
             <>
               <span>{ttp.question}</span> - <span>{ttp.id}</span>
@@ -221,6 +222,7 @@ export const commands: Commands = {
         const test = await teminalList({
           items: tests,
           keyProp: (test) => test,
+          filterOn: (test) => test,
           renderItem: (test) => (
             <>
               <span>{test}</span>
@@ -277,6 +279,7 @@ export const commands: Commands = {
         const test = await teminalList({
           items: tests,
           keyProp: (test) => test,
+          filterOn: (test) => test,
           renderItem: (test) => (
             <>
               <span>{test}</span>
