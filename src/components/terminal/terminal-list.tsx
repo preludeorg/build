@@ -149,29 +149,30 @@ const TerminalList = <T extends {}>({
           })}
         </ol>
       </div>
-      <div>
-        <span>
-          Type the number and hit <strong>Enter</strong> to select (1-
-          {pageItems.length})
-        </span>{" "}
-        <input
-          ref={pickerRef}
-          type="number"
-          min="1"
-          maxLength={2}
-          value={index ?? ""}
-          onKeyDown={handleKey}
-          onChange={handleChange}
-        />
-      </div>
+
       <div className={styles.listBar}>
+        <span className={styles.extra}>
+          <strong>Current: </strong>
+          <input
+            ref={pickerRef}
+            type="number"
+            min="1"
+            maxLength={2}
+            value={index ?? ""}
+            onKeyDown={handleKey}
+            onChange={handleChange}
+          />
+        </span>
+        <span className={styles.extra}>
+          <strong>Page:</strong>
+          {page}/{totalPages}
+        </span>
         <span className={styles.extra}>
           <strong>Total:</strong>
           {items.length}
         </span>
         <span className={styles.extra}>
-          <strong>Page:</strong>
-          {page}/{totalPages}
+          <strong>Exit: </strong> e
         </span>
         <span className={styles.extra}>
           <strong>Change Page: </strong>
@@ -182,10 +183,6 @@ const TerminalList = <T extends {}>({
           <strong>Change Selection: </strong>
           <ArrowRight className={styles.rotateNeg90} />
           <ArrowRight className={styles.rotate90} />
-        </span>
-
-        <span className={styles.extra}>
-          <strong>Exit: </strong> e
         </span>
       </div>
     </div>
