@@ -6,7 +6,7 @@ import CopyIcon from "../icons/copy-icon";
 import styles from "./servers.module.css";
 import cx from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
-import useAuthStore from "../../hooks/auth-store";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   toggleServerPanel,
@@ -18,7 +18,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     serverType: state.serverType,
   }));
 
-  const isConnected = useAuthStore((state) => state.isConnected);
+  const isConnected = useAuthStore(selectIsConnected);
   const login = useAuthStore((state) => state.login);
   const disconnect = useAuthStore((state) => state.disconnect);
   const [type, setType] = useState(serverType);

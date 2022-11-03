@@ -215,7 +215,7 @@ const TerminalList = <T extends {}>({
             <strong>Filter: </strong>
             <input
               className={styles.filterInput}
-              placeholder="Type TTP name"
+              placeholder="Type a phrase..."
               ref={filterRef}
               type="text"
               value={filter}

@@ -1,9 +1,9 @@
 import create from "zustand";
+import { persist } from "zustand/middleware";
 import { Service, Credentials } from "@theprelude/sdk";
 
 interface AuthStore {
   host: string;
-  isConnected: boolean;
   serverType: "prelude" | "custom";
   credentials?: Credentials;
   createAccount: (handle: string) => Promise<void>;
@@ -16,35 +16,41 @@ interface AuthStore {
   disconnect: () => void;
 }
 
-const useAuthStore = create<AuthStore>((set, get) => ({
-  host: "https://detect.dev.prelude.org",
-  serverType: "prelude",
-  isConnected: false,
-  async createAccount(handle) {
-    const { host } = get();
+const useAuthStore = create<AuthStore>()(
+  persist(
+    (set, get) => ({
+      host: "https://detect.dev.prelude.org",
+      serverType: "prelude",
+      async createAccount(handle) {
+        const { host } = get();
 
-    const service = new Service({ host });
-    const credentials = await service.iam.newAccount(handle);
+        const service = new Service({ host });
+        const credentials = await service.iam.newAccount(handle);
 
-    set(() => ({ credentials, isConnected: true }));
-  },
-  async login(host, account, token, serverType) {
-    const credentials = { account, token };
-    const service = new Service({ host, credentials });
-    try {
-      await service.build.listManifest();
-      set(() => ({ host, credentials, serverType, isConnected: true }));
-      return true;
-    } catch (err) {
-      return false;
+        set(() => ({ credentials, isConnected: true }));
+      },
+      async login(host, account, token, serverType) {
+        const credentials = { account, token };
+        const service = new Service({ host, credentials });
+        try {
+          await service.build.listManifest();
+          set(() => ({ host, credentials, serverType, isConnected: true }));
+          return true;
+        } catch (err) {
+          return false;
+        }
+      },
+      disconnect() {
+        const host = "";
+        const credentials = { account: "", token: "" };
+        set(() => ({ host, credentials, isConnected: false }));
+      },
+    }),
+    {
+      name: "prelude-credentials",
     }
-  },
-  disconnect() {
-    const host = "";
-    const credentials = { account: "", token: "" };
-    set(() => ({ host, credentials, isConnected: false }));
-  },
-}));
+  )
+);
 
 export default useAuthStore;
 
@@ -52,5 +58,7 @@ export const selectServiceConfig = (state: AuthStore) => ({
   host: state.host,
   credentials: state.credentials,
 });
+
+export const selectIsConnected = (state: AuthStore) => !!state.credentials;
 
 export const authState = () => useAuthStore.getState();
