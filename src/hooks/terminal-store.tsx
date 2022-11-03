@@ -11,19 +11,6 @@ function splitStringAtIndex(value: string, index: number) {
   return [value.substring(0, index), value.substring(index)];
 }
 
-const WelcomeMessage = () => {
-  return (
-    <span>
-      Welcome to Prelude Build
-      <br />
-      <br />
-      Type "use {`<handle>`}" to get started
-      <br />
-      <br />
-    </span>
-  );
-};
-
 interface TerminalStore {
   currentTTP?: TTP;
   focused: boolean;
@@ -46,7 +33,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   focused: false,
   input: "",
   caretPosition: 0,
-  bufferedContent: [<WelcomeMessage />],
+  bufferedContent: [],
   commandsHistory: [],
   historyPointer: 0,
   setFocus: (focused: boolean) => {
