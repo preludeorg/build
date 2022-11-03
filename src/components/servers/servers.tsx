@@ -6,7 +6,7 @@ import CopyIcon from "../icons/copy-icon";
 import styles from "./servers.module.css";
 import cx from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
-import useAuthStore from "../../hooks/auth-store";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   toggleServerPanel,
@@ -18,7 +18,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     serverType: state.serverType,
   }));
 
-  const isConnected = useAuthStore((state) => state.isConnected);
+  const isConnected = useAuthStore(selectIsConnected);
   const login = useAuthStore((state) => state.login);
   const disconnect = useAuthStore((state) => state.disconnect);
   const [type, setType] = useState(serverType);
@@ -44,7 +44,9 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   };
 
   const copyText = (text: string) => {
-    navigator.clipboard.writeText((document.getElementsByName(text)[0] as HTMLInputElement).value);
+    navigator.clipboard.writeText(
+      (document.getElementsByName(text)[0] as HTMLInputElement).value
+    );
   };
 
   return (
@@ -69,7 +71,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
             <h2 className={styles.title}>Servers</h2>
           </div>
           <p className={styles.description}>
-            By default, Operator is backed by the hosted Prelude Server. You can
+            By default, Build is backed by the hosted Prelude Server. You can
             host alternative Server instances and log in below
           </p>
           <div className={styles.selection}>

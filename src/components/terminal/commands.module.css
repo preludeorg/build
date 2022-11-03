@@ -36,7 +36,7 @@
 }
 
 .manifest {
-  height: 185px;
+  min-height: 145px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -47,7 +47,7 @@
   counter-reset: li;
   margin: 0;
   padding-left: 1rem;
-  height: 110px;
+  min-height: 110px;
 }
 
 .manifest ol li::before {
@@ -76,11 +76,8 @@
 
 .manifest input {
   background: none;
-  border-bottom: 2px dashed var(--gray-10);
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  color: var(--white);
+  border: none;
+  color: var(--black);
   width: 1rem;
   -moz-appearance: textfield;
 }
@@ -114,6 +111,7 @@
   flex-direction: row;
   gap: 0.5rem;
   padding-top: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .rotate180 {
@@ -126,4 +124,8 @@
 
 .rotateNeg90 {
   transform: rotate(-90deg);
+}
+
+.filterInput {
+  min-width: 24rem;
 }

@@ -17,9 +17,9 @@ const PrimaryPrompt: React.FC<Props> = ({ children, ttp }) => {
             {ttp.question}
             <span>]</span>
             {"  "}
-            <span>id:[</span>
-            {ttp.id}
-            <span>]</span>
+            <span className={styles.ttpId}>id:[</span>
+            <span className={styles.ttpId}>{ttp.id}</span>
+            <span className={styles.ttpId}>]</span>
             {"  "}
           </div>
         )}
