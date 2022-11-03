@@ -5,7 +5,7 @@ import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
 import { terminalState } from "../../hooks/terminal-store";
 import { getLanguageMode } from "../../lib/lang";
-import TerminalList, { TerminalListProps } from "./terminal-list";
+import { teminalList } from "./terminal-list";
 import {
   deleteCodeFile,
   deleteTTP,
@@ -27,31 +27,6 @@ interface Command {
 }
 export type Commands = Record<string, Command>;
 
-type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
-async function lister<T extends {}>({
-  title,
-  items,
-  keyProp,
-  renderItem,
-}: ListerProps<T>): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const { write } = terminalState();
-    write(
-      <TerminalList
-        title={title}
-        items={items}
-        keyProp={keyProp}
-        renderItem={renderItem}
-        onSelect={(ttp) => {
-          resolve(ttp);
-        }}
-        onExit={() => {
-          reject(new Error("exited"));
-        }}
-      />
-    );
-  });
-}
 export const commands: Commands = {
   login: {
     title: "login <user_handle>",
@@ -111,7 +86,7 @@ export const commands: Commands = {
           return "no ttps in manifest";
         }
 
-        const ttp = await lister({
+        const ttp = await teminalList({
           title: <strong>Manifest List</strong>,
           items: ttps,
           keyProp: (ttp) => ttp.id,
@@ -201,7 +176,7 @@ export const commands: Commands = {
           return "no code files in ttp";
         }
 
-        const file = await lister({
+        const file = await teminalList({
           title: <strong>Code Files</strong>,
           items: files,
           keyProp: (file) => file,
@@ -262,7 +237,7 @@ export const commands: Commands = {
           return "no code files in ttp";
         }
 
-        const file = await lister({
+        const file = await teminalList({
           title: <strong>Choose a code file to delete</strong>,
           items: files,
           keyProp: (file) => file,

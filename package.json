@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.3.0",

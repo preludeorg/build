@@ -1,7 +1,5 @@
-import { Extension } from "@codemirror/state";
 import create from "zustand";
 import { DCF } from "../lib/dcf";
-import { getLanguageMode } from "../lib/lang";
 
 export interface Tab {
   dcf: DCF;
@@ -46,7 +44,11 @@ const useEditorStore = create<EditorStore>((set, get) => ({
     });
   },
   switchTab(tabId) {
-    set((state) => ({ currentTabId: tabId, previousTabId: state.currentTabId, buffer: state.tabs[tabId].buffer }));
+    set((state) => ({
+      currentTabId: tabId,
+      previousTabId: state.currentTabId,
+      buffer: state.tabs[tabId].buffer,
+    }));
   },
   closeTab(tabId) {
     let hasTabs = true;
@@ -57,7 +59,10 @@ const useEditorStore = create<EditorStore>((set, get) => ({
       hasTabs = Object.keys(newTabs).length !== 0;
 
       if (state.currentTabId === tabId) {
-        const nextId = state.previousTabId === "" ? Object.keys(newTabs)[0] : state.previousTabId;
+        const nextId =
+          state.previousTabId === ""
+            ? Object.keys(newTabs)[0]
+            : state.previousTabId;
 
         return {
           tabs: newTabs,

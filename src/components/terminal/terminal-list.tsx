@@ -3,6 +3,7 @@ import styles from "./commands.module.css";
 import { z } from "zod";
 import ArrowRight from "../icons/arrow-right";
 import cx from "classnames";
+import { terminalState } from "../../hooks/terminal-store";
 
 export interface TerminalListProps<T> {
   title: string | JSX.Element;
@@ -192,3 +193,30 @@ const TerminalList = <T extends {}>({
 };
 
 export default TerminalList;
+
+type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
+
+export async function teminalList<T extends {}>({
+  title,
+  items,
+  keyProp,
+  renderItem,
+}: ListerProps<T>): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const { write } = terminalState();
+    write(
+      <TerminalList
+        title={title}
+        items={items}
+        keyProp={keyProp}
+        renderItem={renderItem}
+        onSelect={(ttp) => {
+          resolve(ttp);
+        }}
+        onExit={() => {
+          reject(new Error("exited"));
+        }}
+      />
+    );
+  });
+}
