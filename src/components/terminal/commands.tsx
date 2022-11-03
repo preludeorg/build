@@ -113,7 +113,7 @@ export const commands: Commands = {
         switchTTP(ttp);
         return (
           <span>
-            switched context. type 'list-tests' to choose a implementation.
+            switched context. type 'list-tests' to choose an implementation.
           </span>
         );
       } catch (e) {
@@ -149,7 +149,7 @@ export const commands: Commands = {
 
         return (
           <span>
-            switched context. type 'list-tests' to choose a implementation.
+            switched context. type 'list-tests' to choose an implementation.
           </span>
         );
       } catch (e) {
