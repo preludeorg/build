@@ -1,6 +1,6 @@
 # Prelude Build
 
-Prelude Build is an authoring and testing application designed specifically for TTPs.
+Prelude Build is an authoring and testing application designed specifically for Security Tests.
 
 ## Get started
 
