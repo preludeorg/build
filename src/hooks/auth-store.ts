@@ -19,7 +19,7 @@ interface AuthStore {
 const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
-      host: "https://detect.dev.prelude.org",
+      host: "http://localhost:8080",
       serverType: "prelude",
       async createAccount(handle) {
         const { host } = get();
@@ -33,7 +33,7 @@ const useAuthStore = create<AuthStore>()(
         const credentials = { account, token };
         const service = new Service({ host, credentials });
         try {
-          await service.build.listManifest();
+          await service.build.listTests();
           set(() => ({ host, credentials, serverType }));
           return true;
         } catch (err) {

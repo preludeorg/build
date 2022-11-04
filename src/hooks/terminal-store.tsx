@@ -1,8 +1,8 @@
+import { Test } from "@theprelude/sdk";
 import create from "zustand";
 import { commands } from "../components/terminal/commands";
 import PrimaryPrompt from "../components/terminal/primary-prompt";
 import styles from "../components/terminal/terminal.module.css";
-import { TTP } from "../lib/ttp";
 
 function splitStringAtIndex(value: string, index: number) {
   if (!value) {
@@ -12,7 +12,7 @@ function splitStringAtIndex(value: string, index: number) {
 }
 
 interface TerminalStore {
-  currentTTP?: TTP;
+  currentTest?: Test;
   focused: boolean;
   inputEnabled: boolean;
   input: string;
@@ -25,7 +25,7 @@ interface TerminalStore {
   handleKey: (event: KeyboardEvent) => Promise<void>;
   processCommand: () => void;
   write: (content: string | JSX.Element) => void;
-  switchTTP: (ttp?: TTP) => void;
+  switchTest: (test?: Test) => void;
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
@@ -46,8 +46,8 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       caretPosition: 0,
     }));
   },
-  switchTTP(ttp?: TTP) {
-    set(() => ({ currentTTP: ttp }));
+  switchTest(test?: Test) {
+    set(() => ({ currentTest: test }));
   },
   async handleKey(event: KeyboardEvent) {
     const { focused, inputEnabled } = get();
@@ -161,7 +161,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
     set((state) => {
       const waiting = (
-        <PrimaryPrompt ttp={state.currentTTP}>
+        <PrimaryPrompt test={state.currentTest}>
           <span className={styles.preWhiteSpace}>{input}</span>
         </PrimaryPrompt>
       );

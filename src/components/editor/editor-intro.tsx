@@ -3,7 +3,7 @@ import styles from "./editor.module.pcss";
 const EditorIntro = () => {
   return (
     <div className={styles.intro}>
-      <h2>Start by creating a new TTP in your terminal</h2>
+      <h2>Start by creating a new Test in your terminal</h2>
     </div>
   );
 };

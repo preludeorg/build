@@ -100,11 +100,11 @@ const Terminal: React.FC = () => {
 };
 
 const CurrentLine = () => {
-  const { focused, inputEnabled, currentTTP } = useTerminalStore(
+  const { focused, inputEnabled, currentTest } = useTerminalStore(
     (state) => ({
       focused: state.focused,
       inputEnabled: state.inputEnabled,
-      currentTTP: state.currentTTP,
+      currentTest: state.currentTest,
     }),
     shallow
   );
@@ -119,7 +119,7 @@ const CurrentLine = () => {
   }
 
   return (
-    <PrimaryPrompt ttp={currentTTP}>
+    <PrimaryPrompt test={currentTest}>
       <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
       <span className={cx(styles.caret, { [styles.focused]: focused })}>
         <span className={styles.caretAfter} />

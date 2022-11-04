@@ -1,4 +1,4 @@
-export interface DCF {
+export interface Variant {
   name: string;
   code: string;
 }

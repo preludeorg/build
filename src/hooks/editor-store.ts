@@ -1,17 +1,17 @@
 import create from "zustand";
-import { DCF } from "../lib/dcf";
+import { Variant } from "../lib/variant";
 
 export interface Tab {
-  dcf: DCF;
+  variant: Variant;
   extension: string;
   buffer: string;
 }
 
-function createTab(dcf: DCF): Tab {
+function createTab(variant: Variant): Tab {
   return {
-    dcf,
-    extension: dcf.name.split(".").pop() ?? "c",
-    buffer: dcf.code,
+    variant,
+    extension: variant.name.split(".").pop() ?? "c",
+    buffer: variant.code,
   };
 }
 
@@ -20,7 +20,7 @@ interface EditorStore {
   currentTabId: string;
   previousTabId: string;
   buffer: string;
-  openTab: (dcf: DCF) => void;
+  openTab: (variant: Variant) => void;
   switchTab: (tabId: string) => void;
   closeTab: (tabId: string) => boolean;
   updateCurrentBuffer: (buffer: string) => void;
@@ -31,14 +31,14 @@ const useEditorStore = create<EditorStore>((set, get) => ({
   currentTabId: "",
   previousTabId: "",
   buffer: "",
-  openTab(dcf) {
+  openTab(variant) {
     set((state) => {
-      const tab = createTab(dcf);
-      const newTabs = { ...state.tabs, [tab.dcf.name]: tab };
+      const tab = createTab(variant);
+      const newTabs = { ...state.tabs, [tab.variant.name]: tab };
       return {
         ...state,
         tabs: newTabs,
-        currentTabId: tab.dcf.name,
+        currentTabId: tab.variant.name,
         buffer: tab.buffer,
       };
     });
