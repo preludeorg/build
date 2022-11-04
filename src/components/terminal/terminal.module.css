@@ -70,3 +70,8 @@
 .properties span {
   color: var(--color-primary-10);
 }
+
+.properties .ttpId {
+  color: var(--gray-10);
+  font-weight: normal;
+}

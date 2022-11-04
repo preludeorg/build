@@ -1,13 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import styles from "./commands.module.css";
 import { z } from "zod";
 import ArrowRight from "../icons/arrow-right";
 import cx from "classnames";
+import { terminalState } from "../../hooks/terminal-store";
 
 export interface TerminalListProps<T> {
-  title: string | JSX.Element;
+  title?: string | JSX.Element;
   items: T[];
   keyProp: (item: T) => string;
+  filterOn: (item: T) => string;
   renderItem: (item: T) => JSX.Element;
   onSelect: (item: T) => void;
   onExit: () => void;
@@ -22,27 +24,52 @@ const TerminalList = <T extends {}>({
   keyProp,
   onSelect,
   onExit,
+  filterOn,
 }: TerminalListProps<T>): JSX.Element => {
   const pickerRef = useRef<HTMLInputElement>(null);
+  const filterRef = useRef<HTMLInputElement>(null);
   const prevRef = useRef<HTMLElement | Element | null>(null);
   const [index, setValue] = useState(1);
   const [exited, setExited] = useState(false);
   const [page, setPage] = useState(1);
+  const [mode, setMode] = useState<"list" | "filter">("list");
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     prevRef.current = document.activeElement || document.body;
   }, []);
 
   useEffect(() => {
-    pickerRef.current?.focus();
-  }, [pickerRef.current]);
+    if (mode === "filter") {
+      filterRef.current?.focus();
+    } else {
+      pickerRef.current?.focus();
+    }
+  }, [mode]);
 
-  const totalPages = Math.ceil(items.length / ITEM_PER_PAGE);
+  const filteredItems = useMemo(() => {
+    if (filter === "") {
+      return items;
+    }
+
+    return items.filter((item) =>
+      filterOn(item).toLowerCase().includes(filter.toLowerCase())
+    );
+  }, [filter]);
+
+  const totalPages = Math.ceil(filteredItems.length / ITEM_PER_PAGE);
   const offset = (page - 1) * ITEM_PER_PAGE;
-  const pageItems = items.slice(offset, page * ITEM_PER_PAGE);
+  const pageItems = filteredItems.slice(offset, page * ITEM_PER_PAGE);
 
   const handleKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "e") {
+    if (e.key === "f") {
+      e.preventDefault();
+      setMode("filter");
+      setPage(1);
+      return false;
+    }
+
+    if (e.key === "e" || e.key === "Escape") {
       e.preventDefault();
       setExited(true);
       onExit();
@@ -55,7 +82,7 @@ const TerminalList = <T extends {}>({
       e.preventDefault();
       const itemIndex = index - 1 + offset;
       setExited(true);
-      onSelect(items[itemIndex]);
+      onSelect(filteredItems[itemIndex]);
       document.getElementById("terminal")?.focus();
     }
 
@@ -122,6 +149,26 @@ const TerminalList = <T extends {}>({
     } catch (e) {}
   };
 
+  const handleFilterKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setFilter("");
+      setValue(1);
+      setMode("list");
+      pickerRef.current?.focus();
+      return false;
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setValue(1);
+      setMode("list");
+      return false;
+    }
+
+    return true;
+  };
+
   if (exited) {
     return <></>;
   }
@@ -130,17 +177,23 @@ const TerminalList = <T extends {}>({
     <div
       className={styles.manifest}
       onClick={() => {
-        pickerRef.current?.focus();
+        if (mode === "filter") {
+          filterRef.current?.focus();
+        } else {
+          pickerRef.current?.focus();
+        }
       }}
     >
       <div>
-        {title}
+        {title ? title : null}
         <ol>
           {pageItems.map((item, idx) => {
             return (
               <li
                 key={keyProp(item)}
-                className={cx({ [styles.selected]: idx + 1 === index })}
+                className={cx({
+                  [styles.selected]: idx + 1 === index && mode === "list",
+                })}
               >
                 {renderItem(item)}
               </li>
@@ -148,47 +201,102 @@ const TerminalList = <T extends {}>({
           })}
         </ol>
       </div>
-      <div>
-        <span>
-          Type the number and hit <strong>Enter</strong> to select (1-
-          {pageItems.length})
-        </span>{" "}
-        <input
-          ref={pickerRef}
-          type="number"
-          min="1"
-          maxLength={2}
-          value={index ?? ""}
-          onKeyDown={handleKey}
-          onChange={handleChange}
-        />
-      </div>
-      <div className={styles.listBar}>
-        <span className={styles.extra}>
-          <strong>Total:</strong>
-          {items.length}
-        </span>
-        <span className={styles.extra}>
-          <strong>Page:</strong>
-          {page}/{totalPages}
-        </span>
-        <span className={styles.extra}>
-          <strong>Change Page: </strong>
-          <ArrowRight className={styles.rotate180} />
-          <ArrowRight />
-        </span>
-        <span className={styles.extra}>
-          <strong>Change Selection: </strong>
-          <ArrowRight className={styles.rotateNeg90} />
-          <ArrowRight className={styles.rotate90} />
-        </span>
 
-        <span className={styles.extra}>
-          <strong>Exit: </strong> e
-        </span>
-      </div>
+      {mode === "filter" && (
+        <div className={styles.listBar}>
+          <span className={styles.extra}>
+            <strong>Done: </strong> enter
+          </span>
+          <span className={styles.extra}>
+            <strong>Exit: </strong> esc
+          </span>
+
+          <span className={styles.extra}>
+            <strong>Filter: </strong>
+            <input
+              className={styles.filterInput}
+              placeholder="Type a phrase..."
+              ref={filterRef}
+              type="text"
+              value={filter}
+              onKeyDown={handleFilterKey}
+              onChange={(e) => setFilter(e.target.value)}
+            />
+          </span>
+        </div>
+      )}
+      {mode === "list" && (
+        <div className={styles.listBar}>
+          <span className={styles.extra}>
+            <strong>Current: </strong>
+            <input
+              ref={pickerRef}
+              type="number"
+              min="1"
+              maxLength={2}
+              value={index ?? ""}
+              onKeyDown={handleKey}
+              onChange={handleChange}
+            />
+          </span>
+          <span className={styles.extra}>
+            <strong>Page:</strong>
+            {page}/{totalPages}
+          </span>
+          <span className={styles.extra}>
+            <strong>Total:</strong>
+            {filteredItems.length}
+          </span>
+          <span className={styles.extra}>
+            <strong>Filter: </strong> f
+          </span>
+          <span className={styles.extra}>
+            <strong>Exit: </strong> esc
+          </span>
+
+          <span className={styles.extra}>
+            <strong>Change Selection: </strong>
+            <ArrowRight className={styles.rotateNeg90} />
+            <ArrowRight className={styles.rotate90} />
+          </span>
+          <span className={styles.extra}>
+            <strong>Change Page: </strong>
+            <ArrowRight className={styles.rotate180} />
+            <ArrowRight />
+          </span>
+        </div>
+      )}
     </div>
   );
 };
 
 export default TerminalList;
+
+type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
+
+export async function teminalList<T extends {}>({
+  title,
+  items,
+  keyProp,
+  renderItem,
+  filterOn,
+}: ListerProps<T>): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const { write } = terminalState();
+    write(
+      <TerminalList
+        title={title}
+        items={items}
+        filterOn={filterOn}
+        keyProp={keyProp}
+        renderItem={renderItem}
+        onSelect={(ttp) => {
+          resolve(ttp);
+        }}
+        onExit={() => {
+          reject(new Error("exited"));
+        }}
+      />
+    );
+  });
+}

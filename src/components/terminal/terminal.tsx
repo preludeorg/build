@@ -1,9 +1,11 @@
 import React from "react";
 import shallow from "zustand/shallow";
-import useTerminalStore from "../../hooks/terminal-store";
+import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
 import cx from "classnames";
 import PrimaryPrompt from "./primary-prompt";
+import useAuthStore from "../../hooks/auth-store";
+import WelcomeMessage from "./welcome-message";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -26,6 +28,10 @@ function useTerminal() {
   const setFocus = useTerminalStore((state) => state.setFocus);
   const handleKey = useTerminalStore((state) => state.handleKey);
   const processCommand = useTerminalStore((state) => state.processCommand);
+  const write = useTerminalStore((state) => state.write);
+  const clear = useTerminalStore((state) => state.clear);
+  const host = useAuthStore((state) => state.host);
+  const credentials = useAuthStore((state) => state.credentials);
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
     if (!inputEnabled) {
@@ -47,6 +53,13 @@ function useTerminal() {
   const handleFocus = () => {
     setFocus(document.activeElement === ref.current);
   };
+
+  React.useEffect(() => {
+    write(<WelcomeMessage host={host} credentials={credentials} />);
+    return () => {
+      clear();
+    };
+  }, []);
 
   React.useEffect(() => {
     // Bind the event listener
@@ -97,7 +110,7 @@ const CurrentLine = () => {
   );
 
   const [beforeCaretText, afterCaretText] = useTerminalStore(
-    (state) => state.caretText(),
+    selectCaretText,
     shallow
   );
 

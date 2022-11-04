@@ -5,12 +5,12 @@ import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
 import { terminalState } from "../../hooks/terminal-store";
 import { getLanguageMode } from "../../lib/lang";
-import TerminalList, { TerminalListProps } from "./terminal-list";
+import { teminalList } from "./terminal-list";
 import {
-  deleteCodeFile,
+  deleteTest,
   deleteTTP,
-  getCodeFile,
   getManifest,
+  getTest,
   getTTP,
   TTP,
 } from "../../lib/ttp";
@@ -25,37 +25,26 @@ interface Command {
   desc?: string | JSX.Element;
   exec: (args: string) => CommandReturn;
 }
+
 export type Commands = Record<string, Command>;
 
-type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
-async function lister<T extends {}>({
-  title,
-  items,
-  keyProp,
-  renderItem,
-}: ListerProps<T>): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const { write } = terminalState();
-    write(
-      <TerminalList
-        title={title}
-        items={items}
-        keyProp={keyProp}
-        renderItem={renderItem}
-        onSelect={(ttp) => {
-          resolve(ttp);
-        }}
-        onExit={() => {
-          reject(new Error("exited"));
-        }}
-      />
-    );
-  });
-}
+const isConnected = () => !!authState().credentials;
+const AUTH_REQUIRED_MESSAGE =
+  "account is required to run this command. Type use <handle>";
+
+const TTP_REQUIRED_MESSAGE =
+  "ttp is required to execute command.  Type “list-manifest” to show all your TTPs";
+
+const NO_TTP_MESSAGE =
+  "no TTPs in manifest. Type put-ttp <question> to create a TTP";
+
+const NO_TESTS_MESSAGE =
+  "no tests in TTP. Type create-test <platform> <arch> <language> to create a test";
+
 export const commands: Commands = {
-  login: {
-    title: "login <user_handle>",
-    desc: "logs into the default prelude instance with a handle",
+  use: {
+    title: "use <handle>",
+    desc: "register a free account with a particular user ID",
     async exec(args) {
       try {
         const { createAccount, host } = authState();
@@ -69,13 +58,12 @@ export const commands: Commands = {
         await createAccount(handle);
 
         return (
-          <>
-            <br />
+          <div>
             Connected to {host}
             <br />
             <br />
-            Type “list-manifest” to show all your ttps <br />
-          </>
+            Type “list-manifest” to show all your TTPs
+          </div>
         );
       } catch (e) {
         if (e instanceof ZodError) {
@@ -91,10 +79,10 @@ export const commands: Commands = {
     async exec() {
       try {
         const { switchTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
+        const { host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         const manifest = (await getManifest({
@@ -108,13 +96,13 @@ export const commands: Commands = {
         }));
 
         if (ttps.length === 0) {
-          return "no ttps in manifest";
+          return NO_TTP_MESSAGE;
         }
 
-        const ttp = await lister({
-          title: <strong>Manifest List</strong>,
+        const ttp = await teminalList({
           items: ttps,
           keyProp: (ttp) => ttp.id,
+          filterOn: (ttp) => ttp.question,
           renderItem: (ttp) => (
             <>
               <span>{ttp.question}</span> - <span>{ttp.id}</span>
@@ -125,7 +113,7 @@ export const commands: Commands = {
         switchTTP(ttp);
         return (
           <span>
-            switched to ttp: <strong>{ttp.question}</strong> - {ttp.id}
+            switched context. type 'list-tests' to choose an implementation.
           </span>
         );
       } catch (e) {
@@ -139,9 +127,10 @@ export const commands: Commands = {
     async exec(args) {
       try {
         const { switchTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
-        if (!isConnected) {
-          return "login is required to execute command";
+        const { host, credentials } = authState();
+
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         const ttpId = uuid.v4();
@@ -160,10 +149,7 @@ export const commands: Commands = {
 
         return (
           <span>
-            created and switched to ttp:{" "}
-            <strong>
-              {question} - {ttpId}
-            </strong>
+            switched context. type 'list-tests' to choose an implementation.
           </span>
         );
       } catch (e) {
@@ -175,146 +161,169 @@ export const commands: Commands = {
       }
     },
   },
-  "list-code-files": {
-    desc: "lists the code files in current ttp",
+  "delete-ttp": {
+    desc: "deletes current ttp",
+    async exec() {
+      try {
+        const { closeTab, tabs } = editorState();
+        const { currentTTP, switchTTP } = terminalState();
+        const { host, credentials } = authState();
+
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
+        }
+
+        if (!currentTTP) {
+          return TTP_REQUIRED_MESSAGE;
+        }
+
+        await deleteTTP(currentTTP.id, { host, credentials });
+
+        Object.keys(tabs).forEach((id) => {
+          if (tabs[id].dcf.name.startsWith(currentTTP.id)) {
+            closeTab(id);
+          }
+        });
+
+        switchTTP();
+
+        return <span>ttp: {currentTTP.id} was deleted</span>;
+      } catch (e) {
+        return `failed to delete ttp: ${(e as Error).message}`;
+      }
+    },
+  },
+  "list-tests": {
+    desc: "lists the tests in current ttp",
     async exec() {
       try {
         const { navigate } = navigatorState();
         const { openTab } = editorState();
         const { currentTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
+        const { host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         if (!currentTTP) {
-          return "ttp is required to execute command";
+          return TTP_REQUIRED_MESSAGE;
         }
 
-        const files = await getTTP(currentTTP.id, {
+        const tests = await getTTP(currentTTP.id, {
           host,
           credentials,
         });
 
-        if (files.length === 0) {
-          return "no code files in ttp";
+        if (tests.length === 0) {
+          return NO_TESTS_MESSAGE;
         }
 
-        const file = await lister({
-          title: <strong>Code Files</strong>,
-          items: files,
-          keyProp: (file) => file,
-          renderItem: (file) => (
+        const test = await teminalList({
+          items: tests,
+          keyProp: (test) => test,
+          filterOn: (test) => test,
+          renderItem: (test) => (
             <>
-              <span>{file}</span>
+              <span>{test}</span>
             </>
           ),
         });
 
         try {
-          const code = await getCodeFile(file, { host, credentials });
+          const code = await getTest(test, { host, credentials });
           openTab({
-            name: file,
+            name: test,
             code,
           });
           navigate("editor");
-          return (
-            <span>
-              opened code file: <strong>{file}</strong> in editor
-            </span>
-          );
+          return <span>opened test all changes will auto-save</span>;
         } catch (e) {
-          return <span>failed to get code file: {(e as Error).message}</span>;
+          return <span>failed to get test: {(e as Error).message}</span>;
         }
       } catch (e) {
         if ((e as Error).message === "exited") {
-          return "no code file selected";
+          return "no test selected";
         }
 
-        return `failed to list code files: ${(e as Error).message}`;
+        return `failed to list tests: ${(e as Error).message}`;
       }
     },
   },
-  "delete-code-file": {
-    desc: "deletes a code files from current ttp",
+  "delete-test": {
+    desc: "deletes a test from current ttp",
     async exec() {
       try {
         const { navigate } = navigatorState();
         const { closeTab } = editorState();
         const { currentTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
+        const { host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         if (!currentTTP) {
-          return "ttp is required to execute command";
+          return TTP_REQUIRED_MESSAGE;
         }
 
-        const files = await getTTP(currentTTP.id, {
+        const tests = await getTTP(currentTTP.id, {
           host,
           credentials,
         });
 
-        if (files.length === 0) {
-          return "no code files in ttp";
+        if (tests.length === 0) {
+          return NO_TESTS_MESSAGE;
         }
 
-        const file = await lister({
-          title: <strong>Choose a code file to delete</strong>,
-          items: files,
-          keyProp: (file) => file,
-          renderItem: (file) => (
+        const test = await teminalList({
+          items: tests,
+          keyProp: (test) => test,
+          filterOn: (test) => test,
+          renderItem: (test) => (
             <>
-              <span>{file}</span>
+              <span>{test}</span>
             </>
           ),
         });
 
         try {
-          await deleteCodeFile(file, { host, credentials });
+          await deleteTest(test, { host, credentials });
 
-          if (closeTab(file)) {
+          if (closeTab(test)) {
             navigate("welcome");
           }
 
-          return (
-            <span>
-              code file: <strong>{file}</strong> deleted
-            </span>
-          );
+          return <span>test deleted</span>;
         } catch (e) {
-          return (
-            <span>failed to delete code file: {(e as Error).message}</span>
-          );
+          return <span>failed to delete test: {(e as Error).message}</span>;
         }
       } catch (e) {
         if ((e as Error).message === "exited") {
-          return "no code file selected";
+          return "no test selected";
         }
 
-        return `failed to list code files: ${(e as Error).message}`;
+        return `failed to list tests: ${(e as Error).message}`;
       }
     },
   },
-  "create-code-file": {
-    title: "create-code-file <platform> <arch> <language>",
-    desc: "creates a new code file in current ttp",
+  "create-test": {
+    title: "create-test <platform> <arch> <language>",
+    desc: "creates a new test in the current ttp",
     async exec(args) {
       try {
         const { navigate } = navigatorState();
         const { openTab } = editorState();
-        const { isConnected, host, credentials } = authState();
-        if (!isConnected) {
-          return "login is required to execute command";
+        const { host, credentials } = authState();
+
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
         }
 
         const { currentTTP } = terminalState();
 
         if (!currentTTP) {
-          return "ttp is required to execute command";
+          return TTP_REQUIRED_MESSAGE;
         }
 
         const input = args.split(" ");
@@ -356,15 +365,11 @@ export const commands: Commands = {
         };
 
         const service = new Prelude.Service({ host, credentials });
-        await service.build.putCodeFile(dcf.name, dcf.code, true);
+        await service.build.putTest(dcf.name, dcf.code, true);
         openTab(dcf);
         navigate("editor");
 
-        return (
-          <span>
-            created and opened code file: <strong>{file}</strong>
-          </span>
-        );
+        return <span>created and opened test</span>;
       } catch (e) {
         if (
           e instanceof ZodError &&
@@ -377,45 +382,14 @@ export const commands: Commands = {
         } else {
           return (
             <span className={styles.error}>
-              failed to create code file: {(e as Error).message}
+              failed to create test: {(e as Error).message}
             </span>
           );
         }
       }
     },
   },
-  "delete-ttp": {
-    desc: "deletes current ttp",
-    async exec() {
-      try {
-        const { closeTab, tabs } = editorState();
-        const { currentTTP, switchTTP } = terminalState();
-        const { isConnected, host, credentials } = authState();
 
-        if (!isConnected) {
-          return "login is required to execute command";
-        }
-
-        if (!currentTTP) {
-          return "ttp is required to execute command";
-        }
-
-        await deleteTTP(currentTTP.id, { host, credentials });
-
-        Object.keys(tabs).forEach((id) => {
-          if (tabs[id].dcf.name.startsWith(currentTTP.id)) {
-            closeTab(id);
-          }
-        });
-
-        switchTTP();
-
-        return <span>ttp: {currentTTP.id} was deleted</span>;
-      } catch (e) {
-        return `failed to delete ttp: ${(e as Error).message}`;
-      }
-    },
-  },
   help: {
     exec() {
       const commandsList = Object.keys(commands).map((command) => ({
@@ -424,7 +398,6 @@ export const commands: Commands = {
       }));
       return (
         <div className={styles.help}>
-          <br />
           <strong>Commands</strong>
           <ul>
             {commandsList.map((command) => (

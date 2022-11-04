@@ -1,11 +1,11 @@
-import useAuthStore from "../../hooks/auth-store";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 import styles from "./servers.module.css";
 import cx from "classnames";
 import useNavigationStore from "../../hooks/navigation-store";
 
 const ConnectedServer = () => {
   const host = useAuthStore((state) => state.host);
-  const isConnected = useAuthStore((state) => state.isConnected);
+  const isConnected = useAuthStore(selectIsConnected);
   const serverName = isConnected ? host : "Disconnected";
   const toggleServerPanel = useNavigationStore(
     (state) => state.toggleServerPanel

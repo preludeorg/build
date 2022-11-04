@@ -15,9 +15,9 @@ export const getTTP = async (id: string, config: ServiceConfig) => {
   return service.build.getTTP(id);
 };
 
-export const getCodeFile = async (file: string, config: ServiceConfig) => {
+export const getTest = async (file: string, config: ServiceConfig) => {
   const service = new Service(config);
-  return service.build.getCodeFile(file);
+  return service.build.getTest(file);
 };
 
 export const deleteTTP = async (id: string, config: ServiceConfig) => {
@@ -25,7 +25,7 @@ export const deleteTTP = async (id: string, config: ServiceConfig) => {
   return service.build.deleteTTP(id);
 };
 
-export const deleteCodeFile = async (name: string, config: ServiceConfig) => {
+export const deleteTest = async (name: string, config: ServiceConfig) => {
   const service = new Service(config);
-  return service.build.deleteCodeFile(name);
+  return service.build.deleteTest(name);
 };

@@ -15,14 +15,14 @@ import { debounce } from "../../lib/utils/debounce";
 import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
 import { Service, ServiceConfig } from "@theprelude/sdk";
 
-const saveFile = async (name: string, code: string, config: ServiceConfig) => {
+const saveTest = async (name: string, code: string, config: ServiceConfig) => {
   try {
     const service = new Service(config);
-    await service.build.putCodeFile(name, code);
+    await service.build.putTest(name, code);
   } catch (e) {}
 };
 
-const processSave = debounce(saveFile, 500);
+const processTest = debounce(saveTest, 500);
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(selectServiceConfig, shallow);
@@ -54,7 +54,7 @@ const EditorWindow: React.FC = () => {
           updateBuffer(buffer);
           const isValid = validate(buffer, linters);
           if (isValid) {
-            processSave(currentTabId, buffer, serviceConfig);
+            processTest(currentTabId, buffer, serviceConfig);
           }
         }}
       />
