@@ -27,6 +27,12 @@
   text-overflow: ellipsis;
 }
 
+.help ul li strong {
+  color: var(--white);
+  text-align: left;
+  flex: 1;
+}
+
 .success {
   color: var(--color-success);
 }
