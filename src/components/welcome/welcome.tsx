@@ -18,7 +18,7 @@ const Welcome = () => {
           link="https://docs.prelude.org/v2/docs/basic"
         />
         <WelcomeBlock
-          title="Your first TTP"
+          title="Your first Test"
           description="Design your own security test that can both test your controls and clean up after itself"
           image={rectangle2}
           link="https://docs.prelude.org/v2/docs/understanding-ttps"

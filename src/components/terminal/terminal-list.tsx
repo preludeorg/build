@@ -290,8 +290,8 @@ export async function teminalList<T extends {}>({
         filterOn={filterOn}
         keyProp={keyProp}
         renderItem={renderItem}
-        onSelect={(ttp) => {
-          resolve(ttp);
+        onSelect={(item) => {
+          resolve(item);
         }}
         onExit={() => {
           reject(new Error("exited"));

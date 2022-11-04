@@ -71,7 +71,7 @@
   color: var(--color-primary-10);
 }
 
-.properties .ttpId {
+.properties .testId {
   color: var(--gray-10);
   font-weight: normal;
 }

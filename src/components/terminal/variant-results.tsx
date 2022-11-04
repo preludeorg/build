@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ChevronIcon from "../icons/chevron-icon";
 import ContainerIcon from "../icons/container-icon";
-import styles from "./dcf-results.module.css";
+import styles from "./variant-results.module.css";
 import cx from "classnames";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
   output: string;
 }
 
-const DCFResults: React.FC<Props> = ({ name, status, cpu, output }) => {
+const VariantResults: React.FC<Props> = ({ name, status, cpu, output }) => {
   const [expanded, setExpanded] = useState(false);
   return (
     <li className={styles.resultsContainer}>
@@ -53,4 +53,4 @@ const DCFResults: React.FC<Props> = ({ name, status, cpu, output }) => {
   );
 };
 
-export default DCFResults;
+export default VariantResults;

@@ -15,14 +15,18 @@ import { debounce } from "../../lib/utils/debounce";
 import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
 import { Service, ServiceConfig } from "@theprelude/sdk";
 
-const saveTest = async (name: string, code: string, config: ServiceConfig) => {
+const saveVariant = async (
+  name: string,
+  code: string,
+  config: ServiceConfig
+) => {
   try {
     const service = new Service(config);
-    await service.build.putTest(name, code);
+    await service.build.createVariant(name, code);
   } catch (e) {}
 };
 
-const processTest = debounce(saveTest, 500);
+const processVariant = debounce(saveVariant, 1000);
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(selectServiceConfig, shallow);
@@ -54,7 +58,7 @@ const EditorWindow: React.FC = () => {
           updateBuffer(buffer);
           const isValid = validate(buffer, linters);
           if (isValid) {
-            processTest(currentTabId, buffer, serviceConfig);
+            processVariant(currentTabId, buffer, serviceConfig);
           }
         }}
       />
@@ -71,7 +75,7 @@ const uuidRegex = new RegExp(
 );
 
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
-  const tabName = useEditorStore((state) => state.tabs[tabId].dcf.name);
+  const tabName = useEditorStore((state) => state.tabs[tabId].variant.name);
   const currentTabId = useEditorStore((state) => state.currentTabId);
   const switchTab = useEditorStore((state) => state.switchTab);
   const closeTab = useEditorStore((state) => state.closeTab);

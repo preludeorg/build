@@ -33,7 +33,7 @@ const useAuthStore = create<AuthStore>()(
         const credentials = { account, token };
         const service = new Service({ host, credentials });
         try {
-          await service.build.listManifest();
+          await service.build.listTests();
           set(() => ({ host, credentials, serverType }));
           return true;
         } catch (err) {

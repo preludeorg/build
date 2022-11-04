@@ -13,7 +13,7 @@ const WelcomeMessage: React.FC<{ host: string; credentials?: Credentials }> = ({
         Connected to {host}
         <br />
         <br />
-        Type “list-manifest” to show all your TTPs
+        Type “list-tests” to show all your tests
       </div>
     );
   }
