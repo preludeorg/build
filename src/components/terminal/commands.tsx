@@ -427,7 +427,7 @@ export const commands: Commands = {
               <li key={command.name}>
                 <span>{command.name}</span> <p>{command.desc} </p>
                 {command.alias.length !== 0 ? (
-                  <strong>[aliases: {command.alias.join(", ")}]</strong>
+                  <strong>[alias: {command.alias.join(", ")}]</strong>
                 ) : (
                   ""
                 )}

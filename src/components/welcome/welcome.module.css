@@ -37,6 +37,10 @@
     color: #fff;
 }
 
+.block:hover {
+    background-color: var(--color-secondary-20);
+}
+
 .title {
     margin: 0 0 16px;
 }
