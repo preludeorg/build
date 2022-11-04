@@ -52,7 +52,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       set((state) => {
         const waiting = (
           <>
-            <PrimaryPrompt ttp={state.currentTTP}>
+            <PrimaryPrompt test={state.currentTest}>
               <span className={styles.preWhiteSpace}>{input}</span>
             </PrimaryPrompt>
             <div style={{ color: "var(--color-primary-10)" }}>
