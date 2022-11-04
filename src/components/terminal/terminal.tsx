@@ -32,6 +32,7 @@ function useTerminal() {
   const clear = useTerminalStore((state) => state.clear);
   const host = useAuthStore((state) => state.host);
   const credentials = useAuthStore((state) => state.credentials);
+  const autoComplete = useTerminalStore((state) => state.autoComplete);
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
     if (!inputEnabled) {
@@ -44,6 +45,11 @@ function useTerminal() {
 
     if (eventKey === "Enter") {
       processCommand();
+      return;
+    }
+
+    if (eventKey === "Tab") {
+      autoComplete();
       return;
     }
 
