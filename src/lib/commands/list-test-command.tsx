@@ -6,7 +6,7 @@ import {
   AUTH_REQUIRED_MESSAGE,
   CONTEXT_SWITCH_MESSAGE,
   NO_TESTS_MESSAGE,
-} from "./consts";
+} from "./messages";
 import { ErrorMessage, isConnected } from "./helpers";
 import { Command } from "./types";
 

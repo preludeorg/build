@@ -1,6 +1,6 @@
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./consts";
+import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
 import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
 import { Command } from "./types";
 import { editorState } from "../../hooks/editor-store";

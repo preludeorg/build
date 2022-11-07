@@ -8,7 +8,7 @@ import {
   AUTH_REQUIRED_MESSAGE,
   TEST_REQUIRED_MESSAGE,
   NO_VARIANTS_MESSAGE,
-} from "./consts";
+} from "./messages";
 import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
 import { Command } from "./types";
 

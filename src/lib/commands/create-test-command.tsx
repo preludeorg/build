@@ -1,7 +1,7 @@
 import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { AUTH_REQUIRED_MESSAGE, CONTEXT_SWITCH_MESSAGE } from "./consts";
+import { AUTH_REQUIRED_MESSAGE, CONTEXT_SWITCH_MESSAGE } from "./messages";
 import { ErrorMessage, isConnected } from "./helpers";
 import { Command } from "./types";
 import * as Prelude from "@theprelude/sdk";
