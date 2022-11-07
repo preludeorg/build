@@ -43,6 +43,10 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   autoComplete: () => {
     const { input } = get();
     const options = Object.keys(commands).filter((o) => o.startsWith(input));
+    if (input === "" || options.length === 0) {
+      return;
+    }
+
     if (options.length === 1) {
       set(() => ({
         input: options[0],

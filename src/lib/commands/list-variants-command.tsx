@@ -12,6 +12,9 @@ import { teminalList } from "../../components/terminal/terminal-list";
 import { editorState } from "../../hooks/editor-store";
 import { getTest, getVariant } from "../test";
 
+const VARIANT_FORMAT =
+  /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}(_\w*)?(-\w*)?\.(\w*)/i;
+
 export const listVariantsCommand: Command = {
   alias: ["lv"],
   desc: "lists the variants in current test",
@@ -39,13 +42,26 @@ export const listVariantsCommand: Command = {
         return NO_VARIANTS_MESSAGE;
       }
 
+      const shortenVariant = (v: string) => {
+        const results = v.match(VARIANT_FORMAT);
+        if (!results) {
+          return "";
+        }
+        let [, platform, arch, language] = results;
+        let shorten = "";
+        shorten += platform ? platform.replaceAll("_", "") : "*";
+        shorten += arch ? arch : "-*";
+        shorten += `.${language}`;
+        return shorten;
+      };
+
       const variant = await teminalList({
         items: variants,
-        keyProp: (variant) => variant,
-        filterOn: (variant) => variant,
+        keyProp: shortenVariant,
+        filterOn: shortenVariant,
         renderItem: (variant) => (
           <>
-            <span>{variant}</span>
+            <span>{shortenVariant(variant)}</span>
           </>
         ),
       });

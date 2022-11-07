@@ -1,8 +1,8 @@
 import { Command } from "./types";
 import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
-import styles from "../../components/terminal/command.module.css";
 import { ErrorMessage } from "./helpers";
+import WelcomeMessage from "../../components/terminal/welcome-message";
 
 export const useCommand: Command = {
   args: "[handle]",
@@ -17,18 +17,9 @@ export const useCommand: Command = {
         })
         .min(1, { message: "handle is required" })
         .parse(args);
-      await createAccount(handle);
+      const credentials = await createAccount(handle);
 
-      return (
-        <div>
-          Connected to {host}
-          <br />
-          <br />
-          <span className={styles.helpText}>
-            type "list-tests" to show all your Tests
-          </span>
-        </div>
-      );
+      return <WelcomeMessage host={host} credentials={credentials} />;
     } catch (e) {
       if (e instanceof ZodError) {
         return <ErrorMessage message={e.errors[0].message} />;
