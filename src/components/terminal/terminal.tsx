@@ -6,6 +6,7 @@ import cx from "classnames";
 import PrimaryPrompt from "./primary-prompt";
 import useAuthStore from "../../hooks/auth-store";
 import WelcomeMessage from "./welcome-message";
+import focusTerminal from "../../utils/focus-terminal";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -96,7 +97,16 @@ function useTerminal() {
 const Terminal: React.FC = () => {
   const { ref, bufferedContent } = useTerminal();
   return (
-    <div id="terminal" tabIndex={0} ref={ref} className={styles.terminal}>
+    <div
+      onFocus={(e) => {
+        e.preventDefault();
+        focusTerminal();
+      }}
+      id="terminal"
+      tabIndex={0}
+      ref={ref}
+      className={styles.terminal}
+    >
       {bufferedContent.map((el, index) => {
         return <React.Fragment key={index}>{el}</React.Fragment>;
       })}
