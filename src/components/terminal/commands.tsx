@@ -29,32 +29,36 @@ interface Command {
 export type Commands = Record<string, Command>;
 
 const isConnected = () => !!authState().credentials;
-const AUTH_REQUIRED_MESSAGE =
-  "account is required to run this command. Type use <handle>";
+const AUTH_REQUIRED_MESSAGE = (
+  <>
+    <span>account is required to run this command.</span>
+    <span className={styles.helpText}>type use {"<handle"}</span>
+  </>
+);
+
+(" ");
 
 const TEST_REQUIRED_MESSAGE = (
   <>
-    <span>test is required to execute command.</span>{" "}
+    <span>test is required to execute command.</span>
     <span className={styles.helpText}>
-      Type “list-tests to show all your Tests"
+      type "list-tests" to show all your Tests
     </span>
   </>
 );
 
 const NO_TESTS_MESSAGE = (
   <>
-    <span>no tests found.</span>{" "}
-    <span className={styles.helpText}>
-      Type create-test {"<question>"} to create a test
-    </span>
+    <span>no tests found.</span>
+    <span className={styles.helpText}>type "create-test" to create a test</span>
   </>
 );
 
 const NO_VARIANTS_MESSAGE = (
   <>
-    <span>no variants in test.</span>{" "}
+    <span>no variants in test.</span>
     <span className={styles.helpText}>
-      Type create-variant {"<platform> <arch> <language>"} to create a variant"
+      type "create-variant" to create a variant"
     </span>
   </>
 );
@@ -80,7 +84,9 @@ export const commands: Commands = {
             Connected to {host}
             <br />
             <br />
-            Type “list-tests” to show all your tests
+            <span className={styles.helpText}>
+              type "list-tests" to show all your Tests
+            </span>
           </div>
         );
       } catch (e) {
@@ -127,7 +133,10 @@ export const commands: Commands = {
         switchTest(test);
         return (
           <span>
-            switched context. type 'list-variants' to choose an implementation.
+            switched context.
+            <span className={styles.helpText}>
+              type "list-variants" to choose an implementation
+            </span>
           </span>
         );
       } catch (e) {
@@ -168,14 +177,17 @@ export const commands: Commands = {
 
         return (
           <span>
-            switched context. type 'list-variants' to choose an implementation.
+            switched context.
+            <span className={styles.helpText}>
+              type "list-variants" to choose an implementation
+            </span>
           </span>
         );
       } catch (e) {
         if (e instanceof ZodError) {
-          return e.errors[0].message;
+          return <span className={styles.error}>{e.errors[0].message}</span>;
         } else {
-          return (e as Error).message;
+          return <span className={styles.error}>{(e as Error).message}</span>;
         }
       }
     },
@@ -188,6 +200,7 @@ export const commands: Commands = {
         const { closeTab, tabs } = editorState();
         const { currentTest, switchTest } = terminalState();
         const { host, credentials } = authState();
+        const { navigate } = navigatorState();
 
         if (!isConnected()) {
           return AUTH_REQUIRED_MESSAGE;
@@ -205,11 +218,19 @@ export const commands: Commands = {
           }
         });
 
+        if (Object.keys(editorState().tabs).length === 0) {
+          navigate("welcome");
+        }
+
         switchTest();
 
-        return <span>test: {currentTest.id} was deleted</span>;
+        return <span>test deleted</span>;
       } catch (e) {
-        return `failed to delete test: ${(e as Error).message}`;
+        return (
+          <span className={styles.error}>
+            failed to delete test: {(e as Error).message}
+          </span>
+        );
       }
     },
   },
@@ -258,16 +279,24 @@ export const commands: Commands = {
             code,
           });
           navigate("editor");
-          return <span>opened variant all changes will auto-save</span>;
+          return <span>opened variant. all changes will auto-save</span>;
         } catch (e) {
-          return <span>failed to get variant: {(e as Error).message}</span>;
+          return (
+            <span className={styles.error}>
+              failed to get variant: {(e as Error).message}
+            </span>
+          );
         }
       } catch (e) {
         if ((e as Error).message === "exited") {
           return "no variant selected";
         }
 
-        return `failed to list variants: ${(e as Error).message}`;
+        return (
+          <span className={styles.error}>
+            failed to list variants: {(e as Error).message}
+          </span>
+        );
       }
     },
   },
@@ -316,16 +345,24 @@ export const commands: Commands = {
             navigate("welcome");
           }
 
-          return <span>variant deleted</span>;
+          return <span className={styles.error}>variant deleted</span>;
         } catch (e) {
-          return <span>failed to delete variant: {(e as Error).message}</span>;
+          return (
+            <span className={styles.error}>
+              failed to delete variant: {(e as Error).message}
+            </span>
+          );
         }
       } catch (e) {
         if ((e as Error).message === "exited") {
-          return "no variant selected";
+          return <span className={styles.error}>no variant selected</span>;
         }
 
-        return `failed to list variants: ${(e as Error).message}`;
+        return (
+          <span className={styles.error}>
+            failed to list variants: {(e as Error).message}
+          </span>
+        );
       }
     },
   },
@@ -392,7 +429,9 @@ export const commands: Commands = {
         openTab(variant);
         navigate("editor");
 
-        return <span>created and opened variant</span>;
+        return (
+          <span>created and opened variant. all changes will auto-save</span>
+        );
       } catch (e) {
         if (
           e instanceof ZodError &&

@@ -136,6 +136,10 @@
   min-width: 24rem;
 }
 
+.welcomeMessage .helpText {
+  padding-left: 0;
+}
 .helpText {
+  padding-left: 0.5rem;
   color: var(--gray-10);
 }
