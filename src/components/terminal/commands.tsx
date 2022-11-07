@@ -20,9 +20,10 @@ import { format } from "date-fns";
 
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
-  title?: string;
+  args?: string;
   alias?: string[];
   desc?: string | JSX.Element;
+  hidden?: boolean;
   exec: (args: string) => CommandReturn;
 }
 
@@ -65,7 +66,7 @@ const NO_VARIANTS_MESSAGE = (
 
 export const commands: Commands = {
   use: {
-    title: "use <handle>",
+    args: "[handle]",
     desc: "register a free account with a particular user ID",
     async exec(args) {
       try {
@@ -145,7 +146,7 @@ export const commands: Commands = {
     },
   },
   "create-test": {
-    title: "create-test <question>",
+    args: "[question]",
     alias: ["ct"],
     desc: "creates a test with a given question",
     async exec(args) {
@@ -300,75 +301,10 @@ export const commands: Commands = {
       }
     },
   },
-  "delete-variant": {
-    alias: ["dv"],
-    desc: "deletes a variant from current test",
-    async exec() {
-      try {
-        const { navigate } = navigatorState();
-        const { closeTab } = editorState();
-        const { currentTest } = terminalState();
-        const { host, credentials } = authState();
 
-        if (!isConnected()) {
-          return AUTH_REQUIRED_MESSAGE;
-        }
-
-        if (!currentTest) {
-          return TEST_REQUIRED_MESSAGE;
-        }
-
-        const variants = await getTest(currentTest.id, {
-          host,
-          credentials,
-        });
-
-        if (variants.length === 0) {
-          return NO_VARIANTS_MESSAGE;
-        }
-
-        const variant = await teminalList({
-          items: variants,
-          keyProp: (variant) => variant,
-          filterOn: (variant) => variant,
-          renderItem: (variant) => (
-            <>
-              <span>{variant}</span>
-            </>
-          ),
-        });
-
-        try {
-          await deleteVariant(variant, { host, credentials });
-
-          if (!closeTab(variant)) {
-            navigate("welcome");
-          }
-
-          return <span className={styles.error}>variant deleted</span>;
-        } catch (e) {
-          return (
-            <span className={styles.error}>
-              failed to delete variant: {(e as Error).message}
-            </span>
-          );
-        }
-      } catch (e) {
-        if ((e as Error).message === "exited") {
-          return <span className={styles.error}>no variant selected</span>;
-        }
-
-        return (
-          <span className={styles.error}>
-            failed to list variants: {(e as Error).message}
-          </span>
-        );
-      }
-    },
-  },
   "create-variant": {
-    title: "create-variant <platform> <arch> <language>",
     alias: ["cv"],
+    args: "[platform] [arch] [language]",
     desc: "creates a new variant in the current test",
     async exec(args) {
       try {
@@ -451,25 +387,96 @@ export const commands: Commands = {
       }
     },
   },
+  "delete-variant": {
+    alias: ["dv"],
+    desc: "deletes a variant from current test",
+    async exec() {
+      try {
+        const { navigate } = navigatorState();
+        const { closeTab } = editorState();
+        const { currentTest } = terminalState();
+        const { host, credentials } = authState();
+
+        if (!isConnected()) {
+          return AUTH_REQUIRED_MESSAGE;
+        }
+
+        if (!currentTest) {
+          return TEST_REQUIRED_MESSAGE;
+        }
+
+        const variants = await getTest(currentTest.id, {
+          host,
+          credentials,
+        });
+
+        if (variants.length === 0) {
+          return NO_VARIANTS_MESSAGE;
+        }
+
+        const variant = await teminalList({
+          items: variants,
+          keyProp: (variant) => variant,
+          filterOn: (variant) => variant,
+          renderItem: (variant) => (
+            <>
+              <span>{variant}</span>
+            </>
+          ),
+        });
+
+        try {
+          await deleteVariant(variant, { host, credentials });
+
+          if (!closeTab(variant)) {
+            navigate("welcome");
+          }
+
+          return <span className={styles.error}>variant deleted</span>;
+        } catch (e) {
+          return (
+            <span className={styles.error}>
+              failed to delete variant: {(e as Error).message}
+            </span>
+          );
+        }
+      } catch (e) {
+        if ((e as Error).message === "exited") {
+          return <span className={styles.error}>no variant selected</span>;
+        }
+
+        return (
+          <span className={styles.error}>
+            failed to list variants: {(e as Error).message}
+          </span>
+        );
+      }
+    },
+  },
   help: {
+    hidden: true,
     exec() {
-      const commandsList = Object.keys(commands).map((command) => ({
-        name: commands[command].title ?? command,
-        desc: commands[command].desc ?? "",
-        alias: commands[command].alias ?? [],
-      }));
+      const commandsList = Object.keys(commands)
+        .filter((command) => !commands[command].hidden)
+        .map((command) => ({
+          name: command,
+          args: commands[command].args ?? "",
+          desc: commands[command].desc ?? "",
+          alias: commands[command].alias
+            ? ", " + commands[command].alias?.join(", ")
+            : "",
+        }));
       return (
         <div className={styles.help}>
           <strong>Commands</strong>
           <ul>
             {commandsList.map((command) => (
               <li key={command.name}>
-                <span>{command.name}</span> <p>{command.desc} </p>
-                {command.alias.length !== 0 ? (
-                  <strong>[aliases: {command.alias.join(", ")}]</strong>
-                ) : (
-                  ""
-                )}
+                <span>
+                  {command.name}
+                  {command.alias} {command.args}
+                </span>{" "}
+                <p>{command.desc} </p>
               </li>
             ))}
           </ul>
