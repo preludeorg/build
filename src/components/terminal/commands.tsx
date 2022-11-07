@@ -31,9 +31,6 @@ export type Commands = Record<string, Command>;
 const isConnected = () => !!authState().credentials;
 const VARIANT_FORMAT =
   /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}(_\w*)?(-\w*)?\.(\w*)/i;
-const AUTH_REQUIRED_MESSAGE =
-  "account is required to run this command. Type use <handle>";
-
 const AUTH_REQUIRED_MESSAGE = (
   <>
     <span>account is required to run this command.</span>
@@ -271,7 +268,7 @@ export const commands: Commands = {
           if (!results) {
             return "";
           }
-          let [all, platform, arch, language] = results;
+          let [, platform, arch, language] = results;
           let shorten = "";
           shorten += platform ? platform.replaceAll("_", "") : "*";
           shorten += arch ? arch : "-*";
