@@ -71,6 +71,9 @@
 .content {
   padding: 0 0.5rem;
   flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .item.selected .content {

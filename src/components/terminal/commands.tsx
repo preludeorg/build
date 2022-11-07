@@ -117,7 +117,7 @@ export const commands: Commands = {
           filterOn: (test) => test.question,
           renderItem: (test) => (
             <>
-              <span>{test.question}</span> - <span>{test.id}</span>
+              <span>{test.question}</span> <span>[{test.id}]</span>
             </>
           ),
         });
