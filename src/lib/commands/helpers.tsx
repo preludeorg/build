@@ -1,5 +1,5 @@
 import { authState } from "../../hooks/auth-store";
-import styles from "../../components/terminal/command.module.css";
+import styles from "../../components/terminal/commands.module.css";
 
 export const isConnected = () => !!authState().credentials;
 
