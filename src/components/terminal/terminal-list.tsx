@@ -4,6 +4,7 @@ import { z } from "zod";
 import ArrowRight from "../icons/arrow-right";
 import cx from "classnames";
 import { terminalState } from "../../hooks/terminal-store";
+import focusTerminal from "../../utils/focus-terminal";
 
 export interface TerminalListProps<T> {
   title?: string | JSX.Element;
@@ -73,8 +74,7 @@ const TerminalList = <T extends {}>({
       e.preventDefault();
       setExited(true);
       onExit();
-      document.getElementById("terminal")?.focus();
-
+      focusTerminal();
       return false;
     }
 
@@ -83,7 +83,8 @@ const TerminalList = <T extends {}>({
       const itemIndex = index - 1 + offset;
       setExited(true);
       onSelect(filteredItems[itemIndex]);
-      document.getElementById("terminal")?.focus();
+
+      focusTerminal();
     }
 
     if (e.key === "ArrowRight") {
@@ -159,7 +160,7 @@ const TerminalList = <T extends {}>({
       return false;
     }
 
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && filteredItems.length !== 0) {
       e.preventDefault();
       setValue(1);
       setMode("list");
@@ -174,32 +175,25 @@ const TerminalList = <T extends {}>({
   }
 
   return (
-    <div
-      className={styles.manifest}
-      onClick={() => {
-        if (mode === "filter") {
-          filterRef.current?.focus();
-        } else {
-          pickerRef.current?.focus();
-        }
-      }}
-    >
+    <div className={styles.terminalList}>
       <div>
         {title ? title : null}
-        <ol>
+        <div className={styles.itemList}>
           {pageItems.map((item, idx) => {
+            const selected = idx + 1 === index && mode === "list";
             return (
-              <li
+              <div
                 key={keyProp(item)}
-                className={cx({
-                  [styles.selected]: idx + 1 === index && mode === "list",
+                className={cx(styles.item, {
+                  [styles.selected]: selected,
                 })}
               >
-                {renderItem(item)}
-              </li>
+                <div className={styles.cursor}>{selected ? ">" : ""}</div>
+                <div className={styles.content}>{renderItem(item)}</div>
+              </div>
             );
           })}
-        </ol>
+        </div>
       </div>
 
       {mode === "filter" && (
@@ -228,18 +222,6 @@ const TerminalList = <T extends {}>({
       {mode === "list" && (
         <div className={styles.listBar}>
           <span className={styles.extra}>
-            <strong>Current: </strong>
-            <input
-              ref={pickerRef}
-              type="number"
-              min="1"
-              maxLength={2}
-              value={index ?? ""}
-              onKeyDown={handleKey}
-              onChange={handleChange}
-            />
-          </span>
-          <span className={styles.extra}>
             <strong>Page:</strong>
             {page}/{totalPages}
           </span>
@@ -264,6 +246,15 @@ const TerminalList = <T extends {}>({
             <ArrowRight className={styles.rotate180} />
             <ArrowRight />
           </span>
+          <input
+            ref={pickerRef}
+            type="number"
+            min="1"
+            maxLength={2}
+            value={index ?? ""}
+            onKeyDown={handleKey}
+            onChange={handleChange}
+          />
         </div>
       )}
     </div>

@@ -28,8 +28,6 @@ const WelcomeMessage: React.FC<{ host: string; credentials?: Credentials }> = ({
       <span className={styles.helpText}>
         type "use {`<handle>`}" to get started
       </span>
-      <br />
-      <br />
     </div>
   );
 };

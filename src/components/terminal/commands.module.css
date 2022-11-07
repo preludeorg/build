@@ -41,60 +41,71 @@
   color: var(--color-error);
 }
 
-.manifest {
+.terminalList {
   min-height: 145px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.manifest ol {
+.itemList {
   list-style: none;
-  counter-reset: li;
   margin: 0;
-  padding-left: 1rem;
   min-height: 110px;
+  width: max-content;
 }
 
-.manifest ol li::before {
-  content: " " counter(li);
-  color: var(--color-primary-10);
-  display: inline-flex;
-  letter-spacing: 5px;
-  justify-content: right;
-  width: 2rem;
-  margin-left: -1.5em;
+.item {
+  display: flex;
 }
 
-.manifest ol li.selected::before {
-  content: ">" counter(li);
-  font-weight: bold;
-  color: var(--white);
+.item {
+  display: flex;
 }
 
-.manifest ol li {
-  counter-increment: li;
+.item .cursor {
+  width: 1rem;
+  flex-shrink: 0;
 }
 
-.manifest ol li span:nth-child(2) {
+.content {
+  padding: 0 0.5rem;
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.item.selected .content {
+  background-color: var(--white);
+  color: var(--black);
+  opacity: 0.5;
+}
+
+.terminalList:focus-within .item.selected .content {
+  opacity: 1;
+}
+
+.item span:nth-child(2) {
   color: var(--gray-10);
 }
 
-.manifest input {
+.terminalList input {
   background: none;
   border: none;
   color: var(--black);
   width: 1rem;
   -moz-appearance: textfield;
+  width: 0;
 }
 
-.manifest input:focus {
+.terminalList input:focus {
   background: none;
   outline: none;
 }
 
-.manifest input::-webkit-outer-spin-button,
-.manifest input::-webkit-inner-spin-button {
+.terminalList input::-webkit-outer-spin-button,
+.terminalList input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
