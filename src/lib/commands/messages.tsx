@@ -16,7 +16,7 @@ export const TEST_REQUIRED_MESSAGE = (
 
 export const NO_TESTS_MESSAGE = (
   <TerminalMessage
-    message="no tests found"
+    message="no tests found."
     helpText={`type "create-test" to create a test`}
   />
 );
