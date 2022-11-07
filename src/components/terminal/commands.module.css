@@ -5,22 +5,18 @@
   list-style-type: none;
   padding-left: 1rem;
   margin-top: 0.25rem;
+  margin-bottom: 0;
 }
 
 .help ul li {
-  display: flex;
-  gap: 1rem;
 }
 
 .help ul li span {
-  width: 24rem;
-  flex-shrink: 0;
 }
 
 .help ul li p {
-  flex: 1;
   margin: 0;
-  padding: 0;
+  padding-left: 1.5rem;
   color: var(--gray-10);
   white-space: nowrap;
   overflow: hidden;

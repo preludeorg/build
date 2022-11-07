@@ -1,6 +1,6 @@
 import { Test } from "@theprelude/sdk";
 import create from "zustand";
-import { commands } from "../components/terminal/commands";
+import { commands } from "../lib/commands";
 import PrimaryPrompt from "../components/terminal/primary-prompt";
 import styles from "../components/terminal/terminal.module.css";
 
