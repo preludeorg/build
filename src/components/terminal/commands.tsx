@@ -17,6 +17,7 @@ import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { Variant } from "../../lib/variant";
 import { format } from "date-fns";
+import WelcomeMessage from "./welcome-message";
 
 type CommandReturn = string | JSX.Element | Promise<string | JSX.Element>;
 interface Command {
@@ -77,18 +78,9 @@ export const commands: Commands = {
           })
           .min(1, { message: "handle is required" })
           .parse(args);
-        await createAccount(handle);
+        const credentials = await createAccount(handle);
 
-        return (
-          <div>
-            Connected to {host}
-            <br />
-            <br />
-            <span className={styles.helpText}>
-              type "list-tests" to show all your Tests
-            </span>
-          </div>
-        );
+        return <WelcomeMessage host={host} credentials={credentials} />;
       } catch (e) {
         if (e instanceof ZodError) {
           return e.errors[0].message;

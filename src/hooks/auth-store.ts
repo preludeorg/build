@@ -6,7 +6,7 @@ interface AuthStore {
   host: string;
   serverType: "prelude" | "custom";
   credentials?: Credentials;
-  createAccount: (handle: string) => Promise<void>;
+  createAccount: (handle: string) => Promise<Credentials>;
   login: (
     host: string,
     account: string,
@@ -28,6 +28,8 @@ const useAuthStore = create<AuthStore>()(
         const credentials = await service.iam.newAccount(handle);
 
         set(() => ({ credentials }));
+
+        return credentials;
       },
       async login(host, account, token, serverType) {
         const credentials = { account, token };
