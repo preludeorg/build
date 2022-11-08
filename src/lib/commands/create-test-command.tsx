@@ -6,6 +6,30 @@ import { ErrorMessage, isConnected } from "./helpers";
 import { Command } from "./types";
 import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
+import { inquire } from "../../components/terminal/question";
+
+const validator = z
+  .string({
+    required_error: "question is required",
+    invalid_type_error: "question must be a string",
+  })
+  .min(1, { message: "question is required" });
+
+const getAnswer = async (args = "") => {
+  if (args === "") {
+    return await inquire({
+      question: {
+        message: "enter a question",
+        validator,
+      },
+    });
+  }
+  return z
+    .object({
+      question: validator,
+    })
+    .parse({ question: args });
+};
 
 export const createTestCommand: Command = {
   args: "[question]",
@@ -21,14 +45,7 @@ export const createTestCommand: Command = {
       }
 
       const testId = uuid.v4();
-      const question = z
-        .string({
-          required_error: "question is required",
-          invalid_type_error: "question must be a string",
-        })
-        .min(1, { message: "question is required" })
-        .parse(args);
-
+      const { question } = await getAnswer(args);
       const service = new Prelude.Service({ host, credentials });
       await service.build.createTest(testId, question);
 

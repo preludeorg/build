@@ -10,6 +10,45 @@ import { Variant } from "../variant";
 import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
 import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
 import { Command } from "./types";
+import { inquire } from "../../components/terminal/question";
+
+const platformValidator = z.enum(["*", "darwin", "linux"]);
+const archValidator = z.enum(["*", "arm64", "x86_64"]);
+const languageValidator = z.enum(["c", "cs", "swift"]);
+
+const getAnswers = async (args: string) => {
+  if (args === "") {
+    return await inquire({
+      platform: {
+        message: "select a platform",
+        validator: platformValidator,
+        defaultValue: "*",
+      },
+      arch: {
+        message: "select an architecture",
+        validator: archValidator,
+        defaultValue: "*",
+      },
+      language: {
+        message: "select a language",
+        validator: languageValidator,
+      },
+    });
+  }
+
+  const input = args.split(" ");
+  return z
+    .object({
+      platform: platformValidator,
+      arch: archValidator,
+      language: languageValidator,
+    })
+    .parse({
+      platform: input[0] ?? "",
+      arch: input[1] ?? "",
+      language: input[2] ?? "",
+    });
+};
 
 export const createVariantCommand: Command = {
   alias: ["cv"],
@@ -31,19 +70,9 @@ export const createVariantCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
-      const input = args.split(" ");
+      const results = await getAnswers(args);
 
-      const { platform, arch, language } = z
-        .object({
-          platform: z.enum(["*", "darwin", "linux"]),
-          arch: z.enum(["*", "arm64", "x86_64"]),
-          language: z.enum(["c", "cs", "swift"]),
-        })
-        .parse({
-          platform: input[0] ?? "",
-          arch: input[1] ?? "",
-          language: input[2] ?? "",
-        });
+      const { platform, arch, language } = results;
 
       let file = `${currentTest.id}`;
       if (platform !== "*") {
@@ -87,13 +116,17 @@ export const createVariantCommand: Command = {
             }" expected: ${error.options.join(" | ")}`}
           />
         );
-      } else {
-        return (
-          <ErrorMessage
-            message={`failed to create variant: ${(e as Error).message}`}
-          />
-        );
       }
+
+      if ((e as Error).message === "exited") {
+        return <TerminalMessage message={"no variant created"} />;
+      }
+
+      return (
+        <ErrorMessage
+          message={`failed to create variant: ${(e as Error).message}`}
+        />
+      );
     }
   },
 };
