@@ -8,7 +8,6 @@ import { inquire } from "../../components/terminal/question";
 const validator = z
   .string({
     required_error: "handle is required",
-    invalid_type_error: "handle must be a string",
   })
   .min(1, { message: "handle is required" });
 

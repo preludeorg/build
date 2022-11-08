@@ -11,7 +11,6 @@ import { inquire } from "../../components/terminal/question";
 const validator = z
   .string({
     required_error: "question is required",
-    invalid_type_error: "question must be a string",
   })
   .min(1, { message: "question is required" });
 

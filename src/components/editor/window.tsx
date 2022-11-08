@@ -9,7 +9,7 @@ import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
 import cx from "classnames";
 import React from "react";
-import { getLanguageMode, getLinters } from "../../lib/lang";
+import { getLanguage } from "../../lib/lang";
 import { lint, validate } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
 import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
@@ -39,8 +39,8 @@ const EditorWindow: React.FC = () => {
   );
   const updateBuffer = useEditorStore((state) => state.updateCurrentBuffer);
 
-  const extensions = React.useMemo(() => getLanguageMode(ext).mode(), [ext]);
-  const linters = React.useMemo(() => getLinters(ext), [ext]);
+  const extensions = React.useMemo(() => getLanguage(ext).mode, [ext]);
+  const linters = React.useMemo(() => getLanguage(ext).linters, [ext]);
 
   return (
     <div className={styles.window}>
@@ -114,7 +114,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
 const Linters: React.FC = () => {
   const messages = useEditorStore((state) => {
     const tab = state.tabs[state.currentTabId];
-    return lint(tab.buffer, getLinters(tab.extension));
+    return lint(tab.buffer, getLanguage(tab.extension).linters);
   }, shallow);
 
   if (messages.length === 0) return null;

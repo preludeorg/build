@@ -1,13 +1,27 @@
 import { useEffect, useRef, useState } from "react";
-import { z, ZodInvalidEnumValueIssue, ZodTypeAny } from "zod";
+import {
+  ParseParams,
+  SafeParseReturnType,
+  z,
+  ZodInvalidEnumValueIssue,
+  ZodTypeAny,
+} from "zod";
 import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
 import styles from "./commands.module.css";
 
+interface Validator {
+  options?: string[];
+  safeParse(
+    data: unknown,
+    params?: Partial<ParseParams>
+  ): SafeParseReturnType<any, any>;
+}
+
 interface QuestionProps {
   message: string;
   defaultValue?: string;
-  validator?: ZodTypeAny;
+  validator?: Validator;
   onAnswer: (answer: string) => void;
   onInvalidAnswer: (invalid: string) => void;
   onExit: () => void;
@@ -19,7 +33,7 @@ export const Question: React.FC<QuestionProps> = ({
   onExit,
   onAnswer,
   onInvalidAnswer,
-  validator = z.string(),
+  validator = z.string() as Validator,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [answer, setAnswer] = useState<string | null>(null);
@@ -87,10 +101,8 @@ export const Question: React.FC<QuestionProps> = ({
     return true;
   };
 
-  const choices =
-    (validator as unknown as { options?: string[] }).options ?? [];
-  const choice = (validator as unknown as { options?: string[] }).options
-    ? ` (${choices.join(", ")})`
+  const choice = Array.isArray(validator.options)
+    ? ` (${validator.options.join(", ")})`
     : "";
   const def = defaultValue ? ` [${defaultValue}]` : "";
 
