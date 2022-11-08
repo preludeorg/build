@@ -25,7 +25,7 @@ const getAnswers = async (args: string) => {
         defaultValue: "*",
       },
       arch: {
-        message: "select a architecture",
+        message: "select an architecture",
         validator: archValidator,
         defaultValue: "*",
       },
