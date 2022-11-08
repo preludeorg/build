@@ -5,7 +5,7 @@ import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { getLanguageMode } from "../lang";
+import { getLanguage } from "../lang";
 import { Variant } from "../variant";
 import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
 import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
@@ -84,9 +84,8 @@ export const createVariantCommand: Command = {
       }
 
       file += `.${language}`;
-      const code = getLanguageMode(language)
-        .bootstrap()
-        .replaceAll("$NAME", file)
+      const code = getLanguage(language)
+        .bootstrap.replaceAll("$NAME", file)
         .replaceAll("$QUESTION", currentTest.question)
         .replaceAll(
           "$CREATED",
