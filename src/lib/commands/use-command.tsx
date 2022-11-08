@@ -44,7 +44,7 @@ export const useCommand: Command = {
       } else {
         return (
           <ErrorMessage
-            message={`failed to register account: (e as Error).message}`}
+            message={`failed to register account: ${(e as Error).message}`}
           />
         );
       }
