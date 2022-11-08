@@ -3,7 +3,7 @@ import { TerminalMessage } from "./helpers";
 export const AUTH_REQUIRED_MESSAGE = (
   <TerminalMessage
     message="account is required to run this command."
-    helpText={`type use "<handle>"`}
+    helpText={`type "use"`}
   />
 );
 

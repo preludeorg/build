@@ -3,6 +3,30 @@ import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
 import { ErrorMessage } from "./helpers";
 import WelcomeMessage from "../../components/terminal/welcome-message";
+import { inquire } from "../../components/terminal/question";
+
+const validator = z
+  .string({
+    required_error: "handle is required",
+    invalid_type_error: "handle must be a string",
+  })
+  .min(1, { message: "handle is required" });
+
+const getAnswer = async (args = "") => {
+  if (args === "") {
+    return await inquire({
+      handle: {
+        message: "enter a handle",
+        validator,
+      },
+    });
+  }
+  return z
+    .object({
+      handle: validator,
+    })
+    .parse({ handle: args });
+};
 
 export const useCommand: Command = {
   args: "[handle]",
@@ -10,13 +34,8 @@ export const useCommand: Command = {
   async exec(args) {
     try {
       const { createAccount, host } = authState();
-      const handle = z
-        .string({
-          required_error: "handle is required",
-          invalid_type_error: "handle must be a string",
-        })
-        .min(1, { message: "handle is required" })
-        .parse(args);
+      const { handle } = await getAnswer(args);
+
       const credentials = await createAccount(handle);
 
       return <WelcomeMessage host={host} credentials={credentials} />;

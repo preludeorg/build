@@ -25,9 +25,7 @@ const WelcomeMessage: React.FC<{ host: string; credentials?: Credentials }> = ({
       Welcome to Prelude Build
       <br />
       <br />
-      <span className={styles.helpText}>
-        type "use {`<handle>`}" to get started
-      </span>
+      <span className={styles.helpText}>type "use" to get started</span>
     </div>
   );
 };

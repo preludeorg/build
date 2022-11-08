@@ -83,8 +83,8 @@ const TerminalList = <T extends {}>({
       const itemIndex = index - 1 + offset;
       setExited(true);
       onSelect(filteredItems[itemIndex]);
-
       focusTerminal();
+      return false;
     }
 
     if (e.key === "ArrowRight") {
