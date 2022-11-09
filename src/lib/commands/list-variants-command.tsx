@@ -15,6 +15,7 @@ import focusTerminal from "../../utils/focus-terminal";
 
 const VARIANT_FORMAT =
   /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}(_\w*)?(-\w*)?\.(\w*)/i;
+const OPEN_ALL = "open all";
 
 export const listVariantsCommand: Command = {
   alias: ["lv"],
@@ -46,7 +47,7 @@ export const listVariantsCommand: Command = {
       const shortenVariant = (v: string) => {
         const results = v.match(VARIANT_FORMAT);
         if (!results) {
-          return "";
+          return v;
         }
         let [, platform, arch, language] = results;
         let shorten = "";
@@ -57,7 +58,7 @@ export const listVariantsCommand: Command = {
       };
 
       const variant = await teminalList({
-        items: variants,
+        items: variants.length > 1 ? [OPEN_ALL, ...variants] : variants,
         keyProp: shortenVariant,
         filterOn: shortenVariant,
         renderItem: (variant) => (
@@ -67,18 +68,29 @@ export const listVariantsCommand: Command = {
         ),
       });
 
+      const filesToOpen = variant === OPEN_ALL ? variants : [variant];
       try {
-        const code = await getVariant(variant, { host, credentials });
-        openTab({
-          name: variant,
-          code,
-        });
+        const variants = await Promise.all(
+          filesToOpen.map(async (v) => {
+            const code = await getVariant(v, { host, credentials });
+            return {
+              name: v,
+              code,
+            };
+          })
+        );
+        variants.forEach(openTab);
+
         navigate("editor");
-
         focusTerminal();
-
         return (
-          <TerminalMessage message="opened variant. all changes will auto-save" />
+          <TerminalMessage
+            message={
+              variant === OPEN_ALL
+                ? "opened all variants. all changes will auto-save"
+                : "opened variant. all changes will auto-save"
+            }
+          />
         );
       } catch (e) {
         return (
