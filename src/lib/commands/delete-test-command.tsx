@@ -1,7 +1,12 @@
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
-import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
+import {
+  ErrorMessage,
+  isConnected,
+  isExitError,
+  TerminalMessage,
+} from "./helpers";
 import { Command } from "./types";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
@@ -45,6 +50,10 @@ export const deleteTestCommand: Command = {
 
       return <TerminalMessage message="test deleted" />;
     } catch (e) {
+      if (isExitError(e)) {
+        return <TerminalMessage message="exited" />;
+      }
+
       return (
         <ErrorMessage
           message={`failed to delete test: ${(e as Error).message}`}
