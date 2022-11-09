@@ -3,6 +3,7 @@ import create from "zustand";
 import { commands } from "../lib/commands";
 import PrimaryPrompt from "../components/terminal/primary-prompt";
 import styles from "../components/terminal/terminal.module.css";
+import { commonBeginning } from "../lib/utils/common-beginning";
 
 function splitStringAtIndex(value: string, index: number) {
   if (!value) {
@@ -68,6 +69,8 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
         return {
           bufferedContent: [...state.bufferedContent, waiting],
+          input: commonBeginning(options),
+          caretPosition: commonBeginning(options).length + 1,
         };
       });
     }
