@@ -5,6 +5,7 @@ import ArrowRight from "../icons/arrow-right";
 import cx from "classnames";
 import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
+import { isControlC } from "../../lib/keys";
 
 export interface TerminalListProps<T> {
   title?: string | JSX.Element;
@@ -70,7 +71,7 @@ const TerminalList = <T extends {}>({
       return false;
     }
 
-    if (e.key === "e" || e.key === "Escape") {
+    if (e.key === "e" || e.key === "Escape" || isControlC(e)) {
       e.preventDefault();
       setExited(true);
       onExit();
@@ -151,7 +152,7 @@ const TerminalList = <T extends {}>({
   };
 
   const handleFilterKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" || isControlC(e)) {
       e.preventDefault();
       setFilter("");
       setValue(1);
@@ -265,7 +266,7 @@ export default TerminalList;
 
 type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
 
-export async function teminalList<T extends {}>({
+export async function terminalList<T extends {}>({
   title,
   items,
   keyProp,
@@ -274,6 +275,7 @@ export async function teminalList<T extends {}>({
 }: ListerProps<T>): Promise<T> {
   return new Promise((resolve, reject) => {
     const { write } = terminalState();
+
     write(
       <TerminalList
         title={title}

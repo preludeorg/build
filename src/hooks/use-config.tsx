@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { ErrorMessage, TerminalMessage } from "../lib/commands/helpers";
+import {
+  ErrorMessage,
+  isExitError,
+  TerminalMessage,
+} from "../lib/commands/helpers";
 import focusTerminal from "../utils/focus-terminal";
 import useAuthStore from "./auth-store";
 import useEditorStore from "./editor-store";
@@ -30,6 +34,7 @@ const configSchema = z.object({
 
 export const useConfig = () => {
   const login = useAuthStore((state) => state.login);
+  const takeControl = useTerminalStore((state) => state.takeControl);
   const write = useTerminalStore((state) => state.write);
   const resetTerminal = useTerminalStore((state) => state.reset);
   const resetEditor = useEditorStore((state) => state.reset);
@@ -50,10 +55,13 @@ export const useConfig = () => {
       }
 
       const authenticated = await login(
-        config.default.hq,
-        config.default.account,
-        config.default.token,
-        "prelude"
+        {
+          host: config.default.hq,
+          account: config.default.account,
+          token: config.default.token,
+          serverType: "prelude",
+        },
+        takeControl().signal
       );
 
       if (authenticated) {
@@ -70,15 +78,20 @@ export const useConfig = () => {
         focusTerminal();
       } else {
         write(
-          <ErrorMessage message="failed to import credentials: unable to connect to hq" />
+          <ErrorMessage message="failed to import credentials: unable to authenticate" />
         );
       }
     } catch (err) {
+      if (isExitError(err)) {
+        return write(<TerminalMessage message="exited" />);
+      }
+
       write(<ErrorMessage message="failed to import credentials" />);
     }
   };
 
   const handleExport = async () => {
+    focusTerminal();
     if (!credentials) {
       write(
         <ErrorMessage message="failed to export credentials: no credentials found" />
@@ -132,6 +145,7 @@ export const useConfig = () => {
   };
 
   const handleImport = async () => {
+    focusTerminal();
     if ("showOpenFilePicker" in window) {
       try {
         //@ts-ignore

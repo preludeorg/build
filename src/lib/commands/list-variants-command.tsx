@@ -5,12 +5,17 @@ import {
   NO_VARIANTS_MESSAGE,
   TEST_REQUIRED_MESSAGE,
 } from "./messages";
-import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
+import {
+  ErrorMessage,
+  isConnected,
+  isExitError,
+  TerminalMessage,
+} from "./helpers";
 import { Command } from "./types";
 import { navigatorState } from "../../hooks/navigation-store";
-import { teminalList } from "../../components/terminal/terminal-list";
+import { terminalList } from "../../components/terminal/terminal-list";
 import { editorState } from "../../hooks/editor-store";
-import { getTest, getVariant } from "../test";
+import { getTest, getVariant } from "../api";
 import focusTerminal from "../../utils/focus-terminal";
 
 const VARIANT_FORMAT =
@@ -24,8 +29,10 @@ export const listVariantsCommand: Command = {
     try {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
-      const { currentTest } = terminalState();
+      const { currentTest, takeControl } = terminalState();
       const { host, credentials } = authState();
+
+      const signal = takeControl().signal;
 
       if (!isConnected()) {
         return AUTH_REQUIRED_MESSAGE;
@@ -35,10 +42,14 @@ export const listVariantsCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
-      const variants = await getTest(currentTest.id, {
-        host,
-        credentials,
-      });
+      const variants = await getTest(
+        currentTest.id,
+        {
+          host,
+          credentials,
+        },
+        signal
+      );
 
       if (variants.length === 0) {
         return NO_VARIANTS_MESSAGE;
@@ -57,7 +68,7 @@ export const listVariantsCommand: Command = {
         return shorten;
       };
 
-      const variant = await teminalList({
+      const variant = await terminalList({
         items: variants.length > 1 ? [OPEN_ALL, ...variants] : variants,
         keyProp: shortenVariant,
         filterOn: shortenVariant,
@@ -72,7 +83,7 @@ export const listVariantsCommand: Command = {
       try {
         const variants = await Promise.all(
           filesToOpen.map(async (v) => {
-            const code = await getVariant(v, { host, credentials });
+            const code = await getVariant(v, { host, credentials }, signal);
             return {
               name: v,
               code,
@@ -100,8 +111,8 @@ export const listVariantsCommand: Command = {
         );
       }
     } catch (e) {
-      if ((e as Error).message === "exited") {
-        return <TerminalMessage message="no variant selected" />;
+      if (isExitError(e)) {
+        return <TerminalMessage message="exited" />;
       }
 
       return (
@@ -109,6 +120,7 @@ export const listVariantsCommand: Command = {
           message={`failed to list variants: ${(e as Error).message}`}
         />
       );
+    } finally {
     }
   },
 };

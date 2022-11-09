@@ -1,9 +1,10 @@
 import { Command } from "./types";
 import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
-import { ErrorMessage } from "./helpers";
+import { ErrorMessage, isExitError, TerminalMessage } from "./helpers";
 import WelcomeMessage from "../../components/terminal/welcome-message";
 import { inquire } from "../../components/terminal/question";
+import { terminalState } from "../../hooks/terminal-store";
 
 const validator = z
   .string({
@@ -33,12 +34,17 @@ export const useCommand: Command = {
   async exec(args) {
     try {
       const { createAccount, host } = authState();
+      const { takeControl } = terminalState();
       const { handle } = await getAnswer(args);
 
-      const credentials = await createAccount(handle);
+      const credentials = await createAccount(handle, takeControl().signal);
 
       return <WelcomeMessage host={host} credentials={credentials} />;
     } catch (e) {
+      if (isExitError(e)) {
+        return <TerminalMessage message="exited" />;
+      }
+
       if (e instanceof ZodError) {
         return <ErrorMessage message={e.errors[0].message} />;
       } else {

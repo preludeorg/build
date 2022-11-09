@@ -1,5 +1,5 @@
 import create from "zustand";
-import { Variant } from "../lib/variant";
+import { Variant } from "../lib/api";
 
 export interface Tab {
   variant: Variant;

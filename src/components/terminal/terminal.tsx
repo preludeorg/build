@@ -7,6 +7,7 @@ import PrimaryPrompt from "./primary-prompt";
 import useAuthStore from "../../hooks/auth-store";
 import WelcomeMessage from "./welcome-message";
 import focusTerminal from "../../utils/focus-terminal";
+import { isControlC } from "../../lib/keys";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -34,8 +35,14 @@ function useTerminal() {
   const host = useAuthStore((state) => state.host);
   const credentials = useAuthStore((state) => state.credentials);
   const autoComplete = useTerminalStore((state) => state.autoComplete);
+  const abort = useTerminalStore((state) => state.abort);
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
+    if (isControlC(event)) {
+      abort();
+      return;
+    }
+
     if (!inputEnabled) {
       return;
     }

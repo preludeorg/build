@@ -22,3 +22,10 @@ export const TerminalMessage: React.FC<{
     </div>
   );
 };
+
+export const isExitError = (e: unknown) => {
+  if (!(e instanceof Error)) {
+    return false;
+  }
+  return e.message === "exited" || e.message === "The user aborted a request.";
+};

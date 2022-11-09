@@ -1,17 +1,21 @@
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import { Service, Credentials } from "@theprelude/sdk";
+import { isExitError } from "../lib/commands/helpers";
 
 interface AuthStore {
   host: string;
   serverType: "prelude" | "custom";
   credentials?: Credentials;
-  createAccount: (handle: string) => Promise<Credentials>;
+  createAccount: (handle: string, signal: AbortSignal) => Promise<Credentials>;
   login: (
-    host: string,
-    account: string,
-    token: string,
-    serverType: "prelude" | "custom"
+    record: {
+      host: string;
+      account: string;
+      token: string;
+      serverType: "prelude" | "custom";
+    },
+    signal: AbortSignal
   ) => Promise<boolean>;
   disconnect: () => void;
 }
@@ -21,27 +25,34 @@ const useAuthStore = create<AuthStore>()(
     (set, get) => ({
       host: "https://detect.dev.prelude.org",
       serverType: "prelude",
-      async createAccount(handle) {
+      async createAccount(handle, signal: AbortSignal) {
         const { host } = get();
 
         const service = new Service({ host });
-        const credentials = await service.iam.newAccount(handle);
+        const credentials = await service.iam.newAccount(handle, {
+          signal: signal,
+        });
 
         set(() => ({ credentials }));
 
         return credentials;
       },
-      async login(host, account, token, serverType) {
+
+      async login({ host, account, token, serverType }, signal) {
         const credentials = { account, token };
         const service = new Service({ host, credentials });
         try {
-          await service.build.listTests();
+          await service.build.listTests({ signal });
           set(() => ({ host, credentials, serverType }));
           return true;
         } catch (err) {
+          if (isExitError(err)) {
+            throw err;
+          }
           return false;
         }
       },
+
       disconnect() {
         const host = "";
         const credentials = { account: "", token: "" };
