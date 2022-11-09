@@ -29,6 +29,7 @@ interface TerminalStore {
   write: (content: string | JSX.Element) => void;
   switchTest: (test?: Test) => void;
   autoComplete: () => void;
+  abort: () => void;
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
@@ -74,6 +75,25 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
         };
       });
     }
+  },
+
+  abort: () => {
+    const { input } = get();
+    set((state) => {
+      const waiting = (
+        <>
+          <PrimaryPrompt test={state.currentTest}>
+            <span className={styles.preWhiteSpace}>{input}</span>
+          </PrimaryPrompt>
+        </>
+      );
+
+      return {
+        bufferedContent: [...state.bufferedContent, waiting],
+        input: "",
+        caretPosition: 0,
+      };
+    });
   },
   clear() {
     set(() => ({
