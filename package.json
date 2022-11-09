@@ -10,18 +10,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prod": "vite --mode=production --port 5000 --host 127.0.0.1 dist",
     "build": "tsc && vite build",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "^6.3.0",
-    "@codemirror/commands": "^6.1.1",
     "@codemirror/lang-cpp": "^6.0.1",
-    "@codemirror/language": "^6.2.1",
-    "@codemirror/legacy-modes": "^6.1.0",
-    "@codemirror/state": "^6.1.2",
-    "@codemirror/theme-one-dark": "^6.0.0",
-    "@codemirror/view": "^6.3.1",
+    "@codemirror/legacy-modes": "^6.0.1",
+    "@codemirror/theme-one-dark": "^6.0.1",
     "@headlessui/react": "^1.7.4",
     "@theprelude/sdk": "^0.9.9",
     "classnames": "^2.3.2",
