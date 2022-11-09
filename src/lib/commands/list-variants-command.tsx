@@ -11,6 +11,7 @@ import { navigatorState } from "../../hooks/navigation-store";
 import { teminalList } from "../../components/terminal/terminal-list";
 import { editorState } from "../../hooks/editor-store";
 import { getTest, getVariant } from "../test";
+import focusTerminal from "../../utils/focus-terminal";
 
 const VARIANT_FORMAT =
   /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}(_\w*)?(-\w*)?\.(\w*)/i;
@@ -73,6 +74,9 @@ export const listVariantsCommand: Command = {
           code,
         });
         navigate("editor");
+
+        focusTerminal();
+
         return (
           <TerminalMessage message="opened variant. all changes will auto-save" />
         );

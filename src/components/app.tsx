@@ -5,6 +5,7 @@ import EditorPanel from "./editor/editor-panel";
 import useNavigationStore from "../hooks/navigation-store";
 import Servers from "./servers/servers";
 import shallow from "zustand/shallow";
+import StatusBar from "./status-bar/status-bar";
 
 function App() {
   const { panel, serverPanelVisible, toggleServerPanel } = useNavigationStore(
@@ -20,6 +21,7 @@ function App() {
         </section>
         <footer>
           <Terminal />
+          <StatusBar />
         </footer>
       </main>
       {serverPanelVisible && <Servers toggleServerPanel={toggleServerPanel} />}

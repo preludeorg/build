@@ -11,6 +11,7 @@ import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
 import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
 import { Command } from "./types";
 import { inquire } from "../../components/terminal/question";
+import focusTerminal from "../../utils/focus-terminal";
 
 const platformValidator = z.enum(["*", "darwin", "linux"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
@@ -101,6 +102,8 @@ export const createVariantCommand: Command = {
       await service.build.createVariant(variant.name, variant.code);
       openTab(variant);
       navigate("editor");
+
+      focusTerminal();
 
       return (
         <TerminalMessage message="created and opened variant. all changes will auto-save" />

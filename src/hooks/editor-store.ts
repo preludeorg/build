@@ -20,6 +20,7 @@ interface EditorStore {
   currentTabId: string;
   previousTabId: string;
   buffer: string;
+  reset: () => void;
   openTab: (variant: Variant) => void;
   switchTab: (tabId: string) => void;
   closeTab: (tabId: string) => boolean;
@@ -42,6 +43,14 @@ const useEditorStore = create<EditorStore>((set, get) => ({
         buffer: tab.buffer,
       };
     });
+  },
+  reset() {
+    set(() => ({
+      tabs: {},
+      currentTabId: "",
+      previousTabId: "",
+      buffer: "",
+    }));
   },
   switchTab(tabId) {
     set((state) => ({
