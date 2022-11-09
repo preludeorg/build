@@ -1,4 +1,3 @@
-import { Service } from "@theprelude/sdk";
 import { format } from "date-fns";
 import { z, ZodError, ZodInvalidEnumValueIssue } from "zod";
 import { authState } from "../../hooks/auth-store";
@@ -6,12 +5,18 @@ import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { getLanguage } from "../lang";
-import { Variant } from "../variant";
+
 import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
-import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
+import {
+  ErrorMessage,
+  isConnected,
+  isExitError,
+  TerminalMessage,
+} from "./helpers";
 import { Command } from "./types";
 import { inquire } from "../../components/terminal/question";
 import focusTerminal from "../../utils/focus-terminal";
+import { createVariant, Variant } from "../api";
 
 const platformValidator = z.enum(["*", "darwin", "linux"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
@@ -60,12 +65,11 @@ export const createVariantCommand: Command = {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
       const { host, credentials } = authState();
+      const { takeControl, currentTest } = terminalState();
 
       if (!isConnected()) {
         return AUTH_REQUIRED_MESSAGE;
       }
-
-      const { currentTest } = terminalState();
 
       if (!currentTest) {
         return TEST_REQUIRED_MESSAGE;
@@ -98,8 +102,7 @@ export const createVariantCommand: Command = {
         code,
       };
 
-      const service = new Service({ host, credentials });
-      await service.build.createVariant(variant.name, variant.code);
+      await createVariant(variant, { host, credentials }, takeControl().signal);
       openTab(variant);
       navigate("editor");
 
@@ -109,6 +112,10 @@ export const createVariantCommand: Command = {
         <TerminalMessage message="created and opened variant. all changes will auto-save" />
       );
     } catch (e) {
+      if (isExitError(e)) {
+        return <TerminalMessage message="exited" />;
+      }
+
       if (e instanceof ZodError && e.errors[0].code === "invalid_enum_value") {
         const error = e.errors[0] as ZodInvalidEnumValueIssue;
         return (
@@ -118,10 +125,6 @@ export const createVariantCommand: Command = {
             }" expected: ${error.options.join(" | ")}`}
           />
         );
-      }
-
-      if ((e as Error).message === "exited") {
-        return <TerminalMessage message={"no variant created"} />;
       }
 
       return (

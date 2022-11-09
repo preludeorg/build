@@ -5,7 +5,7 @@ import { ErrorMessage, isConnected, TerminalMessage } from "./helpers";
 import { Command } from "./types";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
-import { deleteTest } from "../test";
+import { deleteTest } from "../api";
 
 export const deleteTestCommand: Command = {
   alias: ["dt"],
@@ -13,7 +13,7 @@ export const deleteTestCommand: Command = {
   async exec() {
     try {
       const { closeTab, tabs } = editorState();
-      const { currentTest, switchTest } = terminalState();
+      const { currentTest, switchTest, takeControl } = terminalState();
       const { host, credentials } = authState();
       const { navigate } = navigatorState();
 
@@ -25,7 +25,11 @@ export const deleteTestCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
-      await deleteTest(currentTest.id, { host, credentials });
+      await deleteTest(
+        currentTest.id,
+        { host, credentials },
+        takeControl().signal
+      );
 
       Object.keys(tabs).forEach((id) => {
         if (tabs[id].variant.name.startsWith(currentTest.id)) {

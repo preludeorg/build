@@ -266,7 +266,7 @@ export default TerminalList;
 
 type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
 
-export async function teminalList<T extends {}>({
+export async function terminalList<T extends {}>({
   title,
   items,
   keyProp,
@@ -275,6 +275,7 @@ export async function teminalList<T extends {}>({
 }: ListerProps<T>): Promise<T> {
   return new Promise((resolve, reject) => {
     const { write } = terminalState();
+
     write(
       <TerminalList
         title={title}

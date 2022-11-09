@@ -38,6 +38,11 @@ function useTerminal() {
   const abort = useTerminalStore((state) => state.abort);
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
+    if (isControlC(event)) {
+      abort();
+      return;
+    }
+
     if (!inputEnabled) {
       return;
     }
@@ -53,11 +58,6 @@ function useTerminal() {
 
     if (eventKey === "Tab") {
       autoComplete();
-      return;
-    }
-
-    if (isControlC(event as unknown as React.KeyboardEvent<HTMLInputElement>)) {
-      abort();
       return;
     }
 

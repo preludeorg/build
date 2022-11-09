@@ -21,6 +21,7 @@ interface TerminalStore {
   commandsHistory: string[];
   historyPointer: number;
   bufferedContent: Array<string | JSX.Element>;
+  abortController?: AbortController;
   setFocus: (focused: boolean) => void;
   clear: () => void;
   reset: () => void;
@@ -29,6 +30,7 @@ interface TerminalStore {
   write: (content: string | JSX.Element) => void;
   switchTest: (test?: Test) => void;
   autoComplete: () => void;
+  takeControl: () => AbortController;
   abort: () => void;
 }
 
@@ -40,6 +42,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   bufferedContent: [],
   commandsHistory: [],
   historyPointer: 0,
+
   setFocus: (focused: boolean) => {
     set(() => ({ focused }));
   },
@@ -76,9 +79,23 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       });
     }
   },
+  takeControl() {
+    const { abortController } = get();
+    /** abort previous requests */
+    abortController?.abort();
 
+    const controller = new AbortController();
+    set(() => ({ abortController: controller }));
+    return controller;
+  },
   abort: () => {
-    const { input } = get();
+    const { input, abortController, inputEnabled } = get();
+    abortController?.abort();
+
+    if (!inputEnabled) {
+      return;
+    }
+
     set((state) => {
       const waiting = (
         <>

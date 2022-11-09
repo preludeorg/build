@@ -2,7 +2,12 @@ import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { AUTH_REQUIRED_MESSAGE, CONTEXT_SWITCH_MESSAGE } from "./messages";
-import { ErrorMessage, isConnected } from "./helpers";
+import {
+  ErrorMessage,
+  isConnected,
+  isExitError,
+  TerminalMessage,
+} from "./helpers";
 import { Command } from "./types";
 import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
@@ -56,6 +61,10 @@ export const createTestCommand: Command = {
 
       return CONTEXT_SWITCH_MESSAGE;
     } catch (e) {
+      if (isExitError(e)) {
+        return <TerminalMessage message="exited" />;
+      }
+
       if (e instanceof ZodError) {
         return <ErrorMessage message={e.errors[0].message} />;
       } else {

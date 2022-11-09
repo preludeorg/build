@@ -12,6 +12,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   toggleServerPanel,
 }) => {
   const write = useTerminalStore((state) => state.write);
+  const takeControl = useTerminalStore((state) => state.takeControl);
   const { host, credentials, serverType } = useAuthStore((state) => ({
     host: state.host,
     credentials: state.credentials,
@@ -33,7 +34,10 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     const host = formData.get("host") as string;
     const accountID = formData.get("accountID") as string;
     const token = formData.get("token") as string;
-    const isLoggedIn = await login(host, accountID, token, type);
+    const isLoggedIn = await login(
+      { host, account: accountID, token, serverType: type },
+      takeControl().signal
+    );
     if (isLoggedIn) {
       write(
         <span style={{ color: "green" }}>
