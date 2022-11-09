@@ -22,6 +22,7 @@ interface TerminalStore {
   bufferedContent: Array<string | JSX.Element>;
   setFocus: (focused: boolean) => void;
   clear: () => void;
+  reset: () => void;
   handleKey: (event: KeyboardEvent) => Promise<void>;
   processCommand: () => void;
   write: (content: string | JSX.Element) => void;
@@ -73,6 +74,14 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   },
   clear() {
     set(() => ({
+      bufferedContent: [],
+      input: "",
+      caretPosition: 0,
+    }));
+  },
+  reset() {
+    set(() => ({
+      currentTest: undefined,
       bufferedContent: [],
       input: "",
       caretPosition: 0,

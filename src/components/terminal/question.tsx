@@ -4,7 +4,6 @@ import {
   SafeParseReturnType,
   z,
   ZodInvalidEnumValueIssue,
-  ZodTypeAny,
 } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
@@ -83,7 +82,7 @@ export const Question: React.FC<QuestionProps> = ({
         if (e.errors[0].code === "invalid_enum_value") {
           const error = e.errors[0] as ZodInvalidEnumValueIssue;
           setError(
-            `error: "${error.received}" is not one of : ${error.options.join(
+            `error: "${error.received}" is not one of: ${error.options.join(
               " | "
             )}`
           );
@@ -102,17 +101,15 @@ export const Question: React.FC<QuestionProps> = ({
   };
 
   const choice = Array.isArray(validator.options)
-    ? ` (${validator.options.join(", ")})`
-    : "";
-  const def = defaultValue ? ` [${defaultValue}]` : "";
+    ? `(${validator.options.join(", ")})`
+    : null;
+  const def = defaultValue ? `[${defaultValue}]` : null;
 
   return (
     <>
       <div className={styles.question}>
         <span className={styles.message}>
-          {message}
-          {choice}
-          {def}:
+          {[message, choice, def].filter((m) => !!m).join(" ")}:
         </span>
         {answer === null ? (
           <input ref={inputRef} type="text" onKeyDown={handleKey} />
@@ -151,7 +148,7 @@ interface Question {
   message: string;
   choices?: readonly string[];
   defaultValue?: string;
-  validator?: ZodTypeAny;
+  validator?: Validator;
 }
 
 type Questions = Record<string, Question>;
