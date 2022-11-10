@@ -40,14 +40,14 @@ export const createTestCommand: Command = {
   alias: ["ct"],
   desc: "creates a test with a given question",
   async exec(args) {
+    const { switchTest, showIndicator, hideIndicator } = terminalState();
     try {
-      const { switchTest } = terminalState();
       const { host, credentials } = authState();
 
       if (!isConnected()) {
         return AUTH_REQUIRED_MESSAGE;
       }
-
+      showIndicator("Creating test...");
       const testId = uuid.v4();
       const { question } = await getAnswer(args);
       const service = new Prelude.Service({ host, credentials });
@@ -70,6 +70,8 @@ export const createTestCommand: Command = {
       } else {
         return <ErrorMessage message={(e as Error).message} />;
       }
+    } finally {
+      hideIndicator();
     }
   },
 };

@@ -21,10 +21,11 @@ export const deleteVariantCommand: Command = {
   alias: ["dv"],
   desc: "deletes a variant from current test",
   async exec() {
+    const { currentTest, takeControl, showIndicator, hideIndicator } =
+      terminalState();
     try {
       const { navigate } = navigatorState();
       const { closeTab } = editorState();
-      const { currentTest, takeControl } = terminalState();
       const { host, credentials } = authState();
 
       const signal = takeControl().signal;
@@ -37,6 +38,7 @@ export const deleteVariantCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
+      showIndicator("Retrieving variants...");
       const variants = await getTest(
         currentTest.id,
         {
@@ -50,6 +52,7 @@ export const deleteVariantCommand: Command = {
         return NO_VARIANTS_MESSAGE;
       }
 
+      showIndicator("Select a variant to delete...");
       const variant = await terminalList({
         items: variants,
         keyProp: (variant) => variant,
@@ -90,6 +93,8 @@ export const deleteVariantCommand: Command = {
           message={`failed to list variants: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

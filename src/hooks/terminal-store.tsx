@@ -32,6 +32,12 @@ interface TerminalStore {
   autoComplete: () => void;
   takeControl: () => AbortController;
   abort: () => void;
+  statusIndicator?: {
+    message: string;
+    loading: boolean;
+  };
+  showIndicator: (message: string) => void;
+  hideIndicator: () => void;
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
@@ -287,6 +293,20 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     set((state) => ({
       bufferedContent: [...state.bufferedContent, content],
     }));
+  },
+  showIndicator(message) {
+    set(() => {
+      return {
+        statusIndicator: { message: message, loading: true },
+      };
+    });
+  },
+  hideIndicator() {
+    set(() => {
+      return {
+        statusIndicator: { message: "", loading: false },
+      };
+    });
   },
 }));
 

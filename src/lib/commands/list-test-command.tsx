@@ -19,7 +19,8 @@ export const listTestsCommand: Command = {
   alias: ["lt"],
   desc: "lists the tests accesible by your account",
   async exec() {
-    const { switchTest, takeControl } = terminalState();
+    const { switchTest, takeControl, showIndicator, hideIndicator } =
+      terminalState();
     try {
       const { host, credentials } = authState();
 
@@ -27,6 +28,7 @@ export const listTestsCommand: Command = {
         return AUTH_REQUIRED_MESSAGE;
       }
 
+      showIndicator("Retrieving tests...");
       const tests = await getTestList(
         {
           host,
@@ -39,6 +41,7 @@ export const listTestsCommand: Command = {
         return NO_TESTS_MESSAGE;
       }
 
+      showIndicator("Select a test...");
       const test = await terminalList({
         items: tests,
         keyProp: (test) => test.id,
@@ -62,6 +65,8 @@ export const listTestsCommand: Command = {
           message={`failed to list tests: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

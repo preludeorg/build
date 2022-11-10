@@ -16,9 +16,15 @@ export const deleteTestCommand: Command = {
   alias: ["dt"],
   desc: "deletes current test",
   async exec() {
+    const {
+      currentTest,
+      switchTest,
+      takeControl,
+      showIndicator,
+      hideIndicator,
+    } = terminalState();
     try {
       const { closeTab, tabs } = editorState();
-      const { currentTest, switchTest, takeControl } = terminalState();
       const { host, credentials } = authState();
       const { navigate } = navigatorState();
 
@@ -30,6 +36,7 @@ export const deleteTestCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
+      showIndicator("Deleting test...");
       await deleteTest(
         currentTest.id,
         { host, credentials },
@@ -59,6 +66,8 @@ export const deleteTestCommand: Command = {
           message={`failed to delete test: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

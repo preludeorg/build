@@ -61,11 +61,12 @@ export const createVariantCommand: Command = {
   args: "[platform] [arch] [language]",
   desc: "creates a new variant in the current test",
   async exec(args) {
+    const { takeControl, currentTest, showIndicator, hideIndicator } =
+      terminalState();
     try {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
       const { host, credentials } = authState();
-      const { takeControl, currentTest } = terminalState();
 
       if (!isConnected()) {
         return AUTH_REQUIRED_MESSAGE;
@@ -75,6 +76,7 @@ export const createVariantCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
+      showIndicator("Creating variant...");
       const results = await getAnswers(args);
 
       const { platform, arch, language } = results;
@@ -132,6 +134,8 @@ export const createVariantCommand: Command = {
           message={`failed to create variant: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

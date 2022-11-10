@@ -26,10 +26,11 @@ export const listVariantsCommand: Command = {
   alias: ["lv"],
   desc: "lists the variants in current test",
   async exec() {
+    const { currentTest, takeControl, showIndicator, hideIndicator } =
+    terminalState();
     try {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
-      const { currentTest, takeControl } = terminalState();
       const { host, credentials } = authState();
 
       const signal = takeControl().signal;
@@ -42,6 +43,7 @@ export const listVariantsCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
+      showIndicator("Retrieving variants...");
       const variants = await getTest(
         currentTest.id,
         {
@@ -68,6 +70,7 @@ export const listVariantsCommand: Command = {
         return shorten;
       };
 
+      showIndicator("Select a variant...");
       const variant = await terminalList({
         items: variants.length > 1 ? [OPEN_ALL, ...variants] : variants,
         keyProp: shortenVariant,
@@ -121,6 +124,7 @@ export const listVariantsCommand: Command = {
         />
       );
     } finally {
+      hideIndicator();
     }
   },
 };
