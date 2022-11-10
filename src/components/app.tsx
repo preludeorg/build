@@ -6,6 +6,7 @@ import useNavigationStore from "../hooks/navigation-store";
 import Servers from "./servers/servers";
 import shallow from "zustand/shallow";
 import StatusBar from "./status-bar/status-bar";
+import ReloadPrompt from "./reload-prompt/reload-prompt";
 
 function App() {
   const { panel, serverPanelVisible, toggleServerPanel } = useNavigationStore(
@@ -15,7 +16,7 @@ function App() {
   return (
     <div className={styles.app}>
       <main>
-        <section>
+        <section className={styles.topSection}>
           {panel === "welcome" && <Welcome />}
           {panel === "editor" && <EditorPanel />}
         </section>
@@ -25,6 +26,7 @@ function App() {
         </footer>
       </main>
       {serverPanelVisible && <Servers toggleServerPanel={toggleServerPanel} />}
+      <ReloadPrompt />
     </div>
   );
 }
