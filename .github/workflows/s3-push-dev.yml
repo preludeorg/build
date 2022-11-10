@@ -18,10 +18,10 @@ concurrency:
   group: environment-${{ github.ref }}
 
 env:
-  AWS_REGION: us-west-1
-  S3_BUCKET: prelude-build-us-east-1-dev
+  AWS_REGION: us-east-1
+  S3_BUCKET: prelude-build-us-east-1
   DIST_DIR: ./dist
-  CF_DIST_ID: ER1HBHK52ZYT1
+  CF_DIST_ID: E378HTGLIUNIPR
   NODE_VER: 18
 
 permissions:
