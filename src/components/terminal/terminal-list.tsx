@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import styles from "./commands.module.css";
 import { z } from "zod";
 import ArrowRight from "../icons/arrow-right";
-import cx from "classnames";
+import classNames from "classnames";
 import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
 import { isControlC } from "../../lib/keys";
@@ -185,7 +185,7 @@ const TerminalList = <T extends {}>({
             return (
               <div
                 key={keyProp(item)}
-                className={cx(styles.item, {
+                className={classNames(styles.item, {
                   [styles.selected]: selected,
                 })}
               >

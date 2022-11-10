@@ -4,7 +4,7 @@ import HostsIcon from "../icons/hosts-icon";
 import CloseIcon from "../icons/close-icon";
 import CopyIcon from "../icons/copy-icon";
 import styles from "./servers.module.css";
-import cx from "classnames";
+import classNames from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
 import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 
@@ -80,7 +80,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
           </p>
           <div className={styles.selection}>
             <p
-              className={cx(styles.server, {
+              className={classNames(styles.server, {
                 [styles.activeServer]: type === "prelude",
               })}
               onClick={() => {
@@ -90,7 +90,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
               Prelude
             </p>
             <p
-              className={cx(styles.server, {
+              className={classNames(styles.server, {
                 [styles.activeServer]: type === "custom",
               })}
               onClick={() => {
@@ -163,7 +163,7 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
             </div>
             <button
               type="submit"
-              className={cx(styles.connect, {
+              className={classNames(styles.connect, {
                 [styles.disconnect]: isConnected,
               })}
             >
