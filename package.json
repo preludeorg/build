@@ -10,7 +10,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prod": "vite --mode=production --port 5000 --host 127.0.0.1 dist",
     "build": "tsc && vite build",
     "lint": "tsc --noEmit"
   },
