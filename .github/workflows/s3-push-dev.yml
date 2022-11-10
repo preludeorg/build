@@ -31,7 +31,7 @@ jobs:
 
   Build:
     runs-on: ubuntu-latest
-    name: Build the application container and push to registry (ECR)
+    name: Build the application and deploy to S3 Bucket
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -55,11 +55,7 @@ jobs:
 
       - name: Copy files to the test website with the AWS CLI
         run: |
-          aws s3 sync --delete ${{ env.dist_dir }} s3://${{ env.S3_BUCKET }}
-
-      - name: Copy files to the test website with the AWS CLI
-        run: |
-          aws s3 sync --delete ${{ env.dist_dir }} s3://${{ env.S3_BUCKET }}
+          aws s3 sync --delete ${{ env.DIST_DIR }} s3://${{ env.S3_BUCKET }}
 
       - name: Invalidate the CDN
         run: |
