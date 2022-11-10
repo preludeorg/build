@@ -10,11 +10,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 
-FROM node:19-slim as runner
-WORKDIR /app
-ENV NODE_ENV production
-COPY --from=builder /app/node_modules ./node_modules
+FROM nginx:1.22.1-alpine as runner
+WORKDIR /usr/share/nginx/html
+# Remove nginx default files
+RUN rm -rf ./*
 COPY --from=builder /app/dist .
-COPY --from=builder /app/package.json .
-EXPOSE 5000
-CMD ["yarn", "prod"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
