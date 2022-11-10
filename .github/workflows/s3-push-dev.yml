@@ -1,0 +1,65 @@
+name: Deploy to S3 Bucket
+
+on:
+  pull_request:
+    - master
+    
+  workflow_dispatch:
+
+  # push:
+  #   branches:
+  #     - master
+  # release:
+  #   types:
+  #     - created
+
+concurrency:
+  group: environment-${{ github.ref }}
+
+env:
+  AWS_REGION: us-west-1
+  S3_BUCKET: prelude-build-us-east-1-dev
+  DIST_DIR: ./dist
+  CF_DIST_ID: ER1HBHK52ZYT1
+  NODE_VER: 18
+
+permissions:
+  contents: read
+
+jobs:
+
+  Build:
+    runs-on: ubuntu-latest
+    name: Build the application container and push to registry (ECR)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VER }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Yarn build
+        run: yarn build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.DEV_MACHINE_USER_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.DEV_MACHINE_USER_SECRET_KEY }}
+
+      - name: Copy files to the test website with the AWS CLI
+        run: |
+          aws s3 sync --delete ${{ env.dist_dir }} s3://${{ env.S3_BUCKET }}
+
+      - name: Copy files to the test website with the AWS CLI
+        run: |
+          aws s3 sync --delete ${{ env.dist_dir }} s3://${{ env.S3_BUCKET }}
+
+      - name: Invalidate the CDN
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.CF_DIST_ID }} --paths '/*'
