@@ -5,7 +5,7 @@ import CopyIcon from "../icons/copy-icon";
 import styles from "./control-panel.module.css";
 import useEditorStore from "../../hooks/editor-store";
 import { useState } from "react";
-import cx from "classnames";
+import classNames from "classnames";
 import AppleIcon from "../icons/apple-icon";
 import LinuxIcon from "../icons/linux-icon";
 
@@ -25,7 +25,7 @@ const ControlPanel: React.FC = () => {
         >
           <span>Deploy</span>
           <ChevronIcon
-            className={cx(styles.chevronIcon, {
+            className={classNames(styles.chevronIcon, {
               [styles.activeChevron]: overlayVisible === true,
             })}
           />

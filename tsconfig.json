@@ -16,7 +16,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strictNullChecks": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "types": [
+      "vite-plugin-pwa/client"
+    ]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

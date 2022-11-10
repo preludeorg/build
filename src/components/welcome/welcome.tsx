@@ -4,12 +4,57 @@ import styles from "./welcome.module.css";
 import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
 import rectangle3 from "../../assets/rectangle3.png";
+import DownloadIcon from "../icons/download-icon";
+import { useEffect, useRef, useState } from "react";
+import classNames from "classnames";
 
 const Welcome = () => {
+  const promptRef = useRef<Event | null>(null);
+  const [showInstaller, setShowInstaller] = useState(false);
+  function beforeInstall(e: Event) {
+    setShowInstaller(true);
+    promptRef.current = e;
+  }
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", beforeInstall);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", beforeInstall);
+    };
+  }, []);
+
+  async function handleInstall() {
+    if (promptRef.current === null) return;
+    // @ts-ignore
+    promptRef.current.prompt();
+    // @ts-ignore
+    if (promptRef.current.userChoice) {
+      // @ts-ignore
+      const { outcome } = await promptRef.current.userChoice;
+      if (outcome === "accepted") {
+        promptRef.current = null;
+        setShowInstaller(false);
+      }
+    }
+  }
+
   return (
     <div className={styles.welcome}>
-      <h1 className={styles.header}>Prelude Build</h1>
-      <h2 className={styles.tagline}>Security simplified</h2>
+      <header>
+        <section className={styles.intro}>
+          <h1 className={styles.header}>Prelude Build</h1>
+          <h2 className={styles.tagline}>Security simplified</h2>
+        </section>
+        <section className={styles.install}>
+          <button
+            onClick={handleInstall}
+            className={classNames({ [styles.showInstaller]: showInstaller })}
+          >
+            <DownloadIcon />
+            Install
+          </button>
+        </section>
+      </header>
       <div className={styles.blockContainer}>
         <WelcomeBlock
           title="Introduction to Build"

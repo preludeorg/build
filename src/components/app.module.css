@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-.app main section {
+.app main .topSection {
   flex: 2;
 }
 

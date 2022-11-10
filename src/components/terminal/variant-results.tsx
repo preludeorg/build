@@ -1,8 +1,8 @@
+import classNames from "classnames";
 import { useState } from "react";
 import ChevronIcon from "../icons/chevron-icon";
 import ContainerIcon from "../icons/container-icon";
 import styles from "./variant-results.module.css";
-import cx from "classnames";
 
 interface Props {
   name: string;
@@ -40,7 +40,7 @@ const VariantResults: React.FC<Props> = ({ name, status, cpu, output }) => {
             <span>View Results</span>
             {expanded ? (
               <ChevronIcon
-                className={cx(styles.chevronIcon, styles.activeChevron)}
+                className={classNames(styles.chevronIcon, styles.activeChevron)}
               />
             ) : (
               <ChevronIcon className={styles.chevronIcon} />
