@@ -2,8 +2,9 @@ name: Deploy to S3 Bucket
 
 on:
   pull_request:
-    - master
-    
+    branches:
+      - master
+
   workflow_dispatch:
 
   # push:
