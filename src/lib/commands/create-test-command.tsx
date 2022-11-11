@@ -47,11 +47,12 @@ export const createTestCommand: Command = {
       if (!isConnected()) {
         return AUTH_REQUIRED_MESSAGE;
       }
-      showIndicator("Creating test...");
       const testId = uuid.v4();
       const { question } = await getAnswer(args);
       const service = new Prelude.Service({ host, credentials });
+      showIndicator("Creating test...");
       await service.build.createTest(testId, question);
+      hideIndicator();
 
       switchTest({
         id: testId,
@@ -70,8 +71,6 @@ export const createTestCommand: Command = {
       } else {
         return <ErrorMessage message={(e as Error).message} />;
       }
-    } finally {
-      hideIndicator();
     }
   },
 };

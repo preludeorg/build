@@ -47,12 +47,12 @@ export const deleteVariantCommand: Command = {
         },
         signal
       );
+      hideIndicator();
 
       if (variants.length === 0) {
         return NO_VARIANTS_MESSAGE;
       }
 
-      showIndicator("Select a variant to delete...");
       const variant = await terminalList({
         items: variants,
         keyProp: (variant) => variant,
@@ -65,7 +65,9 @@ export const deleteVariantCommand: Command = {
       });
 
       try {
+        showIndicator("Deleting variant...");
         await deleteVariant(variant, { host, credentials }, signal);
+        hideIndicator();
 
         if (!closeTab(variant)) {
           navigate("welcome");
@@ -93,8 +95,6 @@ export const deleteVariantCommand: Command = {
           message={`failed to list variants: ${(e as Error).message}`}
         />
       );
-    } finally {
-      hideIndicator();
     }
   },
 };

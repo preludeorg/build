@@ -76,7 +76,6 @@ export const createVariantCommand: Command = {
         return TEST_REQUIRED_MESSAGE;
       }
 
-      showIndicator("Creating variant...");
       const results = await getAnswers(args);
 
       const { platform, arch, language } = results;
@@ -104,7 +103,9 @@ export const createVariantCommand: Command = {
         code,
       };
 
+      showIndicator("Creating variant...");
       await createVariant(variant, { host, credentials }, takeControl().signal);
+      hideIndicator();
       openTab(variant);
       navigate("editor");
 
@@ -134,8 +135,6 @@ export const createVariantCommand: Command = {
           message={`failed to create variant: ${(e as Error).message}`}
         />
       );
-    } finally {
-      hideIndicator();
     }
   },
 };

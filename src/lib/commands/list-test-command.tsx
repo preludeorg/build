@@ -36,12 +36,12 @@ export const listTestsCommand: Command = {
         },
         takeControl().signal
       );
+      hideIndicator();
 
       if (tests.length === 0) {
         return NO_TESTS_MESSAGE;
       }
 
-      showIndicator("Select a test...");
       const test = await terminalList({
         items: tests,
         keyProp: (test) => test.id,
@@ -65,8 +65,6 @@ export const listTestsCommand: Command = {
           message={`failed to list tests: ${(e as Error).message}`}
         />
       );
-    } finally {
-      hideIndicator();
     }
   },
 };

@@ -27,7 +27,7 @@ export const listVariantsCommand: Command = {
   desc: "lists the variants in current test",
   async exec() {
     const { currentTest, takeControl, showIndicator, hideIndicator } =
-    terminalState();
+      terminalState();
     try {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
@@ -52,6 +52,7 @@ export const listVariantsCommand: Command = {
         },
         signal
       );
+      hideIndicator();
 
       if (variants.length === 0) {
         return NO_VARIANTS_MESSAGE;
@@ -70,7 +71,6 @@ export const listVariantsCommand: Command = {
         return shorten;
       };
 
-      showIndicator("Select a variant...");
       const variant = await terminalList({
         items: variants.length > 1 ? [OPEN_ALL, ...variants] : variants,
         keyProp: shortenVariant,
@@ -123,8 +123,6 @@ export const listVariantsCommand: Command = {
           message={`failed to list variants: ${(e as Error).message}`}
         />
       );
-    } finally {
-      hideIndicator();
     }
   },
 };
