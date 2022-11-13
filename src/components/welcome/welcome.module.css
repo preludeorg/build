@@ -62,6 +62,12 @@
   }
 }
 
+@media (--bp-sm) {
+  .blockContainer {
+    gap: 1rem;
+  }
+}
+
 /* Welcome Blocks */
 
 .block {
@@ -79,6 +85,13 @@
 @media (--bp-lg-only) {
   .block {
     padding: 1rem;
+  }
+}
+
+@media (--bp-sm) {
+  .block {
+    padding: 1rem;
+    height: 15rem;
   }
 }
 
