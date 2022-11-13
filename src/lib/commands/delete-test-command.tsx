@@ -42,7 +42,6 @@ export const deleteTestCommand: Command = {
         { host, credentials },
         takeControl().signal
       );
-      hideIndicator();
 
       Object.keys(tabs).forEach((id) => {
         if (tabs[id].variant.name.startsWith(currentTest.id)) {
@@ -67,6 +66,8 @@ export const deleteTestCommand: Command = {
           message={`failed to delete test: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

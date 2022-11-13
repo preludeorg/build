@@ -67,7 +67,6 @@ export const deleteVariantCommand: Command = {
       try {
         showIndicator("Deleting variant...");
         await deleteVariant(variant, { host, credentials }, signal);
-        hideIndicator();
 
         if (!closeTab(variant)) {
           navigate("welcome");
@@ -95,6 +94,8 @@ export const deleteVariantCommand: Command = {
           message={`failed to list variants: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

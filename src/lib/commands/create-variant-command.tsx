@@ -105,7 +105,6 @@ export const createVariantCommand: Command = {
 
       showIndicator("Creating variant...");
       await createVariant(variant, { host, credentials }, takeControl().signal);
-      hideIndicator();
       openTab(variant);
       navigate("editor");
 
@@ -135,6 +134,8 @@ export const createVariantCommand: Command = {
           message={`failed to create variant: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

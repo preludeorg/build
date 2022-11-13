@@ -52,7 +52,6 @@ export const createTestCommand: Command = {
       const service = new Prelude.Service({ host, credentials });
       showIndicator("Creating test...");
       await service.build.createTest(testId, question);
-      hideIndicator();
 
       switchTest({
         id: testId,
@@ -71,6 +70,8 @@ export const createTestCommand: Command = {
       } else {
         return <ErrorMessage message={(e as Error).message} />;
       }
+    } finally {
+      hideIndicator();
     }
   },
 };

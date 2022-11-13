@@ -65,6 +65,8 @@ export const listTestsCommand: Command = {
           message={`failed to list tests: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

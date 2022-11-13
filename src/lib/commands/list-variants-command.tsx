@@ -123,6 +123,8 @@ export const listVariantsCommand: Command = {
           message={`failed to list variants: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };
