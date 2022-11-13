@@ -1,20 +1,24 @@
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
 import {
   ErrorMessage,
   isConnected,
   isExitError,
+  isInTestContext,
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
-import { deleteTest } from "../api";
+import { deleteTest, getTestList } from "../api";
+import { NO_TESTS_MESSAGE } from "./messages";
+import { terminalList } from "../../components/terminal/terminal-list";
 
 export const deleteTestCommand: Command = {
   alias: ["dt"],
-  desc: "deletes current test",
+  desc: "deletes a test",
+  enabled: () => isConnected(),
+  hidden: () => isInTestContext(),
   async exec() {
     try {
       const { closeTab, tabs } = editorState();
@@ -22,22 +26,33 @@ export const deleteTestCommand: Command = {
       const { host, credentials } = authState();
       const { navigate } = navigatorState();
 
-      if (!isConnected()) {
-        return AUTH_REQUIRED_MESSAGE;
-      }
-
-      if (!currentTest) {
-        return TEST_REQUIRED_MESSAGE;
-      }
-
-      await deleteTest(
-        currentTest.id,
-        { host, credentials },
+      const tests = await getTestList(
+        {
+          host,
+          credentials,
+        },
         takeControl().signal
       );
 
+      if (tests.length === 0) {
+        return NO_TESTS_MESSAGE;
+      }
+
+      const test = await terminalList({
+        items: tests,
+        keyProp: (test) => test.id,
+        filterOn: (test) => test.question,
+        renderItem: (test) => (
+          <>
+            <span>{test.question}</span> <span>[{test.id}]</span>
+          </>
+        ),
+      });
+
+      await deleteTest(test.id, { host, credentials }, takeControl().signal);
+
       Object.keys(tabs).forEach((id) => {
-        if (tabs[id].variant.name.startsWith(currentTest.id)) {
+        if (tabs[id].variant.name.startsWith(test.id)) {
           closeTab(id);
         }
       });
@@ -46,7 +61,9 @@ export const deleteTestCommand: Command = {
         navigate("welcome");
       }
 
-      switchTest();
+      if (currentTest?.id === test.id) {
+        switchTest();
+      }
 
       return <TerminalMessage message="test deleted" />;
     } catch (e) {

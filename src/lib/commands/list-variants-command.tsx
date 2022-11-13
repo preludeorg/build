@@ -1,14 +1,11 @@
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import {
-  AUTH_REQUIRED_MESSAGE,
-  NO_VARIANTS_MESSAGE,
-  TEST_REQUIRED_MESSAGE,
-} from "./messages";
+import { NO_VARIANTS_MESSAGE } from "./messages";
 import {
   ErrorMessage,
   isConnected,
   isExitError,
+  isInTestContext,
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
@@ -25,6 +22,7 @@ const OPEN_ALL = "open all";
 export const listVariantsCommand: Command = {
   alias: ["lv"],
   desc: "lists the variants in current test",
+  enabled: () => isConnected() && isInTestContext(),
   async exec() {
     try {
       const { navigate } = navigatorState();
@@ -34,16 +32,8 @@ export const listVariantsCommand: Command = {
 
       const signal = takeControl().signal;
 
-      if (!isConnected()) {
-        return AUTH_REQUIRED_MESSAGE;
-      }
-
-      if (!currentTest) {
-        return TEST_REQUIRED_MESSAGE;
-      }
-
       const variants = await getTest(
-        currentTest.id,
+        currentTest!.id,
         {
           host,
           credentials,

@@ -1,7 +1,12 @@
 import { Command } from "./types";
 import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
-import { ErrorMessage, isExitError, TerminalMessage } from "./helpers";
+import {
+  ErrorMessage,
+  isConnected,
+  isExitError,
+  TerminalMessage,
+} from "./helpers";
 import WelcomeMessage from "../../components/terminal/welcome-message";
 import { inquire } from "../../components/terminal/question";
 import { terminalState } from "../../hooks/terminal-store";
@@ -31,6 +36,7 @@ const getAnswer = async (args = "") => {
 export const useCommand: Command = {
   args: "[handle]",
   desc: "register a free account with a particular user ID",
+  hidden: () => isConnected(),
   async exec(args) {
     try {
       const { createAccount, host } = authState();

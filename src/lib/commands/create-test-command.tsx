@@ -1,11 +1,12 @@
 import { z, ZodError } from "zod";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { AUTH_REQUIRED_MESSAGE, CONTEXT_SWITCH_MESSAGE } from "./messages";
+import { CONTEXT_SWITCH_MESSAGE } from "./messages";
 import {
   ErrorMessage,
   isConnected,
   isExitError,
+  isInTestContext,
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
@@ -39,14 +40,12 @@ export const createTestCommand: Command = {
   args: "[question]",
   alias: ["ct"],
   desc: "creates a test with a given question",
+  enabled: () => isConnected(),
+  hidden: () => isInTestContext(),
   async exec(args) {
     try {
       const { switchTest } = terminalState();
       const { host, credentials } = authState();
-
-      if (!isConnected()) {
-        return AUTH_REQUIRED_MESSAGE;
-      }
 
       const testId = uuid.v4();
       const { question } = await getAnswer(args);

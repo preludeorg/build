@@ -6,11 +6,11 @@ import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { getLanguage } from "../lang";
 
-import { AUTH_REQUIRED_MESSAGE, TEST_REQUIRED_MESSAGE } from "./messages";
 import {
   ErrorMessage,
   isConnected,
   isExitError,
+  isInTestContext,
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
@@ -60,6 +60,7 @@ export const createVariantCommand: Command = {
   alias: ["cv"],
   args: "[platform] [arch] [language]",
   desc: "creates a new variant in the current test",
+  enabled: () => isConnected() && isInTestContext(),
   async exec(args) {
     try {
       const { navigate } = navigatorState();
@@ -67,19 +68,11 @@ export const createVariantCommand: Command = {
       const { host, credentials } = authState();
       const { takeControl, currentTest } = terminalState();
 
-      if (!isConnected()) {
-        return AUTH_REQUIRED_MESSAGE;
-      }
-
-      if (!currentTest) {
-        return TEST_REQUIRED_MESSAGE;
-      }
-
       const results = await getAnswers(args);
 
       const { platform, arch, language } = results;
 
-      let file = `${currentTest.id}`;
+      let file = `${currentTest!.id}`;
       if (platform !== "*") {
         file += `_${platform}`;
 
@@ -91,7 +84,7 @@ export const createVariantCommand: Command = {
       file += `.${language}`;
       const code = getLanguage(language)
         .bootstrap.replaceAll("$NAME", file)
-        .replaceAll("$QUESTION", currentTest.question)
+        .replaceAll("$QUESTION", currentTest!.question)
         .replaceAll(
           "$CREATED",
           format(new Date(), "yyyy-mm-dd hh:mm:ss.SSSSSS")
