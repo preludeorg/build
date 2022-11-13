@@ -7,6 +7,7 @@ import Servers from "./servers/servers";
 import shallow from "zustand/shallow";
 import StatusBar from "./status-bar/status-bar";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
+import { Resizable } from "re-resizable";
 
 function App() {
   const { panel, serverPanelVisible, toggleServerPanel } = useNavigationStore(
@@ -20,10 +21,17 @@ function App() {
           {panel === "welcome" && <Welcome />}
           {panel === "editor" && <EditorPanel />}
         </section>
-        <footer>
+        <Resizable
+          className={styles.footer}
+          enable={{ top: true }}
+          defaultSize={{ height: "30vh", width: "100%" }}
+          maxHeight="80vh"
+          minHeight="10vh"
+          handleClasses={{ top: styles.handle }}
+        >
           <Terminal />
-          <StatusBar />
-        </footer>
+        </Resizable>
+        <StatusBar />
       </main>
       {serverPanelVisible && <Servers toggleServerPanel={toggleServerPanel} />}
       <ReloadPrompt />
