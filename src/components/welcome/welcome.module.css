@@ -51,9 +51,15 @@
 .blockContainer {
   display: flex;
   flex-direction: row;
-  column-gap: 2rem;
+  gap: 2rem;
   margin: 2rem 0;
   width: 100%;
+}
+
+@media (--bp-md) {
+  .blockContainer {
+    flex-direction: column;
+  }
 }
 
 /* Welcome Blocks */
@@ -70,13 +76,26 @@
   color: #fff;
 }
 
+@media (--bp-lg-only) {
+  .block {
+    padding: 1rem;
+  }
+}
+
 .title {
   margin: 0 0 16px;
+}
+
+@media (--bp-lg-only) {
+  .title {
+    font-size: var(--text-lg);
+  }
 }
 
 .image {
   width: 100%;
   height: 7.5rem;
+  object-fit: cover;
 }
 
 .description {
