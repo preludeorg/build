@@ -7,12 +7,14 @@ import { deleteTestCommand } from "./delete-test-command";
 import { listVariantsCommand } from "./list-variants-command";
 import { createVariantCommand } from "./create-variant-command";
 import { deleteVariantCommand } from "./delete-variant-command";
+import { exitCommand } from "./exit-command";
 
 const helpCommand: Command = {
-  hidden: true,
+  hidden: () => true,
   exec() {
     const commandsList = Object.keys(commands)
-      .filter((command) => !commands[command].hidden)
+      .filter((command) => !(commands[command].hidden?.() ?? false))
+      .filter((command) => commands[command].enabled?.() ?? true)
       .map((command) => ({
         name: command,
         args: commands[command].args ?? "",
@@ -23,7 +25,6 @@ const helpCommand: Command = {
       }));
     return (
       <div className={styles.help}>
-        <strong>Commands</strong>
         <ul>
           {commandsList.map((command) => (
             <li key={command.name}>
@@ -48,5 +49,6 @@ export const commands: Commands = {
   "list-variants": listVariantsCommand,
   "create-variant": createVariantCommand,
   "delete-variant": deleteVariantCommand,
+  exit: exitCommand,
   help: helpCommand,
 };

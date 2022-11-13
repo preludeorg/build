@@ -7,7 +7,7 @@ import LinuxIcon from "../icons/linux-icon";
 import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
-import cx from "classnames";
+import classNames from "classnames";
 import React from "react";
 import { getLanguage } from "../../lib/lang";
 import { lint, validate } from "../../lib/lang/linter";
@@ -83,7 +83,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const uuid = tabName.match(uuidRegex)?.[0] ?? "";
   return (
     <li
-      className={cx({ [styles.active]: tabId === currentTabId })}
+      className={classNames({ [styles.active]: tabId === currentTabId })}
       onClick={(e) => {
         switchTab(tabId);
       }}

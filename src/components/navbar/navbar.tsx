@@ -2,7 +2,7 @@ import EditorIcon from "../icons/editor-icon";
 import HostsIcon from "../icons/hosts-icon";
 import SettingsIcon from "../icons/settings-icon";
 import styles from "./navbar.module.css";
-import cx from "classnames";
+import classNames from "classnames";
 
 interface Props {
   navigation: string;
@@ -19,7 +19,7 @@ const Navbar: React.FC<Props> = ({
     <nav className={styles.navbar}>
       <ul className={styles.topIcons}>
         <li
-          className={cx(styles.iconWrapper, {
+          className={classNames(styles.iconWrapper, {
             [styles.active]: navigation === "editor",
           })}
           onClick={() => setNavigation("editor")}

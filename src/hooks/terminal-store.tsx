@@ -4,6 +4,7 @@ import { commands } from "../lib/commands";
 import PrimaryPrompt from "../components/terminal/primary-prompt";
 import styles from "../components/terminal/terminal.module.css";
 import { commonBeginning } from "../lib/utils/common-beginning";
+import { TerminalMessage } from "../lib/commands/helpers";
 
 function splitStringAtIndex(value: string, index: number) {
   if (!value) {
@@ -224,7 +225,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   },
   async processCommand() {
     const { input, commandsHistory } = get();
-    const [command, ...rest] = input.trim().split(" ");
+    const [commandName, ...rest] = input.trim().split(" ");
     let output: string | JSX.Element = "";
 
     if (input !== "") {
@@ -237,7 +238,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       });
     }
 
-    if (command === "clear") {
+    if (commandName === "clear") {
       set(() => ({
         bufferedContent: [],
         input: "",
@@ -261,26 +262,28 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       };
     });
 
-    if (input) {
-      const commandArguments = rest.join(" ");
-      const commandName = Object.keys(commands).find(
-        (c) => command === c || commands[c].alias?.includes(command)
-      );
-      if (command && commandName) {
-        const executor = commands[commandName].exec;
+    const commandArguments = rest.join(" ");
+    const commandKey = Object.keys(commands).find(
+      (c) => commandName === c || commands[c].alias?.includes(commandName)
+    );
+    const command = commandKey ? commands[commandKey] : null;
+    const isEnabled = command?.enabled?.() ?? true;
 
-        if (typeof executor === "function") {
-          output = await executor(commandArguments);
-        } else {
-          output = executor;
-        }
-      } else {
-        output = `command "${command}" is not recognized`;
-      }
+    if (command && isEnabled) {
+      output = await command.exec(commandArguments);
+    } else if (command && !isEnabled) {
+      output = (
+        <TerminalMessage
+          message={`command "${commandName}" is unavailable.`}
+          helpText={`type "help" to list avaliable commmands`}
+        />
+      );
+    } else {
+      output = `command not found: ${commandName}`;
     }
 
     set((state) => {
-      const nextBufferedContent = output ? <span>{output}</span> : <></>;
+      const nextBufferedContent = <span>{output}</span>;
 
       return {
         bufferedContent: [...state.bufferedContent, nextBufferedContent],

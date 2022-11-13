@@ -2,31 +2,26 @@ import { terminalList } from "../../components/terminal/terminal-list";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { getTestList } from "../api";
-import {
-  AUTH_REQUIRED_MESSAGE,
-  CONTEXT_SWITCH_MESSAGE,
-  NO_TESTS_MESSAGE,
-} from "./messages";
+import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
 import {
   ErrorMessage,
   isConnected,
   isExitError,
+  isInTestContext,
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
 
 export const listTestsCommand: Command = {
   alias: ["lt"],
+  enabled: () => isConnected(),
+  hidden: () => isInTestContext(),
   desc: "lists the tests accesible by your account",
   async exec() {
     const { switchTest, takeControl, showIndicator, hideIndicator } =
       terminalState();
     try {
       const { host, credentials } = authState();
-
-      if (!isConnected()) {
-        return AUTH_REQUIRED_MESSAGE;
-      }
 
       showIndicator("Retrieving tests...");
       const tests = await getTestList(

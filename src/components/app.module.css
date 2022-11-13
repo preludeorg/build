@@ -12,13 +12,17 @@
   overflow: hidden;
 }
 
-.app main section {
-  flex: 2;
+.app main .topSection {
+  flex: 1;
+  overflow-y: auto;
 }
 
-.app main footer {
-  flex: 1;
+.app main .footer {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.handle:hover {
+  background-color: var(--color-secondary-10);
 }

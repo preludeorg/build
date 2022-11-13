@@ -2,7 +2,7 @@ import React from "react";
 import shallow from "zustand/shallow";
 import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
 import styles from "./terminal.module.css";
-import cx from "classnames";
+import classNames from "classnames";
 import PrimaryPrompt from "./primary-prompt";
 import useAuthStore from "../../hooks/auth-store";
 import WelcomeMessage from "./welcome-message";
@@ -144,7 +144,7 @@ const CurrentLine = () => {
   return (
     <PrimaryPrompt test={currentTest}>
       <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-      <span className={cx(styles.caret, { [styles.focused]: focused })}>
+      <span className={classNames(styles.caret, { [styles.focused]: focused })}>
         <span className={styles.caretAfter} />
       </span>
       <span className={styles.preWhiteSpace}>{afterCaretText}</span>
