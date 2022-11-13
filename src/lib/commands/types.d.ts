@@ -3,7 +3,8 @@ export interface Command {
   args?: string;
   alias?: string[];
   desc?: string | JSX.Element;
-  hidden?: boolean;
+  hidden?: () => boolean;
+  enabled?: () => boolean;
   exec: (args: string) => CommandReturn;
 }
 
