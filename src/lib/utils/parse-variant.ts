@@ -14,6 +14,5 @@ export function parseVariant(variantName: string): ParsedVariant | null {
     return null;
   }
   let [variant, id, , platform, , arch, language] = results;
-  console.log(results);
   return { variant, id, platform, arch, language };
 }
