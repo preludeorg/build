@@ -87,18 +87,20 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       <VariantIcon platform={platform} className={styles.icon} />
       <span className={styles.truncate}>{id}</span>
       <span>{tabName.replace(id, "")}</span>
-      <button
-        className={styles.close}
-        onClick={(e) => {
-          e.stopPropagation();
-          const hasTabs = closeTab(tabName);
-          if (!hasTabs) {
-            navigate("welcome");
-          }
-        }}
-      >
-        <CloseIcon />
-      </button>
+      <div className={styles.closeContainer}>
+        <button
+          className={styles.close}
+          onClick={(e) => {
+            e.stopPropagation();
+            const hasTabs = closeTab(tabName);
+            if (!hasTabs) {
+              navigate("welcome");
+            }
+          }}
+        >
+          <CloseIcon />
+        </button>
+      </div>
     </li>
   );
 };
