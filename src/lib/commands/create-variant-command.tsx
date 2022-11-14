@@ -59,7 +59,7 @@ const getAnswers = async (args: string) => {
 export const createVariantCommand: Command = {
   alias: ["cv"],
   args: "[platform] [arch] [language]",
-  desc: "creates a new variant in the current test",
+  desc: "creates a new variant in current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec(args) {
     const { takeControl, currentTest, showIndicator, hideIndicator } =
