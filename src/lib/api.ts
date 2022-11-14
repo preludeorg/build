@@ -31,6 +31,16 @@ export const getVariant = async (
   return service.build.getVariant(file, { signal });
 };
 
+export const variantExists = async (
+  id: string,
+  file: string,
+  config: ServiceConfig,
+  signal: AbortSignal
+) => {
+  const variants = await getTest(id, config, signal);
+  return variants.includes(file);
+};
+
 export const deleteTest = async (
   id: string,
   config: ServiceConfig,

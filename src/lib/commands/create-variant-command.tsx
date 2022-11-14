@@ -16,7 +16,7 @@ import {
 import { Command } from "./types";
 import { inquire } from "../../components/terminal/question";
 import focusTerminal from "../../utils/focus-terminal";
-import { createVariant, Variant } from "../api";
+import { createVariant, getVariant, Variant, variantExists } from "../api";
 
 const platformValidator = z.enum(["*", "darwin", "linux"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
@@ -68,6 +68,7 @@ export const createVariantCommand: Command = {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
       const { host, credentials } = authState();
+      const signal = takeControl().signal;
 
       const results = await getAnswers(args);
 
@@ -83,6 +84,38 @@ export const createVariantCommand: Command = {
       }
 
       file += `.${language}`;
+
+      showIndicator("Checking if variant exists...");
+      const exists = await variantExists(
+        currentTest!.id,
+        file,
+        { host, credentials },
+        signal
+      );
+      hideIndicator();
+
+      if (exists) {
+        const { confirm } = await inquire({
+          confirm: {
+            message: "do you want to overwrite exisiting variant?",
+            validator: z.enum(["yes", "no"]),
+            defaultValue: "no",
+          },
+        });
+
+        if (confirm === "no") {
+          const code = await getVariant(file, { host, credentials }, signal);
+          openTab({ name: file, code });
+          navigate("editor");
+          focusTerminal();
+          return (
+            <TerminalMessage
+              message={"opened variant. all changes will auto-save"}
+            />
+          );
+        }
+      }
+
       const code = getLanguage(language)
         .bootstrap.replaceAll("$NAME", file)
         .replaceAll("$QUESTION", currentTest!.question)
@@ -97,12 +130,10 @@ export const createVariantCommand: Command = {
       };
 
       showIndicator("Creating variant...");
-      await createVariant(variant, { host, credentials }, takeControl().signal);
+      await createVariant(variant, { host, credentials }, signal);
       openTab(variant);
       navigate("editor");
-
       focusTerminal();
-
       return (
         <TerminalMessage message="created and opened variant. all changes will auto-save" />
       );
