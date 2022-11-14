@@ -35,7 +35,7 @@ const getAnswer = async (args = "") => {
 
 export const useCommand: Command = {
   args: "[handle]",
-  desc: "register a free account with a particular user ID",
+  desc: "create account for handle",
   hidden: () => isConnected(),
   async exec(args) {
     try {

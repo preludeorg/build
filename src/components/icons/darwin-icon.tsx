@@ -1,4 +1,4 @@
-const AppleIcon: React.FC<{ className?: string }> = ({ className }) => {
+const DarwinIcon: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <svg
       className={className}
@@ -11,4 +11,4 @@ const AppleIcon: React.FC<{ className?: string }> = ({ className }) => {
   );
 };
 
-export default AppleIcon;
+export default DarwinIcon;

@@ -2,8 +2,6 @@ import Editor from "./editor";
 import ControlPanel from "./control-panel";
 import styles from "./editor.module.pcss";
 import CloseIcon from "../icons/close-icon";
-import AppleIcon from "../icons/apple-icon";
-import LinuxIcon from "../icons/linux-icon";
 import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
@@ -14,6 +12,8 @@ import { lint, validate } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
 import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
 import { Service, ServiceConfig } from "@theprelude/sdk";
+import VariantIcon from "../icons/variant-icon";
+import { parseVariant } from "../../lib/utils/parse-variant";
 
 const saveVariant = async (
   name: string,
@@ -70,17 +70,13 @@ const EditorWindow: React.FC = () => {
 
 export default EditorWindow;
 
-const uuidRegex = new RegExp(
-  /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}/
-);
-
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const tabName = useEditorStore((state) => state.tabs[tabId].variant.name);
   const currentTabId = useEditorStore((state) => state.currentTabId);
   const switchTab = useEditorStore((state) => state.switchTab);
   const closeTab = useEditorStore((state) => state.closeTab);
   const navigate = useNavigationStore((state) => state.navigate);
-  const uuid = tabName.match(uuidRegex)?.[0] ?? "";
+  const { id, platform } = parseVariant(tabName) ?? { id: "" };
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}
@@ -88,13 +84,9 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
         switchTab(tabId);
       }}
     >
-      {tabName.includes("darwin") ? (
-        <AppleIcon className={styles.icon} />
-      ) : (
-        <LinuxIcon className={styles.icon} />
-      )}
-      <span className={styles.truncate}>{uuid}</span>
-      <span>{tabName.replace(uuid, "")}</span>
+      <VariantIcon platform={platform} className={styles.icon} />
+      <span className={styles.truncate}>{id}</span>
+      <span>{tabName.replace(id, "")}</span>
       <div className={styles.closeContainer}>
         <button
           className={styles.close}

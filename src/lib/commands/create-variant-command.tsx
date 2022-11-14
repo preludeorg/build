@@ -18,7 +18,7 @@ import { inquire } from "../../components/terminal/question";
 import focusTerminal from "../../utils/focus-terminal";
 import { createVariant, getVariant, Variant, variantExists } from "../api";
 
-const platformValidator = z.enum(["*", "darwin", "linux"]);
+const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
 const languageValidator = z.enum(["c", "cs", "swift"]);
 
@@ -59,7 +59,7 @@ const getAnswers = async (args: string) => {
 export const createVariantCommand: Command = {
   alias: ["cv"],
   args: "[platform] [arch] [language]",
-  desc: "creates a new variant in current test",
+  desc: "create variant in current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec(args) {
     const { takeControl, currentTest, showIndicator, hideIndicator } =
