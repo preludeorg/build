@@ -1,18 +1,10 @@
-name: Deploy to S3 Bucket
+name: Dev - Deploy to S3 Bucket
 
 on:
-  pull_request:
+  push:
     branches:
       - master
-
   workflow_dispatch:
-
-  # push:
-  #   branches:
-  #     - master
-  # release:
-  #   types:
-  #     - created
 
 concurrency:
   group: environment-${{ github.ref }}
@@ -31,7 +23,7 @@ jobs:
 
   Build:
     runs-on: ubuntu-latest
-    name: Build the application and deploy to S3 Bucket
+    name: Dev - Build the application and deploy to S3 Bucket
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
