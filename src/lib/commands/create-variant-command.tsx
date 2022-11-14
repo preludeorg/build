@@ -18,7 +18,7 @@ import { inquire } from "../../components/terminal/question";
 import focusTerminal from "../../utils/focus-terminal";
 import { createVariant, Variant } from "../api";
 
-const platformValidator = z.enum(["*", "darwin", "linux"]);
+const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
 const languageValidator = z.enum(["c", "cs", "swift"]);
 

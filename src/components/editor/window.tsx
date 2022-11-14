@@ -2,8 +2,6 @@ import Editor from "./editor";
 import ControlPanel from "./control-panel";
 import styles from "./editor.module.pcss";
 import CloseIcon from "../icons/close-icon";
-import AppleIcon from "../icons/apple-icon";
-import LinuxIcon from "../icons/linux-icon";
 import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
@@ -14,6 +12,7 @@ import { lint, validate } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
 import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
 import { Service, ServiceConfig } from "@theprelude/sdk";
+import VariantIcon from "../icons/variant-icon";
 
 const saveVariant = async (
   name: string,
@@ -88,11 +87,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
         switchTab(tabId);
       }}
     >
-      {tabName.includes("darwin") ? (
-        <AppleIcon className={styles.icon} />
-      ) : (
-        <LinuxIcon className={styles.icon} />
-      )}
+      <VariantIcon variantName={tabName} className={styles.icon} />
       <span className={styles.truncate}>{uuid}</span>
       <span>{tabName.replace(uuid, "")}</span>
       <button
