@@ -62,11 +62,12 @@ export const createVariantCommand: Command = {
   desc: "creates a new variant in the current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec(args) {
+    const { takeControl, currentTest, showIndicator, hideIndicator } =
+      terminalState();
     try {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
       const { host, credentials } = authState();
-      const { takeControl, currentTest } = terminalState();
 
       const results = await getAnswers(args);
 
@@ -95,6 +96,7 @@ export const createVariantCommand: Command = {
         code,
       };
 
+      showIndicator("Creating variant...");
       await createVariant(variant, { host, credentials }, takeControl().signal);
       openTab(variant);
       navigate("editor");
@@ -125,6 +127,8 @@ export const createVariantCommand: Command = {
           message={`failed to create variant: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

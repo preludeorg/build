@@ -24,14 +24,16 @@ export const listVariantsCommand: Command = {
   desc: "lists the variants in current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec() {
+    const { currentTest, takeControl, showIndicator, hideIndicator } =
+      terminalState();
     try {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
-      const { currentTest, takeControl } = terminalState();
       const { host, credentials } = authState();
 
       const signal = takeControl().signal;
 
+      showIndicator("Retrieving variants...");
       const variants = await getTest(
         currentTest!.id,
         {
@@ -40,6 +42,7 @@ export const listVariantsCommand: Command = {
         },
         signal
       );
+      hideIndicator();
 
       if (variants.length === 0) {
         return NO_VARIANTS_MESSAGE;
@@ -111,6 +114,7 @@ export const listVariantsCommand: Command = {
         />
       );
     } finally {
+      hideIndicator();
     }
   },
 };

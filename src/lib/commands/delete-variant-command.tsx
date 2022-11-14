@@ -19,14 +19,16 @@ export const deleteVariantCommand: Command = {
   desc: "deletes a variant from current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec() {
+    const { currentTest, takeControl, showIndicator, hideIndicator } =
+      terminalState();
     try {
       const { navigate } = navigatorState();
       const { closeTab } = editorState();
-      const { currentTest, takeControl } = terminalState();
       const { host, credentials } = authState();
 
       const signal = takeControl().signal;
 
+      showIndicator("Retrieving variants...");
       const variants = await getTest(
         currentTest!.id,
         {
@@ -35,6 +37,7 @@ export const deleteVariantCommand: Command = {
         },
         signal
       );
+      hideIndicator();
 
       if (variants.length === 0) {
         return NO_VARIANTS_MESSAGE;
@@ -52,6 +55,7 @@ export const deleteVariantCommand: Command = {
       });
 
       try {
+        showIndicator("Deleting variant...");
         await deleteVariant(variant, { host, credentials }, signal);
 
         if (!closeTab(variant)) {
@@ -80,6 +84,8 @@ export const deleteVariantCommand: Command = {
           message={`failed to list variants: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

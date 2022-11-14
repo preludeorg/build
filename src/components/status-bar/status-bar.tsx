@@ -2,9 +2,16 @@ import SettingsIcon from "../icons/settings-icon";
 import styles from "./status-bar.module.css";
 import { Popover, Transition } from "@headlessui/react";
 import { useConfig } from "../../hooks/use-config";
+import useTerminalStore from "../../hooks/terminal-store";
+import LoaderIcon from "../icons/loader-icon";
+import shallow from "zustand/shallow";
 
 const StatusBar: React.FC = () => {
   const { handleExport, handleImport } = useConfig();
+  const statusIndicator = useTerminalStore(
+    (state) => state.statusIndicator,
+    shallow
+  );
   return (
     <div className={styles.statusBar}>
       <div className={styles.stat}>
@@ -47,6 +54,12 @@ const StatusBar: React.FC = () => {
           </Transition>
         </Popover>
       </div>
+      {statusIndicator?.loading === true && (
+        <div className={styles.statusIndicator}>
+          <LoaderIcon className={styles.loaderIcon} />
+          <span>{statusIndicator.message}</span>
+        </div>
+      )}
     </div>
   );
 };

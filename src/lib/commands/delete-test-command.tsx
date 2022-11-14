@@ -20,9 +20,15 @@ export const deleteTestCommand: Command = {
   enabled: () => isConnected(),
   hidden: () => isInTestContext(),
   async exec() {
+    const {
+      currentTest,
+      switchTest,
+      takeControl,
+      showIndicator,
+      hideIndicator,
+    } = terminalState();
     try {
       const { closeTab, tabs } = editorState();
-      const { currentTest, switchTest, takeControl } = terminalState();
       const { host, credentials } = authState();
       const { navigate } = navigatorState();
 
@@ -49,6 +55,7 @@ export const deleteTestCommand: Command = {
         ),
       });
 
+      showIndicator("Deleting test...");
       await deleteTest(test.id, { host, credentials }, takeControl().signal);
 
       Object.keys(tabs).forEach((id) => {
@@ -76,6 +83,8 @@ export const deleteTestCommand: Command = {
           message={`failed to delete test: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };

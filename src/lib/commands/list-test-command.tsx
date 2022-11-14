@@ -18,10 +18,12 @@ export const listTestsCommand: Command = {
   hidden: () => isInTestContext(),
   desc: "lists the tests accesible by your account",
   async exec() {
-    const { switchTest, takeControl } = terminalState();
+    const { switchTest, takeControl, showIndicator, hideIndicator } =
+      terminalState();
     try {
       const { host, credentials } = authState();
 
+      showIndicator("Retrieving tests...");
       const tests = await getTestList(
         {
           host,
@@ -29,6 +31,7 @@ export const listTestsCommand: Command = {
         },
         takeControl().signal
       );
+      hideIndicator();
 
       if (tests.length === 0) {
         return NO_TESTS_MESSAGE;
@@ -57,6 +60,8 @@ export const listTestsCommand: Command = {
           message={`failed to list tests: ${(e as Error).message}`}
         />
       );
+    } finally {
+      hideIndicator();
     }
   },
 };
