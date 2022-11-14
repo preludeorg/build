@@ -16,7 +16,7 @@ export const listTestsCommand: Command = {
   alias: ["lt"],
   enabled: () => isConnected(),
   hidden: () => isInTestContext(),
-  desc: "lists the tests accesible by your account",
+  desc: "list tests in account",
   async exec() {
     const { switchTest, takeControl, showIndicator, hideIndicator } =
       terminalState();

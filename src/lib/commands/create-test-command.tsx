@@ -39,7 +39,7 @@ const getAnswer = async (args = "") => {
 export const createTestCommand: Command = {
   args: "[question]",
   alias: ["ct"],
-  desc: "creates a test with a given question",
+  desc: "create test in account",
   enabled: () => isConnected(),
   hidden: () => isInTestContext(),
   async exec(args) {

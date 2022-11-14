@@ -16,7 +16,7 @@ import { Command } from "./types";
 
 export const deleteVariantCommand: Command = {
   alias: ["dv"],
-  desc: "deletes a variant from current test",
+  desc: "delete variant from current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec() {
     const { currentTest, takeControl, showIndicator, hideIndicator } =
