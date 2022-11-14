@@ -88,7 +88,7 @@ export const createVariantCommand: Command = {
         .replaceAll("$QUESTION", currentTest!.question)
         .replaceAll(
           "$CREATED",
-          format(new Date(), "yyyy-mm-dd hh:mm:ss.SSSSSS")
+          format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS")
         );
 
       const variant: Variant = {
