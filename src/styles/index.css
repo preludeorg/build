@@ -1,6 +1,7 @@
 @import "core/preflight.css";
 @import "core/colors.css";
 @import "core/typography.css";
+@import "core/breakpoints.css";
 
 body {
   background-color: var(--color-secondary-40);
