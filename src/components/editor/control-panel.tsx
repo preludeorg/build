@@ -6,8 +6,8 @@ import styles from "./control-panel.module.css";
 import useEditorStore from "../../hooks/editor-store";
 import { useState } from "react";
 import classNames from "classnames";
-import AppleIcon from "../icons/apple-icon";
-import LinuxIcon from "../icons/linux-icon";
+import VariantIcon from "../icons/variant-icon";
+import { parseVariant } from "../../lib/utils/parse-variant";
 
 const ControlPanel: React.FC = () => {
   const currentTabId = useEditorStore((state) => state.currentTabId);
@@ -34,11 +34,10 @@ const ControlPanel: React.FC = () => {
           <div className={styles.overlay}>
             <div className={styles.headline}>
               <span className={styles.target}>Deploy on</span>
-              {currentTabId.startsWith("darwin") ? (
-                <AppleIcon className={styles.platformIcon} />
-              ) : (
-                <LinuxIcon className={styles.platformIcon} />
-              )}
+              <VariantIcon
+                platform={parseVariant(currentTabId)?.platform}
+                className={styles.platformIcon}
+              />
               <HelpIcon className={styles.helpIcon} />
             </div>
             <span className={styles.description}>

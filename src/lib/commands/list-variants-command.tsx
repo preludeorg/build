@@ -14,9 +14,8 @@ import { terminalList } from "../../components/terminal/terminal-list";
 import { editorState } from "../../hooks/editor-store";
 import { getTest, getVariant } from "../api";
 import focusTerminal from "../../utils/focus-terminal";
+import { parseVariant } from "../utils/parse-variant";
 
-const VARIANT_FORMAT =
-  /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}(_\w*)?(-\w*)?\.(\w*)/i;
 const OPEN_ALL = "open all";
 
 export const listVariantsCommand: Command = {
@@ -49,16 +48,16 @@ export const listVariantsCommand: Command = {
       }
 
       const shortenVariant = (v: string) => {
-        const results = v.match(VARIANT_FORMAT);
+        const results = parseVariant(v);
         if (!results) {
           return v;
         }
-        let [, platform, arch, language] = results;
-        let shorten = "";
-        shorten += platform ? platform.replaceAll("_", "") : "*";
-        shorten += arch ? arch : "-*";
-        shorten += `.${language}`;
-        return shorten;
+        let { platform, arch, language } = results;
+        return "".concat(
+          platform ? platform : "*",
+          arch ? `-${arch}` : "-*",
+          `.${language}`
+        );
       };
 
       const variant = await terminalList({
