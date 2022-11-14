@@ -95,18 +95,20 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       )}
       <span className={styles.truncate}>{uuid}</span>
       <span>{tabName.replace(uuid, "")}</span>
-      <button
-        className={styles.close}
-        onClick={(e) => {
-          e.stopPropagation();
-          const hasTabs = closeTab(tabName);
-          if (!hasTabs) {
-            navigate("welcome");
-          }
-        }}
-      >
-        <CloseIcon />
-      </button>
+      <div className={styles.closeContainer}>
+        <button
+          className={styles.close}
+          onClick={(e) => {
+            e.stopPropagation();
+            const hasTabs = closeTab(tabName);
+            if (!hasTabs) {
+              navigate("welcome");
+            }
+          }}
+        >
+          <CloseIcon />
+        </button>
+      </div>
     </li>
   );
 };
