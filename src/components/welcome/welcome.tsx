@@ -5,35 +5,28 @@ import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
 import rectangle3 from "../../assets/rectangle3.png";
 import DownloadIcon from "../icons/download-icon";
-import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
+import useNavigationStore, {
+  navigatorState,
+} from "../../hooks/navigation-store";
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  const { setInstaller } = navigatorState();
+  setInstaller(e);
+});
 
 const Welcome = () => {
-  const promptRef = useRef<Event | null>(null);
-  const [showInstaller, setShowInstaller] = useState(false);
-  function beforeInstall(e: Event) {
-    setShowInstaller(true);
-    promptRef.current = e;
-  }
-
-  useEffect(() => {
-    window.addEventListener("beforeinstallprompt", beforeInstall);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", beforeInstall);
-    };
-  }, []);
+  const installer = useNavigationStore((state) => state.installer);
+  const setInstaller = useNavigationStore((state) => state.setInstaller);
 
   async function handleInstall() {
-    if (promptRef.current === null) return;
-    // @ts-ignore
-    promptRef.current.prompt();
-    // @ts-ignore
-    if (promptRef.current.userChoice) {
-      // @ts-ignore
-      const { outcome } = await promptRef.current.userChoice;
+    if (!installer) return;
+
+    installer.prompt();
+    if (installer.userChoice) {
+      const { outcome } = await installer.userChoice;
       if (outcome === "accepted") {
-        promptRef.current = null;
-        setShowInstaller(false);
+        setInstaller();
       }
     }
   }
@@ -48,7 +41,7 @@ const Welcome = () => {
         <section className={styles.install}>
           <button
             onClick={handleInstall}
-            className={classNames({ [styles.showInstaller]: showInstaller })}
+            className={classNames({ [styles.showInstaller]: !!installer })}
           >
             <DownloadIcon />
             Install
