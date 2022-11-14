@@ -16,7 +16,7 @@ import { terminalList } from "../../components/terminal/terminal-list";
 
 export const deleteTestCommand: Command = {
   alias: ["dt"],
-  desc: "deletes a test",
+  desc: "delete test from account",
   enabled: () => isConnected(),
   hidden: () => isInTestContext(),
   async exec() {

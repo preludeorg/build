@@ -21,7 +21,7 @@ const OPEN_ALL = "open all";
 
 export const listVariantsCommand: Command = {
   alias: ["lv"],
-  desc: "lists the variants in current test",
+  desc: "list variants in current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec() {
     const { currentTest, takeControl, showIndicator, hideIndicator } =
