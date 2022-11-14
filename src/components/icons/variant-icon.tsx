@@ -2,8 +2,8 @@ import DarwinIcon from "./darwin-icon";
 import LinuxIcon from "./linux-icon";
 import WindowsIcon from "./windows-icon";
 
-const VariantIcon: React.FC<{ variantName: string; className: string }> = ({
-  variantName,
+const VariantIcon: React.FC<{ platform?: string; className: string }> = ({
+  platform,
   className,
 }) => {
   const variantIcons: Record<string, JSX.Element> = {
@@ -11,8 +11,7 @@ const VariantIcon: React.FC<{ variantName: string; className: string }> = ({
     linux: <LinuxIcon className={className} />,
     windows: <WindowsIcon className={className} />,
   };
-  const icon = Object.keys(variantIcons).filter((v) => variantName.includes(v));
-  return variantIcons[icon.toString()];
+  return platform ? variantIcons[platform] : null;
 };
 
 export default VariantIcon;

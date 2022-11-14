@@ -7,6 +7,7 @@ import useEditorStore from "../../hooks/editor-store";
 import { useState } from "react";
 import classNames from "classnames";
 import VariantIcon from "../icons/variant-icon";
+import { parseVariant } from "../../lib/utils/parse-variant";
 
 const ControlPanel: React.FC = () => {
   const currentTabId = useEditorStore((state) => state.currentTabId);
@@ -34,7 +35,7 @@ const ControlPanel: React.FC = () => {
             <div className={styles.headline}>
               <span className={styles.target}>Deploy on</span>
               <VariantIcon
-                variantName={currentTabId}
+                platform={parseVariant(currentTabId)?.platform}
                 className={styles.platformIcon}
               />
               <HelpIcon className={styles.helpIcon} />
