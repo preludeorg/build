@@ -21,7 +21,7 @@ env:
   AWS_REGION: us-east-1
   S3_BUCKET: prelude-build-us-east-1
   DIST_DIR: ./dist
-  CF_DIST_ID: E378HTGLIUNIPR
+  CF_DIST_ID: EBLD66VAXNINV
   NODE_VER: 18
 
 permissions:
