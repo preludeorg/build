@@ -7,21 +7,28 @@ import styles from "./servers.module.css";
 import classNames from "classnames";
 import useTerminalStore from "../../hooks/terminal-store";
 import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
+import shallow from "zustand/shallow";
+import { select } from "../../lib/utils/select";
 
 const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   toggleServerPanel,
 }) => {
-  const write = useTerminalStore((state) => state.write);
-  const takeControl = useTerminalStore((state) => state.takeControl);
-  const { host, credentials, serverType } = useAuthStore((state) => ({
-    host: state.host,
-    credentials: state.credentials,
-    serverType: state.serverType,
+  const { write, takeControl } = useTerminalStore(
+    select("write", "takeControl"),
+    shallow
+  );
+
+  const { host, credentials, serverType } = useAuthStore(
+    select("host", "credentials", "serverType"),
+    shallow
+  );
+
+  const { isConnected, login, disconnect } = useAuthStore((state) => ({
+    isConnected: selectIsConnected(state),
+    login: state.login,
+    disconnect: state.disconnect,
   }));
 
-  const isConnected = useAuthStore(selectIsConnected);
-  const login = useAuthStore((state) => state.login);
-  const disconnect = useAuthStore((state) => state.disconnect);
   const [type, setType] = useState(serverType);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {

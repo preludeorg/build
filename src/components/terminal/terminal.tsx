@@ -8,6 +8,7 @@ import useAuthStore from "../../hooks/auth-store";
 import WelcomeMessage from "./welcome-message";
 import focusTerminal from "../../utils/focus-terminal";
 import { isControlC } from "../../lib/keys";
+import { select } from "../../lib/utils/select";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -20,22 +21,35 @@ function useTerminal() {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const { bufferedContent, inputEnabled } = useTerminalStore(
-    (state) => ({
-      bufferedContent: state.bufferedContent,
-      inputEnabled: state.inputEnabled,
-    }),
+    select("bufferedContent", "inputEnabled"),
     shallow
   );
 
-  const setFocus = useTerminalStore((state) => state.setFocus);
-  const handleKey = useTerminalStore((state) => state.handleKey);
-  const processCommand = useTerminalStore((state) => state.processCommand);
-  const write = useTerminalStore((state) => state.write);
-  const clear = useTerminalStore((state) => state.clear);
-  const host = useAuthStore((state) => state.host);
-  const credentials = useAuthStore((state) => state.credentials);
-  const autoComplete = useTerminalStore((state) => state.autoComplete);
-  const abort = useTerminalStore((state) => state.abort);
+  const {
+    abort,
+    setFocus,
+    handleKey,
+    processCommand,
+    write,
+    clear,
+    autoComplete,
+  } = useTerminalStore(
+    select(
+      "abort",
+      "setFocus",
+      "handleKey",
+      "processCommand",
+      "write",
+      "clear",
+      "autoComplete"
+    ),
+    shallow
+  );
+
+  const { host, credentials } = useAuthStore(
+    select("host", "credentials"),
+    shallow
+  );
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
     if (isControlC(event)) {
@@ -124,11 +138,7 @@ const Terminal: React.FC = () => {
 
 const CurrentLine = () => {
   const { focused, inputEnabled, currentTest } = useTerminalStore(
-    (state) => ({
-      focused: state.focused,
-      inputEnabled: state.inputEnabled,
-      currentTest: state.currentTest,
-    }),
+    select("focused", "inputEnabled", "currentTest"),
     shallow
   );
 

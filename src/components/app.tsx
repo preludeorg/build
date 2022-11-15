@@ -8,10 +8,11 @@ import shallow from "zustand/shallow";
 import StatusBar from "./status-bar/status-bar";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
 import { Resizable } from "re-resizable";
+import { select } from "../lib/utils/select";
 
 function App() {
   const { panel, serverPanelVisible, toggleServerPanel } = useNavigationStore(
-    (state) => state,
+    select("panel", "serverPanelVisible", "toggleServerPanel"),
     shallow
   );
   return (

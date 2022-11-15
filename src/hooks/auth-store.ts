@@ -67,11 +67,6 @@ const useAuthStore = create<AuthStore>()(
 
 export default useAuthStore;
 
-export const selectServiceConfig = (state: AuthStore) => ({
-  host: state.host,
-  credentials: state.credentials,
-});
-
 export const selectIsConnected = (state: AuthStore) => !!state.credentials;
 
 export const authState = () => useAuthStore.getState();
