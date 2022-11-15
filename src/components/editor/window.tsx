@@ -56,10 +56,7 @@ const EditorWindow: React.FC = () => {
         extensions={extensions}
         onChange={(buffer) => {
           updateBuffer(buffer);
-          const isValid = validate(buffer, linters);
-          if (isValid) {
-            processVariant(currentTabId, buffer, serviceConfig);
-          }
+          processVariant(currentTabId, buffer, serviceConfig);
         }}
       />
       <Linters />

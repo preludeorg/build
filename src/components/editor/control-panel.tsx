@@ -8,13 +8,21 @@ import { useState } from "react";
 import classNames from "classnames";
 import VariantIcon from "../icons/variant-icon";
 import { parseVariant } from "../../lib/utils/parse-variant";
+import { validate } from "../../lib/lang/linter";
+import { getLanguage } from "../../lib/lang";
 
-const ControlPanel: React.FC = () => {
+const ControlPanel: React.FC = ({}) => {
+  const validTest = useEditorStore((state) => {
+    const tab = state.tabs[state.currentTabId];
+
+    return validate(tab.buffer, getLanguage(tab.extension).linters);
+  });
+
   const currentTabId = useEditorStore((state) => state.currentTabId);
   const [overlayVisible, setOverlayVisible] = useState(false);
   return (
     <div className={styles.controlPanel}>
-      <button className={styles.test}>
+      <button disabled={!validTest} className={styles.test}>
         <PlayIcon className={styles.playIcon} />
         <span>Test</span>
       </button>
