@@ -73,6 +73,7 @@ export const listVariantsCommand: Command = {
 
       const filesToOpen = variant === OPEN_ALL ? variants : [variant];
       try {
+        showIndicator("Opening variant...");
         const variants = await Promise.all(
           filesToOpen.map(async (v) => {
             const code = await getVariant(v, { host, credentials }, signal);
@@ -101,6 +102,8 @@ export const listVariantsCommand: Command = {
             message={`failed to get variant: ${(e as Error).message}`}
           />
         );
+      } finally {
+        hideIndicator();
       }
     } catch (e) {
       if (isExitError(e)) {

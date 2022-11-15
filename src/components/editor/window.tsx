@@ -14,6 +14,9 @@ import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
 import { Service, ServiceConfig } from "@theprelude/sdk";
 import VariantIcon from "../icons/variant-icon";
 import { parseVariant } from "../../lib/utils/parse-variant";
+import { terminalState } from "../../hooks/terminal-store";
+
+const { showIndicator, hideIndicator } = terminalState();
 
 const saveVariant = async (
   name: string,
@@ -21,9 +24,13 @@ const saveVariant = async (
   config: ServiceConfig
 ) => {
   try {
+    showIndicator("Auto-saving...");
     const service = new Service(config);
     await service.build.createVariant(name, code);
-  } catch (e) {}
+  } catch (e) {
+  } finally {
+    hideIndicator();
+  }
 };
 
 const processVariant = debounce(saveVariant, 1000);
