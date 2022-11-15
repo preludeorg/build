@@ -38,14 +38,13 @@ const processVariant = debounce(saveVariant, 1000);
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-
-  const { tabKeys, currentTabId, buffer, ext, updateBuffer } = useEditorStore(
+  const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
+  const { currentTabId, ext, buffer, updateBuffer } = useEditorStore(
     (state) => ({
-      tabKeys: Object.keys(state.tabs),
       currentTabId: state.currentTabId,
-      buffer: selectBuffer(state),
       ext: state.tabs[state.currentTabId].extension,
       updateBuffer: state.updateCurrentBuffer,
+      buffer: selectBuffer(state),
     }),
     shallow
   );

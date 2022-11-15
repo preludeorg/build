@@ -13,7 +13,7 @@ const LoaderIcon: React.FC<{ className?: string }> = ({ className }) => {
         cy="12"
         r="9"
         stroke="url(#paint0_angular_277_764)"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <defs>
         <radialGradient
@@ -24,10 +24,10 @@ const LoaderIcon: React.FC<{ className?: string }> = ({ className }) => {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(12 17) rotate(-84.8056) scale(5.52268)"
         >
-          <stop stop-color="#232323" />
-          <stop offset="0.0001" stop-color="white" />
-          <stop offset="0.623581" stop-color="white" />
-          <stop offset="1" stop-color="white" stop-opacity="0" />
+          <stop stopColor="#232323" />
+          <stop offset="0.0001" stopColor="white" />
+          <stop offset="0.623581" stopColor="white" />
+          <stop offset="1" stopColor="white" stopOpacity="0" />
         </radialGradient>
       </defs>
     </svg>

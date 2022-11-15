@@ -67,3 +67,8 @@ export const createVariant = async (
   const service = new Service(config);
   await service.build.createVariant(variant.name, variant.code, { signal });
 };
+
+export const build = async (variantName: string, config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.build.computeProxy(variantName);
+};
