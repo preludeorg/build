@@ -152,26 +152,15 @@ interface Question {
   validator?: Validator;
 }
 
-type Questions = Record<string, Question>;
-
-export async function inquire<T extends Questions>(
-  questions: T
-): Promise<{ [x in keyof T]: string }> {
-  const answers: Record<string, string> = {};
-  for (const [key, ques] of Object.entries(questions)) {
-    while (true) {
-      try {
-        answers[key] = await question(ques);
-        break;
-      } catch (err) {
-        if ((err as Error).message === "invalidAnswer") {
-          continue;
-        }
-
-        throw err;
+export async function inquire(quest: Question): Promise<string> {
+  while (true) {
+    try {
+      return await question(quest);
+    } catch (err) {
+      if ((err as Error).message === "invalidAnswer") {
+        continue;
       }
+      throw err;
     }
   }
-
-  return answers as { [x in keyof T]: string };
 }

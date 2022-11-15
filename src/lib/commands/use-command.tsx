@@ -20,17 +20,11 @@ const validator = z
 const getAnswer = async (args = "") => {
   if (args === "") {
     return await inquire({
-      handle: {
-        message: "enter a handle",
-        validator,
-      },
+      message: "enter a handle",
+      validator,
     });
   }
-  return z
-    .object({
-      handle: validator,
-    })
-    .parse({ handle: args });
+  return validator.parse(args);
 };
 
 export const useCommand: Command = {
@@ -41,7 +35,7 @@ export const useCommand: Command = {
     try {
       const { createAccount, host } = authState();
       const { takeControl } = terminalState();
-      const { handle } = await getAnswer(args);
+      const handle = await getAnswer(args);
 
       const credentials = await createAccount(handle, takeControl().signal);
 
