@@ -18,11 +18,16 @@
   column-gap: 0.75rem;
   color: #fff;
   margin-right: auto;
+  cursor: pointer;
 }
 
-.test:hover {
+.test:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.test:hover:not(:disabled) {
   background-color: var(--color-primary-30);
-  cursor: pointer;
 }
 
 .playIcon {
@@ -70,7 +75,7 @@
 }
 
 .activeChevron {
-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .deploy:hover {
