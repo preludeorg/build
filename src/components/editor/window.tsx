@@ -10,11 +10,12 @@ import React from "react";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
-import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
+import useAuthStore from "../../hooks/auth-store";
 import { Service, ServiceConfig } from "@theprelude/sdk";
 import VariantIcon from "../icons/variant-icon";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { terminalState } from "../../hooks/terminal-store";
+import { select } from "../../lib/utils/select";
 
 const { showIndicator, hideIndicator } = terminalState();
 
@@ -36,15 +37,18 @@ const saveVariant = async (
 const processVariant = debounce(saveVariant, 1000);
 
 const EditorWindow: React.FC = () => {
-  const serviceConfig = useAuthStore(selectServiceConfig, shallow);
-  const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
-  const currentTabId = useEditorStore((state) => state.currentTabId);
-  const buffer = useEditorStore(selectBuffer);
-  const ext = useEditorStore(
-    (state) => state.tabs[state.currentTabId].extension,
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+
+  const { tabKeys, currentTabId, buffer, ext, updateBuffer } = useEditorStore(
+    (state) => ({
+      tabKeys: Object.keys(state.tabs),
+      currentTabId: state.currentTabId,
+      buffer: selectBuffer(state),
+      ext: state.tabs[state.currentTabId].extension,
+      updateBuffer: state.updateCurrentBuffer,
+    }),
     shallow
   );
-  const updateBuffer = useEditorStore((state) => state.updateCurrentBuffer);
 
   const extensions = React.useMemo(() => getLanguage(ext).mode, [ext]);
 
@@ -75,9 +79,10 @@ export default EditorWindow;
 
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const tabName = useEditorStore((state) => state.tabs[tabId].variant.name);
-  const currentTabId = useEditorStore((state) => state.currentTabId);
-  const switchTab = useEditorStore((state) => state.switchTab);
-  const closeTab = useEditorStore((state) => state.closeTab);
+  const { currentTabId, switchTab, closeTab } = useEditorStore(
+    select("currentTabId", "switchTab", "closeTab"),
+    shallow
+  );
   const navigate = useNavigationStore((state) => state.navigate);
   const { id, platform } = parseVariant(tabName) ?? { id: "" };
   return (

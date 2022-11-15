@@ -10,6 +10,8 @@ import useEditorStore from "./editor-store";
 import useNavigationStore from "./navigation-store";
 import useTerminalStore from "./terminal-store";
 import ini from "ini";
+import { select } from "../lib/utils/select";
+import shallow from "zustand/shallow";
 
 const readAsText = (file: Blob): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -33,14 +35,19 @@ const configSchema = z.object({
 });
 
 export const useConfig = () => {
-  const login = useAuthStore((state) => state.login);
-  const takeControl = useTerminalStore((state) => state.takeControl);
-  const write = useTerminalStore((state) => state.write);
-  const resetTerminal = useTerminalStore((state) => state.reset);
+  const { login, host, credentials } = useAuthStore(
+    select("login", "host", "credentials"),
+    shallow
+  );
+
+  const {
+    takeControl,
+    write,
+    reset: resetTerminal,
+  } = useTerminalStore(select("takeControl", "write", "reset"), shallow);
+
   const resetEditor = useEditorStore((state) => state.reset);
   const navigate = useNavigationStore((state) => state.navigate);
-  const host = useAuthStore((state) => state.host);
-  const credentials = useAuthStore((state) => state.credentials);
 
   const importConfig = async (content: string) => {
     try {

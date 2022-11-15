@@ -9,6 +9,8 @@ import classNames from "classnames";
 import useNavigationStore, {
   navigatorState,
 } from "../../hooks/navigation-store";
+import shallow from "zustand/shallow";
+import { select } from "../../lib/utils/select";
 
 window.addEventListener("beforeinstallprompt", (e) => {
   const { setInstaller } = navigatorState();
@@ -16,8 +18,10 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 const Welcome = () => {
-  const installer = useNavigationStore((state) => state.installer);
-  const setInstaller = useNavigationStore((state) => state.setInstaller);
+  const { installer, setInstaller } = useNavigationStore(
+    select("installer", "setInstaller"),
+    shallow
+  );
 
   async function handleInstall() {
     if (!installer) return;
