@@ -8,7 +8,7 @@ import useNavigationStore from "../../hooks/navigation-store";
 import classNames from "classnames";
 import React from "react";
 import { getLanguage } from "../../lib/lang";
-import { lint, validate } from "../../lib/lang/linter";
+import { lint } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
 import useAuthStore, { selectServiceConfig } from "../../hooks/auth-store";
 import { Service, ServiceConfig } from "@theprelude/sdk";
@@ -40,7 +40,6 @@ const EditorWindow: React.FC = () => {
   const updateBuffer = useEditorStore((state) => state.updateCurrentBuffer);
 
   const extensions = React.useMemo(() => getLanguage(ext).mode, [ext]);
-  const linters = React.useMemo(() => getLanguage(ext).linters, [ext]);
 
   return (
     <div className={styles.window}>

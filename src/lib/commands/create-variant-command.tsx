@@ -24,22 +24,27 @@ const languageValidator = z.enum(["c", "cs", "swift"]);
 
 const getAnswers = async (args: string) => {
   if (args === "") {
-    return await inquire({
-      platform: {
-        message: "select a platform",
-        validator: platformValidator,
-        defaultValue: "*",
-      },
-      arch: {
-        message: "select an architecture",
-        validator: archValidator,
-        defaultValue: "*",
-      },
-      language: {
-        message: "select a language",
-        validator: languageValidator,
-      },
+    const platform = await inquire({
+      message: "select a platform",
+      validator: platformValidator,
+      defaultValue: "*",
     });
+
+    const arch =
+      platform !== "*"
+        ? await inquire({
+            message: "select an architecture",
+            validator: archValidator,
+            defaultValue: "*",
+          })
+        : "*";
+
+    const language = await inquire({
+      message: "select a language",
+      validator: languageValidator,
+    });
+
+    return { platform, arch, language };
   }
 
   const input = args.split(" ");
@@ -95,12 +100,10 @@ export const createVariantCommand: Command = {
       hideIndicator();
 
       if (exists) {
-        const { confirm } = await inquire({
-          confirm: {
-            message: "do you want to overwrite exisiting variant?",
-            validator: z.enum(["yes", "no"]),
-            defaultValue: "no",
-          },
+        const confirm = await inquire({
+          message: "do you want to overwrite exisiting variant?",
+          validator: z.enum(["yes", "no"]),
+          defaultValue: "no",
         });
 
         if (confirm === "no") {

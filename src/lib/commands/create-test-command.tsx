@@ -23,17 +23,12 @@ const validator = z
 const getAnswer = async (args = "") => {
   if (args === "") {
     return await inquire({
-      question: {
-        message: "enter a question",
-        validator,
-      },
+      message: "enter a question",
+      validator,
     });
   }
-  return z
-    .object({
-      question: validator,
-    })
-    .parse({ question: args });
+
+  return validator.parse(args);
 };
 
 export const createTestCommand: Command = {
@@ -48,7 +43,7 @@ export const createTestCommand: Command = {
       const { host, credentials } = authState();
 
       const testId = uuid.v4();
-      const { question } = await getAnswer(args);
+      const question = await getAnswer(args);
       const service = new Prelude.Service({ host, credentials });
       showIndicator("Creating test...");
       await service.build.createTest(testId, question);
