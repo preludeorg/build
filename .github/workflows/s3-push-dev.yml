@@ -10,10 +10,10 @@ concurrency:
   group: environment-${{ github.ref }}
 
 env:
-  AWS_REGION: us-east-1
-  S3_BUCKET: prelude-build-us-east-1
+  AWS_REGION: ${{ secrets.BUCKET_REGION }}
+  S3_BUCKET: ${{ secrets.BUCKET_NAME }}
   DIST_DIR: ./dist
-  CF_DIST_ID: E10K5M7KZITZ79
+  CF_DIST_ID: ${{ secrets.CLOUDFRONT_ID }}
   NODE_VER: 18
 
 permissions:
@@ -23,6 +23,7 @@ jobs:
 
   Build:
     runs-on: ubuntu-latest
+    environment: dev
     name: Dev - Build the application and deploy to S3 Bucket
     steps:
       - name: Checkout code
