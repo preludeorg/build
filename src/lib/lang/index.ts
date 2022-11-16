@@ -1,5 +1,6 @@
 import C from "./c";
 import CS from "./cs";
+import GO from "./go";
 import Swift from "./swift";
 
 export function getLanguage(ext: string) {
@@ -7,7 +8,9 @@ export function getLanguage(ext: string) {
     return CS;
   } else if (ext === "swift") {
     return Swift;
-  } else {
+  } else if(ext === "go"){
+    return GO;
+  }else{
     return C;
   }
 }
