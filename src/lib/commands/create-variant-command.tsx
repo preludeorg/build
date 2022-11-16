@@ -20,7 +20,7 @@ import { createVariant, getVariant, Variant, variantExists } from "../api";
 
 const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
-const languageValidator = z.enum(["c", "cs", "swift"]);
+const languageValidator = z.enum(["c", "cs", "swift","rs","go"]);
 
 const getAnswers = async (args: string) => {
   if (args === "") {
