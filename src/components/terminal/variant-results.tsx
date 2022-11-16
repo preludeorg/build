@@ -9,37 +9,53 @@ import TimeIcon from "../icons/time-icon";
 import styles from "./variant-results.module.css";
 
 interface Props {
+  question: string;
   results: ComputeResult[];
 }
 
-const VariantResults: React.FC<Props> = ({ results }) => {
-  const sucesses = 0;
-  const failures = 0;
-  if (results.map((r) => r.steps.map((s) => s.status).includes(1))) {
-    failures + 1;
-  } else {
-    sucesses + 1;
-  }
+const VariantResults: React.FC<Props> = ({ results, question }) => {
+  const sucesses = results.filter((result) =>
+    result.steps.every((step) => step.status === 0)
+  );
+  const failures = results.filter(
+    (result) => !result.steps.every((step) => step.status === 0)
+  );
+
+  const totalTime = results
+    .flatMap((result) => result.steps.map((step) => step.duration))
+    .map((duration) => parseFloat(duration))
+    .reduce((sum, duration) => sum + duration, 0.0);
+
   return (
-    <ul>
-      {results.map((r) => (
-        <VariantResult result={r} key={r.name} />
-      ))}
-      <li className={styles.pass}> {sucesses} Compeleted</li>
-      <li className={styles.alert}>{failures} Failed</li>
-    </ul>
+    <div className={styles.results}>
+      <span className={styles.title}>Tested and compiled "{question}"</span>
+      <ul>
+        {results.map((r) => (
+          <VariantResult result={r} key={r.name} />
+        ))}
+      </ul>
+      <span className={styles.pass}>{sucesses.length} variant(s) complied</span>
+      <span className={styles.alert}>{failures.length} variant(s) failed</span>
+      <span className={styles.time}>
+        Total build time executed in {totalTime.toFixed(3)}s
+      </span>
+    </div>
   );
 };
 
 export default VariantResults;
 
+const isEmpty = (val: string | Array<any>): boolean =>
+  (Array.isArray(val) && val.length === 0) || val === "";
+
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
   const [expanded, setExpanded] = useState(false);
   const status = result.steps.map((s) => s.status);
+  const isPass = status.every((e) => e === 0);
   return (
     <li className={styles.variantContainer}>
       <div className={styles.variant} onClick={() => setExpanded(!expanded)}>
-        {status.every((e) => e === 0) ? (
+        {isPass ? (
           <CheckmarkIcon className={styles.checkmarkIcon} />
         ) : (
           <AlertIcon className={styles.alertIcon} />
@@ -51,46 +67,49 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
           })}
         />
       </div>
-      <ul
-        className={classNames(styles.steps, {
-          [styles.expanded]: expanded,
-        })}
-      >
-        {result.steps.map((s) => (
-          <li className={styles.step} key={s.step}>
-            <div className={styles.info}>
-              <div className={styles.infoBlock}>
-                <ChevronIcon className={styles.stepChevron} />
-                <span>{s.step}</span>
+
+      {expanded && (
+        <ul className={classNames(styles.steps)}>
+          {result.steps.map((s) => (
+            <li className={styles.step} key={s.step}>
+              <div className={styles.info}>
+                <div className={styles.infoBlock}>
+                  <ChevronIcon className={styles.stepChevron} />
+                  <span>{s.step}</span>
+                </div>
+                {s.status === 0 ? (
+                  <div className={styles.infoBlock}>
+                    <CheckmarkIcon className={styles.checkmarkIcon} />
+                    <span className={styles.pass}>Pass</span>
+                  </div>
+                ) : (
+                  <div className={styles.infoBlock}>
+                    <AlertIcon className={styles.alertIcon} />
+                    <span className={styles.alert}>Error</span>
+                  </div>
+                )}
+                <div className={styles.infoBlock}>
+                  <TimeIcon className={styles.timeIcon} />
+                  <span>{s.duration}s</span>
+                </div>
               </div>
-              {s.status === 0 ? (
-                <div className={styles.infoBlock}>
-                  <CheckmarkIcon className={styles.checkmarkIcon} />
-                  <span className={styles.pass}>Pass</span>
-                </div>
-              ) : (
-                <div className={styles.infoBlock}>
-                  <AlertIcon className={styles.alertIcon} />
-                  <span className={styles.alert}>Error</span>
-                </div>
+
+              {!isEmpty(s.output) && <VariantOutput step={s} />}
+
+              {s.step.toLowerCase() === "publish" && s.status !== 1 && (
+                <button
+                  className={classNames(styles.publish, {
+                    [styles.left]: !isEmpty(s.output),
+                  })}
+                >
+                  <LaunchIcon className={styles.launchIcon} />
+                  <span>Publish</span>
+                </button>
               )}
-              <div className={styles.infoBlock}>
-                <TimeIcon className={styles.timeIcon} />
-                <span>{s.duration}s</span>
-              </div>
-            </div>
-            <VariantOutput step={s} />
-            {s.step.toLowerCase() === "publish" ? (
-              <button className={styles.publish}>
-                <LaunchIcon className={styles.launchIcon} />
-                <span>Publish</span>
-              </button>
-            ) : (
-              ""
-            )}
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
     </li>
   );
 };
@@ -103,55 +122,49 @@ const VariantOutput: React.FC<{
     duration: string;
   };
 }> = ({ step }) => {
-  const output = Array.isArray(step.output) ? step.output[0] : step.output;
+  const isArrayOutput = Array.isArray(step.output);
+  const output = Array.isArray(step.output)
+    ? (step.output[0] as string) ?? ""
+    : step.output;
+
   const [readMore, setReadMore] = useState(false);
   return (
-    <>
-      {readMore ? (
-        <ul className={styles.outputArray}>
-          {Array.isArray(step.output)
-            ? step.output.map((o) => (
-                <li className={step.status !== 0 ? styles.alert : ""}>{o}</li>
-              ))
-            : ""}
-          <span
-            onClick={() => setReadMore(!readMore)}
-            className={classNames(styles.details, styles.lessDetail, {
-              [styles.alert]: step.status !== 0,
-            })}
-          >
-            Less Details
-          </span>
-        </ul>
-      ) : (
-        <div className={styles.output}>
-          {Array.isArray(step.output) && step.output.length !== 0 ? (
-            <>
-              <span
-                className={classNames(styles.truncate, {
-                  [styles.alert]: step.status !== 0,
-                })}
-              >
-                {output}
-              </span>
-              <span
-                onClick={() => setReadMore(!readMore)}
-                className={classNames(styles.details, {
-                  [styles.alert]: step.status !== 0,
-                })}
-              >
-                See Details
-              </span>
-            </>
-          ) : (
-            <>
-              <span className={step.status !== 0 ? styles.alert : ""}>
-                {output}
-              </span>
-            </>
-          )}
-        </div>
+    <div
+      className={classNames(styles.output, {
+        [styles.more]: readMore,
+      })}
+    >
+      <span
+        className={classNames({
+          [styles.truncate]: isArrayOutput && !readMore,
+          [styles.alert]: step.status !== 0,
+        })}
+      >
+        {output}
+      </span>
+
+      {readMore && Array.isArray(step.output) && (
+        <>
+          {step.output.slice(1).map((o) => (
+            <span
+              key={Date.now()}
+              className={step.status !== 0 ? styles.alert : ""}
+            >
+              {o}
+            </span>
+          ))}
+        </>
       )}
-    </>
+      {Array.isArray(step.output) && step.output.length !== 0 && (
+        <span
+          onClick={() => setReadMore(!readMore)}
+          className={classNames(styles.details, {
+            [styles.alert]: step.status !== 0,
+          })}
+        >
+          {!readMore ? "See Details" : "  Less Details"}
+        </span>
+      )}
+    </div>
   );
 };

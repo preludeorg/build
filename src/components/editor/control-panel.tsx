@@ -25,8 +25,8 @@ const ControlPanel: React.FC = () => {
     };
   }, shallow);
 
-  const { write, showIndicator, hideIndicator } = useTerminalStore(
-    select("write", "showIndicator", "hideIndicator")
+  const { write, showIndicator, hideIndicator, currentTest } = useTerminalStore(
+    select("write", "showIndicator", "hideIndicator", "currentTest")
   );
 
   const handleBuild = async () => {
@@ -34,7 +34,9 @@ const ControlPanel: React.FC = () => {
       setLoading(true);
       showIndicator("Building...");
       const results = await build(currentTabId, serviceConfig);
-      write(<VariantResults results={results} />);
+      write(
+        <VariantResults question={currentTest!.question} results={results} />
+      );
     } catch (e) {
     } finally {
       setLoading(false);
