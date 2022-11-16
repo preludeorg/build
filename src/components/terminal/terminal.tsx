@@ -9,7 +9,6 @@ import WelcomeMessage from "./welcome-message";
 import focusTerminal from "../../utils/focus-terminal";
 import { isControlC } from "../../lib/keys";
 import { select } from "../../lib/utils/select";
-import VariantResults from "./variant-results";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {
@@ -154,65 +153,17 @@ const CurrentLine = () => {
 
   return (
     <>
-    <PrimaryPrompt test={currentTest}>
-      <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-      <span className={classNames(styles.caret, { [styles.focused]: focused })}>
-        <span className={styles.caretAfter} />
-      </span>
-      <span className={styles.preWhiteSpace}>{afterCaretText}</span>
-    </PrimaryPrompt>
-    <VariantResults results={results}/>
+      <PrimaryPrompt test={currentTest}>
+        <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
+        <span
+          className={classNames(styles.caret, { [styles.focused]: focused })}
+        >
+          <span className={styles.caretAfter} />
+        </span>
+        <span className={styles.preWhiteSpace}>{afterCaretText}</span>
+      </PrimaryPrompt>
     </>
   );
 };
-
-const results = [
-  {
-    name: "2613fbc3-8e41-45de-afac-fcc5b0b7332b_linux_linux-x86_64",
-    steps: [
-      {
-        step: "COMPILE",
-        status: 0,
-        output: "",
-        duration: "3.732",
-      },
-      {
-        step: "SCAN",
-        status: 0,
-        output: ["Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el","Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el"],
-        duration: "0.235",
-      },
-      {
-        step: "PUBLISH",
-        status: 0,
-        output: "",
-        duration: "0.224",
-      },
-    ],
-  },
-  {
-    name: "2613fbc3-8e41-45de-afac-fcc5b0b7332b_linux_linux-arm64",
-    steps: [
-      {
-        step: "COMPILE",
-        status: 0,
-        output: "Hello this is a test",
-        duration: "3.823",
-      },
-      {
-        step: "SCAN",
-        status: 1,
-        output: ["Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el","Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el"],
-        duration: "0.117",
-      },
-      {
-        step: "PUBLISH",
-        status: 1,
-        output: "Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec el",
-        duration: "0.198",
-      },
-    ],
-  },
-];
 
 export default Terminal;

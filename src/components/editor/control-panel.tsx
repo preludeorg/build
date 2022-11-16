@@ -11,6 +11,7 @@ import { select } from "../../lib/utils/select";
 import { build } from "../../lib/api";
 import LoaderIcon from "../icons/loader-icon";
 import { useState } from "react";
+import VariantResults from "../terminal/variant-results";
 
 const ControlPanel: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -33,7 +34,7 @@ const ControlPanel: React.FC = () => {
       setLoading(true);
       showIndicator("Building...");
       const results = await build(currentTabId, serviceConfig);
-      write(<pre>{JSON.stringify(results, null, 2)}</pre>);
+      write(<VariantResults results={results} />);
     } catch (e) {
     } finally {
       setLoading(false);
