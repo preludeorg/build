@@ -8,7 +8,7 @@ export function getLanguage(ext: string) {
     return CS;
   } else if (ext === "swift") {
     return Swift;
-  } else if (ext == "rust") {
+  } else if (ext == "rs") {
     return Rust;
   } else {
     return C;

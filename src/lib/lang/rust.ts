@@ -1,7 +1,7 @@
 import { rust } from "@codemirror/legacy-modes/mode/rust";
 import { StreamLanguage } from "@codemirror/language";
 import { Linter } from "./linter";
-import template from "./templates/template.rust?raw";
+import template from "./templates/template.rs?raw";
 
 export default class Rust {
   static linters: Linter[] = [
