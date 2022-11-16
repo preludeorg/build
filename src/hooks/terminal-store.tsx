@@ -262,6 +262,13 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       };
     });
 
+    if (commandName === "") {
+      set(() => ({
+        inputEnabled: true,
+      }));
+      return;
+    }
+
     const commandArguments = rest.join(" ");
     const commandKey = Object.keys(commands).find(
       (c) => commandName === c || commands[c].alias?.includes(commandName)

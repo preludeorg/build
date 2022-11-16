@@ -11,6 +11,7 @@ import { select } from "../../lib/utils/select";
 import { build } from "../../lib/api";
 import LoaderIcon from "../icons/loader-icon";
 import { useState } from "react";
+import VariantResults from "../terminal/variant-results";
 
 const ControlPanel: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -24,8 +25,8 @@ const ControlPanel: React.FC = () => {
     };
   }, shallow);
 
-  const { write, showIndicator, hideIndicator } = useTerminalStore(
-    select("write", "showIndicator", "hideIndicator")
+  const { write, showIndicator, hideIndicator, currentTest } = useTerminalStore(
+    select("write", "showIndicator", "hideIndicator", "currentTest")
   );
 
   const handleBuild = async () => {
@@ -33,7 +34,9 @@ const ControlPanel: React.FC = () => {
       setLoading(true);
       showIndicator("Building...");
       const results = await build(currentTabId, serviceConfig);
-      write(<pre>{JSON.stringify(results, null, 2)}</pre>);
+      write(
+        <VariantResults question={currentTest!.question} results={results} />
+      );
     } catch (e) {
     } finally {
       setLoading(false);

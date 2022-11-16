@@ -152,13 +152,17 @@ const CurrentLine = () => {
   }
 
   return (
-    <PrimaryPrompt test={currentTest}>
-      <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-      <span className={classNames(styles.caret, { [styles.focused]: focused })}>
-        <span className={styles.caretAfter} />
-      </span>
-      <span className={styles.preWhiteSpace}>{afterCaretText}</span>
-    </PrimaryPrompt>
+    <>
+      <PrimaryPrompt test={currentTest}>
+        <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
+        <span
+          className={classNames(styles.caret, { [styles.focused]: focused })}
+        >
+          <span className={styles.caretAfter} />
+        </span>
+        <span className={styles.preWhiteSpace}>{afterCaretText}</span>
+      </PrimaryPrompt>
+    </>
   );
 };
 
