@@ -82,6 +82,7 @@
 .loaderIcon {
   width: 1rem;
   height: 1rem;
+  fill: var(--white);
   animation: loader 1.2s linear infinite;
 }
 
