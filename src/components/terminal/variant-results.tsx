@@ -56,7 +56,7 @@ const isEmpty = (val: string | Array<any>): boolean =>
 
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
   const [expanded, setExpanded] = useState(false);
-  const [published, setPublished] = useState(false);
+  const [linkAvailable, setLinkAvailable] = useState(false);
   const [url, setURL] = useState("");
   const [loading, setLoading] = useState(false);
   const status = result.steps.map((s) => s.status);
@@ -71,10 +71,10 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
         )}
         <span className={styles.name}>{result.name}</span>
         {!expanded && isPass ? (
-          <PublishButton
+          <DownloadLink
             variant={result.name}
-            published={published}
-            setPublished={setPublished}
+            linkAvailable={linkAvailable}
+            setLinkAvailable={setLinkAvailable}
             url={url}
             setURL={setURL}
             loading={loading}
@@ -119,10 +119,10 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
               {!isEmpty(s.output) && <VariantOutput step={s} />}
 
               {s.step.toLowerCase() === "publish" && s.status !== 1 && (
-                <PublishButton
+                <DownloadLink
                   variant={result.name}
-                  published={published}
-                  setPublished={setPublished}
+                  linkAvailable={linkAvailable}
+                  setLinkAvailable={setLinkAvailable}
                   url={url}
                   setURL={setURL}
                   loading={loading}
@@ -192,32 +192,32 @@ const VariantOutput: React.FC<{
   );
 };
 
-interface PublishButtonProps {
+interface DownloadLinkProps {
   variant: string;
-  published: boolean;
-  setPublished: (b: boolean) => void;
+  linkAvailable: boolean;
+  setLinkAvailable: (b: boolean) => void;
   url: string;
   setURL: (u: string) => void;
   loading: boolean;
   setLoading: (b: boolean) => void;
 }
 
-const PublishButton: React.FC<PublishButtonProps> = ({
+const DownloadLink: React.FC<DownloadLinkProps> = ({
   variant,
-  published,
-  setPublished,
+  linkAvailable,
+  setLinkAvailable,
   url,
   setURL,
   loading,
   setLoading,
 }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const handlePublish = async (variant: string) => {
+  const handleDownloadLink = async (variant: string) => {
     setLoading(true);
     try {
       const { url } = await createURL(variant, serviceConfig);
       setURL(url);
-      setPublished(true);
+      setLinkAvailable(true);
     } catch {
     } finally {
       setLoading(false);
@@ -230,27 +230,27 @@ const PublishButton: React.FC<PublishButtonProps> = ({
   };
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      {published && url ? (
-        <button className={styles.publish} onClick={() => handleCopy()}>
+      {linkAvailable && url ? (
+        <button className={styles.download} onClick={() => handleCopy()}>
           <input type="url" value={url} readOnly className={styles.url}></input>
           <CopyIcon className={styles.copyIcon} />
         </button>
       ) : (
         <button
-          className={styles.publish}
-          onClick={(e) => handlePublish(variant)}
+          className={styles.download}
+          onClick={(e) => handleDownloadLink(variant)}
         >
           {loading ? (
             <>
               <LoaderIcon
                 className={classNames(styles.launchIcon, styles.loaderIcon)}
               />
-              <span>Publishing...</span>
+              <span>Generating link...</span>
             </>
           ) : (
             <>
               <LaunchIcon className={styles.launchIcon} />
-              <span>Publish</span>
+              <span>Download link</span>
             </>
           )}
         </button>
