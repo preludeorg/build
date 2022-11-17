@@ -61,6 +61,17 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
           <AlertIcon className={styles.alertIcon} />
         )}
         <span className={styles.name}>{result.name}</span>
+        {!expanded && isPass ? (
+          <button
+            className={styles.publish}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <LaunchIcon className={styles.launchIcon} />
+            <span>Publish</span>
+          </button>
+        ) : (
+          ""
+        )}
         <ChevronIcon
           className={classNames(styles.chevronIcon, {
             [styles.activeChevron]: expanded,
