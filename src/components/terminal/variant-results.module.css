@@ -121,6 +121,10 @@ ul {
   color: var(--white);
 }
 
+.publish.left {
+  margin-left: 1rem;
+}
+
 .publish:hover {
   cursor: pointer;
   background-color: var(--color-secondary-20);

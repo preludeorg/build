@@ -104,7 +104,19 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
                   <span>{s.duration}s</span>
                 </div>
               </div>
+
               {!isEmpty(s.output) && <VariantOutput step={s} />}
+
+              {s.step.toLowerCase() === "publish" && s.status !== 1 && (
+                <button
+                  className={classNames(styles.publish, {
+                    [styles.left]: !isEmpty(s.output),
+                  })}
+                >
+                  <LaunchIcon className={styles.launchIcon} />
+                  <span>Publish</span>
+                </button>
+              )}
             </li>
           ))}
         </ul>
