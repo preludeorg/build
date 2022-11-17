@@ -241,11 +241,18 @@ const PublishButton: React.FC<PublishButtonProps> = ({
           onClick={(e) => handlePublish(variant)}
         >
           {loading ? (
-            <LoaderIcon className={classNames(styles.launchIcon, styles.loaderIcon)} />
+            <>
+              <LoaderIcon
+                className={classNames(styles.launchIcon, styles.loaderIcon)}
+              />
+              <span>Publishing...</span>
+            </>
           ) : (
-            <LaunchIcon className={styles.launchIcon} />
+            <>
+              <LaunchIcon className={styles.launchIcon} />
+              <span>Publish</span>
+            </>
           )}
-          <span>Publish</span>
         </button>
       )}
     </div>
