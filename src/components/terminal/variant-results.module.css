@@ -109,7 +109,7 @@ ul {
   fill: var(--gray-10);
 }
 
-.publish {
+.download {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -121,11 +121,11 @@ ul {
   color: var(--white);
 }
 
-.publish.left {
+.download.left {
   margin-left: 1rem;
 }
 
-.publish:hover {
+.download:hover {
   cursor: pointer;
   background-color: var(--color-secondary-20);
 }
