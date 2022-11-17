@@ -64,20 +64,22 @@ const StatusBar: React.FC = () => {
         </Popover>
       </div>
 
-      {statusIndicator?.loading === true && (
-        <div className={styles.statusIndicator}>
-          <LoaderIcon className={styles.loaderIcon} />
-          <span>{statusIndicator.message}</span>
-        </div>
-      )}
-      {isConnected && (
-        <div className={classNames(styles.stat, styles.compiled)}>
-          <button onClick={() => showOverlay("verifiedTests")}>
-            <LaunchIcon className={styles.icon} />
-            <span>Compiled</span>
-          </button>
-        </div>
-      )}
+      <section className={styles.right}>
+        {statusIndicator?.loading === true && (
+          <div className={styles.statusIndicator}>
+            <LoaderIcon className={styles.loaderIcon} />
+            <span>{statusIndicator.message}</span>
+          </div>
+        )}
+        {isConnected && (
+          <div className={classNames(styles.stat, styles.compiled)}>
+            <button onClick={() => showOverlay("verifiedTests")}>
+              <LaunchIcon className={styles.icon} />
+              <span>Compiled</span>
+            </button>
+          </div>
+        )}
+      </section>
     </div>
   );
 };

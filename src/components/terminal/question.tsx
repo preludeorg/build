@@ -25,6 +25,7 @@ interface QuestionProps {
   onAnswer: (answer: string) => void;
   onInvalidAnswer: (invalid: string) => void;
   onExit: () => void;
+  signal?: AbortSignal;
 }
 
 export const Question: React.FC<QuestionProps> = ({
@@ -34,10 +35,27 @@ export const Question: React.FC<QuestionProps> = ({
   onAnswer,
   onInvalidAnswer,
   validator = z.string() as Validator,
+  signal,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [answer, setAnswer] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const exit = () => {
+    setAnswer("");
+    onExit();
+  };
+
+  useEffect(() => {
+    if (!signal) {
+      return;
+    }
+
+    signal.addEventListener("abort", exit);
+    return () => {
+      signal.removeEventListener("abort", exit);
+    };
+  }, []);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -47,9 +65,7 @@ export const Question: React.FC<QuestionProps> = ({
     if (e.key === "Escape" || isControlC(e)) {
       e.preventDefault();
       const value = inputRef.current?.value ?? "";
-
       setAnswer(value);
-
       onExit();
       focusTerminal();
       return false;
@@ -150,6 +166,7 @@ interface Question {
   choices?: readonly string[];
   defaultValue?: string;
   validator?: Validator;
+  signal?: AbortSignal;
 }
 
 export async function inquire(quest: Question): Promise<string> {

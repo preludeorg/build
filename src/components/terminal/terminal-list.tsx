@@ -15,6 +15,7 @@ export interface TerminalListProps<T> {
   renderItem: (item: T) => JSX.Element;
   onSelect: (item: T) => void;
   onExit: () => void;
+  signal?: AbortSignal;
 }
 
 const ITEM_PER_PAGE = 5;
@@ -27,6 +28,7 @@ const TerminalList = <T extends {}>({
   onSelect,
   onExit,
   filterOn,
+  signal,
 }: TerminalListProps<T>): JSX.Element => {
   const pickerRef = useRef<HTMLInputElement>(null);
   const filterRef = useRef<HTMLInputElement>(null);
@@ -36,6 +38,22 @@ const TerminalList = <T extends {}>({
   const [page, setPage] = useState(1);
   const [mode, setMode] = useState<"list" | "filter">("list");
   const [filter, setFilter] = useState("");
+
+  const exit = () => {
+    setExited(true);
+    onExit();
+  };
+
+  useEffect(() => {
+    if (!signal) {
+      return;
+    }
+
+    signal.addEventListener("abort", exit);
+    return () => {
+      signal.removeEventListener("abort", exit);
+    };
+  }, []);
 
   useEffect(() => {
     prevRef.current = document.activeElement || document.body;
@@ -272,6 +290,7 @@ export async function terminalList<T extends {}>({
   keyProp,
   renderItem,
   filterOn,
+  signal,
 }: ListerProps<T>): Promise<T> {
   return new Promise((resolve, reject) => {
     const { write } = terminalState();
@@ -289,6 +308,7 @@ export async function terminalList<T extends {}>({
         onExit={() => {
           reject(new Error("exited"));
         }}
+        signal={signal}
       />
     );
   });
