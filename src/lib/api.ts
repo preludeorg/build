@@ -72,3 +72,13 @@ export const build = async (variantName: string, config: ServiceConfig) => {
   const service = new Service(config);
   return await service.build.computeProxy(variantName);
 };
+
+export const verifiedTests = async (config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.build.verifiedTests();
+};
+
+export const createURL = async (name: string, config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.build.createURL(name);
+};

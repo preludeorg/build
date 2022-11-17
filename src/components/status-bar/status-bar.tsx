@@ -6,8 +6,15 @@ import useTerminalStore from "../../hooks/terminal-store";
 import LoaderIcon from "../icons/loader-icon";
 import shallow from "zustand/shallow";
 
+import useNavigationStore from "../../hooks/navigation-store";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
+import classNames from "classnames";
+import LaunchIcon from "../icons/launch-icon";
+
 const StatusBar: React.FC = () => {
   const { handleExport, handleImport } = useConfig();
+  const showOverlay = useNavigationStore((state) => state.showOverlay);
+  const isConnected = useAuthStore(selectIsConnected);
   const statusIndicator = useTerminalStore(
     (state) => state.statusIndicator,
     shallow
@@ -40,24 +47,35 @@ const StatusBar: React.FC = () => {
                   >
                     Import Credentials
                   </a>
-                  <a
-                    onClick={() => {
-                      handleExport();
-                      close();
-                    }}
-                  >
-                    Export Crententials
-                  </a>
+                  {isConnected && (
+                    <a
+                      onClick={() => {
+                        handleExport();
+                        close();
+                      }}
+                    >
+                      Export Crententials
+                    </a>
+                  )}
                 </>
               )}
             </Popover.Panel>
           </Transition>
         </Popover>
       </div>
+
       {statusIndicator?.loading === true && (
         <div className={styles.statusIndicator}>
           <LoaderIcon className={styles.loaderIcon} />
           <span>{statusIndicator.message}</span>
+        </div>
+      )}
+      {isConnected && (
+        <div className={classNames(styles.stat, styles.compiled)}>
+          <button onClick={() => showOverlay("verifiedTests")}>
+            <LaunchIcon className={styles.icon} />
+            <span>Compiled</span>
+          </button>
         </div>
       )}
     </div>
