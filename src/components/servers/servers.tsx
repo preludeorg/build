@@ -9,10 +9,11 @@ import useTerminalStore from "../../hooks/terminal-store";
 import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 import shallow from "zustand/shallow";
 import { select } from "../../lib/utils/select";
+import useNavigationStore from "../../hooks/navigation-store";
 
-const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
-  toggleServerPanel,
-}) => {
+const Servers: React.FC = () => {
+  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
+
   const { write, takeControl } = useTerminalStore(
     select("write", "takeControl"),
     shallow
@@ -64,14 +65,14 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     <div
       className={styles.overlay}
       onClick={(e) => {
-        toggleServerPanel();
+        hideOverlay();
       }}
     >
       <div className={styles.servers} onClick={(e) => e.stopPropagation()}>
         <div
           className={styles.closeIcon}
           onClick={(e) => {
-            toggleServerPanel();
+            hideOverlay();
           }}
         >
           <CloseIcon className={styles.icon} />

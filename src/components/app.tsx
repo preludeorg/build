@@ -9,10 +9,11 @@ import StatusBar from "./status-bar/status-bar";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
 import { Resizable } from "re-resizable";
 import { select } from "../lib/utils/select";
+import VerifiedTests from "./verified-tests/verified-tests";
 
 function App() {
-  const { panel, serverPanelVisible, toggleServerPanel } = useNavigationStore(
-    select("panel", "serverPanelVisible", "toggleServerPanel"),
+  const { panel, overlay } = useNavigationStore(
+    select("panel", "overlay"),
     shallow
   );
   return (
@@ -34,7 +35,8 @@ function App() {
         </Resizable>
         <StatusBar />
       </main>
-      {serverPanelVisible && <Servers toggleServerPanel={toggleServerPanel} />}
+      {overlay === "servers" && <Servers />}
+      {overlay === "verifiedTests" && <VerifiedTests />}
       <ReloadPrompt />
     </div>
   );

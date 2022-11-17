@@ -7,11 +7,9 @@ const ConnectedServer = () => {
   const host = useAuthStore((state) => state.host);
   const isConnected = useAuthStore(selectIsConnected);
   const serverName = isConnected ? host : "Disconnected";
-  const toggleServerPanel = useNavigationStore(
-    (state) => state.toggleServerPanel
-  );
+  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
   return (
-    <button onClick={toggleServerPanel} className={styles.container}>
+    <button onClick={hideOverlay} className={styles.container}>
       <div
         className={classNames(styles.status, {
           [styles.connected]: isConnected,
