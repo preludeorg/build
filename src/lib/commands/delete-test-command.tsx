@@ -31,13 +31,14 @@ export const deleteTestCommand: Command = {
       const { closeTab, tabs } = editorState();
       const { host, credentials } = authState();
       const { navigate } = navigatorState();
+      const signal = takeControl().signal;
 
       const tests = await getTestList(
         {
           host,
           credentials,
         },
-        takeControl().signal
+        signal
       );
 
       if (tests.length === 0) {
@@ -53,6 +54,7 @@ export const deleteTestCommand: Command = {
             <span>{test.question}</span> <span>[{test.id}]</span>
           </>
         ),
+        signal,
       });
 
       showIndicator("Deleting test...");

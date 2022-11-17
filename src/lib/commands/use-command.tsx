@@ -17,11 +17,12 @@ const validator = z
   })
   .min(1, { message: "handle is required" });
 
-const getAnswer = async (args = "") => {
+const getAnswer = async (args = "", signal: AbortSignal) => {
   if (args === "") {
     return await inquire({
       message: "enter a handle",
       validator,
+      signal,
     });
   }
   return validator.parse(args);
@@ -35,9 +36,10 @@ export const useCommand: Command = {
     try {
       const { createAccount, host } = authState();
       const { takeControl } = terminalState();
-      const handle = await getAnswer(args);
+      const signal = takeControl().signal;
+      const handle = await getAnswer(args, signal);
 
-      const credentials = await createAccount(handle, takeControl().signal);
+      const credentials = await createAccount(handle, signal);
 
       return <WelcomeMessage host={host} credentials={credentials} />;
     } catch (e) {

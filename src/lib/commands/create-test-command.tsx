@@ -20,11 +20,12 @@ const validator = z
   })
   .min(1, { message: "question is required" });
 
-const getAnswer = async (args = "") => {
+const getAnswer = async (args = "", signal: AbortSignal) => {
   if (args === "") {
     return await inquire({
       message: "enter a question",
       validator,
+      signal,
     });
   }
 
@@ -38,15 +39,18 @@ export const createTestCommand: Command = {
   enabled: () => isConnected(),
   hidden: () => isInTestContext(),
   async exec(args) {
-    const { switchTest, showIndicator, hideIndicator } = terminalState();
+    const { switchTest, showIndicator, hideIndicator, takeControl } =
+      terminalState();
     try {
       const { host, credentials } = authState();
 
+      const signal = takeControl().signal;
+
       const testId = uuid.v4();
-      const question = await getAnswer(args);
+      const question = await getAnswer(args, signal);
       const service = new Prelude.Service({ host, credentials });
       showIndicator("Creating test...");
-      await service.build.createTest(testId, question);
+      await service.build.createTest(testId, question, { signal });
 
       switchTest({
         id: testId,

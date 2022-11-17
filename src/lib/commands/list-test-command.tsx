@@ -23,13 +23,15 @@ export const listTestsCommand: Command = {
     try {
       const { host, credentials } = authState();
 
+      const signal = takeControl().signal;
+
       showIndicator("Retrieving tests...");
       const tests = await getTestList(
         {
           host,
           credentials,
         },
-        takeControl().signal
+        signal
       );
       hideIndicator();
 
@@ -46,6 +48,7 @@ export const listTestsCommand: Command = {
             <span>{test.question}</span> <span>[{test.id}]</span>
           </>
         ),
+        signal,
       });
 
       switchTest(test);

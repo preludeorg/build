@@ -69,6 +69,7 @@ export const listVariantsCommand: Command = {
             <span>{shortenVariant(variant)}</span>
           </>
         ),
+        signal,
       });
 
       const filesToOpen = variant === OPEN_ALL ? variants : [variant];

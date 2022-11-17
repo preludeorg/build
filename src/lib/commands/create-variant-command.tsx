@@ -22,12 +22,13 @@ const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
 const languageValidator = z.enum(["c", "cs", "swift"]);
 
-const getAnswers = async (args: string) => {
+const getAnswers = async (args: string, signal: AbortSignal) => {
   if (args === "") {
     const platform = await inquire({
       message: "select a platform",
       validator: platformValidator,
       defaultValue: "*",
+      signal,
     });
 
     const arch =
@@ -75,7 +76,7 @@ export const createVariantCommand: Command = {
       const { host, credentials } = authState();
       const signal = takeControl().signal;
 
-      const results = await getAnswers(args);
+      const results = await getAnswers(args, signal);
 
       const { platform, arch, language } = results;
 
