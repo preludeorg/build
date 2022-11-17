@@ -21,10 +21,10 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
     (result) => !result.steps.every((step) => step.status === 0)
   );
 
-  const totalTime = results
+  const longestTime = results
     .flatMap((result) => result.steps.map((step) => step.duration))
     .map((duration) => parseFloat(duration))
-    .reduce((sum, duration) => sum + duration, 0.0);
+    .sort((a, b) => b - a)[0];
 
   return (
     <div className={styles.results}>
@@ -37,7 +37,7 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
       <span className={styles.pass}>{sucesses.length} variant(s) complied</span>
       <span className={styles.alert}>{failures.length} variant(s) failed</span>
       <span className={styles.time}>
-        Total build time executed in {totalTime.toFixed(3)}s
+        Total build time executed in {longestTime.toFixed(3)}s
       </span>
     </div>
   );
