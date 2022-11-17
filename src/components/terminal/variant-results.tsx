@@ -1,12 +1,18 @@
 import { ComputeResult } from "@theprelude/sdk";
 import classNames from "classnames";
 import { useState } from "react";
+import useAuthStore from "../../hooks/auth-store";
 import AlertIcon from "../icons/alert-icon";
 import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
 import LaunchIcon from "../icons/launch-icon";
 import TimeIcon from "../icons/time-icon";
 import styles from "./variant-results.module.css";
+import shallow from "zustand/shallow";
+import { select } from "../../lib/utils/select";
+import { createURL } from "../../lib/api";
+import CopyIcon from "../icons/copy-icon";
+import LoaderIcon from "../icons/loader-icon";
 
 interface Props {
   question: string;
@@ -50,6 +56,9 @@ const isEmpty = (val: string | Array<any>): boolean =>
 
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
   const [expanded, setExpanded] = useState(false);
+  const [published, setPublished] = useState(false);
+  const [url, setURL] = useState("");
+  const [loading, setLoading] = useState(false);
   const status = result.steps.map((s) => s.status);
   const isPass = status.every((e) => e === 0);
   return (
@@ -62,13 +71,15 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
         )}
         <span className={styles.name}>{result.name}</span>
         {!expanded && isPass ? (
-          <button
-            className={styles.publish}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <LaunchIcon className={styles.launchIcon} />
-            <span>Publish</span>
-          </button>
+          <PublishButton
+            variant={result.name}
+            published={published}
+            setPublished={setPublished}
+            url={url}
+            setURL={setURL}
+            loading={loading}
+            setLoading={setLoading}
+          />
         ) : (
           ""
         )}
@@ -108,14 +119,15 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
               {!isEmpty(s.output) && <VariantOutput step={s} />}
 
               {s.step.toLowerCase() === "publish" && s.status !== 1 && (
-                <button
-                  className={classNames(styles.publish, {
-                    [styles.left]: !isEmpty(s.output),
-                  })}
-                >
-                  <LaunchIcon className={styles.launchIcon} />
-                  <span>Publish</span>
-                </button>
+                <PublishButton
+                  variant={result.name}
+                  published={published}
+                  setPublished={setPublished}
+                  url={url}
+                  setURL={setURL}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
               )}
             </li>
           ))}
@@ -175,6 +187,73 @@ const VariantOutput: React.FC<{
         >
           {!readMore ? "See Details" : "  Less Details"}
         </span>
+      )}
+    </div>
+  );
+};
+
+interface PublishButtonProps {
+  variant: string;
+  published: boolean;
+  setPublished: (b: boolean) => void;
+  url: string;
+  setURL: (u: string) => void;
+  loading: boolean;
+  setLoading: (b: boolean) => void;
+}
+
+const PublishButton: React.FC<PublishButtonProps> = ({
+  variant,
+  published,
+  setPublished,
+  url,
+  setURL,
+  loading,
+  setLoading,
+}) => {
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const handlePublish = async (variant: string) => {
+    setLoading(true);
+    try {
+      const { url } = await createURL(variant, serviceConfig);
+      setURL(url);
+      setPublished(true);
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {}
+  };
+  return (
+    <div onClick={(e) => e.stopPropagation()}>
+      {published && url ? (
+        <button className={styles.publish} onClick={() => handleCopy()}>
+          <input type="url" value={url} readOnly className={styles.url}></input>
+          <CopyIcon className={styles.copyIcon} />
+        </button>
+      ) : (
+        <button
+          className={styles.publish}
+          onClick={(e) => handlePublish(variant)}
+        >
+          {loading ? (
+            <>
+              <LoaderIcon
+                className={classNames(styles.launchIcon, styles.loaderIcon)}
+              />
+              <span>Publishing...</span>
+            </>
+          ) : (
+            <>
+              <LaunchIcon className={styles.launchIcon} />
+              <span>Publish</span>
+            </>
+          )}
+        </button>
       )}
     </div>
   );

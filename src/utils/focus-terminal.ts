@@ -1,7 +1,7 @@
 export default function focusTerminal() {
   setTimeout(function () {
     const input = document.querySelector(
-      "#terminal input"
+      "#terminal input:not(:read-only)"
     ) as HTMLElement | null;
 
     const terminal = document.getElementById("terminal");

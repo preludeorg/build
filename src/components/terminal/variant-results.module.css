@@ -134,6 +134,38 @@ ul {
   fill: var(--white);
 }
 
+.loaderIcon {
+  animation: loader 1s linear infinite;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.url {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  color: var(--white);
+  text-overflow: ellipsis;
+}
+
+.url:focus {
+  outline: none;
+}
+
+.copyIcon {
+  height: 1rem;
+  width: 1rem;
+  fill: var(--white);
+}
+
 .output {
   display: flex;
   flex-direction: row;
