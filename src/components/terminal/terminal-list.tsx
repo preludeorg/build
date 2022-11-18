@@ -15,7 +15,7 @@ export interface TerminalListProps<T> {
   renderItem: (item: T) => JSX.Element;
   onSelect: (item: T) => void;
   onExit: () => void;
-  signal?: AbortSignal;
+  signal: AbortSignal;
 }
 
 const ITEM_PER_PAGE = 5;
