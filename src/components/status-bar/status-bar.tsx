@@ -9,7 +9,7 @@ import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
 import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 import classNames from "classnames";
-import LaunchIcon from "../icons/launch-icon";
+import DownloadIcon from "../icons/download-icon";
 
 const StatusBar: React.FC = () => {
   const { handleExport, handleImport } = useConfig();
@@ -74,7 +74,7 @@ const StatusBar: React.FC = () => {
         {isConnected && (
           <div className={classNames(styles.stat, styles.compiled)}>
             <button onClick={() => showOverlay("verifiedTests")}>
-              <LaunchIcon className={styles.icon} />
+              <DownloadIcon className={styles.icon} />
               <span>Compiled</span>
             </button>
           </div>

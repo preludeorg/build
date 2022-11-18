@@ -72,6 +72,10 @@ ul {
   overflow: hidden;
 }
 
+.stepCentered {
+  align-items: center;
+}
+
 .info {
   display: flex;
   flex-direction: row;
@@ -119,6 +123,7 @@ ul {
   border: 1px solid var(--color-primary-10);
   border-radius: 0.25rem;
   color: var(--white);
+  white-space: nowrap;
 }
 
 .download.left {
@@ -130,7 +135,7 @@ ul {
   background-color: var(--color-secondary-20);
 }
 
-.launchIcon {
+.downloadIcon {
   fill: var(--white);
 }
 
