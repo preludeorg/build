@@ -5,12 +5,18 @@ import PrimaryPrompt from "../components/terminal/primary-prompt";
 import styles from "../components/terminal/terminal.module.css";
 import { commonBeginning } from "../lib/utils/common-beginning";
 import { TerminalMessage } from "../lib/commands/helpers";
+import { CurrentLine } from "../components/terminal/terminal";
+import focusTerminal from "../utils/focus-terminal";
 
-function splitStringAtIndex(value: string, index: number) {
+export function splitStringAtIndex(value: string, index: number) {
   if (!value) {
     return ["", ""];
   }
   return [value.substring(0, index), value.substring(index)];
+}
+
+export function getSuggestions(input: string) {
+  return Object.keys(commands).filter((o) => o.startsWith(input));
 }
 
 interface TerminalStore {
@@ -27,10 +33,10 @@ interface TerminalStore {
   clear: () => void;
   reset: () => void;
   handleKey: (event: KeyboardEvent) => Promise<void>;
-  processCommand: () => void;
+  processCommand: (input: string) => void;
   write: (content: string | JSX.Element) => void;
   switchTest: (test?: Test) => void;
-  autoComplete: () => void;
+  autoComplete: (input: string) => void;
   takeControl: () => AbortController;
   abort: () => void;
   statusIndicator?: {
@@ -53,8 +59,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   setFocus: (focused: boolean) => {
     set(() => ({ focused }));
   },
-  autoComplete: () => {
-    const { input } = get();
+  autoComplete: (input: string) => {
     const options = Object.keys(commands).filter((o) => o.startsWith(input));
     if (input === "" || options.length === 0) {
       return;
@@ -96,28 +101,19 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     return controller;
   },
   abort: () => {
-    const { input, abortController, inputEnabled } = get();
+    const { abortController } = get();
     abortController?.abort();
 
-    if (!inputEnabled) {
-      return;
-    }
-
     set((state) => {
-      const waiting = (
-        <>
-          <PrimaryPrompt test={state.currentTest}>
-            <span className={styles.preWhiteSpace}>{input}</span>
-          </PrimaryPrompt>
-        </>
-      );
-
       return {
-        bufferedContent: [...state.bufferedContent, waiting],
-        input: "",
-        caretPosition: 0,
+        bufferedContent: [
+          ...state.bufferedContent,
+          <CurrentLine key={Date.now()} currentTest={state.currentTest} />,
+        ],
       };
     });
+
+    focusTerminal();
   },
   clear() {
     set(() => ({
@@ -223,81 +219,75 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       historyPointer,
     }));
   },
-  async processCommand() {
-    const { input, commandsHistory } = get();
-    const [commandName, ...rest] = input.trim().split(" ");
-    let output: string | JSX.Element = "";
+  async processCommand(input) {
+    try {
+      const { commandsHistory } = get();
+      const [commandName, ...rest] = input.trim().split(" ");
+      let output: string | JSX.Element = "";
 
-    if (input !== "") {
-      set(() => {
-        const commands = [...commandsHistory, input];
+      if (input !== "") {
+        set(() => {
+          const commands = [...commandsHistory, input];
+          return {
+            commandsHistory: commands,
+            historyPointer: commands.length,
+          };
+        });
+      }
+
+      if (commandName === "clear") {
+        set((state) => ({
+          bufferedContent: [
+            <CurrentLine key={Date.now()} currentTest={state.currentTest} />,
+          ],
+        }));
+        return;
+      }
+
+      if (commandName === "") {
+        set((state) => ({
+          bufferedContent: [
+            ...state.bufferedContent,
+            <CurrentLine key={Date.now()} currentTest={state.currentTest} />,
+          ],
+        }));
+        return;
+      }
+
+      const commandArguments = rest.join(" ");
+      const commandKey = Object.keys(commands).find(
+        (c) => commandName === c || commands[c].alias?.includes(commandName)
+      );
+      const command = commandKey ? commands[commandKey] : null;
+      const isEnabled = command?.enabled?.() ?? true;
+
+      if (command && isEnabled) {
+        output = await command.exec(commandArguments);
+      } else if (command && !isEnabled) {
+        output = (
+          <TerminalMessage
+            message={`command "${commandName}" is unavailable.`}
+            helpText={`type "help" to list avaliable commmands`}
+          />
+        );
+      } else {
+        output = `command not found: ${commandName}`;
+      }
+
+      set((state) => {
+        const nextBufferedContent = <span>{output}</span>;
+
         return {
-          commandsHistory: commands,
-          historyPointer: commands.length,
+          bufferedContent: [
+            ...state.bufferedContent,
+            nextBufferedContent,
+            <CurrentLine currentTest={state.currentTest} />,
+          ],
         };
       });
+    } finally {
+      focusTerminal();
     }
-
-    if (commandName === "clear") {
-      set(() => ({
-        bufferedContent: [],
-        input: "",
-        caretPosition: 0,
-      }));
-      return;
-    }
-
-    set((state) => {
-      const waiting = (
-        <PrimaryPrompt test={state.currentTest}>
-          <span className={styles.preWhiteSpace}>{input}</span>
-        </PrimaryPrompt>
-      );
-
-      return {
-        bufferedContent: [...state.bufferedContent, waiting],
-        input: "",
-        caretPosition: 0,
-        inputEnabled: false,
-      };
-    });
-
-    if (commandName === "") {
-      set(() => ({
-        inputEnabled: true,
-      }));
-      return;
-    }
-
-    const commandArguments = rest.join(" ");
-    const commandKey = Object.keys(commands).find(
-      (c) => commandName === c || commands[c].alias?.includes(commandName)
-    );
-    const command = commandKey ? commands[commandKey] : null;
-    const isEnabled = command?.enabled?.() ?? true;
-
-    if (command && isEnabled) {
-      output = await command.exec(commandArguments);
-    } else if (command && !isEnabled) {
-      output = (
-        <TerminalMessage
-          message={`command "${commandName}" is unavailable.`}
-          helpText={`type "help" to list avaliable commmands`}
-        />
-      );
-    } else {
-      output = `command not found: ${commandName}`;
-    }
-
-    set((state) => {
-      const nextBufferedContent = <span>{output}</span>;
-
-      return {
-        bufferedContent: [...state.bufferedContent, nextBufferedContent],
-        input: "",
-        inputEnabled: true,
-      };
-    });
   },
   write(content) {
     set((state) => ({
