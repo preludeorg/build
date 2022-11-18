@@ -5,6 +5,7 @@ interface BeforeInstallEvent {
   userChoice?: Promise<{ outcome: "accepted" }>;
 }
 interface NavigationStore {
+  isInstalled: boolean;
   installer?: BeforeInstallEvent;
   panel: string;
   overlay: string;
@@ -12,9 +13,11 @@ interface NavigationStore {
   showOverlay: (overlay: string) => void;
   hideOverlay: () => void;
   setInstaller: (event?: unknown) => void;
+  setIsInstalled: (installed: boolean) => void;
 }
 
 const useNavigationStore = create<NavigationStore>((set) => ({
+  isInstalled: false,
   panel: "welcome",
   overlay: "",
   navigate(panel) {
@@ -28,6 +31,9 @@ const useNavigationStore = create<NavigationStore>((set) => ({
   },
   setInstaller(installer) {
     set(() => ({ installer: installer as BeforeInstallEvent }));
+  },
+  setIsInstalled(installed: boolean) {
+    set(() => ({ isInstalled: installed }));
   },
 }));
 
