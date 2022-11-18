@@ -75,3 +75,9 @@
   color: var(--gray-10);
   font-weight: normal;
 }
+
+.readline {
+  position: relative;
+  display: inline;
+  outline: none;
+}
