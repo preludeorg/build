@@ -5,7 +5,6 @@ import useAuthStore from "../../hooks/auth-store";
 import AlertIcon from "../icons/alert-icon";
 import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
-import LaunchIcon from "../icons/launch-icon";
 import TimeIcon from "../icons/time-icon";
 import styles from "./variant-results.module.css";
 import shallow from "zustand/shallow";
@@ -13,6 +12,7 @@ import { select } from "../../lib/utils/select";
 import { createURL } from "../../lib/api";
 import CopyIcon from "../icons/copy-icon";
 import LoaderIcon from "../icons/loader-icon";
+import DownloadIcon from "../icons/download-icon";
 
 interface Props {
   question: string;
@@ -249,13 +249,13 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
           {loading ? (
             <>
               <LoaderIcon
-                className={classNames(styles.launchIcon, styles.loaderIcon)}
+                className={classNames(styles.downloadIcon, styles.loaderIcon)}
               />
               <span>Generating link...</span>
             </>
           ) : (
             <>
-              <LaunchIcon className={styles.launchIcon} />
+              <DownloadIcon className={styles.downloadIcon} />
               <span>Download link</span>
             </>
           )}
