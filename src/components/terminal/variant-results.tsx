@@ -93,7 +93,13 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
       {expanded && (
         <ul className={classNames(styles.steps)}>
           {result.steps.map((s) => (
-            <li className={styles.step} key={s.step}>
+            <li
+              className={classNames(styles.step, {
+                [styles.stepCentered]:
+                  s.step.toLowerCase() === "publish" && !s.output,
+              })}
+              key={s.step}
+            >
               <div className={styles.info}>
                 <div className={styles.infoBlock}>
                   <ChevronIcon className={styles.stepChevron} />
