@@ -37,12 +37,14 @@ const getAnswers = async (args: string, signal: AbortSignal) => {
             message: "select an architecture",
             validator: archValidator,
             defaultValue: "*",
+            signal,
           })
         : "*";
 
     const language = await inquire({
       message: "select a language",
       validator: languageValidator,
+      signal,
     });
 
     return { platform, arch, language };
@@ -105,6 +107,7 @@ export const createVariantCommand: Command = {
           message: "do you want to overwrite exisiting variant?",
           validator: z.enum(["yes", "no"]),
           defaultValue: "no",
+          signal,
         });
 
         if (confirm === "no") {

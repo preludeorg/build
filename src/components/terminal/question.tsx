@@ -73,11 +73,8 @@ export const Question: React.FC<QuestionProps> = ({
 
     if (e.key === "Enter") {
       e.preventDefault();
-
       const value = (inputRef.current?.value ?? "").trim();
-
       setAnswer(value);
-
       if (value === "" && defaultValue) {
         onAnswer(defaultValue);
         focusTerminal();
@@ -128,11 +125,12 @@ export const Question: React.FC<QuestionProps> = ({
         <span className={styles.message}>
           {[message, choice, def].filter((m) => !!m).join(" ")}:
         </span>
-        {answer === null ? (
-          <input ref={inputRef} type="text" onKeyDown={handleKey} />
-        ) : (
-          <span>{answer}</span>
-        )}
+        <input
+          readOnly={answer !== null}
+          ref={inputRef}
+          type="text"
+          onKeyDown={handleKey}
+        />
       </div>
       {error && <div>{error}</div>}
     </>
@@ -166,7 +164,7 @@ interface Question {
   choices?: readonly string[];
   defaultValue?: string;
   validator?: Validator;
-  signal?: AbortSignal;
+  signal: AbortSignal;
 }
 
 export async function inquire(quest: Question): Promise<string> {

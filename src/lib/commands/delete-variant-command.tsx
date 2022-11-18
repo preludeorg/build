@@ -52,6 +52,7 @@ export const deleteVariantCommand: Command = {
             <span>{variant}</span>
           </>
         ),
+        signal,
       });
 
       try {
