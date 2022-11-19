@@ -1,9 +1,10 @@
 import { Test } from "@theprelude/sdk";
 import create from "zustand";
 import PrimaryPrompt from "../components/terminal/primary-prompt";
+import { TerminalMessage } from "../components/terminal/terminal-message";
 import styles from "../components/terminal/terminal.module.css";
 import { commands } from "../lib/commands";
-import { TerminalMessage } from "../lib/commands/helpers";
+
 import { commonBeginning } from "../lib/utils/common-beginning";
 
 function splitStringAtIndex(value: string, index: number) {

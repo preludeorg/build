@@ -40,7 +40,9 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
           <VariantResult result={r} key={r.name} />
         ))}
       </ul>
-      <span className={classNames(styles.pass, styles.passBorder)}>{sucesses.length} variant(s) complied</span>
+      <span className={classNames(styles.pass, styles.passBorder)}>
+        {sucesses.length} variant(s) complied
+      </span>
       <span className={styles.alert}>{failures.length} variant(s) failed</span>
       <span className={styles.time}>
         Total build time executed in {longestTime.toFixed(3)}s

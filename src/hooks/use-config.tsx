@@ -3,9 +3,9 @@ import { z } from "zod";
 import shallow from "zustand/shallow";
 import {
   ErrorMessage,
-  isExitError,
   TerminalMessage,
-} from "../lib/commands/helpers";
+} from "../components/terminal/terminal-message";
+import { isExitError } from "../lib/commands/helpers";
 import { select } from "../lib/utils/select";
 import focusTerminal from "../utils/focus-terminal";
 import useAuthStore from "./auth-store";

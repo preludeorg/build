@@ -1,5 +1,6 @@
+import { TerminalMessage } from "../../components/terminal/terminal-message";
 import { terminalState } from "../../hooks/terminal-store";
-import { isConnected, isInTestContext, TerminalMessage } from "./helpers";
+import { isConnected, isInTestContext } from "./helpers";
 import { Command } from "./types";
 
 export const exitCommand: Command = {

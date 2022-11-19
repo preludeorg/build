@@ -1,4 +1,4 @@
-import { TerminalMessage } from "./helpers";
+import { TerminalMessage } from "../../components/terminal/terminal-message";
 
 export const NO_TESTS_MESSAGE = (
   <TerminalMessage
