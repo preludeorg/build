@@ -177,8 +177,8 @@ export const useConfig = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", ".ini");
-    input.addEventListener("change", async (e: any) => {
-      const file = e.target?.files?.[0];
+    input.addEventListener("change", async (e) => {
+      const file = (e.target as HTMLInputElement)?.files?.[0];
 
       if (!file) {
         return;

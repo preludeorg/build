@@ -10,7 +10,10 @@ import PrimaryPrompt from "./primary-prompt";
 import styles from "./terminal.module.css";
 import WelcomeMessage from "./welcome-message";
 
-const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
+const useScrollToBottom = (
+  changesToWatch: unknown,
+  wrapperRef: React.RefObject<{ scrollTop: number; scrollHeight: number }>
+) => {
   React.useEffect(() => {
     if (!wrapperRef.current) return;
     wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;

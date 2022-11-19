@@ -51,7 +51,7 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
 
 export default VariantResults;
 
-const isEmpty = (val: string | Array<any>): boolean =>
+const isEmpty = (val: string | Array<unknown>): boolean =>
   (Array.isArray(val) && val.length === 0) || val === "";
 
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
