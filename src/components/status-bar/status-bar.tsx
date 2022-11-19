@@ -72,10 +72,10 @@ const StatusBar: React.FC = () => {
           </div>
         )}
         {isConnected && (
-          <div className={classNames(styles.stat, styles.compiled)}>
+          <div className={classNames(styles.stat, styles.verified)}>
             <button onClick={() => showOverlay("verifiedTests")}>
               <DownloadIcon className={styles.icon} />
-              <span>Compiled</span>
+              <span>Verified</span>
             </button>
           </div>
         )}

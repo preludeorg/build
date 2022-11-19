@@ -52,7 +52,7 @@ export const useCommand: Command = {
       } else {
         return (
           <ErrorMessage
-            message={`failed to register account: ${(e as Error).message}`}
+            message={`${(e as Error).message.toLowerCase()}`}
           />
         );
       }

@@ -46,7 +46,7 @@ const VerifiedTests: React.FC = () => {
       />
       <div className={classNames(styles.panel, styles.right)}>
         <span className={styles.legend}>
-          Compiled {loading && <LoaderIcon className={styles.loaderIcon} />}
+          Verified {loading && <LoaderIcon className={styles.loaderIcon} />}
         </span>
         {tests.map((test) => (
           <Test
