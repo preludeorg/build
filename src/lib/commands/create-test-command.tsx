@@ -10,9 +10,9 @@ import {
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
-import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
 import { inquire } from "../../components/terminal/question";
+import { createTest } from "../api";
 
 const validator = z
   .string({
@@ -48,9 +48,10 @@ export const createTestCommand: Command = {
 
       const testId = uuid.v4();
       const question = await getAnswer(args, signal);
-      const service = new Prelude.Service({ host, credentials });
+
       showIndicator("Creating test...");
-      await service.build.createTest(testId, question, { signal });
+
+      await createTest(testId, question, { host, credentials }, signal);
 
       switchTest({
         id: testId,
