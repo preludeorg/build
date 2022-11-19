@@ -1,14 +1,14 @@
+import classNames from "classnames";
 import React from "react";
 import shallow from "zustand/shallow";
-import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
-import styles from "./terminal.module.css";
-import classNames from "classnames";
-import PrimaryPrompt from "./primary-prompt";
 import useAuthStore from "../../hooks/auth-store";
-import WelcomeMessage from "./welcome-message";
-import focusTerminal from "../../utils/focus-terminal";
+import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
 import { isControlC } from "../../lib/keys";
 import { select } from "../../lib/utils/select";
+import focusTerminal from "../../utils/focus-terminal";
+import PrimaryPrompt from "./primary-prompt";
+import styles from "./terminal.module.css";
+import WelcomeMessage from "./welcome-message";
 
 const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
   React.useEffect(() => {

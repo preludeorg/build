@@ -1,5 +1,5 @@
-import styles from "./reload-prompt.module.css";
 import { useRegisterSW } from "virtual:pwa-register/react";
+import styles from "./reload-prompt.module.css";
 
 function ReloadPrompt() {
   let {

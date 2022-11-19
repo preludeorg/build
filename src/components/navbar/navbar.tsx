@@ -1,8 +1,8 @@
+import classNames from "classnames";
 import EditorIcon from "../icons/editor-icon";
 import HostsIcon from "../icons/hosts-icon";
 import SettingsIcon from "../icons/settings-icon";
 import styles from "./navbar.module.css";
-import classNames from "classnames";
 
 interface Props {
   navigation: string;

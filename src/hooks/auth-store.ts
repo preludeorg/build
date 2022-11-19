@@ -1,6 +1,6 @@
+import { Credentials, Service } from "@theprelude/sdk";
 import create from "zustand";
 import { persist } from "zustand/middleware";
-import { Service, Credentials } from "@theprelude/sdk";
 import { isExitError } from "../lib/commands/helpers";
 
 interface AuthStore {

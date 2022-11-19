@@ -1,15 +1,15 @@
+import classNames from "classnames";
 import { useState } from "react";
+import shallow from "zustand/shallow";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
+import useNavigationStore from "../../hooks/navigation-store";
+import useTerminalStore from "../../hooks/terminal-store";
+import { select } from "../../lib/utils/select";
 import { InputGroup } from "../forms/input";
-import HostsIcon from "../icons/hosts-icon";
 import CloseIcon from "../icons/close-icon";
 import CopyIcon from "../icons/copy-icon";
+import HostsIcon from "../icons/hosts-icon";
 import styles from "./servers.module.css";
-import classNames from "classnames";
-import useTerminalStore from "../../hooks/terminal-store";
-import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
-import shallow from "zustand/shallow";
-import { select } from "../../lib/utils/select";
-import useNavigationStore from "../../hooks/navigation-store";
 
 const Servers: React.FC = () => {
   const hideOverlay = useNavigationStore((state) => state.hideOverlay);

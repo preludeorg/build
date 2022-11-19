@@ -2,7 +2,6 @@ import { terminalList } from "../../components/terminal/terminal-list";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { getTestList } from "../api";
-import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
 import {
   ErrorMessage,
   isConnected,
@@ -10,6 +9,7 @@ import {
   isInTestContext,
   TerminalMessage,
 } from "./helpers";
+import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
 import { Command } from "./types";
 
 export const listTestsCommand: Command = {

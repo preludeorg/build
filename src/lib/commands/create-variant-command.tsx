@@ -1,11 +1,13 @@
 import { format } from "date-fns";
 import { z, ZodError, ZodInvalidEnumValueIssue } from "zod";
+import { inquire } from "../../components/terminal/question";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
+import focusTerminal from "../../utils/focus-terminal";
+import { createVariant, getVariant, Variant, variantExists } from "../api";
 import { getLanguage } from "../lang";
-
 import {
   ErrorMessage,
   isConnected,
@@ -14,9 +16,6 @@ import {
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
-import { inquire } from "../../components/terminal/question";
-import focusTerminal from "../../utils/focus-terminal";
-import { createVariant, getVariant, Variant, variantExists } from "../api";
 
 const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);

@@ -1,6 +1,11 @@
+import { terminalList } from "../../components/terminal/terminal-list";
 import { authState } from "../../hooks/auth-store";
+import { editorState } from "../../hooks/editor-store";
+import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { NO_VARIANTS_MESSAGE } from "./messages";
+import focusTerminal from "../../utils/focus-terminal";
+import { getTest, getVariant } from "../api";
+import { parseVariant } from "../utils/parse-variant";
 import {
   ErrorMessage,
   isConnected,
@@ -8,13 +13,8 @@ import {
   isInTestContext,
   TerminalMessage,
 } from "./helpers";
+import { NO_VARIANTS_MESSAGE } from "./messages";
 import { Command } from "./types";
-import { navigatorState } from "../../hooks/navigation-store";
-import { terminalList } from "../../components/terminal/terminal-list";
-import { editorState } from "../../hooks/editor-store";
-import { getTest, getVariant } from "../api";
-import focusTerminal from "../../utils/focus-terminal";
-import { parseVariant } from "../utils/parse-variant";
 
 const OPEN_ALL = "open all";
 

@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
-import styles from "./commands.module.css";
-import { z } from "zod";
-import ArrowRight from "../icons/arrow-right";
 import classNames from "classnames";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { z } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
-import focusTerminal from "../../utils/focus-terminal";
 import { isControlC } from "../../lib/keys";
+import focusTerminal from "../../utils/focus-terminal";
+import ArrowRight from "../icons/arrow-right";
+import styles from "./commands.module.css";
 
 export interface TerminalListProps<T> {
   title?: string | JSX.Element;

@@ -1,17 +1,17 @@
+import ini from "ini";
 import { z } from "zod";
+import shallow from "zustand/shallow";
 import {
   ErrorMessage,
   isExitError,
   TerminalMessage,
 } from "../lib/commands/helpers";
+import { select } from "../lib/utils/select";
 import focusTerminal from "../utils/focus-terminal";
 import useAuthStore from "./auth-store";
 import useEditorStore from "./editor-store";
 import useNavigationStore from "./navigation-store";
 import useTerminalStore from "./terminal-store";
-import ini from "ini";
-import { select } from "../lib/utils/select";
-import shallow from "zustand/shallow";
 
 const readAsText = (file: Blob): Promise<string> => {
   return new Promise((resolve, reject) => {

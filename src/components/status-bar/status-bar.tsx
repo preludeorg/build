@@ -1,15 +1,14 @@
+import { Popover, Transition } from "@headlessui/react";
+import classNames from "classnames";
+import shallow from "zustand/shallow";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
+import useNavigationStore from "../../hooks/navigation-store";
+import useTerminalStore from "../../hooks/terminal-store";
+import { useConfig } from "../../hooks/use-config";
+import DownloadIcon from "../icons/download-icon";
+import LoaderIcon from "../icons/loader-icon";
 import SettingsIcon from "../icons/settings-icon";
 import styles from "./status-bar.module.css";
-import { Popover, Transition } from "@headlessui/react";
-import { useConfig } from "../../hooks/use-config";
-import useTerminalStore from "../../hooks/terminal-store";
-import LoaderIcon from "../icons/loader-icon";
-import shallow from "zustand/shallow";
-
-import useNavigationStore from "../../hooks/navigation-store";
-import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
-import classNames from "classnames";
-import DownloadIcon from "../icons/download-icon";
 
 const StatusBar: React.FC = () => {
   const { handleExport, handleImport } = useConfig();

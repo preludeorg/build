@@ -1,5 +1,5 @@
-import { csharp } from "@codemirror/legacy-modes/mode/clike";
 import { StreamLanguage } from "@codemirror/language";
+import { csharp } from "@codemirror/legacy-modes/mode/clike";
 import { Linter } from "./linter";
 import template from "./templates/template.cs?raw";
 

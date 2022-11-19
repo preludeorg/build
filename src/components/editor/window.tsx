@@ -1,21 +1,21 @@
-import Editor from "./editor";
-import ControlPanel from "./control-panel";
-import styles from "./editor.module.pcss";
-import CloseIcon from "../icons/close-icon";
-import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
-import shallow from "zustand/shallow";
-import useNavigationStore from "../../hooks/navigation-store";
+import { Service, ServiceConfig } from "@theprelude/sdk";
 import classNames from "classnames";
 import React from "react";
+import shallow from "zustand/shallow";
+import useAuthStore from "../../hooks/auth-store";
+import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
+import useNavigationStore from "../../hooks/navigation-store";
+import { terminalState } from "../../hooks/terminal-store";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
-import useAuthStore from "../../hooks/auth-store";
-import { Service, ServiceConfig } from "@theprelude/sdk";
-import VariantIcon from "../icons/variant-icon";
 import { parseVariant } from "../../lib/utils/parse-variant";
-import { terminalState } from "../../hooks/terminal-store";
 import { select } from "../../lib/utils/select";
+import CloseIcon from "../icons/close-icon";
+import VariantIcon from "../icons/variant-icon";
+import ControlPanel from "./control-panel";
+import Editor from "./editor";
+import styles from "./editor.module.pcss";
 
 const { showIndicator, hideIndicator } = terminalState();
 

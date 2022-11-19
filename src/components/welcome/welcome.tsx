@@ -1,16 +1,16 @@
-import ArrowRight from "../icons/arrow-right";
-import WelcomeBlock from "./welcome-block";
-import styles from "./welcome.module.css";
+import classNames from "classnames";
+import { useEffect } from "react";
+import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
 import rectangle3 from "../../assets/rectangle3.png";
-import DownloadIcon from "../icons/download-icon";
-import classNames from "classnames";
 import useNavigationStore from "../../hooks/navigation-store";
-import shallow from "zustand/shallow";
-import { select } from "../../lib/utils/select";
-import { useEffect } from "react";
 import { isPWA } from "../../lib/utils/pwa";
+import { select } from "../../lib/utils/select";
+import ArrowRight from "../icons/arrow-right";
+import DownloadIcon from "../icons/download-icon";
+import WelcomeBlock from "./welcome-block";
+import styles from "./welcome.module.css";
 
 const Welcome = () => {
   const { installer, setInstaller, isInstalled, setIsInstalled } =

@@ -1,17 +1,16 @@
-import PlayIcon from "../icons/play-icon";
-
-import styles from "./control-panel.module.css";
-import useEditorStore from "../../hooks/editor-store";
-import { validate } from "../../lib/lang/linter";
-import { getLanguage } from "../../lib/lang";
-import useTerminalStore from "../../hooks/terminal-store";
+import { useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
-import { select } from "../../lib/utils/select";
+import useEditorStore from "../../hooks/editor-store";
+import useTerminalStore from "../../hooks/terminal-store";
 import { build } from "../../lib/api";
+import { getLanguage } from "../../lib/lang";
+import { validate } from "../../lib/lang/linter";
+import { select } from "../../lib/utils/select";
 import LoaderIcon from "../icons/loader-icon";
-import { useState } from "react";
+import PlayIcon from "../icons/play-icon";
 import VariantResults from "../terminal/variant-results";
+import styles from "./control-panel.module.css";
 
 const ControlPanel: React.FC = () => {
   const [loading, setLoading] = useState(false);
