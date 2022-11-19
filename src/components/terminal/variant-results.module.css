@@ -152,13 +152,22 @@ ul {
   }
 }
 
-.url {
+.copy:hover {
+  cursor: default;
+}
+
+.iconContainer {
   background-color: transparent;
   padding: 0;
   border: none;
   cursor: pointer;
+}
+
+.url {
+  background-color: transparent;
+  padding: 0;
+  border: none;
   color: var(--white);
-  text-overflow: ellipsis;
 }
 
 .url:focus {
@@ -168,6 +177,10 @@ ul {
 .copyIcon {
   height: 1rem;
   width: 1rem;
+  fill: var(--color-primary-10);
+}
+
+.copyIcon:hover {
   fill: var(--white);
 }
 

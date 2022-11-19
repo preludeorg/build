@@ -237,10 +237,12 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
   return (
     <div onClick={(e) => e.stopPropagation()}>
       {linkAvailable && url ? (
-        <button className={styles.download} onClick={() => handleCopy()}>
+        <div className={classNames(styles.download, styles.copy)}>
           <input type="url" value={url} readOnly className={styles.url}></input>
-          <CopyIcon className={styles.copyIcon} />
-        </button>
+          <button className={styles.iconContainer} onClick={() => handleCopy()}>
+            <CopyIcon className={styles.copyIcon} />
+          </button>
+        </div>
       ) : (
         <button
           className={styles.download}
