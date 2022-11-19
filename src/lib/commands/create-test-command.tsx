@@ -1,9 +1,9 @@
-import * as Prelude from "@theprelude/sdk";
 import * as uuid from "uuid";
 import { z, ZodError } from "zod";
 import { inquire } from "../../components/terminal/question";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
+import { createTest } from "../api";
 import {
   ErrorMessage,
   isConnected,
@@ -48,9 +48,10 @@ export const createTestCommand: Command = {
 
       const testId = uuid.v4();
       const question = await getAnswer(args, signal);
-      const service = new Prelude.Service({ host, credentials });
+
       showIndicator("Creating test...");
-      await service.build.createTest(testId, question, { signal });
+
+      await createTest(testId, question, { host, credentials }, signal);
 
       switchTest({
         id: testId,

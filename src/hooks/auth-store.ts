@@ -1,7 +1,8 @@
-import { Credentials, Service } from "@theprelude/sdk";
 import create from "zustand";
 import { persist } from "zustand/middleware";
+import { Credentials } from "@theprelude/sdk";
 import { isExitError } from "../lib/commands/helpers";
+import { getTestList, newAccount } from "../lib/api";
 
 interface AuthStore {
   host: string;
@@ -28,21 +29,14 @@ const useAuthStore = create<AuthStore>()(
       async createAccount(handle, signal: AbortSignal) {
         const { host } = get();
 
-        const service = new Service({ host });
-        const credentials = await service.iam.newAccount(handle, {
-          signal: signal,
-        });
-
+        const credentials = await newAccount(handle, host, signal);
         set(() => ({ credentials }));
-
         return credentials;
       },
-
       async login({ host, account, token, serverType }, signal) {
         const credentials = { account, token };
-        const service = new Service({ host, credentials });
         try {
-          await service.build.listTests({ signal });
+          await getTestList({ host, credentials }, signal);
           set(() => ({ host, credentials, serverType }));
           return true;
         } catch (err) {
@@ -52,7 +46,6 @@ const useAuthStore = create<AuthStore>()(
           return false;
         }
       },
-
       disconnect() {
         const host = "";
         const credentials = { account: "", token: "" };
