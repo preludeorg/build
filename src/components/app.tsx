@@ -4,6 +4,7 @@ import useNavigationStore from "../hooks/navigation-store";
 import { select } from "../lib/utils/select";
 import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
+import { Notifications } from "./notifications/notifications";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
 import Servers from "./servers/servers";
 import StatusBar from "./status-bar/status-bar";
@@ -38,6 +39,7 @@ function App() {
       {overlay === "servers" && <Servers />}
       {overlay === "verifiedTests" && <VerifiedTests />}
       <ReloadPrompt />
+      <Notifications />
     </div>
   );
 }

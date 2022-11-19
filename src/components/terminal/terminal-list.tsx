@@ -154,19 +154,17 @@ function TerminalList<T>({
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    try {
-      if (e.target.value === "") {
-        return;
-      }
-      const parse = e.target.value.split("");
-      const val = z
-        .number()
-        .min(1)
-        .max(pageItems.length)
-        .parse(parseInt(parse[parse.length - 1], 10));
+    if (e.target.value === "") {
+      return;
+    }
+    const parse = e.target.value.split("");
+    const val = z
+      .number()
+      .min(1)
+      .max(pageItems.length)
+      .parse(parseInt(parse[parse.length - 1], 10));
 
-      setValue(val);
-    } catch (e) {}
+    setValue(val);
   };
 
   const handleFilterKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {

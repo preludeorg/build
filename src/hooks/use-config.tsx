@@ -1,6 +1,7 @@
 import ini from "ini";
 import { z } from "zod";
 import shallow from "zustand/shallow";
+import { notifyError } from "../components/notifications/notifications";
 import {
   ErrorMessage,
   TerminalMessage,
@@ -135,7 +136,9 @@ export const useConfig = () => {
         write(
           <TerminalMessage message={`credentials exported successfully`} />
         );
-      } catch (err) {}
+      } catch (err) {
+        notifyError("Failed to open file picker", err);
+      }
       return;
     }
 
@@ -169,7 +172,9 @@ export const useConfig = () => {
 
         const file: File = await handle.getFile();
         await importConfig(await file.text());
-      } catch (err) {}
+      } catch (err) {
+        notifyError("Failed to open file picker", err);
+      }
       return;
     }
 
