@@ -4,7 +4,7 @@
   display: flex;
   color: var(--gray-10);
   font-size: var(--text-xs);
-  padding: 0 0.75rem;
+  padding: 0 0 0 0.75rem;
   align-items: center;
 }
 
@@ -26,12 +26,21 @@
   padding: 0 0.5rem;
   cursor: pointer;
   outline: none;
+  align-items: center;
+}
+
+.compiled {
+  border-left: 1px solid var(--gray-30);
+  border-right: none;
+  background: var(--black);
+  color: var(--white);
+  padding-right: 0.75rem;
 }
 
 .icon {
   fill: var(--gray-10);
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .stat button:hover {
@@ -75,13 +84,14 @@
   flex-direction: row;
   column-gap: 0.5rem;
   align-items: center;
-  margin-left: auto;
+
   color: var(--white);
 }
 
 .loaderIcon {
   width: 1rem;
   height: 1rem;
+  fill: var(--white);
   animation: loader 1.2s linear infinite;
 }
 
@@ -134,4 +144,12 @@
 
 .fileInput {
   display: none;
+}
+
+.right {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  height: 100%;
 }

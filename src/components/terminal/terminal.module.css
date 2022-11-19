@@ -6,7 +6,7 @@
 
   text-align: left;
   overflow-wrap: break-word;
-  overflow-y: auto;
+  overflow-y: scroll;
   outline: none;
   line-height: 22px;
 }

@@ -1,42 +1,60 @@
-import ArrowRight from "../icons/arrow-right";
-import WelcomeBlock from "./welcome-block";
-import styles from "./welcome.module.css";
+import classNames from "classnames";
+import { useEffect } from "react";
+import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
 import rectangle3 from "../../assets/rectangle3.png";
+import useNavigationStore from "../../hooks/navigation-store";
+import { isPWA } from "../../lib/utils/pwa";
+import { select } from "../../lib/utils/select";
+import ArrowRight from "../icons/arrow-right";
 import DownloadIcon from "../icons/download-icon";
-import { useEffect, useRef, useState } from "react";
-import classNames from "classnames";
+import WelcomeBlock from "./welcome-block";
+import styles from "./welcome.module.css";
 
 const Welcome = () => {
-  const promptRef = useRef<Event | null>(null);
-  const [showInstaller, setShowInstaller] = useState(false);
-  function beforeInstall(e: Event) {
-    setShowInstaller(true);
-    promptRef.current = e;
-  }
-
-  useEffect(() => {
-    window.addEventListener("beforeinstallprompt", beforeInstall);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", beforeInstall);
-    };
-  }, []);
+  const { installer, setInstaller, isInstalled, setIsInstalled } =
+    useNavigationStore(
+      select("installer", "setInstaller", "isInstalled", "setIsInstalled"),
+      shallow
+    );
 
   async function handleInstall() {
-    if (promptRef.current === null) return;
-    // @ts-ignore
-    promptRef.current.prompt();
-    // @ts-ignore
-    if (promptRef.current.userChoice) {
-      // @ts-ignore
-      const { outcome } = await promptRef.current.userChoice;
+    if (!installer) return;
+
+    installer.prompt();
+    if (installer.userChoice) {
+      const { outcome } = await installer.userChoice;
       if (outcome === "accepted") {
-        promptRef.current = null;
-        setShowInstaller(false);
+        setInstaller();
       }
     }
   }
+
+  function handleBeforeInstall(e: Event) {
+    e.preventDefault();
+    const installed = isPWA();
+    if (!installed) {
+      setInstaller(e);
+    }
+  }
+
+  const handleAppInstalled = (e: Event) => {
+    if (!isInstalled) {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+      e.preventDefault();
+      setIsInstalled(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+    window.addEventListener("appinstalled", handleAppInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
 
   return (
     <div className={styles.welcome}>
@@ -48,7 +66,9 @@ const Welcome = () => {
         <section className={styles.install}>
           <button
             onClick={handleInstall}
-            className={classNames({ [styles.showInstaller]: showInstaller })}
+            className={classNames({
+              [styles.showInstaller]: !isInstalled && Boolean(installer),
+            })}
           >
             <DownloadIcon />
             Install

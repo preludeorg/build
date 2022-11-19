@@ -1,17 +1,19 @@
-import styles from "./app.module.css";
-import Terminal from "./terminal/terminal";
-import Welcome from "./welcome/welcome";
-import EditorPanel from "./editor/editor-panel";
-import useNavigationStore from "../hooks/navigation-store";
-import Servers from "./servers/servers";
-import shallow from "zustand/shallow";
-import StatusBar from "./status-bar/status-bar";
-import ReloadPrompt from "./reload-prompt/reload-prompt";
 import { Resizable } from "re-resizable";
+import shallow from "zustand/shallow";
+import useNavigationStore from "../hooks/navigation-store";
+import { select } from "../lib/utils/select";
+import styles from "./app.module.css";
+import EditorPanel from "./editor/editor-panel";
+import ReloadPrompt from "./reload-prompt/reload-prompt";
+import Servers from "./servers/servers";
+import StatusBar from "./status-bar/status-bar";
+import Terminal from "./terminal/terminal";
+import VerifiedTests from "./verified-tests/verified-tests";
+import Welcome from "./welcome/welcome";
 
 function App() {
-  const { panel, serverPanelVisible, toggleServerPanel } = useNavigationStore(
-    (state) => state,
+  const { panel, overlay } = useNavigationStore(
+    select("panel", "overlay"),
     shallow
   );
   return (
@@ -33,7 +35,8 @@ function App() {
         </Resizable>
         <StatusBar />
       </main>
-      {serverPanelVisible && <Servers toggleServerPanel={toggleServerPanel} />}
+      {overlay === "servers" && <Servers />}
+      {overlay === "verifiedTests" && <VerifiedTests />}
       <ReloadPrompt />
     </div>
   );

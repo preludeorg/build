@@ -1,15 +1,19 @@
+import classNames from "classnames";
 import React from "react";
 import shallow from "zustand/shallow";
-import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
-import styles from "./terminal.module.css";
-import classNames from "classnames";
-import PrimaryPrompt from "./primary-prompt";
 import useAuthStore from "../../hooks/auth-store";
-import WelcomeMessage from "./welcome-message";
-import focusTerminal from "../../utils/focus-terminal";
+import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
 import { isControlC } from "../../lib/keys";
+import { select } from "../../lib/utils/select";
+import focusTerminal from "../../utils/focus-terminal";
+import PrimaryPrompt from "./primary-prompt";
+import styles from "./terminal.module.css";
+import WelcomeMessage from "./welcome-message";
 
-const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
+const useScrollToBottom = (
+  changesToWatch: unknown,
+  wrapperRef: React.RefObject<{ scrollTop: number; scrollHeight: number }>
+) => {
   React.useEffect(() => {
     if (!wrapperRef.current) return;
     wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
@@ -20,22 +24,35 @@ function useTerminal() {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const { bufferedContent, inputEnabled } = useTerminalStore(
-    (state) => ({
-      bufferedContent: state.bufferedContent,
-      inputEnabled: state.inputEnabled,
-    }),
+    select("bufferedContent", "inputEnabled"),
     shallow
   );
 
-  const setFocus = useTerminalStore((state) => state.setFocus);
-  const handleKey = useTerminalStore((state) => state.handleKey);
-  const processCommand = useTerminalStore((state) => state.processCommand);
-  const write = useTerminalStore((state) => state.write);
-  const clear = useTerminalStore((state) => state.clear);
-  const host = useAuthStore((state) => state.host);
-  const credentials = useAuthStore((state) => state.credentials);
-  const autoComplete = useTerminalStore((state) => state.autoComplete);
-  const abort = useTerminalStore((state) => state.abort);
+  const {
+    abort,
+    setFocus,
+    handleKey,
+    processCommand,
+    write,
+    clear,
+    autoComplete,
+  } = useTerminalStore(
+    select(
+      "abort",
+      "setFocus",
+      "handleKey",
+      "processCommand",
+      "write",
+      "clear",
+      "autoComplete"
+    ),
+    shallow
+  );
+
+  const { host, credentials } = useAuthStore(
+    select("host", "credentials"),
+    shallow
+  );
 
   const handleKeyDownEvent = (event: KeyboardEvent) => {
     if (isControlC(event)) {
@@ -61,7 +78,7 @@ function useTerminal() {
       return;
     }
 
-    handleKey(event);
+    void handleKey(event);
   };
 
   const handleFocus = () => {
@@ -124,11 +141,7 @@ const Terminal: React.FC = () => {
 
 const CurrentLine = () => {
   const { focused, inputEnabled, currentTest } = useTerminalStore(
-    (state) => ({
-      focused: state.focused,
-      inputEnabled: state.inputEnabled,
-      currentTest: state.currentTest,
-    }),
+    select("focused", "inputEnabled", "currentTest"),
     shallow
   );
 
@@ -142,13 +155,17 @@ const CurrentLine = () => {
   }
 
   return (
-    <PrimaryPrompt test={currentTest}>
-      <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-      <span className={classNames(styles.caret, { [styles.focused]: focused })}>
-        <span className={styles.caretAfter} />
-      </span>
-      <span className={styles.preWhiteSpace}>{afterCaretText}</span>
-    </PrimaryPrompt>
+    <>
+      <PrimaryPrompt test={currentTest}>
+        <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
+        <span
+          className={classNames(styles.caret, { [styles.focused]: focused })}
+        >
+          <span className={styles.caretAfter} />
+        </span>
+        <span className={styles.preWhiteSpace}>{afterCaretText}</span>
+      </PrimaryPrompt>
+    </>
   );
 };
 

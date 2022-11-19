@@ -1,11 +1,13 @@
 import { format } from "date-fns";
 import { z, ZodError, ZodInvalidEnumValueIssue } from "zod";
+import { inquire } from "../../components/terminal/question";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
+import focusTerminal from "../../utils/focus-terminal";
+import { createVariant, getVariant, Variant, variantExists } from "../api";
 import { getLanguage } from "../lang";
-
 import {
   ErrorMessage,
   isConnected,
@@ -14,32 +16,37 @@ import {
   TerminalMessage,
 } from "./helpers";
 import { Command } from "./types";
-import { inquire } from "../../components/terminal/question";
-import focusTerminal from "../../utils/focus-terminal";
-import { createVariant, Variant } from "../api";
 
-const platformValidator = z.enum(["*", "darwin", "linux"]);
+const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
 const languageValidator = z.enum(["c", "cs", "swift"]);
 
-const getAnswers = async (args: string) => {
+const getAnswers = async (args: string, signal: AbortSignal) => {
   if (args === "") {
-    return await inquire({
-      platform: {
-        message: "select a platform",
-        validator: platformValidator,
-        defaultValue: "*",
-      },
-      arch: {
-        message: "select an architecture",
-        validator: archValidator,
-        defaultValue: "*",
-      },
-      language: {
-        message: "select a language",
-        validator: languageValidator,
-      },
+    const platform = await inquire({
+      message: "select a platform",
+      validator: platformValidator,
+      defaultValue: "*",
+      signal,
     });
+
+    const arch =
+      platform !== "*"
+        ? await inquire({
+            message: "select an architecture",
+            validator: archValidator,
+            defaultValue: "*",
+            signal,
+          })
+        : "*";
+
+    const language = await inquire({
+      message: "select a language",
+      validator: languageValidator,
+      signal,
+    });
+
+    return { platform, arch, language };
   }
 
   const input = args.split(" ");
@@ -59,7 +66,7 @@ const getAnswers = async (args: string) => {
 export const createVariantCommand: Command = {
   alias: ["cv"],
   args: "[platform] [arch] [language]",
-  desc: "creates a new variant in the current test",
+  desc: "create variant in current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec(args) {
     const { takeControl, currentTest, showIndicator, hideIndicator } =
@@ -68,12 +75,17 @@ export const createVariantCommand: Command = {
       const { navigate } = navigatorState();
       const { openTab } = editorState();
       const { host, credentials } = authState();
+      const signal = takeControl().signal;
 
-      const results = await getAnswers(args);
+      const results = await getAnswers(args, signal);
 
       const { platform, arch, language } = results;
 
-      let file = `${currentTest!.id}`;
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
+      let file = `${currentTest.id}`;
       if (platform !== "*") {
         file += `_${platform}`;
 
@@ -83,12 +95,43 @@ export const createVariantCommand: Command = {
       }
 
       file += `.${language}`;
+
+      showIndicator("Checking if variant exists...");
+      const exists = await variantExists(
+        currentTest.id,
+        file,
+        { host, credentials },
+        signal
+      );
+      hideIndicator();
+
+      if (exists) {
+        const confirm = await inquire({
+          message: "do you want to overwrite exisiting variant?",
+          validator: z.enum(["yes", "no"]),
+          defaultValue: "no",
+          signal,
+        });
+
+        if (confirm === "no") {
+          const code = await getVariant(file, { host, credentials }, signal);
+          openTab({ name: file, code });
+          navigate("editor");
+          focusTerminal();
+          return (
+            <TerminalMessage
+              message={"opened variant. all changes will auto-save"}
+            />
+          );
+        }
+      }
+
       const code = getLanguage(language)
         .bootstrap.replaceAll("$NAME", file)
-        .replaceAll("$QUESTION", currentTest!.question)
+        .replaceAll("$QUESTION", currentTest.question)
         .replaceAll(
           "$CREATED",
-          format(new Date(), "yyyy-mm-dd hh:mm:ss.SSSSSS")
+          format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS")
         );
 
       const variant: Variant = {
@@ -97,12 +140,10 @@ export const createVariantCommand: Command = {
       };
 
       showIndicator("Creating variant...");
-      await createVariant(variant, { host, credentials }, takeControl().signal);
+      await createVariant(variant, { host, credentials }, signal);
       openTab(variant);
       navigate("editor");
-
       focusTerminal();
-
       return (
         <TerminalMessage message="created and opened variant. all changes will auto-save" />
       );

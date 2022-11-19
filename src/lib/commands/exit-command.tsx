@@ -4,7 +4,7 @@ import { Command } from "./types";
 
 export const exitCommand: Command = {
   alias: ["e"],
-  desc: "exits current test context",
+  desc: "exit current test context",
   enabled: () => isConnected() && isInTestContext(),
   async exec() {
     const { switchTest } = terminalState();

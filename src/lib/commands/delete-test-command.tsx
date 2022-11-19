@@ -1,5 +1,9 @@
+import { terminalList } from "../../components/terminal/terminal-list";
 import { authState } from "../../hooks/auth-store";
+import { editorState } from "../../hooks/editor-store";
+import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
+import { deleteTest, getTestList } from "../api";
 import {
   ErrorMessage,
   isConnected,
@@ -7,16 +11,12 @@ import {
   isInTestContext,
   TerminalMessage,
 } from "./helpers";
-import { Command } from "./types";
-import { editorState } from "../../hooks/editor-store";
-import { navigatorState } from "../../hooks/navigation-store";
-import { deleteTest, getTestList } from "../api";
 import { NO_TESTS_MESSAGE } from "./messages";
-import { terminalList } from "../../components/terminal/terminal-list";
+import { Command } from "./types";
 
 export const deleteTestCommand: Command = {
   alias: ["dt"],
-  desc: "deletes a test",
+  desc: "delete test from account",
   enabled: () => isConnected(),
   hidden: () => isInTestContext(),
   async exec() {
@@ -31,13 +31,14 @@ export const deleteTestCommand: Command = {
       const { closeTab, tabs } = editorState();
       const { host, credentials } = authState();
       const { navigate } = navigatorState();
+      const signal = takeControl().signal;
 
       const tests = await getTestList(
         {
           host,
           credentials,
         },
-        takeControl().signal
+        signal
       );
 
       if (tests.length === 0) {
@@ -53,6 +54,7 @@ export const deleteTestCommand: Command = {
             <span>{test.question}</span> <span>[{test.id}]</span>
           </>
         ),
+        signal,
       });
 
       showIndicator("Deleting test...");

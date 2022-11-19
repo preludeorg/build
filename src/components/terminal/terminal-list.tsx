@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
-import styles from "./commands.module.css";
-import { z } from "zod";
-import ArrowRight from "../icons/arrow-right";
 import classNames from "classnames";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { z } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
-import focusTerminal from "../../utils/focus-terminal";
 import { isControlC } from "../../lib/keys";
+import focusTerminal from "../../utils/focus-terminal";
+import ArrowRight from "../icons/arrow-right";
+import styles from "./commands.module.css";
 
 export interface TerminalListProps<T> {
   title?: string | JSX.Element;
@@ -15,11 +15,12 @@ export interface TerminalListProps<T> {
   renderItem: (item: T) => JSX.Element;
   onSelect: (item: T) => void;
   onExit: () => void;
+  signal: AbortSignal;
 }
 
 const ITEM_PER_PAGE = 5;
 
-const TerminalList = <T extends {}>({
+function TerminalList<T>({
   title,
   items,
   renderItem,
@@ -27,7 +28,8 @@ const TerminalList = <T extends {}>({
   onSelect,
   onExit,
   filterOn,
-}: TerminalListProps<T>): JSX.Element => {
+  signal,
+}: TerminalListProps<T>) {
   const pickerRef = useRef<HTMLInputElement>(null);
   const filterRef = useRef<HTMLInputElement>(null);
   const prevRef = useRef<HTMLElement | Element | null>(null);
@@ -36,6 +38,22 @@ const TerminalList = <T extends {}>({
   const [page, setPage] = useState(1);
   const [mode, setMode] = useState<"list" | "filter">("list");
   const [filter, setFilter] = useState("");
+
+  const exit = () => {
+    setExited(true);
+    onExit();
+  };
+
+  useEffect(() => {
+    if (!signal) {
+      return;
+    }
+
+    signal.addEventListener("abort", exit);
+    return () => {
+      signal.removeEventListener("abort", exit);
+    };
+  }, []);
 
   useEffect(() => {
     prevRef.current = document.activeElement || document.body;
@@ -260,18 +278,19 @@ const TerminalList = <T extends {}>({
       )}
     </div>
   );
-};
+}
 
 export default TerminalList;
 
 type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
 
-export async function terminalList<T extends {}>({
+export async function terminalList<T>({
   title,
   items,
   keyProp,
   renderItem,
   filterOn,
+  signal,
 }: ListerProps<T>): Promise<T> {
   return new Promise((resolve, reject) => {
     const { write } = terminalState();
@@ -289,6 +308,7 @@ export async function terminalList<T extends {}>({
         onExit={() => {
           reject(new Error("exited"));
         }}
+        signal={signal}
       />
     );
   });

@@ -1,20 +1,39 @@
 import create from "zustand";
 
+interface BeforeInstallEvent {
+  prompt(): void;
+  userChoice?: Promise<{ outcome: "accepted" }>;
+}
 interface NavigationStore {
+  isInstalled: boolean;
+  installer?: BeforeInstallEvent;
   panel: string;
-  serverPanelVisible: boolean;
+  overlay: string;
   navigate: (panel: string) => void;
-  toggleServerPanel: () => void;
+  showOverlay: (overlay: string) => void;
+  hideOverlay: () => void;
+  setInstaller: (event?: unknown) => void;
+  setIsInstalled: (installed: boolean) => void;
 }
 
 const useNavigationStore = create<NavigationStore>((set) => ({
+  isInstalled: false,
   panel: "welcome",
-  serverPanelVisible: false,
+  overlay: "",
   navigate(panel) {
     set(() => ({ panel }));
   },
-  toggleServerPanel() {
-    set((state) => ({ serverPanelVisible: !state.serverPanelVisible }));
+  showOverlay(overlay) {
+    set(() => ({ overlay }));
+  },
+  hideOverlay() {
+    set(() => ({ overlay: "" }));
+  },
+  setInstaller(installer) {
+    set(() => ({ installer: installer as BeforeInstallEvent }));
+  },
+  setIsInstalled(installed: boolean) {
+    set(() => ({ isInstalled: installed }));
   },
 }));
 

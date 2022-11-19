@@ -1,6 +1,11 @@
+import { terminalList } from "../../components/terminal/terminal-list";
 import { authState } from "../../hooks/auth-store";
+import { editorState } from "../../hooks/editor-store";
+import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { NO_VARIANTS_MESSAGE } from "./messages";
+import focusTerminal from "../../utils/focus-terminal";
+import { getTest, getVariant } from "../api";
+import { parseVariant } from "../utils/parse-variant";
 import {
   ErrorMessage,
   isConnected,
@@ -8,20 +13,14 @@ import {
   isInTestContext,
   TerminalMessage,
 } from "./helpers";
+import { NO_VARIANTS_MESSAGE } from "./messages";
 import { Command } from "./types";
-import { navigatorState } from "../../hooks/navigation-store";
-import { terminalList } from "../../components/terminal/terminal-list";
-import { editorState } from "../../hooks/editor-store";
-import { getTest, getVariant } from "../api";
-import focusTerminal from "../../utils/focus-terminal";
 
-const VARIANT_FORMAT =
-  /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}(_\w*)?(-\w*)?\.(\w*)/i;
 const OPEN_ALL = "open all";
 
 export const listVariantsCommand: Command = {
   alias: ["lv"],
-  desc: "lists the variants in current test",
+  desc: "list variants in current test",
   enabled: () => isConnected() && isInTestContext(),
   async exec() {
     const { currentTest, takeControl, showIndicator, hideIndicator } =
@@ -33,9 +32,13 @@ export const listVariantsCommand: Command = {
 
       const signal = takeControl().signal;
 
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
       showIndicator("Retrieving variants...");
       const variants = await getTest(
-        currentTest!.id,
+        currentTest.id,
         {
           host,
           credentials,
@@ -49,16 +52,16 @@ export const listVariantsCommand: Command = {
       }
 
       const shortenVariant = (v: string) => {
-        const results = v.match(VARIANT_FORMAT);
+        const results = parseVariant(v);
         if (!results) {
           return v;
         }
-        let [, platform, arch, language] = results;
-        let shorten = "";
-        shorten += platform ? platform.replaceAll("_", "") : "*";
-        shorten += arch ? arch : "-*";
-        shorten += `.${language}`;
-        return shorten;
+        const { platform, arch, language } = results;
+        return "".concat(
+          platform ? platform : "*",
+          arch ? `-${arch}` : "-*",
+          `.${language}`
+        );
       };
 
       const variant = await terminalList({
@@ -70,10 +73,12 @@ export const listVariantsCommand: Command = {
             <span>{shortenVariant(variant)}</span>
           </>
         ),
+        signal,
       });
 
       const filesToOpen = variant === OPEN_ALL ? variants : [variant];
       try {
+        showIndicator("Opening variant...");
         const variants = await Promise.all(
           filesToOpen.map(async (v) => {
             const code = await getVariant(v, { host, credentials }, signal);
@@ -102,6 +107,8 @@ export const listVariantsCommand: Command = {
             message={`failed to get variant: ${(e as Error).message}`}
           />
         );
+      } finally {
+        hideIndicator();
       }
     } catch (e) {
       if (isExitError(e)) {

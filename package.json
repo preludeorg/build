@@ -12,14 +12,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "tsc --noEmit"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.1",
     "@codemirror/legacy-modes": "^6.0.1",
     "@codemirror/theme-one-dark": "^6.0.1",
     "@headlessui/react": "^1.7.4",
-    "@theprelude/sdk": "^0.9.9",
+    "@theprelude/sdk": "^0.9.10",
     "classnames": "^2.3.2",
     "codemirror": "^6.0.1",
     "date-fns": "^2.29.3",
@@ -37,9 +37,19 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
     "@vitejs/plugin-react": "^2.1.0",
+    "eslint": "^8.24.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-turbo": "^0.0.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-unicorn": "44.0.2",
     "postcss-preset-env": "^7.8.2",
-    "typescript": "^4.6.4",
-    "vite": "^3.1.0"
+    "prettier": "^2.7.1",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4"
   }
 }

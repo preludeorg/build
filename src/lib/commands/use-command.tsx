@@ -1,15 +1,15 @@
-import { Command } from "./types";
 import { z, ZodError } from "zod";
+import { inquire } from "../../components/terminal/question";
+import WelcomeMessage from "../../components/terminal/welcome-message";
 import { authState } from "../../hooks/auth-store";
+import { terminalState } from "../../hooks/terminal-store";
 import {
   ErrorMessage,
   isConnected,
   isExitError,
   TerminalMessage,
 } from "./helpers";
-import WelcomeMessage from "../../components/terminal/welcome-message";
-import { inquire } from "../../components/terminal/question";
-import { terminalState } from "../../hooks/terminal-store";
+import { Command } from "./types";
 
 const validator = z
   .string({
@@ -17,33 +17,29 @@ const validator = z
   })
   .min(1, { message: "handle is required" });
 
-const getAnswer = async (args = "") => {
+const getAnswer = async (args = "", signal: AbortSignal) => {
   if (args === "") {
     return await inquire({
-      handle: {
-        message: "enter a handle",
-        validator,
-      },
+      message: "enter a handle",
+      validator,
+      signal,
     });
   }
-  return z
-    .object({
-      handle: validator,
-    })
-    .parse({ handle: args });
+  return validator.parse(args);
 };
 
 export const useCommand: Command = {
   args: "[handle]",
-  desc: "register a free account with a particular user ID",
+  desc: "create account for handle",
   hidden: () => isConnected(),
   async exec(args) {
     try {
       const { createAccount, host } = authState();
       const { takeControl } = terminalState();
-      const { handle } = await getAnswer(args);
+      const signal = takeControl().signal;
+      const handle = await getAnswer(args, signal);
 
-      const credentials = await createAccount(handle, takeControl().signal);
+      const credentials = await createAccount(handle, signal);
 
       return <WelcomeMessage host={host} credentials={credentials} />;
     } catch (e) {

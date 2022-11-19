@@ -1,60 +1,71 @@
-import PlayIcon from "../icons/play-icon";
-import ChevronIcon from "../icons/chevron-icon";
-import HelpIcon from "../icons/help-icon";
-import CopyIcon from "../icons/copy-icon";
-import styles from "./control-panel.module.css";
-import useEditorStore from "../../hooks/editor-store";
 import { useState } from "react";
-import classNames from "classnames";
-import AppleIcon from "../icons/apple-icon";
-import LinuxIcon from "../icons/linux-icon";
+import shallow from "zustand/shallow";
+import useAuthStore from "../../hooks/auth-store";
+import useEditorStore from "../../hooks/editor-store";
+import useTerminalStore from "../../hooks/terminal-store";
+import { build } from "../../lib/api";
+import { getLanguage } from "../../lib/lang";
+import { validate } from "../../lib/lang/linter";
+import { select } from "../../lib/utils/select";
+import LoaderIcon from "../icons/loader-icon";
+import PlayIcon from "../icons/play-icon";
+import VariantResults from "../terminal/variant-results";
+import styles from "./control-panel.module.css";
 
 const ControlPanel: React.FC = () => {
-  const currentTabId = useEditorStore((state) => state.currentTabId);
-  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const { validTest, currentTabId } = useEditorStore((state) => {
+    const tab = state.tabs[state.currentTabId];
+
+    return {
+      validTest: validate(tab.buffer, getLanguage(tab.extension).linters),
+      currentTabId: state.currentTabId,
+    };
+  }, shallow);
+
+  const { write, showIndicator, hideIndicator, currentTest, takeControl } =
+    useTerminalStore(
+      select(
+        "write",
+        "showIndicator",
+        "hideIndicator",
+        "currentTest",
+        "takeControl"
+      )
+    );
+
+  const handleBuild = async () => {
+    try {
+      setLoading(true);
+      showIndicator("Building...");
+      takeControl();
+      const results = await build(currentTabId, serviceConfig);
+
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
+      write(
+        <VariantResults question={currentTest.question} results={results} />
+      );
+    } catch (e) {
+    } finally {
+      setLoading(false);
+      hideIndicator();
+    }
+  };
+
   return (
     <div className={styles.controlPanel}>
-      <button className={styles.test}>
-        <PlayIcon className={styles.playIcon} />
-        <span>Test</span>
+      <button
+        onClick={handleBuild}
+        disabled={!validTest || loading}
+        className={styles.test}
+      >
+        {loading ? <LoaderIcon className={styles.loaderIcon} /> : <PlayIcon />}
+        <span>Build</span>
       </button>
-      <div className={styles.deployContainer}>
-        <button
-          className={styles.deploy}
-          onClick={() => setOverlayVisible(!overlayVisible)}
-        >
-          <span>Deploy</span>
-          <ChevronIcon
-            className={classNames(styles.chevronIcon, {
-              [styles.activeChevron]: overlayVisible === true,
-            })}
-          />
-        </button>
-        {overlayVisible ? (
-          <div className={styles.overlay}>
-            <div className={styles.headline}>
-              <span className={styles.target}>Deploy on</span>
-              {currentTabId.startsWith("darwin") ? (
-                <AppleIcon className={styles.platformIcon} />
-              ) : (
-                <LinuxIcon className={styles.platformIcon} />
-              )}
-              <HelpIcon className={styles.helpIcon} />
-            </div>
-            <span className={styles.description}>
-              Use curl or wget to deploy the Detect node on your instance.
-            </span>
-            <div className={styles.download}>
-              <div className={styles.link}>This is the linkja jajjajaa</div>
-              <div className={styles.copyContainer}>
-                <CopyIcon className={styles.copyIcon} />
-              </div>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
     </div>
   );
 };

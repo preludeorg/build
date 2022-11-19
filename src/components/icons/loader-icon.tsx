@@ -2,34 +2,13 @@ const LoaderIcon: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <svg
       className={className}
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle
-        cx="12"
-        cy="12"
-        r="9"
-        stroke="url(#paint0_angular_277_764)"
-        stroke-width="2"
-      />
-      <defs>
-        <radialGradient
-          id="paint0_angular_277_764"
-          cx="0"
-          cy="0"
-          r="1"
-          gradientUnits="userSpaceOnUse"
-          gradientTransform="translate(12 17) rotate(-84.8056) scale(5.52268)"
-        >
-          <stop stop-color="#232323" />
-          <stop offset="0.0001" stop-color="white" />
-          <stop offset="0.623581" stop-color="white" />
-          <stop offset="1" stop-color="white" stop-opacity="0" />
-        </radialGradient>
-      </defs>
+      <path d="M3.64192 2.95526C4.85162 1.90703 6.39924 1.33103 7.99992 1.33326C11.6819 1.33326 14.6666 4.31792 14.6666 7.99992C14.6666 9.42392 14.2199 10.7439 13.4599 11.8266L11.3333 7.99992H13.3333C13.3333 6.95434 13.0261 5.93179 12.4497 5.05943C11.8733 4.18706 11.0532 3.50336 10.0914 3.09334C9.12954 2.68332 8.0684 2.56506 7.03989 2.75327C6.01138 2.94148 5.06089 3.42786 4.30659 4.15192L3.64192 2.95526ZM12.3579 13.0446C11.1482 14.0928 9.60059 14.6688 7.99992 14.6666C4.31792 14.6666 1.33325 11.6819 1.33325 7.99992C1.33325 6.57592 1.77992 5.25592 2.53992 4.17326L4.66659 7.99992H2.66659C2.6665 9.04551 2.97375 10.0681 3.55014 10.9404C4.12653 11.8128 4.94663 12.4965 5.90847 12.9065C6.8703 13.3165 7.93144 13.4348 8.95995 13.2466C9.98845 13.0584 10.9389 12.572 11.6933 11.8479L12.3579 13.0446Z" />
     </svg>
   );
 };

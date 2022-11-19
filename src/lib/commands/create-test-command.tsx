@@ -1,7 +1,9 @@
+import * as uuid from "uuid";
 import { z, ZodError } from "zod";
+import { inquire } from "../../components/terminal/question";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { CONTEXT_SWITCH_MESSAGE } from "./messages";
+import { createTest } from "../api";
 import {
   ErrorMessage,
   isConnected,
@@ -9,10 +11,8 @@ import {
   isInTestContext,
   TerminalMessage,
 } from "./helpers";
+import { CONTEXT_SWITCH_MESSAGE } from "./messages";
 import { Command } from "./types";
-import * as Prelude from "@theprelude/sdk";
-import * as uuid from "uuid";
-import { inquire } from "../../components/terminal/question";
 
 const validator = z
   .string({
@@ -20,38 +20,38 @@ const validator = z
   })
   .min(1, { message: "question is required" });
 
-const getAnswer = async (args = "") => {
+const getAnswer = async (args = "", signal: AbortSignal) => {
   if (args === "") {
     return await inquire({
-      question: {
-        message: "enter a question",
-        validator,
-      },
+      message: "enter a question",
+      validator,
+      signal,
     });
   }
-  return z
-    .object({
-      question: validator,
-    })
-    .parse({ question: args });
+
+  return validator.parse(args);
 };
 
 export const createTestCommand: Command = {
   args: "[question]",
   alias: ["ct"],
-  desc: "creates a test with a given question",
+  desc: "create test in account",
   enabled: () => isConnected(),
   hidden: () => isInTestContext(),
   async exec(args) {
-    const { switchTest, showIndicator, hideIndicator } = terminalState();
+    const { switchTest, showIndicator, hideIndicator, takeControl } =
+      terminalState();
     try {
       const { host, credentials } = authState();
 
+      const signal = takeControl().signal;
+
       const testId = uuid.v4();
-      const { question } = await getAnswer(args);
-      const service = new Prelude.Service({ host, credentials });
+      const question = await getAnswer(args, signal);
+
       showIndicator("Creating test...");
-      await service.build.createTest(testId, question);
+
+      await createTest(testId, question, { host, credentials }, signal);
 
       switchTest({
         id: testId,

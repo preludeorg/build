@@ -1,27 +1,35 @@
+import classNames from "classnames";
 import { useState } from "react";
+import shallow from "zustand/shallow";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
+import useNavigationStore from "../../hooks/navigation-store";
+import useTerminalStore from "../../hooks/terminal-store";
+import { select } from "../../lib/utils/select";
 import { InputGroup } from "../forms/input";
-import HostsIcon from "../icons/hosts-icon";
 import CloseIcon from "../icons/close-icon";
 import CopyIcon from "../icons/copy-icon";
+import HostsIcon from "../icons/hosts-icon";
 import styles from "./servers.module.css";
-import classNames from "classnames";
-import useTerminalStore from "../../hooks/terminal-store";
-import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 
-const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
-  toggleServerPanel,
-}) => {
-  const write = useTerminalStore((state) => state.write);
-  const takeControl = useTerminalStore((state) => state.takeControl);
-  const { host, credentials, serverType } = useAuthStore((state) => ({
-    host: state.host,
-    credentials: state.credentials,
-    serverType: state.serverType,
+const Servers: React.FC = () => {
+  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
+
+  const { write, takeControl } = useTerminalStore(
+    select("write", "takeControl"),
+    shallow
+  );
+
+  const { host, credentials, serverType } = useAuthStore(
+    select("host", "credentials", "serverType"),
+    shallow
+  );
+
+  const { isConnected, login, disconnect } = useAuthStore((state) => ({
+    isConnected: selectIsConnected(state),
+    login: state.login,
+    disconnect: state.disconnect,
   }));
 
-  const isConnected = useAuthStore(selectIsConnected);
-  const login = useAuthStore((state) => state.login);
-  const disconnect = useAuthStore((state) => state.disconnect);
   const [type, setType] = useState(serverType);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -47,8 +55,8 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
     }
   };
 
-  const copyText = (text: string) => {
-    navigator.clipboard.writeText(
+  const copyText = async (text: string) => {
+    await navigator.clipboard.writeText(
       (document.getElementsByName(text)[0] as HTMLInputElement).value
     );
   };
@@ -56,15 +64,15 @@ const Servers: React.FC<{ toggleServerPanel: () => void }> = ({
   return (
     <div
       className={styles.overlay}
-      onClick={(e) => {
-        toggleServerPanel();
+      onClick={() => {
+        hideOverlay();
       }}
     >
       <div className={styles.servers} onClick={(e) => e.stopPropagation()}>
         <div
           className={styles.closeIcon}
-          onClick={(e) => {
-            toggleServerPanel();
+          onClick={() => {
+            hideOverlay();
           }}
         >
           <CloseIcon className={styles.icon} />

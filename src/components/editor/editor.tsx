@@ -1,11 +1,10 @@
-import { useRef, useEffect } from "react";
-import { EditorView } from "@codemirror/view";
-import styles from "./editor.module.pcss";
 import { indentWithTab } from "@codemirror/commands";
 import { Compartment, EditorState, Extension } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
-import { keymap } from "@codemirror/view";
+import { EditorView, keymap } from "@codemirror/view";
 import { basicSetup } from "codemirror";
+import { useEffect, useRef } from "react";
+import styles from "./editor.module.pcss";
 
 const theme = EditorView.theme({
   "&.cm-editor": {

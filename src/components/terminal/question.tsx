@@ -15,7 +15,7 @@ interface Validator {
   safeParse(
     data: unknown,
     params?: Partial<ParseParams>
-  ): SafeParseReturnType<any, any>;
+  ): SafeParseReturnType<unknown, unknown>;
 }
 
 interface QuestionProps {
@@ -25,6 +25,7 @@ interface QuestionProps {
   onAnswer: (answer: string) => void;
   onInvalidAnswer: (invalid: string) => void;
   onExit: () => void;
+  signal?: AbortSignal;
 }
 
 export const Question: React.FC<QuestionProps> = ({
@@ -34,10 +35,27 @@ export const Question: React.FC<QuestionProps> = ({
   onAnswer,
   onInvalidAnswer,
   validator = z.string() as Validator,
+  signal,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [answer, setAnswer] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const exit = () => {
+    setAnswer("");
+    onExit();
+  };
+
+  useEffect(() => {
+    if (!signal) {
+      return;
+    }
+
+    signal.addEventListener("abort", exit);
+    return () => {
+      signal.removeEventListener("abort", exit);
+    };
+  }, []);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -47,9 +65,7 @@ export const Question: React.FC<QuestionProps> = ({
     if (e.key === "Escape" || isControlC(e)) {
       e.preventDefault();
       const value = inputRef.current?.value ?? "";
-
       setAnswer(value);
-
       onExit();
       focusTerminal();
       return false;
@@ -57,11 +73,8 @@ export const Question: React.FC<QuestionProps> = ({
 
     if (e.key === "Enter") {
       e.preventDefault();
-
       const value = (inputRef.current?.value ?? "").trim();
-
       setAnswer(value);
-
       if (value === "" && defaultValue) {
         onAnswer(defaultValue);
         focusTerminal();
@@ -77,7 +90,7 @@ export const Question: React.FC<QuestionProps> = ({
       const result = validator.safeParse(value);
 
       if (result.success) {
-        onAnswer(result.data);
+        onAnswer(result.data as string);
       } else {
         const e = result.error;
         if (e.errors[0].code === "invalid_enum_value") {
@@ -112,11 +125,12 @@ export const Question: React.FC<QuestionProps> = ({
         <span className={styles.message}>
           {[message, choice, def].filter((m) => !!m).join(" ")}:
         </span>
-        {answer === null ? (
-          <input ref={inputRef} type="text" onKeyDown={handleKey} />
-        ) : (
-          <span>{answer}</span>
-        )}
+        <input
+          readOnly={answer !== null}
+          ref={inputRef}
+          type="text"
+          onKeyDown={handleKey}
+        />
       </div>
       {error && <div>{error}</div>}
     </>
@@ -150,28 +164,18 @@ interface Question {
   choices?: readonly string[];
   defaultValue?: string;
   validator?: Validator;
+  signal: AbortSignal;
 }
 
-type Questions = Record<string, Question>;
-
-export async function inquire<T extends Questions>(
-  questions: T
-): Promise<{ [x in keyof T]: string }> {
-  const answers: Record<string, string> = {};
-  for (const [key, ques] of Object.entries(questions)) {
-    while (true) {
-      try {
-        answers[key] = await question(ques);
-        break;
-      } catch (err) {
-        if ((err as Error).message === "invalidAnswer") {
-          continue;
-        }
-
-        throw err;
+export async function inquire(quest: Question): Promise<string> {
+  while (true) {
+    try {
+      return await question(quest);
+    } catch (err) {
+      if ((err as Error).message === "invalidAnswer") {
+        continue;
       }
+      throw err;
     }
   }
-
-  return answers as { [x in keyof T]: string };
 }

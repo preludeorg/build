@@ -1,10 +1,10 @@
 import { Test } from "@theprelude/sdk";
 import create from "zustand";
-import { commands } from "../lib/commands";
 import PrimaryPrompt from "../components/terminal/primary-prompt";
 import styles from "../components/terminal/terminal.module.css";
-import { commonBeginning } from "../lib/utils/common-beginning";
+import { commands } from "../lib/commands";
 import { TerminalMessage } from "../lib/commands/helpers";
+import { commonBeginning } from "../lib/utils/common-beginning";
 
 function splitStringAtIndex(value: string, index: number) {
   if (!value) {
@@ -145,7 +145,9 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
     const eventKey = event.key;
 
-    let { input, caretPosition, historyPointer, commandsHistory } = get();
+    const { input, commandsHistory } = get();
+    let { caretPosition, historyPointer } = get();
+
     let nextInput: string | null = null;
 
     if (eventKey === "Backspace") {
@@ -261,6 +263,13 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
         inputEnabled: false,
       };
     });
+
+    if (commandName === "") {
+      set(() => ({
+        inputEnabled: true,
+      }));
+      return;
+    }
 
     const commandArguments = rest.join(" ");
     const commandKey = Object.keys(commands).find(
