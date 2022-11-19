@@ -1,17 +1,17 @@
+import ini from "ini";
 import { z } from "zod";
+import shallow from "zustand/shallow";
 import {
   ErrorMessage,
   isExitError,
   TerminalMessage,
 } from "../lib/commands/helpers";
+import { select } from "../lib/utils/select";
 import focusTerminal from "../utils/focus-terminal";
 import useAuthStore from "./auth-store";
 import useEditorStore from "./editor-store";
 import useNavigationStore from "./navigation-store";
 import useTerminalStore from "./terminal-store";
-import ini from "ini";
-import { select } from "../lib/utils/select";
-import shallow from "zustand/shallow";
 
 const readAsText = (file: Blob): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -119,8 +119,7 @@ export const useConfig = () => {
 
     if ("showSaveFilePicker" in window) {
       try {
-        // @ts-ignore;
-        const fileHandle = await window.showSaveFilePicker({
+        const fileHandle = await (window as any).showSaveFilePicker({
           suggestedName: "keychain.ini",
           types: [
             {
@@ -155,8 +154,7 @@ export const useConfig = () => {
     focusTerminal();
     if ("showOpenFilePicker" in window) {
       try {
-        //@ts-ignore
-        const [handle] = await window.showOpenFilePicker({
+        const [handle] = await (window as any).showOpenFilePicker({
           types: [
             {
               description: "Configuration File",
@@ -170,7 +168,7 @@ export const useConfig = () => {
         });
 
         const file: File = await handle.getFile();
-        importConfig(await file.text());
+        await importConfig(await file.text());
       } catch (err) {}
       return;
     }
@@ -179,15 +177,15 @@ export const useConfig = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", ".ini");
-    input.addEventListener("change", async (e: any) => {
-      const file = e.target?.files?.[0];
+    input.addEventListener("change", async (e) => {
+      const file = (e.target as HTMLInputElement)?.files?.[0];
 
       if (!file) {
         return;
       }
 
       const content = await readAsText(file);
-      importConfig(content);
+      await importConfig(content);
     });
     input.click();
   };

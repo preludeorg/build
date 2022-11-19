@@ -1,5 +1,5 @@
-import { authState } from "../../hooks/auth-store";
 import styles from "../../components/terminal/commands.module.css";
+import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 
 export const isConnected = () => !!authState().credentials;

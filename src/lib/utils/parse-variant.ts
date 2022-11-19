@@ -24,7 +24,7 @@ export function parseVariant(variantName: string): ParsedVariant | null {
   if (!results) {
     return null;
   }
-  let [variant, id, , platform, , arch, language] = results;
+  const [variant, id, , platform, , arch, language] = results;
   return { variant, id, platform, arch, language };
 }
 
@@ -35,6 +35,6 @@ export function parseBuildVariant(
   if (!results) {
     return null;
   }
-  let [variant, id, , platform, , arch] = results;
+  const [variant, id, , platform, , arch] = results;
   return { variant, id, platform, arch };
 }

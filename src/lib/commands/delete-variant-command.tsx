@@ -3,8 +3,7 @@ import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { getTest, deleteVariant } from "../api";
-import { NO_VARIANTS_MESSAGE } from "./messages";
+import { deleteVariant, getTest } from "../api";
 import {
   ErrorMessage,
   isConnected,
@@ -12,6 +11,7 @@ import {
   isInTestContext,
   TerminalMessage,
 } from "./helpers";
+import { NO_VARIANTS_MESSAGE } from "./messages";
 import { Command } from "./types";
 
 export const deleteVariantCommand: Command = {
@@ -28,9 +28,13 @@ export const deleteVariantCommand: Command = {
 
       const signal = takeControl().signal;
 
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
       showIndicator("Retrieving variants...");
       const variants = await getTest(
-        currentTest!.id,
+        currentTest.id,
         {
           host,
           credentials,

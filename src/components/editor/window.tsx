@@ -1,22 +1,22 @@
-import Editor from "./editor";
-import ControlPanel from "./control-panel";
-import styles from "./editor.module.pcss";
-import CloseIcon from "../icons/close-icon";
-import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
-import shallow from "zustand/shallow";
-import useNavigationStore from "../../hooks/navigation-store";
+import { ServiceConfig } from "@theprelude/sdk";
 import classNames from "classnames";
 import React from "react";
+import shallow from "zustand/shallow";
+import useAuthStore from "../../hooks/auth-store";
+import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
+import useNavigationStore from "../../hooks/navigation-store";
+import { terminalState } from "../../hooks/terminal-store";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
-import useAuthStore from "../../hooks/auth-store";
-import { ServiceConfig } from "@theprelude/sdk";
 import VariantIcon from "../icons/variant-icon";
 import { parseVariant } from "../../lib/utils/parse-variant";
-import { terminalState } from "../../hooks/terminal-store";
 import { select } from "../../lib/utils/select";
 import { createVariant } from "../../lib/api";
+import Editor from "./editor";
+import ControlPanel from "./control-panel";
+import CloseIcon from "../icons/close-icon";
+import styles from "./editor.module.pcss";
 
 const { showIndicator, hideIndicator } = terminalState();
 
@@ -65,7 +65,7 @@ const EditorWindow: React.FC = () => {
         extensions={extensions}
         onChange={(buffer) => {
           updateBuffer(buffer);
-          processVariant(currentTabId, buffer, serviceConfig);
+          void processVariant(currentTabId, buffer, serviceConfig);
         }}
       />
       <Linters />
@@ -87,7 +87,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}
-      onClick={(e) => {
+      onClick={() => {
         switchTab(tabId);
       }}
     >

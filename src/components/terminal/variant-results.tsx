@@ -1,18 +1,18 @@
 import { ComputeResult } from "@theprelude/sdk";
 import classNames from "classnames";
 import { useState } from "react";
+import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
+import { createURL } from "../../lib/api";
+import { select } from "../../lib/utils/select";
 import AlertIcon from "../icons/alert-icon";
 import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
+import CopyIcon from "../icons/copy-icon";
+import DownloadIcon from "../icons/download-icon";
+import LoaderIcon from "../icons/loader-icon";
 import TimeIcon from "../icons/time-icon";
 import styles from "./variant-results.module.css";
-import shallow from "zustand/shallow";
-import { select } from "../../lib/utils/select";
-import { createURL } from "../../lib/api";
-import CopyIcon from "../icons/copy-icon";
-import LoaderIcon from "../icons/loader-icon";
-import DownloadIcon from "../icons/download-icon";
 
 interface Props {
   question: string;
@@ -51,7 +51,7 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
 
 export default VariantResults;
 
-const isEmpty = (val: string | Array<any>): boolean =>
+const isEmpty = (val: string | Array<unknown>): boolean =>
   (Array.isArray(val) && val.length === 0) || val === "";
 
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
@@ -246,7 +246,7 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
       ) : (
         <button
           className={styles.download}
-          onClick={(e) => handleDownloadLink(variant)}
+          onClick={() => handleDownloadLink(variant)}
         >
           {loading ? (
             <>

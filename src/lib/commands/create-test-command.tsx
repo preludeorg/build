@@ -1,7 +1,9 @@
+import * as uuid from "uuid";
 import { z, ZodError } from "zod";
+import { inquire } from "../../components/terminal/question";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { CONTEXT_SWITCH_MESSAGE } from "./messages";
+import { createTest } from "../api";
 import {
   ErrorMessage,
   isConnected,
@@ -9,10 +11,8 @@ import {
   isInTestContext,
   TerminalMessage,
 } from "./helpers";
+import { CONTEXT_SWITCH_MESSAGE } from "./messages";
 import { Command } from "./types";
-import * as uuid from "uuid";
-import { inquire } from "../../components/terminal/question";
-import { createTest } from "../api";
 
 const validator = z
   .string({

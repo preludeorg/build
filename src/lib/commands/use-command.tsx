@@ -1,15 +1,15 @@
-import { Command } from "./types";
 import { z, ZodError } from "zod";
+import { inquire } from "../../components/terminal/question";
+import WelcomeMessage from "../../components/terminal/welcome-message";
 import { authState } from "../../hooks/auth-store";
+import { terminalState } from "../../hooks/terminal-store";
 import {
   ErrorMessage,
   isConnected,
   isExitError,
   TerminalMessage,
 } from "./helpers";
-import WelcomeMessage from "../../components/terminal/welcome-message";
-import { inquire } from "../../components/terminal/question";
-import { terminalState } from "../../hooks/terminal-store";
+import { Command } from "./types";
 
 const validator = z
   .string({

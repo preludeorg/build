@@ -15,7 +15,7 @@ interface Validator {
   safeParse(
     data: unknown,
     params?: Partial<ParseParams>
-  ): SafeParseReturnType<any, any>;
+  ): SafeParseReturnType<unknown, unknown>;
 }
 
 interface QuestionProps {
@@ -90,7 +90,7 @@ export const Question: React.FC<QuestionProps> = ({
       const result = validator.safeParse(value);
 
       if (result.success) {
-        onAnswer(result.data);
+        onAnswer(result.data as string);
       } else {
         const e = result.error;
         if (e.errors[0].code === "invalid_enum_value") {
