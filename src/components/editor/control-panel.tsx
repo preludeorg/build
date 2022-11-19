@@ -9,6 +9,7 @@ import { validate } from "../../lib/lang/linter";
 import { select } from "../../lib/utils/select";
 import LoaderIcon from "../icons/loader-icon";
 import PlayIcon from "../icons/play-icon";
+import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
 import styles from "./control-panel.module.css";
 
@@ -50,6 +51,7 @@ const ControlPanel: React.FC = () => {
         <VariantResults question={currentTest.question} results={results} />
       );
     } catch (e) {
+      write(<ErrorMessage message={`failed to build variant`} />);
     } finally {
       setLoading(false);
       hideIndicator();

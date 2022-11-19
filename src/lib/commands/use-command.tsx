@@ -50,9 +50,7 @@ export const useCommand: Command = {
         return <ErrorMessage message={e.errors[0].message} />;
       } else {
         return (
-          <ErrorMessage
-            message={`${(e as Error).message.toLowerCase()}`}
-          />
+          <ErrorMessage message={`${(e as Error).message.toLowerCase()}`} />
         );
       }
     }

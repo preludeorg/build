@@ -12,6 +12,7 @@ import CopyIcon from "../icons/copy-icon";
 import DownloadIcon from "../icons/download-icon";
 import LoaderIcon from "../icons/loader-icon";
 import TimeIcon from "../icons/time-icon";
+import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./variant-results.module.css";
 
 interface Props {
@@ -234,7 +235,10 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-    } catch {}
+      notifySuccess("Link copied to clipboard. Link expires in 24 hours");
+    } catch (error) {
+      notifyError("Failed to copy to clipboard", error);
+    }
   };
   return (
     <div onClick={(e) => e.stopPropagation()}>

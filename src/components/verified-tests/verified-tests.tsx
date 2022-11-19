@@ -11,6 +11,7 @@ import ChevronIcon from "../icons/chevron-icon";
 import CopyIcon from "../icons/copy-icon";
 import LoaderIcon from "../icons/loader-icon";
 import VariantIcon from "../icons/variant-icon";
+import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./verified-test.module.css";
 
 const VerifiedTests: React.FC = () => {
@@ -46,7 +47,8 @@ const VerifiedTests: React.FC = () => {
       />
       <div className={classNames(styles.panel, styles.right)}>
         <span className={styles.legend}>
-          Verified Security Tests {loading && <LoaderIcon className={styles.loaderIcon} />}
+          Verified Security Tests{" "}
+          {loading && <LoaderIcon className={styles.loaderIcon} />}
         </span>
         {tests.map((test) => (
           <Test
@@ -109,7 +111,9 @@ const CopyButton: React.FC<{ variant: string }> = ({ variant }) => {
       setLoading(true);
       const { url } = await createURL(variant, serviceConfig);
       await navigator.clipboard.writeText(url);
-    } catch {
+      notifySuccess("Link copied to clipboard. Link expires in 24 hours");
+    } catch (error) {
+      notifyError("Failed to copy to clipboard", error);
     } finally {
       setLoading(false);
     }
