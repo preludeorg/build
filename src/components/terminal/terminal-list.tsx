@@ -20,7 +20,7 @@ export interface TerminalListProps<T> {
 
 const ITEM_PER_PAGE = 5;
 
-const TerminalList = <T extends {}>({
+function TerminalList<T>({
   title,
   items,
   renderItem,
@@ -29,7 +29,7 @@ const TerminalList = <T extends {}>({
   onExit,
   filterOn,
   signal,
-}: TerminalListProps<T>): JSX.Element => {
+}: TerminalListProps<T>) {
   const pickerRef = useRef<HTMLInputElement>(null);
   const filterRef = useRef<HTMLInputElement>(null);
   const prevRef = useRef<HTMLElement | Element | null>(null);
@@ -278,13 +278,13 @@ const TerminalList = <T extends {}>({
       )}
     </div>
   );
-};
+}
 
 export default TerminalList;
 
 type ListerProps<T> = Omit<TerminalListProps<T>, "onSelect" | "onExit">;
 
-export async function terminalList<T extends {}>({
+export async function terminalList<T>({
   title,
   items,
   keyProp,

@@ -29,7 +29,7 @@ const VerifiedTests: React.FC = () => {
   }, shallow);
 
   useEffect(() => {
-    fetch(serviceConfig);
+    void fetch(serviceConfig);
   }, []);
 
   const handleExpand = (id: string) => {
@@ -40,7 +40,7 @@ const VerifiedTests: React.FC = () => {
     <div className={styles.overlay}>
       <div
         className={styles.backdrop}
-        onClick={(e) => {
+        onClick={() => {
           hideOverlay();
         }}
       />

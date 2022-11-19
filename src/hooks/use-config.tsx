@@ -119,8 +119,7 @@ export const useConfig = () => {
 
     if ("showSaveFilePicker" in window) {
       try {
-        // @ts-ignore;
-        const fileHandle = await window.showSaveFilePicker({
+        const fileHandle = await (window as any).showSaveFilePicker({
           suggestedName: "keychain.ini",
           types: [
             {
@@ -155,8 +154,7 @@ export const useConfig = () => {
     focusTerminal();
     if ("showOpenFilePicker" in window) {
       try {
-        //@ts-ignore
-        const [handle] = await window.showOpenFilePicker({
+        const [handle] = await (window as any).showOpenFilePicker({
           types: [
             {
               description: "Configuration File",
@@ -170,7 +168,7 @@ export const useConfig = () => {
         });
 
         const file: File = await handle.getFile();
-        importConfig(await file.text());
+        await importConfig(await file.text());
       } catch (err) {}
       return;
     }
@@ -187,7 +185,7 @@ export const useConfig = () => {
       }
 
       const content = await readAsText(file);
-      importConfig(content);
+      await importConfig(content);
     });
     input.click();
   };

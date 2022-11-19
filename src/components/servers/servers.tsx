@@ -55,8 +55,8 @@ const Servers: React.FC = () => {
     }
   };
 
-  const copyText = (text: string) => {
-    navigator.clipboard.writeText(
+  const copyText = async (text: string) => {
+    await navigator.clipboard.writeText(
       (document.getElementsByName(text)[0] as HTMLInputElement).value
     );
   };
@@ -64,14 +64,14 @@ const Servers: React.FC = () => {
   return (
     <div
       className={styles.overlay}
-      onClick={(e) => {
+      onClick={() => {
         hideOverlay();
       }}
     >
       <div className={styles.servers} onClick={(e) => e.stopPropagation()}>
         <div
           className={styles.closeIcon}
-          onClick={(e) => {
+          onClick={() => {
             hideOverlay();
           }}
         >

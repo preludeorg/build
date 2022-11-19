@@ -40,7 +40,7 @@ const StatusBar: React.FC = () => {
                 <>
                   <a
                     onClick={() => {
-                      handleImport();
+                      void handleImport();
                       close();
                     }}
                   >
@@ -49,7 +49,7 @@ const StatusBar: React.FC = () => {
                   {isConnected && (
                     <a
                       onClick={() => {
-                        handleExport();
+                        void handleExport();
                         close();
                       }}
                     >

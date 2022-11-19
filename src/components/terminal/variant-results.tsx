@@ -244,7 +244,7 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
       ) : (
         <button
           className={styles.download}
-          onClick={(e) => handleDownloadLink(variant)}
+          onClick={() => handleDownloadLink(variant)}
         >
           {loading ? (
             <>

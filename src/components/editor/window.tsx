@@ -65,7 +65,7 @@ const EditorWindow: React.FC = () => {
         extensions={extensions}
         onChange={(buffer) => {
           updateBuffer(buffer);
-          processVariant(currentTabId, buffer, serviceConfig);
+          void processVariant(currentTabId, buffer, serviceConfig);
         }}
       />
       <Linters />
@@ -87,7 +87,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}
-      onClick={(e) => {
+      onClick={() => {
         switchTab(tabId);
       }}
     >

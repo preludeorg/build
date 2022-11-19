@@ -75,7 +75,7 @@ function useTerminal() {
       return;
     }
 
-    handleKey(event);
+    void handleKey(event);
   };
 
   const handleFocus = () => {

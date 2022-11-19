@@ -81,7 +81,11 @@ export const createVariantCommand: Command = {
 
       const { platform, arch, language } = results;
 
-      let file = `${currentTest!.id}`;
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
+      let file = `${currentTest.id}`;
       if (platform !== "*") {
         file += `_${platform}`;
 
@@ -94,7 +98,7 @@ export const createVariantCommand: Command = {
 
       showIndicator("Checking if variant exists...");
       const exists = await variantExists(
-        currentTest!.id,
+        currentTest.id,
         file,
         { host, credentials },
         signal
@@ -124,7 +128,7 @@ export const createVariantCommand: Command = {
 
       const code = getLanguage(language)
         .bootstrap.replaceAll("$NAME", file)
-        .replaceAll("$QUESTION", currentTest!.question)
+        .replaceAll("$QUESTION", currentTest.question)
         .replaceAll(
           "$CREATED",
           format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS")

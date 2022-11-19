@@ -27,7 +27,7 @@ interface EditorStore {
   updateCurrentBuffer: (buffer: string) => void;
 }
 
-const useEditorStore = create<EditorStore>((set, get) => ({
+const useEditorStore = create<EditorStore>((set) => ({
   tabs: {},
   currentTabId: "",
   previousTabId: "",

@@ -28,9 +28,13 @@ export const deleteVariantCommand: Command = {
 
       const signal = takeControl().signal;
 
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
       showIndicator("Retrieving variants...");
       const variants = await getTest(
-        currentTest!.id,
+        currentTest.id,
         {
           host,
           credentials,

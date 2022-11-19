@@ -32,9 +32,13 @@ export const listVariantsCommand: Command = {
 
       const signal = takeControl().signal;
 
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
       showIndicator("Retrieving variants...");
       const variants = await getTest(
-        currentTest!.id,
+        currentTest.id,
         {
           host,
           credentials,
@@ -52,7 +56,7 @@ export const listVariantsCommand: Command = {
         if (!results) {
           return v;
         }
-        let { platform, arch, language } = results;
+        const { platform, arch, language } = results;
         return "".concat(
           platform ? platform : "*",
           arch ? `-${arch}` : "-*",

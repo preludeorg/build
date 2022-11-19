@@ -145,7 +145,9 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
     const eventKey = event.key;
 
-    let { input, caretPosition, historyPointer, commandsHistory } = get();
+    const { input, commandsHistory } = get();
+    let { caretPosition, historyPointer } = get();
+
     let nextInput: string | null = null;
 
     if (eventKey === "Backspace") {

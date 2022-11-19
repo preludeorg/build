@@ -41,8 +41,13 @@ const ControlPanel: React.FC = () => {
       showIndicator("Building...");
       takeControl();
       const results = await build(currentTabId, serviceConfig);
+
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
       write(
-        <VariantResults question={currentTest!.question} results={results} />
+        <VariantResults question={currentTest.question} results={results} />
       );
     } catch (e) {
     } finally {
