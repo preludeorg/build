@@ -11,11 +11,12 @@ import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
 import useAuthStore from "../../hooks/auth-store";
-import { Service, ServiceConfig } from "@theprelude/sdk";
+import { ServiceConfig } from "@theprelude/sdk";
 import VariantIcon from "../icons/variant-icon";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { terminalState } from "../../hooks/terminal-store";
 import { select } from "../../lib/utils/select";
+import { createVariant } from "../../lib/api";
 
 const { showIndicator, hideIndicator } = terminalState();
 
@@ -25,9 +26,8 @@ const saveVariant = async (
   config: ServiceConfig
 ) => {
   try {
-    showIndicator("Auto-saving...");
-    const service = new Service(config);
-    await service.build.createVariant(name, code);
+    showIndicator("auto-saving...");
+    await createVariant({ name, code }, config, new AbortController().signal);
   } catch (e) {
   } finally {
     hideIndicator();
