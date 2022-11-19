@@ -1,16 +1,14 @@
 import * as uuid from "uuid";
 import { z, ZodError } from "zod";
 import { inquire } from "../../components/terminal/question";
+import {
+  ErrorMessage,
+  TerminalMessage,
+} from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { createTest } from "../api";
-import {
-  ErrorMessage,
-  isConnected,
-  isExitError,
-  isInTestContext,
-  TerminalMessage,
-} from "./helpers";
+import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { CONTEXT_SWITCH_MESSAGE } from "./messages";
 import { Command } from "./types";
 

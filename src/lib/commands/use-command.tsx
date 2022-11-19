@@ -1,14 +1,13 @@
 import { z, ZodError } from "zod";
 import { inquire } from "../../components/terminal/question";
+import {
+  ErrorMessage,
+  TerminalMessage,
+} from "../../components/terminal/terminal-message";
 import WelcomeMessage from "../../components/terminal/welcome-message";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import {
-  ErrorMessage,
-  isConnected,
-  isExitError,
-  TerminalMessage,
-} from "./helpers";
+import { isConnected, isExitError } from "./helpers";
 import { Command } from "./types";
 
 const validator = z

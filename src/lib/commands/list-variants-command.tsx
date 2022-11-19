@@ -1,4 +1,8 @@
 import { terminalList } from "../../components/terminal/terminal-list";
+import {
+  ErrorMessage,
+  TerminalMessage,
+} from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
@@ -6,13 +10,7 @@ import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
 import { getTest, getVariant } from "../api";
 import { parseVariant } from "../utils/parse-variant";
-import {
-  ErrorMessage,
-  isConnected,
-  isExitError,
-  isInTestContext,
-  TerminalMessage,
-} from "./helpers";
+import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { NO_VARIANTS_MESSAGE } from "./messages";
 import { Command } from "./types";
 
