@@ -1,7 +1,7 @@
-import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
-import styles from "./servers.module.css";
 import classNames from "classnames";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 import useNavigationStore from "../../hooks/navigation-store";
+import styles from "./servers.module.css";
 
 const ConnectedServer = () => {
   const host = useAuthStore((state) => state.host);

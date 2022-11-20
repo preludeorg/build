@@ -1,18 +1,16 @@
+import * as uuid from "uuid";
 import { z, ZodError } from "zod";
-import { authState } from "../../hooks/auth-store";
-import { terminalState } from "../../hooks/terminal-store";
-import { CONTEXT_SWITCH_MESSAGE } from "./messages";
+import { inquire } from "../../components/terminal/question";
 import {
   ErrorMessage,
-  isConnected,
-  isExitError,
-  isInTestContext,
   TerminalMessage,
-} from "./helpers";
+} from "../../components/terminal/terminal-message";
+import { authState } from "../../hooks/auth-store";
+import { terminalState } from "../../hooks/terminal-store";
+import { createTest } from "../api";
+import { isConnected, isExitError, isInTestContext } from "./helpers";
+import { CONTEXT_SWITCH_MESSAGE } from "./messages";
 import { Command } from "./types";
-import * as Prelude from "@theprelude/sdk";
-import * as uuid from "uuid";
-import { inquire } from "../../components/terminal/question";
 
 const validator = z
   .string({
@@ -48,9 +46,10 @@ export const createTestCommand: Command = {
 
       const testId = uuid.v4();
       const question = await getAnswer(args, signal);
-      const service = new Prelude.Service({ host, credentials });
+
       showIndicator("Creating test...");
-      await service.build.createTest(testId, question, { signal });
+
+      await createTest(testId, question, { host, credentials }, signal);
 
       switchTest({
         id: testId,

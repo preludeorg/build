@@ -1,18 +1,19 @@
 import { ComputeResult } from "@theprelude/sdk";
 import classNames from "classnames";
 import { useState } from "react";
+import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
+import { createURL } from "../../lib/api";
+import { select } from "../../lib/utils/select";
 import AlertIcon from "../icons/alert-icon";
 import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
-import LaunchIcon from "../icons/launch-icon";
-import TimeIcon from "../icons/time-icon";
-import styles from "./variant-results.module.css";
-import shallow from "zustand/shallow";
-import { select } from "../../lib/utils/select";
-import { createURL } from "../../lib/api";
 import CopyIcon from "../icons/copy-icon";
+import DownloadIcon from "../icons/download-icon";
 import LoaderIcon from "../icons/loader-icon";
+import TimeIcon from "../icons/time-icon";
+import { notifyError, notifySuccess } from "../notifications/notifications";
+import styles from "./variant-results.module.css";
 
 interface Props {
   question: string;
@@ -40,7 +41,9 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
           <VariantResult result={r} key={r.name} />
         ))}
       </ul>
-      <span className={styles.pass}>{sucesses.length} variant(s) complied</span>
+      <span className={classNames(styles.pass, styles.passBorder)}>
+        {sucesses.length} variant(s) complied
+      </span>
       <span className={styles.alert}>{failures.length} variant(s) failed</span>
       <span className={styles.time}>
         Total build time executed in {longestTime.toFixed(3)}s
@@ -51,7 +54,7 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
 
 export default VariantResults;
 
-const isEmpty = (val: string | Array<any>): boolean =>
+const isEmpty = (val: string | Array<unknown>): boolean =>
   (Array.isArray(val) && val.length === 0) || val === "";
 
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
@@ -93,7 +96,13 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
       {expanded && (
         <ul className={classNames(styles.steps)}>
           {result.steps.map((s) => (
-            <li className={styles.step} key={s.step}>
+            <li
+              className={classNames(styles.step, {
+                [styles.stepCentered]:
+                  s.step.toLowerCase() === "publish" && !s.output,
+              })}
+              key={s.step}
+            >
               <div className={styles.info}>
                 <div className={styles.infoBlock}>
                   <ChevronIcon className={styles.stepChevron} />
@@ -226,30 +235,35 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-    } catch {}
+      notifySuccess("Link copied to clipboard. Link expires in 24 hours");
+    } catch (error) {
+      notifyError("Failed to copy to clipboard", error);
+    }
   };
   return (
     <div onClick={(e) => e.stopPropagation()}>
       {linkAvailable && url ? (
-        <button className={styles.download} onClick={() => handleCopy()}>
+        <div className={classNames(styles.download, styles.copy)}>
           <input type="url" value={url} readOnly className={styles.url}></input>
-          <CopyIcon className={styles.copyIcon} />
-        </button>
+          <button className={styles.iconContainer} onClick={() => handleCopy()}>
+            <CopyIcon className={styles.copyIcon} />
+          </button>
+        </div>
       ) : (
         <button
           className={styles.download}
-          onClick={(e) => handleDownloadLink(variant)}
+          onClick={() => handleDownloadLink(variant)}
         >
           {loading ? (
             <>
               <LoaderIcon
-                className={classNames(styles.launchIcon, styles.loaderIcon)}
+                className={classNames(styles.downloadIcon, styles.loaderIcon)}
               />
               <span>Generating link...</span>
             </>
           ) : (
             <>
-              <LaunchIcon className={styles.launchIcon} />
+              <DownloadIcon className={styles.downloadIcon} />
               <span>Download link</span>
             </>
           )}

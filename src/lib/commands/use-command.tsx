@@ -1,15 +1,14 @@
-import { Command } from "./types";
 import { z, ZodError } from "zod";
-import { authState } from "../../hooks/auth-store";
+import { inquire } from "../../components/terminal/question";
 import {
   ErrorMessage,
-  isConnected,
-  isExitError,
   TerminalMessage,
-} from "./helpers";
+} from "../../components/terminal/terminal-message";
 import WelcomeMessage from "../../components/terminal/welcome-message";
-import { inquire } from "../../components/terminal/question";
+import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
+import { isConnected, isExitError } from "./helpers";
+import { Command } from "./types";
 
 const validator = z
   .string({
@@ -51,9 +50,7 @@ export const useCommand: Command = {
         return <ErrorMessage message={e.errors[0].message} />;
       } else {
         return (
-          <ErrorMessage
-            message={`failed to register account: ${(e as Error).message}`}
-          />
+          <ErrorMessage message={`${(e as Error).message.toLowerCase()}`} />
         );
       }
     }

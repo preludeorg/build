@@ -29,7 +29,7 @@
   align-items: center;
 }
 
-.compiled {
+.verified {
   border-left: 1px solid var(--gray-30);
   border-right: none;
   background: var(--black);

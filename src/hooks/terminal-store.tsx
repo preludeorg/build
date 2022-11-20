@@ -1,11 +1,11 @@
 import { Test } from "@theprelude/sdk";
 import create from "zustand";
-import { commands } from "../lib/commands";
 import PrimaryPrompt from "../components/terminal/primary-prompt";
-import styles from "../components/terminal/terminal.module.css";
-import { commonBeginning } from "../lib/utils/common-beginning";
-import { TerminalMessage } from "../lib/commands/helpers";
 import { CurrentLine } from "../components/terminal/terminal";
+import { TerminalMessage } from "../components/terminal/terminal-message";
+import styles from "../components/terminal/terminal.module.css";
+import { commands } from "../lib/commands";
+import { commonBeginning } from "../lib/utils/common-beginning";
 import focusTerminal from "../utils/focus-terminal";
 
 export function splitStringAtIndex(value: string, index: number) {
@@ -141,7 +141,9 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
     const eventKey = event.key;
 
-    let { input, caretPosition, historyPointer, commandsHistory } = get();
+    const { input, commandsHistory } = get();
+    let { caretPosition, historyPointer } = get();
+
     let nextInput: string | null = null;
 
     if (eventKey === "Backspace") {

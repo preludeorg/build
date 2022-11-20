@@ -1,34 +1,39 @@
-import { InputHTMLAttributes } from "react"
-import styles from "./input.module.css"
-import classNames from "classnames"
+import classNames from "classnames";
+import { InputHTMLAttributes } from "react";
+import styles from "./input.module.css";
 
-export const Input: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({ className, ...props }) => {
-  return (
-    <input className={classNames(styles.input, className)} {...props} />
-  )
-}
+export const Input: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({
+  className,
+  ...props
+}) => {
+  return <input className={classNames(styles.input, className)} {...props} />;
+};
 
 export interface InputGroupProps extends InputHTMLAttributes<HTMLInputElement> {
   groupClassName?: string;
-  before?: React.ReactNode
-  after?: React.ReactNode
+  before?: React.ReactNode;
+  after?: React.ReactNode;
 }
 
-export const InputGroup: React.FC<InputGroupProps> = ({ groupClassName, className, before, after, ...props }) => {
+export const InputGroup: React.FC<InputGroupProps> = ({
+  groupClassName,
+  className,
+  before,
+  after,
+  ...props
+}) => {
   return (
     <div className={classNames(styles.group, groupClassName)}>
       {before && <div className={styles.before}>{before}</div>}
       <Input
-        className={
-          classNames(
-            className,
-            before && styles.withBefore,
-            after && styles.withAfter
-          )
-        }
+        className={classNames(
+          className,
+          before && styles.withBefore,
+          after && styles.withAfter
+        )}
         {...props}
       />
       {after && <div className={styles.after}>{after}</div>}
     </div>
-  )
-}
+  );
+};

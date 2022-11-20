@@ -1,15 +1,13 @@
 import { terminalList } from "../../components/terminal/terminal-list";
+import {
+  ErrorMessage,
+  TerminalMessage,
+} from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { getTestList } from "../api";
+import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
-import {
-  ErrorMessage,
-  isConnected,
-  isExitError,
-  isInTestContext,
-  TerminalMessage,
-} from "./helpers";
 import { Command } from "./types";
 
 export const listTestsCommand: Command = {

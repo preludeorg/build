@@ -1,15 +1,14 @@
+import { Popover, Transition } from "@headlessui/react";
+import classNames from "classnames";
+import shallow from "zustand/shallow";
+import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
+import useNavigationStore from "../../hooks/navigation-store";
+import useTerminalStore from "../../hooks/terminal-store";
+import { useConfig } from "../../hooks/use-config";
+import DownloadIcon from "../icons/download-icon";
+import LoaderIcon from "../icons/loader-icon";
 import SettingsIcon from "../icons/settings-icon";
 import styles from "./status-bar.module.css";
-import { Popover, Transition } from "@headlessui/react";
-import { useConfig } from "../../hooks/use-config";
-import useTerminalStore from "../../hooks/terminal-store";
-import LoaderIcon from "../icons/loader-icon";
-import shallow from "zustand/shallow";
-
-import useNavigationStore from "../../hooks/navigation-store";
-import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
-import classNames from "classnames";
-import LaunchIcon from "../icons/launch-icon";
 
 const StatusBar: React.FC = () => {
   const { handleExport, handleImport } = useConfig();
@@ -41,7 +40,7 @@ const StatusBar: React.FC = () => {
                 <>
                   <a
                     onClick={() => {
-                      handleImport();
+                      void handleImport();
                       close();
                     }}
                   >
@@ -50,7 +49,7 @@ const StatusBar: React.FC = () => {
                   {isConnected && (
                     <a
                       onClick={() => {
-                        handleExport();
+                        void handleExport();
                         close();
                       }}
                     >
@@ -72,10 +71,10 @@ const StatusBar: React.FC = () => {
           </div>
         )}
         {isConnected && (
-          <div className={classNames(styles.stat, styles.compiled)}>
+          <div className={classNames(styles.stat, styles.verified)}>
             <button onClick={() => showOverlay("verifiedTests")}>
-              <LaunchIcon className={styles.icon} />
-              <span>Compiled</span>
+              <DownloadIcon className={styles.icon} />
+              <span>Verified</span>
             </button>
           </div>
         )}

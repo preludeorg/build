@@ -1,20 +1,23 @@
+import { Test } from "@theprelude/sdk";
+import classNames from "classnames";
 import React, { useState } from "react";
 import shallow from "zustand/shallow";
+import useAuthStore from "../../hooks/auth-store";
 import useTerminalStore, {
   getSuggestions,
   splitStringAtIndex,
 } from "../../hooks/terminal-store";
-import styles from "./terminal.module.css";
-import classNames from "classnames";
-import PrimaryPrompt from "./primary-prompt";
-import useAuthStore from "../../hooks/auth-store";
-import WelcomeMessage from "./welcome-message";
-import focusTerminal from "../../utils/focus-terminal";
 import { isControlC } from "../../lib/keys";
 import { select } from "../../lib/utils/select";
-import { Test } from "@theprelude/sdk";
+import focusTerminal from "../../utils/focus-terminal";
+import PrimaryPrompt from "./primary-prompt";
+import styles from "./terminal.module.css";
+import WelcomeMessage from "./welcome-message";
 
-const useScrollToBottom = (changesToWatch: any, wrapperRef: any) => {
+const useScrollToBottom = (
+  changesToWatch: unknown,
+  wrapperRef: React.RefObject<{ scrollTop: number; scrollHeight: number }>
+) => {
   React.useEffect(() => {
     if (!wrapperRef.current) return;
     wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
@@ -97,7 +100,7 @@ const useReadline = () => {
   const [caretPosition, setCaretPosition] = useState(0);
   const processCommand = useTerminalStore((state) => state.processCommand);
   const abort = useTerminalStore((state) => state.abort);
-  const autoComplete = useTerminalStore((state) => state.autoComplete);
+  // const autoComplete = useTerminalStore((state) => state.autoComplete);
   const [terminated, setTerminated] = useState(false);
 
   const handleFocus = () => {
@@ -269,7 +272,7 @@ const Readline = () => {
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={(e) => {
-        handleKey(e.nativeEvent);
+        void handleKey(e.nativeEvent);
       }}
       tabIndex={0}
     >

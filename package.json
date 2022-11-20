@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "tsc --noEmit"
+    "lint": "eslint --fix src && tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.1",
@@ -27,6 +27,7 @@
     "re-resizable": "^6.9.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
     "uuid": "^9.0.0",
     "vite-plugin-pwa": "^0.13.3",
     "zod": "^3.19.1",
@@ -37,9 +38,19 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
     "@vitejs/plugin-react": "^2.1.0",
+    "eslint": "^8.24.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-turbo": "^0.0.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-unicorn": "44.0.2",
     "postcss-preset-env": "^7.8.2",
-    "typescript": "^4.6.4",
-    "vite": "^3.1.0"
+    "prettier": "^2.7.1",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4"
   }
 }

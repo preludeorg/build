@@ -1,5 +1,5 @@
-import { swift } from "@codemirror/legacy-modes/mode/swift";
 import { StreamLanguage } from "@codemirror/language";
+import { swift } from "@codemirror/legacy-modes/mode/swift";
 import { Linter } from "./linter";
 import template from "./templates/template.swift?raw";
 

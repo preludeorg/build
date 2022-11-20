@@ -1,22 +1,19 @@
 import { format } from "date-fns";
 import { z, ZodError, ZodInvalidEnumValueIssue } from "zod";
+import { inquire } from "../../components/terminal/question";
+import {
+  TerminalMessage,
+  ErrorMessage,
+} from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { getLanguage } from "../lang";
-
-import {
-  ErrorMessage,
-  isConnected,
-  isExitError,
-  isInTestContext,
-  TerminalMessage,
-} from "./helpers";
-import { Command } from "./types";
-import { inquire } from "../../components/terminal/question";
 import focusTerminal from "../../utils/focus-terminal";
 import { createVariant, getVariant, Variant, variantExists } from "../api";
+import { getLanguage } from "../lang";
+import { isConnected, isExitError, isInTestContext } from "./helpers";
+import { Command } from "./types";
 
 const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
@@ -82,7 +79,11 @@ export const createVariantCommand: Command = {
 
       const { platform, arch, language } = results;
 
-      let file = `${currentTest!.id}`;
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
+      let file = `${currentTest.id}`;
       if (platform !== "*") {
         file += `_${platform}`;
 
@@ -95,7 +96,7 @@ export const createVariantCommand: Command = {
 
       showIndicator("Checking if variant exists...");
       const exists = await variantExists(
-        currentTest!.id,
+        currentTest.id,
         file,
         { host, credentials },
         signal
@@ -125,7 +126,7 @@ export const createVariantCommand: Command = {
 
       const code = getLanguage(language)
         .bootstrap.replaceAll("$NAME", file)
-        .replaceAll("$QUESTION", currentTest!.question)
+        .replaceAll("$QUESTION", currentTest.question)
         .replaceAll(
           "$CREATED",
           format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS")

@@ -1,17 +1,15 @@
 import { terminalList } from "../../components/terminal/terminal-list";
+import {
+  TerminalMessage,
+  ErrorMessage,
+} from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { getTest, deleteVariant } from "../api";
+import { deleteVariant, getTest } from "../api";
+import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { NO_VARIANTS_MESSAGE } from "./messages";
-import {
-  ErrorMessage,
-  isConnected,
-  isExitError,
-  isInTestContext,
-  TerminalMessage,
-} from "./helpers";
 import { Command } from "./types";
 
 export const deleteVariantCommand: Command = {
@@ -28,9 +26,13 @@ export const deleteVariantCommand: Command = {
 
       const signal = takeControl().signal;
 
+      if (!currentTest) {
+        throw new Error("missing test");
+      }
+
       showIndicator("Retrieving variants...");
       const variants = await getTest(
-        currentTest!.id,
+        currentTest.id,
         {
           host,
           credentials,

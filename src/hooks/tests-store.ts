@@ -1,5 +1,6 @@
 import { ServiceConfig, Test } from "@theprelude/sdk";
 import create from "zustand";
+import { notifyError } from "../components/notifications/notifications";
 import { getTestList, verifiedTests } from "../lib/api";
 import { parseBuildVariant } from "../lib/utils/parse-variant";
 
@@ -29,6 +30,7 @@ const useTestsStore = create<TestsStore>((set) => ({
 
       set(() => ({ tests, builtVariants }));
     } catch (err) {
+      notifyError("Failed to get verified tests", err);
     } finally {
       set(() => ({ loading: false }));
     }

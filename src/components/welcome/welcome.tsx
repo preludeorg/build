@@ -1,27 +1,23 @@
-import ArrowRight from "../icons/arrow-right";
-import WelcomeBlock from "./welcome-block";
-import styles from "./welcome.module.css";
+import classNames from "classnames";
+import { useEffect } from "react";
+import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
 import rectangle3 from "../../assets/rectangle3.png";
-import DownloadIcon from "../icons/download-icon";
-import classNames from "classnames";
-import useNavigationStore, {
-  navigatorState,
-} from "../../hooks/navigation-store";
-import shallow from "zustand/shallow";
+import useNavigationStore from "../../hooks/navigation-store";
+import { isPWA } from "../../lib/utils/pwa";
 import { select } from "../../lib/utils/select";
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  const { setInstaller } = navigatorState();
-  setInstaller(e);
-});
+import ArrowRight from "../icons/arrow-right";
+import DownloadIcon from "../icons/download-icon";
+import WelcomeBlock from "./welcome-block";
+import styles from "./welcome.module.css";
 
 const Welcome = () => {
-  const { installer, setInstaller } = useNavigationStore(
-    select("installer", "setInstaller"),
-    shallow
-  );
+  const { installer, setInstaller, isInstalled, setIsInstalled } =
+    useNavigationStore(
+      select("installer", "setInstaller", "isInstalled", "setIsInstalled"),
+      shallow
+    );
 
   async function handleInstall() {
     if (!installer) return;
@@ -35,6 +31,31 @@ const Welcome = () => {
     }
   }
 
+  function handleBeforeInstall(e: Event) {
+    e.preventDefault();
+    const installed = isPWA();
+    if (!installed) {
+      setInstaller(e);
+    }
+  }
+
+  const handleAppInstalled = (e: Event) => {
+    if (!isInstalled) {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+      e.preventDefault();
+      setIsInstalled(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+    window.addEventListener("appinstalled", handleAppInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
+
   return (
     <div className={styles.welcome}>
       <header>
@@ -45,7 +66,9 @@ const Welcome = () => {
         <section className={styles.install}>
           <button
             onClick={handleInstall}
-            className={classNames({ [styles.showInstaller]: !!installer })}
+            className={classNames({
+              [styles.showInstaller]: !isInstalled && Boolean(installer),
+            })}
           >
             <DownloadIcon />
             Install

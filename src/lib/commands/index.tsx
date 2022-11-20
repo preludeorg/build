@@ -1,13 +1,13 @@
 import styles from "../../components/terminal/commands.module.css";
-import { Command, Commands } from "./types";
-import { useCommand } from "./use-command";
-import { listTestsCommand } from "./list-test-command";
 import { createTestCommand } from "./create-test-command";
-import { deleteTestCommand } from "./delete-test-command";
-import { listVariantsCommand } from "./list-variants-command";
 import { createVariantCommand } from "./create-variant-command";
+import { deleteTestCommand } from "./delete-test-command";
 import { deleteVariantCommand } from "./delete-variant-command";
 import { exitCommand } from "./exit-command";
+import { listTestsCommand } from "./list-test-command";
+import { listVariantsCommand } from "./list-variants-command";
+import { Command, Commands } from "./types";
+import { useCommand } from "./use-command";
 
 const helpCommand: Command = {
   hidden: () => true,
