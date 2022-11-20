@@ -1,9 +1,11 @@
 import { Test } from "@theprelude/sdk";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import useTerminalStore, {
+  getNextCommand,
+  getPreviousCommand,
   getSuggestions,
   splitStringAtIndex,
 } from "../../hooks/terminal-store";
@@ -82,29 +84,33 @@ const Terminal: React.FC = () => {
   );
 };
 
-export const CurrentLine: React.FC<{ currentTest?: Test }> = ({
+export const CurrentLine: React.FC<{ currentTest?: Test; input?: string }> = ({
   currentTest,
+  input,
 }) => {
   return (
     <>
       <PrimaryPrompt test={currentTest}>
-        <Readline />
+        <Readline defaultInput={input} />
       </PrimaryPrompt>
     </>
   );
 };
 
-const useReadline = () => {
+const useReadline = (defaultInput = "") => {
+  const ref = useRef<HTMLDivElement | HTMLInputElement>(null);
   const [focused, setFocused] = useState(false);
-  const [input, setInput] = useState("");
-  const [caretPosition, setCaretPosition] = useState(0);
-  const processCommand = useTerminalStore((state) => state.processCommand);
-  const abort = useTerminalStore((state) => state.abort);
-  // const autoComplete = useTerminalStore((state) => state.autoComplete);
+  const [input, setInput] = useState(defaultInput);
+  const [caretPosition, setCaretPosition] = useState(defaultInput.length);
   const [terminated, setTerminated] = useState(false);
 
+  const processCommand = useTerminalStore((state) => state.processCommand);
+  const commandsHistory = useTerminalStore((state) => state.commandsHistory);
+  const [historyPointer, setHistoryPointer] = useState(commandsHistory.length);
+  const abort = useTerminalStore((state) => state.abort);
+  const autoComplete = useTerminalStore((state) => state.autoComplete);
+
   const handleFocus = () => {
-    console.log("focusing....");
     setFocused(true);
   };
 
@@ -118,8 +124,6 @@ const useReadline = () => {
   );
 
   const handleKey = async (event: globalThis.KeyboardEvent) => {
-    console.log(event.key);
-
     if (!focused) {
       return;
     }
@@ -140,20 +144,24 @@ const useReadline = () => {
       return;
     }
 
-    if (eventKey === "Tab") {
-      if (input === "") return;
+    if (eventKey === "Tab" && input !== "") {
       const options = getSuggestions(input);
+
+      if (options.length === 0) return;
 
       if (options.length === 1) {
         setInput(options[0]);
         setCaretPosition(options[0].length);
       } else {
+        autoComplete(options);
+        setTerminated(true);
       }
       return;
     }
 
     let nextInput: string | null = null;
     let nextPosition = caretPosition;
+    let nextHistoryPointer = historyPointer;
 
     if (eventKey === "Backspace") {
       const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
@@ -165,33 +173,23 @@ const useReadline = () => {
         nextPosition = caretPosition - 1;
       }
     } else if (eventKey === "ArrowUp") {
-      // nextInput = getPreviousCommand(historyPointer, commandsHistory);
-      // if (historyPointer > 0) {
-      //   historyPointer = historyPointer - 1;
-      // }
-      // if (nextInput) {
-      //   caretPosition = nextInput.length;
-      // }
+      nextInput = getPreviousCommand(historyPointer, commandsHistory);
+      if (historyPointer > 0) {
+        nextHistoryPointer = historyPointer - 1;
+      }
+      if (nextInput) {
+        nextPosition = nextInput.length;
+      }
     } else if (eventKey === "ArrowDown") {
-      //   nextInput = getNextCommand(historyPointer, commandsHistory);
-      //   if (historyPointer + 1 <= commandsHistory.length) {
-      //     historyPointer = historyPointer + 1;
-      //   }
-      //   if (nextInput) {
-      //     caretPosition = nextInput.length;
-      //   } else {
-      //     caretPosition = 0;
-      //   }
-      // } else if (eventKey === "ArrowLeft") {
-      //   if (caretPosition > 0) {
-      //     caretPosition = caretPosition - 1;
-      //   }
-      //   nextInput = input;
-      // } else if (eventKey === "ArrowRight") {
-      //   if (caretPosition < input.length) {
-      //     caretPosition = caretPosition + 1;
-      //   }
-      //   nextInput = input;
+      nextInput = getNextCommand(historyPointer, commandsHistory);
+      if (historyPointer + 1 <= commandsHistory.length) {
+        nextHistoryPointer = historyPointer + 1;
+      }
+      if (nextInput) {
+        nextPosition = nextInput.length;
+      } else {
+        nextPosition = 0;
+      }
     } else if (eventKey === "ArrowLeft") {
       if (caretPosition > 0) {
         nextPosition = caretPosition - 1;
@@ -234,9 +232,14 @@ const useReadline = () => {
       }
     }
 
+    setHistoryPointer(nextHistoryPointer);
     setInput(nextInput ?? "");
     setCaretPosition(nextPosition);
   };
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, [ref]);
 
   return {
     focused,
@@ -247,10 +250,11 @@ const useReadline = () => {
     handleKey,
     terminated,
     input,
+    ref,
   };
 };
 
-const Readline = () => {
+const Readline: React.FC<{ defaultInput?: string }> = ({ defaultInput }) => {
   const {
     focused,
     handleBlur,
@@ -260,7 +264,8 @@ const Readline = () => {
     handleKey,
     terminated,
     input,
-  } = useReadline();
+    ref,
+  } = useReadline(defaultInput);
 
   if (terminated) {
     return <span className={styles.preWhiteSpace}>{input}</span>;
@@ -268,6 +273,7 @@ const Readline = () => {
 
   return (
     <div
+      ref={ref}
       className={classNames(styles.readline, "focusable")}
       onFocus={handleFocus}
       onBlur={handleBlur}
