@@ -4,6 +4,18 @@
 
 ![image](https://user-images.githubusercontent.com/813716/203120833-775232b6-b036-4a53-9aa5-32d48321b41b.png)
 
+## What is Prelude?
+
+Prelude is a technology company that helps organizations proactively ask questions of their security systems to advance their defenses. Prelude authors several different tools that work together to help organizations design and deploy questions at scale.
+
+<ol>
+          <li><a href="https://www.preludesecurity.com/products/operator">Prelude Operator</a>: Perform realistic security assessments on security systems</li>
+          <li><a href="https://www.preludesecurity.com/products/build">Prelude Build</a>: Security test authoring</li>
+          <li><a href="https://www.preludesecurity.com/products/detect">Prelude Detect</a>: Continuous security testing</li>
+</ol>
+
+## What is Build?
+
 Build exists to streamline taking a security test from ideation to production. Security testing today is usually restricted to development environments and the results are extrapolated to the rest of the infrastructure.
 
 Prelude Build can be broken down into the following functions:
