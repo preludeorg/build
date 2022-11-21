@@ -1,4 +1,5 @@
 import { Test } from "@theprelude/sdk";
+import * as uuid from "uuid";
 import create from "zustand";
 import { CurrentLine } from "../components/terminal/terminal";
 import { TerminalMessage } from "../components/terminal/terminal-message";
@@ -16,21 +17,26 @@ export function getSuggestions(input: string) {
   return Object.keys(commands).filter((o) => o.startsWith(input));
 }
 
+interface Content {
+  key: React.Key;
+  content: JSX.Element;
+}
+
+const print = (element: JSX.Element): Content => {
+  return { key: uuid.v4(), content: element };
+};
+
 interface TerminalStore {
   currentTest?: Test;
-  focused: boolean;
-  inputEnabled: boolean;
-  input: string;
-  caretPosition: number;
+  hasFocusable: boolean;
   commandsHistory: string[];
-  historyPointer: number;
-  bufferedContent: Array<string | JSX.Element>;
+  bufferedContent: Array<Content>;
   abortController?: AbortController;
-  setFocus: (focused: boolean) => void;
+  setFocusable: (focused: boolean) => void;
   clear: () => void;
   reset: () => void;
   processCommand: (input: string) => void;
-  write: (content: string | JSX.Element) => void;
+  write: (content: JSX.Element) => void;
   switchTest: (test?: Test) => void;
   autoComplete: (options: string[]) => void;
   takeControl: () => AbortController;
@@ -44,26 +50,23 @@ interface TerminalStore {
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
-  inputEnabled: true,
-  focused: false,
-  input: "",
-  caretPosition: 0,
+  hasFocusable: false,
   bufferedContent: [],
   commandsHistory: [],
-  historyPointer: 0,
-
-  setFocus: (focused: boolean) => {
-    set(() => ({ focused }));
+  setFocusable: (hasFocusable: boolean) => {
+    set(() => ({ hasFocusable }));
   },
   autoComplete: (options: string[]) => {
     set((state) => {
       return {
         bufferedContent: [
           ...state.bufferedContent,
-          <div style={{ color: "var(--color-primary-10)" }}>
-            {options.join(" ")}
-          </div>,
-          <CurrentLine input={commonBeginning(options)} />,
+          print(
+            <div style={{ color: "var(--color-primary-10)" }}>
+              {options.join(" ")}
+            </div>
+          ),
+          print(<CurrentLine input={commonBeginning(options)} />),
         ],
       };
     });
@@ -85,7 +88,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       return {
         bufferedContent: [
           ...state.bufferedContent,
-          <CurrentLine key={Date.now()} currentTest={state.currentTest} />,
+          print(<CurrentLine currentTest={state.currentTest} />),
         ],
       };
     });
@@ -113,7 +116,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     try {
       const { commandsHistory } = get();
       const [commandName, ...rest] = input.trim().split(" ");
-      let output: string | JSX.Element = "";
+      let output: JSX.Element = <></>;
 
       if (input !== "") {
         set(() => {
@@ -128,7 +131,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
       if (commandName === "clear") {
         set((state) => ({
           bufferedContent: [
-            <CurrentLine key={Date.now()} currentTest={state.currentTest} />,
+            print(<CurrentLine currentTest={state.currentTest} />),
           ],
         }));
         return;
@@ -138,7 +141,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
         set((state) => ({
           bufferedContent: [
             ...state.bufferedContent,
-            <CurrentLine key={Date.now()} currentTest={state.currentTest} />,
+            print(<CurrentLine currentTest={state.currentTest} />),
           ],
         }));
         return;
@@ -161,25 +164,41 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
           />
         );
       } else {
-        output = `command not found: ${commandName}`;
+        output = (
+          <TerminalMessage message={`command not found: ${commandName}`} />
+        );
       }
 
       set((state) => {
-        const nextBufferedContent = <span>{output}</span>;
         return {
           bufferedContent: [
             ...state.bufferedContent,
-            nextBufferedContent,
-            <CurrentLine currentTest={state.currentTest} />,
+            print(output),
+            print(<CurrentLine currentTest={state.currentTest} />),
           ],
         };
       });
     } catch (err) {}
   },
   write(content) {
-    set((state) => ({
-      bufferedContent: [...state.bufferedContent, content],
-    }));
+    const { hasFocusable } = get();
+    if (!hasFocusable) {
+      set((state) => ({
+        bufferedContent: [...state.bufferedContent, print(content)],
+      }));
+    } else {
+      set((state) => {
+        const newBufferedContent = [...state.bufferedContent];
+        newBufferedContent.splice(
+          newBufferedContent.length - 1,
+          0,
+          print(content)
+        );
+        return {
+          bufferedContent: newBufferedContent,
+        };
+      });
+    }
   },
   showIndicator(message) {
     set(() => {
@@ -228,14 +247,5 @@ export const getNextCommand = (
 };
 
 export default useTerminalStore;
-
-export const selectCaretText = (state: TerminalStore) => {
-  const [beforeCaretText, afterCaretText] = splitStringAtIndex(
-    state.input,
-    state.caretPosition
-  );
-
-  return [beforeCaretText, afterCaretText];
-};
 
 export const terminalState = () => useTerminalStore.getState();

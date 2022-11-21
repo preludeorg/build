@@ -25,22 +25,14 @@ const ControlPanel: React.FC = () => {
     };
   }, shallow);
 
-  const { write, showIndicator, hideIndicator, currentTest, takeControl } =
-    useTerminalStore(
-      select(
-        "write",
-        "showIndicator",
-        "hideIndicator",
-        "currentTest",
-        "takeControl"
-      )
-    );
+  const { write, showIndicator, hideIndicator, currentTest } = useTerminalStore(
+    select("write", "showIndicator", "hideIndicator", "currentTest")
+  );
 
   const handleBuild = async () => {
     try {
       setLoading(true);
       showIndicator("Building...");
-      takeControl();
       const results = await build(currentTabId, serviceConfig);
 
       if (!currentTest) {
