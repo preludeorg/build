@@ -162,6 +162,7 @@
   border: none;
   caret-color: var(--white);
   color: var(--white);
+  width: 100%;
 }
 
 .question input:focus {
@@ -170,4 +171,5 @@
 
 .question .message {
   color: var(--gray-10);
+  white-space: nowrap;
 }
