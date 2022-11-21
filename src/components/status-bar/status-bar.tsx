@@ -76,6 +76,9 @@ const StatusBar: React.FC = () => {
               <DownloadIcon className={styles.icon} />
               <span>Verified</span>
             </button>
+            <div className={styles.notification}>
+              <span>Click "Verified" to view all the previously built Verified Security tests</span>
+            </div>
           </div>
         )}
       </section>

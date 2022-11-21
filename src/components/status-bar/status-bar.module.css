@@ -9,6 +9,7 @@
 }
 
 .stat {
+  position: relative;
   color: var(--gray-10);
   height: 100%;
   display: flex;
@@ -27,6 +28,31 @@
   cursor: pointer;
   outline: none;
   align-items: center;
+}
+
+.stat .notification {
+  display: none;
+  position: absolute;
+  right: 10%;
+  bottom: 130%;
+  width: 18rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-secondary-30);
+  border: 1px solid var(--color-secondary-10);
+  box-shadow: 12px 12px 15px rgb(0 0 0 / 25%);
+  border-radius: 4px;
+}
+
+.stat .notification:before {
+  right: 12.5%;
+  bottom: -10%;
+  position: absolute;
+  content: "";
+  padding: 0.2rem;
+  background-color: var(--color-secondary-30);
+  border-top: 1px solid var(--color-secondary-10);
+  border-right: 1px solid var(--color-secondary-10);
+  rotate: 135deg;
 }
 
 .verified {
