@@ -25,16 +25,15 @@ Prelude Build can be broken down into the following functions:
 - Validation - Build connects to a more powerful Compute server, containing the runtime environment for compiling, scanning and publishing your code.
 - Deployment - generate deployment URLs - pre-signed download links to your test which are usable for up to 10 minutes. Take a URL and plug it into any execution engine or C2 in order to run it. Or use Detect.
 
-
 ## Get started
 
-Build can be used in two forms: a user interface and the Prelude CLI.
+Build can be used in two forms: a GUI and the Prelude CLI.
 
 You may opt for one or both, depending on your workflow. Both are fully open-source. Build is designed to be run anywhere: desktops, laptops, Chromebooks, tablets and more.
 
 <h4>User Interface</h4>
 
-The Build UI is a Progressive Web Application (PWA) - which means it is a website that functions as a desktop application. This modern deployment mechanism allows the best of both worlds: you can run it as a native desktop experience (where the icon shows up in your dock) but you don't need to actually install it, as it's just browser technology under the covers.
+The Build UI is a <a href="https://web.dev/progressive-web-apps/">Progressive Web Application (PWA)</a> - which means it is a website that functions as a desktop application. This modern deployment mechanism allows the best of both worlds: you can run it as a native desktop experience (where the icon shows up in your dock) but you don't need to actually install it, as it's just browser technology under the covers.
 
 PWA's can run anywhere, on any device you can load a browser. To use the GUI - click on the "Launch Prelude Build" CTAs on https://www.preludesecurity.com/.
 
@@ -50,5 +49,14 @@ The Prelude Command Line Interface (CLI) supplies programmatic access to the ful
  
  To view a list of commands and detailed instructions on using the CLI - view the doc page here: https://docs.prelude.org/v2/docs/prelude-cli
  
- 
+<h4>Prelude Service</h4>
+
+The Prelude CLI is designed to interact with any route on the Prelude Service API.
+
+The CLI is built on top of the Prelude SDK, a Python wrapper around the Prelude Service. The SDK contains the same functions (IAM, Build, Detect) as the CLI - but it also includes the actual REST API code too.
+
+There is also a JavaScript SDK available for integration into web applications. All SDK’s are open-source, made available on GitHub.
+The SDK can be used to build your own programmatic access to the Prelude Service.
+
+You can engage with these API endpoints manually (think cURL), semi-automated (through the CLI) or fully automated (through the Prelude SDK).
 
