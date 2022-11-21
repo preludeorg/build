@@ -2,7 +2,7 @@
 
 <a href="https://www.preludesecurity.com/">Prelude Build</a> is an easy-to-use IDE - purpose built for authoring, testing and verifying security tests for use in real environments. Our goal is to provide a consistent and repeatable way to write, verify and deploy tests for any scale.
 
-<IMAGE>
+![image](https://user-images.githubusercontent.com/813716/203120833-775232b6-b036-4a53-9aa5-32d48321b41b.png)
 
 Build exists to streamline taking a security test from ideation to production. Security testing today is usually restricted to development environments and the results are extrapolated to the rest of the infrastructure.
 
@@ -12,8 +12,6 @@ Prelude Build can be broken down into the following functions:
 - Storage - cloud storage for your files, including the ability to push and pull new tests. 
 - Validation - Build connects to a more powerful Compute server, containing the runtime environment for compiling, scanning and publishing your code.
 - Deployment - generate deployment URLs - pre-signed download links to your test which are usable for up to 10 minutes. Take a URL and plug it into any execution engine or C2 in order to run it. Or use Detect.
-
-<img width="801" alt="image" src="https://user-images.githubusercontent.com/813716/203120340-5731d470-0395-465a-bb6e-0714530eceae.png">
 
 
 ## Get started
