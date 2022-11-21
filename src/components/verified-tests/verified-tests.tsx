@@ -111,7 +111,7 @@ const CopyButton: React.FC<{ variant: string }> = ({ variant }) => {
       setLoading(true);
       const { url } = await createURL(variant, serviceConfig);
       await navigator.clipboard.writeText(url);
-      notifySuccess("Link copied to clipboard. Link expires in 10 minutes");
+      notifySuccess("Link copied to clipboard. Link expires in 10 minutes.");
     } catch (error) {
       notifyError("Failed to copy to clipboard", error);
     } finally {
