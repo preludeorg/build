@@ -4,7 +4,7 @@ import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import useNavigationStore from "../../hooks/navigation-store";
 import useTestsStore from "../../hooks/tests-store";
-import { createURL } from "../../lib/api";
+import { createURL, deleteVerified } from "../../lib/api";
 import { parseBuildVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
 import ChevronIcon from "../icons/chevron-icon";
@@ -15,7 +15,6 @@ import Trashcan from "../icons/trashcan-icon";
 import VariantIcon from "../icons/variant-icon";
 import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./verified-test.module.css";
-import { deleteVerified } from "../../lib/api";
 
 const VerifiedTests: React.FC = () => {
   const [expanded, setExpanded] = useState("");
@@ -140,18 +139,22 @@ const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
       setDeletePrompt(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClick);
     return () => {
       document.removeEventListener("mousedown", handleClick);
     };
   }, [ref.current]);
+
   const handleDelete = async () => {
     try {
       setLoading(true);
       await deleteVerified(variant, serviceConfig);
       await fetch(serviceConfig);
-    } catch {
+      notifySuccess("Verified security test deleted.");
+    } catch (e) {
+      notifyError("Failed to delete verified security test", e);
     } finally {
       setLoading(false);
       setDeletePrompt(false);
