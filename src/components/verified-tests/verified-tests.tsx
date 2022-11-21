@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import useNavigationStore from "../../hooks/navigation-store";
@@ -8,11 +8,14 @@ import { createURL } from "../../lib/api";
 import { parseBuildVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
 import ChevronIcon from "../icons/chevron-icon";
+import CloseIcon from "../icons/close-icon";
 import CopyIcon from "../icons/copy-icon";
 import LoaderIcon from "../icons/loader-icon";
+import Trashcan from "../icons/trashcan-icon";
 import VariantIcon from "../icons/variant-icon";
 import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./verified-test.module.css";
+import { deleteVerified } from "../../lib/api";
 
 const VerifiedTests: React.FC = () => {
   const [expanded, setExpanded] = useState("");
@@ -87,13 +90,14 @@ const Test: React.FC<{
           {test.variants.map((variant) => {
             const platform = parseBuildVariant(variant)?.platform;
             return (
-              <div>
+              <div key={variant}>
                 <VariantIcon
                   className={styles.variantIcon}
                   platform={platform}
                 />
                 <span>{variant}</span>
                 <CopyButton variant={variant} />
+                <DeleteButton variant={variant} />
               </div>
             );
           })}
@@ -122,6 +126,71 @@ const CopyButton: React.FC<{ variant: string }> = ({ variant }) => {
     <button onClick={handleCopy} className={styles.copy}>
       {loading ? <LoaderIcon className={styles.loading} /> : <CopyIcon />}
     </button>
+  );
+};
+
+const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const { fetch } = useTestsStore(select("fetch"), shallow);
+  const [loading, setLoading] = useState(false);
+  const [deletePrompt, setDeletePrompt] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const handleClick = (e: MouseEvent) => {
+    if (ref.current && !ref.current.contains(e.target as Node)) {
+      setDeletePrompt(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, [ref.current]);
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deleteVerified(variant, serviceConfig);
+      await fetch(serviceConfig);
+    } catch {
+    } finally {
+      setLoading(false);
+      setDeletePrompt(false);
+    }
+  };
+  return (
+    <div className={styles.deleteContainer} ref={ref}>
+      <button
+        onClick={() => setDeletePrompt(!deletePrompt)}
+        className={styles.delete}
+      >
+        {loading ? (
+          <LoaderIcon className={styles.loading} />
+        ) : (
+          <Trashcan className={styles.variantIcon} />
+        )}
+      </button>
+      {deletePrompt ? (
+        <div className={styles.deletePrompt}>
+          <div className={styles.message}>
+            <span>Do you want to delete this variant?</span>
+            <button
+              className={styles.close}
+              onClick={() => setDeletePrompt(false)}
+            >
+              <CloseIcon />
+            </button>
+          </div>
+          <div className={styles.confirmation}>
+            <button onClick={handleDelete} className={styles.approve}>
+              Yes
+            </button>
+            <button onClick={() => setDeletePrompt(false)}>No</button>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+    </div>
   );
 };
 

@@ -118,6 +118,11 @@ export const verifiedTests = async (config: ServiceConfig) => {
   return await service.build.verifiedTests({ headers: productHeader() });
 };
 
+export const deleteVerified = async (name: string, config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.build.deleteVerified(name, { headers: productHeader() });
+};
+
 export const createURL = async (name: string, config: ServiceConfig) => {
   const service = new Service(config);
   return await service.build.createURL(name, { headers: productHeader() });
