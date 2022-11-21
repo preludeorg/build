@@ -29,8 +29,8 @@ const useScrollToBottom = (
 function useTerminal() {
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { bufferedContent, inputEnabled } = useTerminalStore(
-    select("bufferedContent", "inputEnabled"),
+  const { bufferedContent } = useTerminalStore(
+    select("bufferedContent"),
     shallow
   );
 
@@ -59,7 +59,6 @@ function useTerminal() {
   // });
 
   useScrollToBottom(bufferedContent, ref);
-  useScrollToBottom(inputEnabled, ref);
 
   return { bufferedContent, ref };
 }
@@ -77,8 +76,8 @@ const Terminal: React.FC = () => {
       className={styles.terminal}
       tabIndex={0}
     >
-      {bufferedContent.map((el, index) => {
-        return <React.Fragment key={index}>{el}</React.Fragment>;
+      {bufferedContent.map((item) => {
+        return <React.Fragment key={item.key}>{item.content}</React.Fragment>;
       })}
     </div>
   );
@@ -109,6 +108,7 @@ const useReadline = (defaultInput = "") => {
   const [historyPointer, setHistoryPointer] = useState(commandsHistory.length);
   const abort = useTerminalStore((state) => state.abort);
   const autoComplete = useTerminalStore((state) => state.autoComplete);
+  const setFocusable = useTerminalStore((state) => state.setFocusable);
 
   const handleFocus = () => {
     setFocused(true);
@@ -132,6 +132,7 @@ const useReadline = (defaultInput = "") => {
 
     if (isControlC(event)) {
       setTerminated(true);
+      setFocusable(false);
       abort();
       return;
     }
@@ -140,6 +141,7 @@ const useReadline = (defaultInput = "") => {
 
     if (eventKey === "Enter") {
       setTerminated(true);
+      setFocusable(false);
       processCommand(input);
       return;
     }
@@ -154,6 +156,7 @@ const useReadline = (defaultInput = "") => {
         setCaretPosition(options[0].length);
       } else {
         autoComplete(options);
+        setFocusable(false);
         setTerminated(true);
       }
       return;
@@ -238,6 +241,7 @@ const useReadline = (defaultInput = "") => {
   };
 
   useEffect(() => {
+    setFocusable(true);
     ref.current?.focus();
   }, [ref]);
 
