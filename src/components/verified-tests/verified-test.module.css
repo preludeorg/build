@@ -161,8 +161,8 @@ svg:hover {
 
 .deletePrompt {
   position: absolute;
-  right: 0;
-  top: 100%;
+  right: -20%;
+  top: 120%;
   display: flex;
   flex-direction: column;
   width: 18rem;
@@ -170,9 +170,23 @@ svg:hover {
   row-gap: 1rem;
   background-color: var(--color-secondary-30);
   z-index: 3;
-  box-shadow: 12px 12px 15px rgba(0, 0, 0, 0.25);
+  box-shadow: 12px 12px 15px rgb(0 0 0 / 25%);
   border: 1px solid var(--color-secondary-10);
   border-radius: 4px;
+
+}
+
+.deletePrompt:before {
+  right: 0;
+  top: -10%;
+  position: absolute;
+  content: "";
+  padding: 0.2rem;
+  background-color: var(--color-secondary-30);
+  border-top: 1px solid var(--color-secondary-10);
+  border-right: 1px solid var(--color-secondary-10);
+  rotate: 315deg;
+  translate: -90% 50%;
 }
 
 .message {
