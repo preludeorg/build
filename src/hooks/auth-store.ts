@@ -1,8 +1,8 @@
+import { Credentials } from "@theprelude/sdk";
 import create from "zustand";
 import { persist } from "zustand/middleware";
-import { Credentials } from "@theprelude/sdk";
-import { isExitError } from "../lib/commands/helpers";
 import { getTestList, newAccount } from "../lib/api";
+import { isExitError } from "../lib/commands/helpers";
 
 interface AuthStore {
   host: string;
@@ -24,7 +24,7 @@ interface AuthStore {
 const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
-      host: "https://detect.dev.prelude.org",
+      host: import.meta.env.VITE_PRELUDE_SERVICE_URL,
       serverType: "prelude",
       async createAccount(handle, signal: AbortSignal) {
         const { host } = get();
