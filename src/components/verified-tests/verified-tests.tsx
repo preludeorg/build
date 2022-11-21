@@ -10,6 +10,7 @@ import { select } from "../../lib/utils/select";
 import ChevronIcon from "../icons/chevron-icon";
 import CloseIcon from "../icons/close-icon";
 import CopyIcon from "../icons/copy-icon";
+import HelpIcon from "../icons/help-icon";
 import LoaderIcon from "../icons/loader-icon";
 import Trashcan from "../icons/trashcan-icon";
 import VariantIcon from "../icons/variant-icon";
@@ -17,7 +18,6 @@ import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./verified-test.module.css";
 
 const VerifiedTests: React.FC = () => {
-  const [expanded, setExpanded] = useState("");
   const hideOverlay = useNavigationStore((state) => state.hideOverlay);
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { fetch, loading } = useTestsStore(select("fetch", "loading"), shallow);
@@ -35,10 +35,6 @@ const VerifiedTests: React.FC = () => {
     void fetch(serviceConfig);
   }, []);
 
-  const handleExpand = (id: string) => {
-    setExpanded(id);
-  };
-
   return (
     <div className={styles.overlay}>
       <div
@@ -48,14 +44,30 @@ const VerifiedTests: React.FC = () => {
         }}
       />
       <div className={classNames(styles.panel, styles.right)}>
-        <span className={styles.legend}>
-          Verified Security Tests{" "}
-          {loading && <LoaderIcon className={styles.loaderIcon} />}
+        <button className={styles.close} onClick={() => hideOverlay()}>
+          <CloseIcon />
+        </button>
+        <div className={styles.title}>
+          <span className={styles.legend}>
+            Verified Security Tests{" "}
+            {loading ? (
+              <LoaderIcon className={styles.loaderIcon} />
+            ) : (
+              <a
+                href="https://docs.prelude.org/v2/docs/deploying-security-tests"
+                target="_blank"
+              >
+                <HelpIcon className={styles.helpIcon} />
+              </a>
+            )}
+          </span>
+        </div>
+        <span className={styles.description}>
+          Verified Security Tests (VSTs) are production-ready tests. Your
+          authored VSTs appear below.
         </span>
         {tests.map((test) => (
           <Test
-            onExpand={handleExpand}
-            expanded={expanded === test.id}
             key={test.id}
             test={test}
           />
@@ -67,16 +79,15 @@ const VerifiedTests: React.FC = () => {
 
 const Test: React.FC<{
   test: { id: string; question: string; variants: string[] };
-  expanded: boolean;
-  onExpand: (id: string) => void;
-}> = ({ test, expanded, onExpand }) => {
+}> = ({ test }) => {
+  const [expanded, setExpanded] = useState(true);
   return (
     <div
       className={classNames(styles.test, {
         [styles.active]: expanded,
       })}
     >
-      <header onClick={() => onExpand(!expanded ? test.id : "")}>
+      <header onClick={() => setExpanded(!expanded)}>
         <span>{test.question}</span>
         <ChevronIcon
           className={classNames(styles.chevronIcon, {
@@ -176,10 +187,7 @@ const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
         <div className={styles.deletePrompt}>
           <div className={styles.message}>
             <span>Do you want to delete this variant?</span>
-            <button
-              className={styles.close}
-              onClick={() => setDeletePrompt(false)}
-            >
+            <button onClick={() => setDeletePrompt(false)}>
               <CloseIcon />
             </button>
           </div>

@@ -20,10 +20,11 @@ button:focus {
   position: absolute;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 0.5rem;
+  padding: 0.75rem 0;
   width: 450px;
   height: 100%;
   background-color: var(--color-secondary-40);
+  border-left: 1px solid var(--color-secondary-10);
 }
 
 .panel.left {
@@ -40,7 +41,7 @@ button:focus {
 
 .test > header {
   font-size: var(--text-base);
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
   background: var(--color-secondary-30);
   display: flex;
   flex-direction: row;
@@ -65,19 +66,48 @@ button:focus {
   transform: rotate(0deg);
 }
 
-.legend {
-  font-size: var(--text-xs);
-  padding: 0.5rem;
-  color: var(--color-primary-10);
+.close {
+  background: none;
+  border: none;
+  margin-left: auto;
+  padding: 0 0.5rem 0 0;
+}
+
+.close > svg {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--color-primary-10);
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+.close > svg:hover {
+  fill: var(--white);
+}
+
+.title {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  align-items: center;
+}
+
+.legend {
+  font-size: var(--text-xxl);
+  padding: 0.5rem;
+  color: var(--white);
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 0 0.75rem;
+  font-weight: 300;
 }
 
 .loaderIcon {
-  width: 0.75rem;
-  height: 0.75rem;
-  fill: var(--color-primary-10);
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--white);
   animation: loader 1.2s linear infinite;
   margin: auto 0;
 }
@@ -89,6 +119,24 @@ button:focus {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.helpIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--color-primary-10);
+  margin: auto 0;
+}
+
+.helpIcon:hover {
+  fill: var(--white);
+  cursor: pointer;
+}
+
+.description {
+  font: var(--text-sm);
+  padding: 0 0.75rem;
+  margin: 0.5rem 0 1.125rem;
 }
 
 .variants {
@@ -151,7 +199,8 @@ button:focus {
   fill: var(--color-primary-10);
 }
 
-svg:hover {
+.delete > svg:hover,
+.copy > svg:hover {
   fill: var(--white);
 }
 
