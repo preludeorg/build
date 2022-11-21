@@ -1,0 +1,155 @@
+.statusBar {
+  height: 2rem;
+  background-color: var(--color-secondary-40);
+  display: flex;
+  color: var(--gray-10);
+  font-size: var(--text-xs);
+  padding: 0 0 0 0.75rem;
+  align-items: center;
+}
+
+.stat {
+  color: var(--gray-10);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--gray-30);
+}
+
+.stat button {
+  display: flex;
+  gap: 0.25rem;
+  line-height: 0.75rem;
+  background: none;
+  color: var(--gray-10);
+  border: none;
+  padding: 0 0.5rem;
+  cursor: pointer;
+  outline: none;
+  align-items: center;
+}
+
+.verified {
+  border-left: 1px solid var(--gray-30);
+  border-right: none;
+  background: var(--black);
+  color: var(--white);
+  padding-right: 0.75rem;
+}
+
+.icon {
+  fill: var(--gray-10);
+  width: 1rem;
+  height: 1rem;
+}
+
+.stat button:hover {
+  color: var(--white);
+}
+
+.stat button:hover .icon {
+  fill: var(--white);
+}
+
+.popover {
+  position: relative;
+}
+
+.popover .panel {
+  position: absolute;
+  z-index: 10;
+  background: #21252b;
+  border: 1px solid #323844;
+  box-shadow: 12px 12px 15px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  width: max-content;
+}
+
+.popover .panel a {
+  font-size: var(--text-sm);
+  line-height: 1.5rem;
+  cursor: pointer;
+}
+
+.popover .panel a:hover {
+  color: var(--white);
+}
+
+.statusIndicator {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  align-items: center;
+
+  color: var(--white);
+}
+
+.loaderIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+  animation: loader 1.2s linear infinite;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.enter {
+  transition-property: background-color, border-color, color, fill, stroke,
+    opacity, box-shadow, transform;
+  transition-duration: 100ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.enterFrom {
+  --transform-scale-x: 0.95;
+  --transform-scale-y: 0.95;
+  opacity: 0;
+}
+
+.enterTo {
+  --transform-scale-x: 1;
+  --transform-scale-y: 1;
+  opacity: 1;
+}
+
+.leave {
+  transition-property: background-color, border-color, color, fill, stroke,
+    opacity, box-shadow, transform;
+  transition-duration: 75ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.leaveFrom {
+  --transform-scale-x: 1;
+  --transform-scale-y: 1;
+  opacity: 1;
+}
+
+.leaveTo {
+  --transform-scale-x: 0.95;
+  --transform-scale-y: 0.95;
+  opacity: 0;
+}
+
+.fileInput {
+  display: none;
+}
+
+.right {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  height: 100%;
+}

@@ -1,0 +1,74 @@
+:root {
+  --font-primary: "IBM Plex Sans", sans-serif;
+  --font-secondary: serif;
+  --font-code: "IBM Plex Mono", monospace;
+
+  /* set base values */
+  --text-base: 16px;
+
+  /* type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-xxl: 2rem;
+  --text-xxxl: 2.5rem;
+}
+
+body {
+  font-size: var(--text-sm);
+  font-family: var(--font-primary);
+  color: var(--color-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+form legend {
+  color: var(--color-text-heading);
+  font-weight: 300;
+}
+
+/* text size */
+.text--xxxl {
+  font-size: var(--text-xxxl);
+}
+
+h1,
+.text--xxl {
+  font-size: var(--text-xxl);
+}
+
+h2,
+.text--xl {
+  font-size: var(--text-xl);
+}
+
+h3,
+.text--lg {
+  font-size: var(--text-lg);
+}
+
+.text--base {
+  font-size: var(--text-base);
+}
+
+h4,
+.text--md {
+  font-size: var(--text-md);
+}
+
+.text--sm,
+small {
+  font-size: var(--text-sm);
+}
+
+.text--xs {
+  font-size: var(--text-xs);
+}
+
+code,
+pre {
+  font-family: var(--font-code);
+}

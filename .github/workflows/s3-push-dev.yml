@@ -1,0 +1,55 @@
+name: Dev - Deploy to S3 Bucket
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: environment-${{ github.ref }}
+
+env:
+  AWS_REGION: ${{ secrets.BUCKET_REGION }}
+  S3_BUCKET: ${{ secrets.BUCKET_NAME }}
+  DIST_DIR: ./dist
+  CF_DIST_ID: ${{ secrets.CLOUDFRONT_ID }}
+  NODE_VER: 18
+
+permissions:
+  contents: read
+
+jobs:
+
+  Build:
+    runs-on: ubuntu-latest
+    environment: dev
+    name: Dev - Build the application and deploy to S3 Bucket
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VER }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Yarn build
+        run: yarn build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+
+      - name: Copy files to the test website with the AWS CLI
+        run: |
+          aws s3 sync --delete ${{ env.DIST_DIR }} s3://${{ env.S3_BUCKET }}
+
+      - name: Invalidate the CDN
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.CF_DIST_ID }} --paths '/*'

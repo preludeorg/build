@@ -1,0 +1,61 @@
+:root {
+  /* main colors */
+  --color-primary-10: #7e95a9; /* Angora Blue */
+  --color-primary-20: #38597a; /* Blue Bay */
+  --color-primary-30: #1c456d; /* Blueberry */
+
+  --color-secondary-10: #444c5b; /* Night Flight */
+  --color-secondary-20: #323844; /* Soft Steal */
+  --color-secondary-30: #272b33; /* Shark */
+  --color-secondary-40: #21252b; /* Dark Mountain */
+
+  /* shades */
+  --white: white;
+  --gray-10: #939393; /* Shingle Gray */
+  --gray-20: #5c6063; /* Steel Metal */
+  --gray-30: #3d4246; /* Metropolis */
+  --gray-40: #232323; /* Carbon */
+  --black: #1e1e1e; /* Halloween Black */
+
+  /* alerts */
+  --color-success: #73b762;
+  --color-error: #f28c8c;
+  --color-alert: #D43535;
+  --color-darkAlert: #A42525;
+  --color-warning: #ffbf44;
+  --color-aero: #78B6ED; /* Aero */
+
+  /* typography */
+  --color-text: var(--white);
+  --color-text-heading: var(--white);
+  --color-text-subtle: var(--gray-20);
+  --color-link: var(--white);
+
+  /* border */
+  --color-border: var(--gray-30);
+
+  /* body */
+  --color-body: var(--white);
+
+  /* forms */
+  --form-element-border: var(--gray-20);
+  --form-element-border-focus: var(--color-primary-20);
+  --form-element-border-error: var(--color-error);
+  --form-element-bg: var(--gray-40);
+  --form-text-placeholder: var(--gray-10);
+  --form-checkbox-bg: var(--color-secondary-30);
+  --form-checkbox-checked-bg: var(--gray-30);
+
+  /* buttons */
+  --btn-primary-bg: var(--gray-30);
+  --btn-primary-hover: var(--gray-40);
+  --btn-primary-label: var(--white);
+
+  --btn-secondary-bg: var(--color-secondary-40);
+  --btn-secondary-hover: var(--color-secondary-20);
+  --btn-secondary-label: var(--white);
+  --btn-secondary-border: var(--color-primary-10);
+
+  /* icons */
+  --color-icon-primary: var(--gray-10);
+}

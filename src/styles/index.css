@@ -1,0 +1,18 @@
+@import "core/preflight.css";
+@import "core/colors.css";
+@import "core/typography.css";
+@import "core/breakpoints.css";
+
+body {
+  background-color: var(--color-secondary-40);
+}
+
+::-webkit-scrollbar {
+  background: none;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-secondary-20);
+  border-radius: 0.25rem;
+}

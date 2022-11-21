@@ -1,0 +1,11 @@
+.idea/*
+.DS_Store
+*.pyc
+*__pycache__*
+node_modules
+*.lock
+
+yarn-debug.log*
+yarn-error.log*
+
+dist

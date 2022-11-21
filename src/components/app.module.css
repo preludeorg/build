@@ -1,0 +1,28 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.app main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
+}
+
+.app main .topSection {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.app main .footer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.handle:hover {
+  background-color: var(--color-secondary-10);
+}

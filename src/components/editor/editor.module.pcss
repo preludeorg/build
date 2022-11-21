@@ -1,0 +1,229 @@
+.editor,
+.window {
+  font-family: var(--font-code);
+}
+
+.editor {
+  height: 100%;
+  position: relative;
+}
+
+.window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  & nav {
+    background-color: var(--color-secondary-20);
+    border-bottom: solid var(--color-secondary-10) 1px;
+
+    & ul {
+      display: flex;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      & li {
+        padding: 0.75rem 2rem 0.75rem 0.5rem;
+        border-right: solid var(--color-secondary-10) 1px;
+        border-bottom: 2px solid var(--color-secondary-20);
+        display: flex;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+
+        &.active {
+          border-bottom: 2px solid var(--color-aero);
+
+          & .closeContainer {
+            display: flex;
+          }
+
+          &:hover {
+            border-bottom: 2px solid var(--color-aero);
+          }
+        }
+
+        &:hover {
+          border-bottom: 2px solid var(--color-secondary-10);
+
+          & .closeContainer {
+            display: flex;
+          }
+        }
+      }
+
+      & li span {
+        margin: auto 0;
+        white-space: nowrap;
+      }
+
+      & li span.truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      & li > svg {
+        flex-shrink: 0;
+        margin-right: 0.5rem;
+      }
+
+      & li .closeContainer {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 0 0.25rem;
+        height: 100%;
+        background-color: var(--color-secondary-20);
+      }
+    }
+  }
+}
+
+.close {
+  background: none;
+  border: none;
+  padding: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  margin: auto;
+
+  & svg {
+    fill: var(--color-primary-10);
+  }
+}
+
+.close:hover {
+  border-radius: 0.25rem;
+  background-color: var(--black);
+
+  & svg {
+    fill: var(--white);
+  }
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: var(--white);
+}
+
+.intro {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.intro h2 {
+  margin: auto;
+}
+
+.controlPanel {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--color-secondary-20);
+  border-top: 1px solid var(--color-secondary-10);
+  padding: 0.5rem;
+}
+
+.test {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: max-content;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-primary-20);
+  border: 1px solid var(--color-primary-20);
+  column-gap: 0.75rem;
+  color: #fff;
+}
+
+.test:hover {
+  background-color: var(--color-primary-30);
+  cursor: pointer;
+}
+
+.playIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+}
+
+.loaderIcon {
+  width: 1rem;
+  height: 1rem;
+  animation: loader 1s linear infinite;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.deploy {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: max-content;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-secondary-30);
+  border: 1px solid var(--gray-30);
+  column-gap: 0.75rem;
+  color: #fff;
+  margin-left: auto;
+  color: var(--color-primary-10);
+}
+
+.chevronIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--color-primary-10);
+}
+
+.deploy:hover {
+  background-color: var(--color-primary-30);
+  border: 1px solid var(--color-primary-20);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.deploy:hover .chevronIcon {
+  fill: var(--white);
+}
+
+.linters {
+  & h3 {
+    text-transform: uppercase;
+    font-size: var(--text-xs);
+    margin: 0.5rem 1rem 0.25rem 1rem;
+    font-weight: bold;
+    text-decoration: underline var(--color-aero);
+    text-underline-offset: 0.25rem;
+  }
+
+  & ul {
+    margin: 0;
+    list-style: none;
+    padding-left: 1rem;
+
+    & li::before {
+      content: "x ";
+      color: var(--color-error);
+      font-weight: bold;
+      vertical-align: top;
+      line-height: 0.9rem;
+    }
+
+    & li {
+      padding: 0.25rem 0;
+    }
+  }
+}
