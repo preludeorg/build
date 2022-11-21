@@ -37,7 +37,7 @@ jobs:
         run: yarn install
 
       - name: Yarn build
-        run: yarn build
+        run: yarn build --mode staging
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
