@@ -31,7 +31,6 @@ const ControlPanel: React.FC = () => {
       "write",
       "showIndicator",
       "hideIndicator",
-      "currentTest",
       "takeControl"
     )
   );
