@@ -3,9 +3,10 @@ import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import useEditorStore from "../../hooks/editor-store";
 import useTerminalStore from "../../hooks/terminal-store";
-import { build } from "../../lib/api";
+import { build, getTestList } from "../../lib/api";
 import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
+import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
 import LoaderIcon from "../icons/loader-icon";
 import PlayIcon from "../icons/play-icon";
@@ -40,15 +41,18 @@ const ControlPanel: React.FC = () => {
     try {
       setLoading(true);
       showIndicator("Building...");
-      takeControl();
+      const signal = takeControl().signal;
       const results = await build(currentTabId, serviceConfig);
+      const test = (await getTestList(serviceConfig, signal)).find(
+        (t) => t.id === parseVariant(currentTabId)?.id
+      );
 
-      if (!currentTest) {
+      if (!test) {
         throw new Error("missing test");
       }
 
       write(
-        <VariantResults question={currentTest.question} results={results} />
+        <VariantResults question={test.question} results={results} />
       );
     } catch (e) {
       write(
