@@ -21,7 +21,7 @@ button:focus {
   display: flex;
   flex-direction: column;
   padding: 0.75rem 0;
-  width: 450px;
+  width: 475px;
   height: 100%;
   background-color: var(--color-secondary-40);
   border-left: 1px solid var(--color-secondary-10);

@@ -40,7 +40,7 @@ ul {
 }
 
 .name {
-  width: 24rem;
+  width: 25rem;
   padding: 0.875rem 0;
 }
 
@@ -94,6 +94,13 @@ ul {
   width: 6rem;
 }
 
+.infoDeployBlock {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  align-items: center;
+}
+
 .checkmarkIcon {
   fill: var(--color-success);
 }
@@ -125,22 +132,37 @@ ul {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  background-color: transparent;
   column-gap: 0.5rem;
-  border: 1px solid var(--color-primary-10);
-  border-radius: 0.25rem;
   color: var(--white);
   white-space: nowrap;
 }
 
-.download.left {
-  margin-left: 1rem;
+.download input {
+  padding: 0.5rem 0.75rem;
+  background-color: transparent;
+  border: 1px solid var(--color-primary-10);
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  height: 2rem;
 }
 
-.download:hover {
-  cursor: pointer;
-  background-color: var(--color-secondary-20);
+.downloadButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.5rem;
+  color: var(--white);
+  white-space: nowrap;
+  padding: 0.5rem 0.75rem;
+  background-color: transparent;
+  border: 1px solid var(--color-primary-10);
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  height: 2rem;
+}
+
+.download.left {
+  margin-left: 1rem;
 }
 
 .downloadIcon {
@@ -165,10 +187,18 @@ ul {
 }
 
 .iconContainer {
-  background-color: transparent;
-  padding: 0;
   border: none;
   cursor: pointer;
+  background: var(--gray-30);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  height: 2rem;
+}
+
+.copyIcon {
+  height: 1rem;
+  width: 1rem;
+  fill: var(--white);
 }
 
 .url {
@@ -180,12 +210,6 @@ ul {
 
 .url:focus {
   outline: none;
-}
-
-.copyIcon {
-  height: 1rem;
-  width: 1rem;
-  fill: var(--color-primary-10);
 }
 
 .copyIcon:hover {
@@ -220,4 +244,16 @@ ul {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.deployIcon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+}
+
+.divider {
+  width: 2px;
+  border-left: 2px solid #3d4246;
+  height: 30px;
 }
