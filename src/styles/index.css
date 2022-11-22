@@ -5,6 +5,9 @@
 
 body {
   background-color: var(--color-secondary-40);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 ::-webkit-scrollbar {
