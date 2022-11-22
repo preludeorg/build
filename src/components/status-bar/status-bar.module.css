@@ -9,6 +9,7 @@
 }
 
 .stat {
+  position: relative;
   color: var(--gray-10);
   height: 100%;
   display: flex;
@@ -27,6 +28,31 @@
   cursor: pointer;
   outline: none;
   align-items: center;
+}
+
+.stat .notification {
+  display: block;
+  position: absolute;
+  right: 10%;
+  bottom: 130%;
+  width: 18rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-secondary-30);
+  border: 1px solid var(--color-secondary-10);
+  box-shadow: 12px 12px 15px rgb(0 0 0 / 25%);
+  border-radius: 4px;
+}
+
+.stat .notification:before {
+  right: 12.5%;
+  bottom: -10%;
+  position: absolute;
+  content: "";
+  padding: 0.2rem;
+  background-color: var(--color-secondary-30);
+  border-top: 1px solid var(--color-secondary-10);
+  border-right: 1px solid var(--color-secondary-10);
+  rotate: 135deg;
 }
 
 .verified {
@@ -107,38 +133,34 @@
 .enter {
   transition-property: background-color, border-color, color, fill, stroke,
     opacity, box-shadow, transform;
-  transition-duration: 100ms;
+  transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .enterFrom {
-  --transform-scale-x: 0.95;
-  --transform-scale-y: 0.95;
+  transform: scale(0.95, 0.95);
   opacity: 0;
 }
 
 .enterTo {
-  --transform-scale-x: 1;
-  --transform-scale-y: 1;
+  transform: scale(1, 1);
   opacity: 1;
 }
 
 .leave {
   transition-property: background-color, border-color, color, fill, stroke,
     opacity, box-shadow, transform;
-  transition-duration: 75ms;
+  transition-duration: 175ms;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .leaveFrom {
-  --transform-scale-x: 1;
-  --transform-scale-y: 1;
+  transform: scale(1, 1);
   opacity: 1;
 }
 
 .leaveTo {
-  --transform-scale-x: 0.95;
-  --transform-scale-y: 0.95;
+  transform: scale(0.95, 0.95);
   opacity: 0;
 }
 

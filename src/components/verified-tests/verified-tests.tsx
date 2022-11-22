@@ -67,10 +67,7 @@ const VerifiedTests: React.FC = () => {
           authored VSTs appear below.
         </span>
         {tests.map((test) => (
-          <Test
-            key={test.id}
-            test={test}
-          />
+          <Test key={test.id} test={test} />
         ))}
       </div>
     </div>
