@@ -1,6 +1,13 @@
 /* Welcome Screen */
+
 .welcome {
   padding: 1.5rem 3.125rem;
+}
+
+@media (--bp-md) {
+  .welcome {
+    padding: 1rem;
+  }
 }
 
 .welcome header {

@@ -1,9 +1,8 @@
-name: Dev - Deploy to S3 Bucket
+name: Prod - Deploy to S3 Bucket
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
   workflow_dispatch:
 
 concurrency:
@@ -23,8 +22,8 @@ jobs:
 
   Build:
     runs-on: ubuntu-latest
-    environment: dev
-    name: Dev - Build the application and deploy to S3 Bucket
+    environment: prod
+    name: Prod - Build the application and deploy to S3 Bucket
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -37,7 +36,7 @@ jobs:
         run: yarn install
 
       - name: Yarn build
-        run: yarn build --mode staging
+        run: yarn build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
