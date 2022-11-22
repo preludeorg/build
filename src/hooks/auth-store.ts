@@ -8,6 +8,10 @@ interface AuthStore {
   host: string;
   serverType: "prelude" | "custom";
   credentials?: Credentials;
+  seenTooltip: boolean;
+  tooltipVisible: boolean;
+  showTooltip: () => void;
+  hideTooltip: () => void;
   createAccount: (handle: string, signal: AbortSignal) => Promise<Credentials>;
   login: (
     record: {
@@ -51,9 +55,33 @@ const useAuthStore = create<AuthStore>()(
         const credentials = { account: "", token: "" };
         set(() => ({ host, credentials }));
       },
+      seenTooltip: false,
+      tooltipVisible: false,
+      showTooltip() {
+        const { seenTooltip } = get();
+
+        if (seenTooltip) {
+          return;
+        }
+
+        set(() => ({ tooltipVisible: true, seenTooltip: true }));
+
+        setTimeout(() => {
+          set(() => ({ tooltipVisible: false }));
+        }, 5000);
+      },
+      hideTooltip() {
+        set(() => ({ tooltipVisible: false }));
+      },
     }),
     {
       name: "prelude-credentials",
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(
+            ([key]) => !["tooltipVisible"].includes(key)
+          )
+        ),
     }
   )
 );

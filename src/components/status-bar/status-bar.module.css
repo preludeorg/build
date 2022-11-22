@@ -31,7 +31,7 @@
 }
 
 .stat .notification {
-  display: none;
+  display: block;
   position: absolute;
   right: 10%;
   bottom: 130%;
@@ -133,38 +133,34 @@
 .enter {
   transition-property: background-color, border-color, color, fill, stroke,
     opacity, box-shadow, transform;
-  transition-duration: 100ms;
+  transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .enterFrom {
-  --transform-scale-x: 0.95;
-  --transform-scale-y: 0.95;
+  transform: scale(0.95, 0.95);
   opacity: 0;
 }
 
 .enterTo {
-  --transform-scale-x: 1;
-  --transform-scale-y: 1;
+  transform: scale(1, 1);
   opacity: 1;
 }
 
 .leave {
   transition-property: background-color, border-color, color, fill, stroke,
     opacity, box-shadow, transform;
-  transition-duration: 75ms;
+  transition-duration: 175ms;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .leaveFrom {
-  --transform-scale-x: 1;
-  --transform-scale-y: 1;
+  transform: scale(1, 1);
   opacity: 1;
 }
 
 .leaveTo {
-  --transform-scale-x: 0.95;
-  --transform-scale-y: 0.95;
+  transform: scale(0.95, 0.95);
   opacity: 0;
 }
 

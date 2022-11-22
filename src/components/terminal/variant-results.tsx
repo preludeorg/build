@@ -220,18 +220,24 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
   loading,
   setLoading,
 }) => {
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const { host, credentials, showTooltip } = useAuthStore(
+    select("host", "credentials", "showTooltip"),
+    shallow
+  );
+
   const handleDownloadLink = async (variant: string) => {
     setLoading(true);
     try {
-      const { url } = await createURL(variant, serviceConfig);
+      const { url } = await createURL(variant, { host, credentials });
       setURL(url);
       setLinkAvailable(true);
     } catch {
     } finally {
       setLoading(false);
+      showTooltip();
     }
   };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);

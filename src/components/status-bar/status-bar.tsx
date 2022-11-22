@@ -5,6 +5,7 @@ import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 import useNavigationStore from "../../hooks/navigation-store";
 import useTerminalStore from "../../hooks/terminal-store";
 import { useConfig } from "../../hooks/use-config";
+import { select } from "../../lib/utils/select";
 import DownloadIcon from "../icons/download-icon";
 import LoaderIcon from "../icons/loader-icon";
 import SettingsIcon from "../icons/settings-icon";
@@ -14,6 +15,9 @@ const StatusBar: React.FC = () => {
   const { handleExport, handleImport } = useConfig();
   const showOverlay = useNavigationStore((state) => state.showOverlay);
   const isConnected = useAuthStore(selectIsConnected);
+  const { tooltipVisible, hideTooltip } = useAuthStore(
+    select("tooltipVisible", "hideTooltip")
+  );
   const statusIndicator = useTerminalStore(
     (state) => state.statusIndicator,
     shallow
@@ -72,13 +76,31 @@ const StatusBar: React.FC = () => {
         )}
         {isConnected && (
           <div className={classNames(styles.stat, styles.verified)}>
-            <button onClick={() => showOverlay("verifiedTests")}>
+            <button
+              onClick={() => {
+                showOverlay("verifiedTests");
+                hideTooltip();
+              }}
+            >
               <DownloadIcon className={styles.icon} />
               <span>Verified</span>
             </button>
-            <div className={styles.notification}>
-              <span>Click "Verified" to view all the previously built Verified Security tests</span>
-            </div>
+            <Transition
+              show={tooltipVisible}
+              className={styles.notification}
+              as="div"
+              enter={styles.enter}
+              enterFrom={styles.enterFrom}
+              enterTo={styles.enterTo}
+              leave={styles.leave}
+              leaveFrom={styles.leaveFrom}
+              leaveTo={styles.leaveTo}
+            >
+              <span>
+                Click "Verified" to view all the previously built Verified
+                Security tests
+              </span>
+            </Transition>
           </div>
         )}
       </section>
