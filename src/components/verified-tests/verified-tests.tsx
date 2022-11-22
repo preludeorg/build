@@ -96,7 +96,7 @@ const Test: React.FC<{
       {expanded && (
         <section className={styles.variants}>
           {test.variants.map((variant) => {
-            return <Variant variant={variant} />;
+            return <Variant key={variant} variant={variant} />;
           })}
         </section>
       )}
@@ -111,7 +111,7 @@ const Variant: React.FC<{
   const [url, setURL] = useState("");
   const platform = parseBuildVariant(variant)?.platform;
   return (
-    <div key={variant}>
+    <div>
       <VariantIcon className={styles.variantIcon} platform={platform} />
       <span>{variant}</span>
       <CopyButton
