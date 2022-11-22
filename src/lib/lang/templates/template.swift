@@ -15,7 +15,7 @@ func clean() {
     exit(100)
 }
 
-if CommandLine.arguments.contains("clean") {
+if CommandLine.arguments.count > 1 {
     clean()
 } else {
     test()
