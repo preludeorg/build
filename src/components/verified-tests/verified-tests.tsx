@@ -10,6 +10,7 @@ import { select } from "../../lib/utils/select";
 import ChevronIcon from "../icons/chevron-icon";
 import CloseIcon from "../icons/close-icon";
 import CopyIcon from "../icons/copy-icon";
+import DownloadIcon from "../icons/download-icon";
 import HelpIcon from "../icons/help-icon";
 import LoaderIcon from "../icons/loader-icon";
 import Trashcan from "../icons/trashcan-icon";
@@ -95,18 +96,7 @@ const Test: React.FC<{
       {expanded && (
         <section className={styles.variants}>
           {test.variants.map((variant) => {
-            const platform = parseBuildVariant(variant)?.platform;
-            return (
-              <div key={variant}>
-                <VariantIcon
-                  className={styles.variantIcon}
-                  platform={platform}
-                />
-                <span>{variant}</span>
-                <CopyButton variant={variant} />
-                <DeleteButton variant={variant} />
-              </div>
-            );
+            return <Variant variant={variant} />;
           })}
         </section>
       )}
@@ -114,25 +104,79 @@ const Test: React.FC<{
   );
 };
 
-const CopyButton: React.FC<{ variant: string }> = ({ variant }) => {
+const Variant: React.FC<{
+  variant: string;
+}> = ({ variant }) => {
+  const [linkAvailable, setLinkAvailable] = useState(false);
+  const [url, setURL] = useState("");
+  const platform = parseBuildVariant(variant)?.platform;
+  return (
+    <div key={variant}>
+      <VariantIcon className={styles.variantIcon} platform={platform} />
+      <span>{variant}</span>
+      <CopyButton
+        variant={variant}
+        linkAvailable={linkAvailable}
+        setLinkAvailable={setLinkAvailable}
+        url={url}
+        setURL={setURL}
+      />
+      <DeleteButton variant={variant} />
+    </div>
+  );
+};
+
+const CopyButton: React.FC<{
+  variant: string;
+  linkAvailable: boolean;
+  setLinkAvailable: (b: boolean) => void;
+  url: string;
+  setURL: (u: string) => void;
+}> = ({ variant, linkAvailable, setLinkAvailable, url, setURL }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const [loading, setLoading] = useState(false);
-  const handleCopy = async () => {
+  const handleDownloadLink = async (variant: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const { url } = await createURL(variant, serviceConfig);
-      await navigator.clipboard.writeText(url);
-      notifySuccess("Link copied to clipboard. Link expires in 10 minutes.");
-    } catch (error) {
-      notifyError("Failed to copy to clipboard", error);
+      setURL(url);
+      setLinkAvailable(true);
+    } catch {
     } finally {
       setLoading(false);
     }
   };
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      notifySuccess("Link copied to clipboard. Link expires in 10 minutes.");
+    } catch (error) {
+      notifyError("Failed to copy to clipboard", error);
+    }
+  };
   return (
-    <button onClick={handleCopy} className={styles.copy}>
-      {loading ? <LoaderIcon className={styles.loading} /> : <CopyIcon />}
-    </button>
+    <>
+      {linkAvailable && url ? (
+        <button onClick={handleCopy} className={styles.copy}>
+          <CopyIcon />
+        </button>
+      ) : (
+        <>
+          {loading ? (
+            <button className={styles.copy}>
+              <LoaderIcon className={styles.loading} />
+            </button>
+          ) : (
+            <button
+              onClick={() => handleDownloadLink(variant)}
+              className={styles.copy}
+            >
+              <DownloadIcon />
+            </button>
+          )}
+        </>
+      )}
+    </>
   );
 };
 
