@@ -23,6 +23,20 @@
   overflow: hidden;
 }
 
+.handle {
+  text-align: center;
+}
+
 .handle:hover {
   background-color: var(--color-secondary-10);
+}
+
+.handle:hover .dragHandle {
+  fill: var(--white);
+}
+
+.dragHandle {
+  fill: var(--color-primary-10);
+  width: 1rem;
+  transform: translateY(-3px);
 }

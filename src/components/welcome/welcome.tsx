@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
@@ -13,7 +13,7 @@ import PreludeWordmark from "../icons/prelude-wordmark";
 import WelcomeBlock from "./welcome-block";
 import styles from "./welcome.module.css";
 
-const Welcome = () => {
+const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
   const { installer, setInstaller, isInstalled, setIsInstalled } =
     useNavigationStore(
       select("installer", "setInstaller", "isInstalled", "setIsInstalled"),
@@ -58,11 +58,11 @@ const Welcome = () => {
   }, []);
 
   return (
-    <div className={styles.welcome}>
+    <div ref={ref} className={styles.welcome}>
       <header>
-        <section >
+        <section>
           <PreludeWordmark className={styles.wordmark} />
-          <div className={styles.line}/>
+          <div className={styles.line} />
           <h2 className={styles.tagline}>Security Test Authoring</h2>
         </section>
         <section className={styles.install}>
@@ -107,6 +107,6 @@ const Welcome = () => {
       </a>
     </div>
   );
-};
+});
 
 export default Welcome;

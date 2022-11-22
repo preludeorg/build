@@ -53,7 +53,7 @@ const StatusBar: React.FC = () => {
                         close();
                       }}
                     >
-                      Export Crententials
+                      Export Credentials
                     </a>
                   )}
                 </>
