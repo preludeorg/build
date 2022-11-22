@@ -26,16 +26,14 @@ const ControlPanel: React.FC = () => {
     };
   }, shallow);
 
-  const { write, showIndicator, hideIndicator, currentTest, takeControl } =
-    useTerminalStore(
-      select(
-        "write",
-        "showIndicator",
-        "hideIndicator",
-        "currentTest",
-        "takeControl"
-      )
-    );
+  const { write, showIndicator, hideIndicator, takeControl } = useTerminalStore(
+    select(
+      "write",
+      "showIndicator",
+      "hideIndicator",
+      "takeControl"
+    )
+  );
 
   const handleBuild = async () => {
     try {
@@ -51,9 +49,7 @@ const ControlPanel: React.FC = () => {
         throw new Error("missing test");
       }
 
-      write(
-        <VariantResults question={test.question} results={results} />
-      );
+      write(<VariantResults question={test.question} results={results} />);
     } catch (e) {
       write(
         <ErrorMessage
