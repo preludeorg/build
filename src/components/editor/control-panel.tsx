@@ -51,7 +51,11 @@ const ControlPanel: React.FC = () => {
         <VariantResults question={currentTest.question} results={results} />
       );
     } catch (e) {
-      write(<ErrorMessage message={`failed to build variant`} />);
+      write(
+        <ErrorMessage
+          message={`failed to build variant: ${(e as Error).message}`}
+        />
+      );
     } finally {
       setLoading(false);
       hideIndicator();
