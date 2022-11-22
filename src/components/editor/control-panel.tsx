@@ -41,9 +41,9 @@ const ControlPanel: React.FC = () => {
     try {
       setLoading(true);
       showIndicator("Building...");
-      takeControl();
+      const signal = takeControl().signal;
       const results = await build(currentTabId, serviceConfig);
-      const test = (await getTestList(serviceConfig, takeControl().signal)).find(
+      const test = (await getTestList(serviceConfig, signal)).find(
         (t) => t.id === parseVariant(currentTabId)?.id
       );
 
