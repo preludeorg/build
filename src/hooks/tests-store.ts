@@ -19,14 +19,7 @@ const useTestsStore = create<TestsStore>((set) => ({
     try {
       set(() => ({ loading: true }));
       const builtVariants = await verifiedTests(config);
-
-      const testIds = new Set(
-        builtVariants.map((t) => parseBuildVariant(t)?.id ?? "")
-      );
-
-      const allTests = await getTestList(config, new AbortController().signal);
-
-      const tests = allTests.filter((test) => testIds.has(test.id));
+      const tests = await getTestList(config, new AbortController().signal);
 
       set(() => ({ tests, builtVariants }));
     } catch (err) {
@@ -36,5 +29,20 @@ const useTestsStore = create<TestsStore>((set) => ({
     }
   },
 }));
+
+export const selectVerifiedTest = (state: TestsStore) => {
+  const testIds = new Set(
+    state.builtVariants.map((t) => parseBuildVariant(t)?.id ?? "")
+  );
+  return state.tests
+    .filter((test) => testIds.has(test.id))
+    .map((test) => {
+      return {
+        id: test.id,
+        question: test.question,
+        variants: state.builtVariants.filter((v) => v.startsWith(test.id)),
+      };
+    });
+};
 
 export default useTestsStore;

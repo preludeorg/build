@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import useNavigationStore from "../../hooks/navigation-store";
-import useTestsStore from "../../hooks/tests-store";
+import useTestsStore, { selectVerifiedTest } from "../../hooks/tests-store";
 import { createURL, deleteVerified } from "../../lib/api";
 import { parseBuildVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
@@ -22,16 +22,7 @@ const VerifiedTests: React.FC = () => {
   const hideOverlay = useNavigationStore((state) => state.hideOverlay);
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { fetch, loading } = useTestsStore(select("fetch", "loading"), shallow);
-  const tests = useTestsStore((state) => {
-    return state.tests.map((test) => {
-      return {
-        id: test.id,
-        question: test.question,
-        variants: state.builtVariants.filter((v) => v.startsWith(test.id)),
-      };
-    });
-  }, shallow);
-
+  const tests = useTestsStore(selectVerifiedTest, shallow);
   useEffect(() => {
     void fetch(serviceConfig);
   }, []);

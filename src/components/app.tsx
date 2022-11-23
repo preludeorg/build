@@ -6,6 +6,7 @@ import { select } from "../lib/utils/select";
 import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
 import DragHandle from "./icons/drag-handle-icon";
+import TestCatalog from "./manifest/test-catalog";
 import { Notifications } from "./notifications/notifications";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
 import Servers from "./servers/servers";
@@ -68,6 +69,7 @@ function App() {
         <StatusBar />
       </main>
       {overlay === "servers" && <Servers />}
+      {overlay === "testCatalog" && <TestCatalog />}
       {overlay === "verifiedTests" && <VerifiedTests />}
       <ReloadPrompt />
       <Notifications />

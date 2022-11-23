@@ -7,6 +7,7 @@ import useTerminalStore from "../../hooks/terminal-store";
 import { useConfig } from "../../hooks/use-config";
 import { select } from "../../lib/utils/select";
 import DownloadIcon from "../icons/download-icon";
+import FolderIcon from "../icons/folder-icon";
 import LoaderIcon from "../icons/loader-icon";
 import SettingsIcon from "../icons/settings-icon";
 import styles from "./status-bar.module.css";
@@ -74,6 +75,16 @@ const StatusBar: React.FC = () => {
             <span>{statusIndicator.message}</span>
           </div>
         )}
+        <div className={classNames(styles.stat, styles.verified)}>
+          <button
+            onClick={() => {
+              showOverlay("testCatalog");
+            }}
+          >
+            <FolderIcon className={styles.icon} />
+            <span>Tests</span>
+          </button>
+        </div>
         {isConnected && (
           <div className={classNames(styles.stat, styles.verified)}>
             <button
