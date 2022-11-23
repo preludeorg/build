@@ -5,8 +5,8 @@ import template from "./templates/template.go?raw";
 
 export default class GO {
   static linters: Linter[] = [
-    { regex: /void\s+test\(.*\)/g, message: "Required test method missing" },
-    { regex: /void\s+clean\(.*\)/g, message: "Required clean method missing" },
+    { regex: /func\s+test\(.*\)/g, message: "Required test method missing" },
+    { regex: /func\s+clean\(.*\)/g, message: "Required clean method missing" },
   ];
   static mode = [StreamLanguage.define(go)];
   static bootstrap = template;
