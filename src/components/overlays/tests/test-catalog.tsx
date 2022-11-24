@@ -1,20 +1,18 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
-import useAuthStore from "../../hooks/auth-store";
-import useNavigationStore from "../../hooks/navigation-store";
-import useTestsStore from "../../hooks/tests-store";
-import { getTest } from "../../lib/api";
-import { parseBuildVariant } from "../../lib/utils/parse-variant";
-import { select } from "../../lib/utils/select";
-import ChevronIcon from "../icons/chevron-icon";
-import CloseIcon from "../icons/close-icon";
-import LoaderIcon from "../icons/loader-icon";
-import VariantIcon from "../icons/variant-icon";
+import useAuthStore from "../../../hooks/auth-store";
+import useTestsStore from "../../../hooks/tests-store";
+import { getTest } from "../../../lib/api";
+import { parseBuildVariant } from "../../../lib/utils/parse-variant";
+import { select } from "../../../lib/utils/select";
+import ChevronIcon from "../../icons/chevron-icon";
+import LoaderIcon from "../../icons/loader-icon";
+import VariantIcon from "../../icons/variant-icon";
+import Overlay from "../overlay";
 import styles from "./test-catalog.module.css";
 
 const TestCatalog = () => {
-  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { fetch, loading, tests } = useTestsStore(
     select("fetch", "loading", "tests"),
@@ -26,31 +24,16 @@ const TestCatalog = () => {
   }, []);
 
   return (
-    <div className={styles.overlay}>
-      <div
-        className={styles.backdrop}
-        onClick={() => {
-          hideOverlay();
-        }}
-      />
-      <div className={classNames(styles.panel, styles.right)}>
-        <button className={styles.close} onClick={() => hideOverlay()}>
-          <CloseIcon />
-        </button>
-        <div className={styles.title}>
-          <span className={styles.legend}>
-            Tests
-            {loading ? <LoaderIcon className={styles.loaderIcon} /> : ""}
-          </span>
-        </div>
-        <span className={styles.description}>
-          Your authored Tests and their applicable Variants appear below.
-        </span>
-        {tests?.map((test) => (
-          <Test key={test.id} test={test} />
-        ))}
-      </div>
-    </div>
+    <Overlay
+      position="right"
+      title="Tests"
+      description="Your authored Tests and their applicable Variants appear below."
+      loading={loading}
+    >
+      {tests?.map((test) => (
+        <Test key={test.id} test={test} />
+      ))}
+    </Overlay>
   );
 };
 

@@ -6,13 +6,13 @@ import { select } from "../lib/utils/select";
 import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
 import DragHandle from "./icons/drag-handle-icon";
-import TestCatalog from "./manifest/test-catalog";
 import { Notifications } from "./notifications/notifications";
+import Servers from "./overlays/servers/servers";
+import TestCatalog from "./overlays/tests/test-catalog";
+import VerifiedTests from "./overlays/verified-tests/verified-tests";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
-import Servers from "./servers/servers";
 import StatusBar from "./status-bar/status-bar";
 import Terminal from "./terminal/terminal";
-import VerifiedTests from "./verified-tests/verified-tests";
 import Welcome from "./welcome/welcome";
 
 function App() {

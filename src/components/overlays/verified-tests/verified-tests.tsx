@@ -1,25 +1,23 @@
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import shallow from "zustand/shallow";
-import useAuthStore from "../../hooks/auth-store";
-import useNavigationStore from "../../hooks/navigation-store";
-import useTestsStore, { selectVerifiedTest } from "../../hooks/tests-store";
-import { createURL, deleteVerified } from "../../lib/api";
-import { parseBuildVariant } from "../../lib/utils/parse-variant";
-import { select } from "../../lib/utils/select";
-import ChevronIcon from "../icons/chevron-icon";
-import CloseIcon from "../icons/close-icon";
-import CopyIcon from "../icons/copy-icon";
-import DownloadIcon from "../icons/download-icon";
-import HelpIcon from "../icons/help-icon";
-import LoaderIcon from "../icons/loader-icon";
-import Trashcan from "../icons/trashcan-icon";
-import VariantIcon from "../icons/variant-icon";
-import { notifyError, notifySuccess } from "../notifications/notifications";
+import useAuthStore from "../../../hooks/auth-store";
+import useTestsStore, { selectVerifiedTest } from "../../../hooks/tests-store";
+import { createURL, deleteVerified } from "../../../lib/api";
+import { parseBuildVariant } from "../../../lib/utils/parse-variant";
+import { select } from "../../../lib/utils/select";
+import ChevronIcon from "../../icons/chevron-icon";
+import CloseIcon from "../../icons/close-icon";
+import CopyIcon from "../../icons/copy-icon";
+import DownloadIcon from "../../icons/download-icon";
+import LoaderIcon from "../../icons/loader-icon";
+import Trashcan from "../../icons/trashcan-icon";
+import VariantIcon from "../../icons/variant-icon";
+import { notifyError, notifySuccess } from "../../notifications/notifications";
+import Overlay from "../overlay";
 import styles from "./verified-test.module.css";
 
 const VerifiedTests: React.FC = () => {
-  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { fetch, loading } = useTestsStore(select("fetch", "loading"), shallow);
   const tests = useTestsStore(selectVerifiedTest, shallow);
@@ -28,41 +26,17 @@ const VerifiedTests: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.overlay}>
-      <div
-        className={styles.backdrop}
-        onClick={() => {
-          hideOverlay();
-        }}
-      />
-      <div className={classNames(styles.panel, styles.right)}>
-        <button className={styles.close} onClick={() => hideOverlay()}>
-          <CloseIcon />
-        </button>
-        <div className={styles.title}>
-          <span className={styles.legend}>
-            Verified Security Tests{" "}
-            {loading ? (
-              <LoaderIcon className={styles.loaderIcon} />
-            ) : (
-              <a
-                href="https://docs.prelude.org/v2/docs/deploying-security-tests"
-                target="_blank"
-              >
-                <HelpIcon className={styles.helpIcon} />
-              </a>
-            )}
-          </span>
-        </div>
-        <span className={styles.description}>
-          Verified Security Tests (VSTs) are production-ready tests. Your
-          authored VSTs appear below.
-        </span>
-        {tests.map((test) => (
-          <Test key={test.id} test={test} />
-        ))}
-      </div>
-    </div>
+    <Overlay
+      loading={loading}
+      position="right"
+      title="Verified Security Tests"
+      description="Verified Security Tests (VSTs) are production-ready tests. Your
+    authored VSTs appear below."
+    >
+      {tests.map((test) => (
+        <Test key={test.id} test={test} />
+      ))}
+    </Overlay>
   );
 };
 
