@@ -1,9 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { Test } from "@theprelude/sdk";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../../hooks/auth-store";
-import useTestsStore from "../../../hooks/tests-store";
-import { getTest } from "../../../lib/api";
+import { getTest, getTestList } from "../../../lib/api";
 import { parseBuildVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
 import ChevronIcon from "../../icons/chevron-icon";
@@ -14,34 +15,38 @@ import styles from "./test-catalog.module.css";
 
 const TestCatalog: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { fetch, loading, tests } = useTestsStore(
-    select("fetch", "loading", "tests"),
-    shallow
+  const { data, isLoading } = useQuery(
+    ["tests", serviceConfig],
+    () => getTestList(serviceConfig),
+    { refetchOnWindowFocus: false }
   );
-
-  useEffect(() => {
-    void fetch(serviceConfig);
-  }, []);
 
   return (
     <Overlay
       position="right"
       title="Tests"
       description="Your authored Tests and their applicable Variants appear below."
-      loading={loading}
+      loading={isLoading}
     >
-      {tests?.map((test) => (
-        <Test key={test.id} test={test} />
+      {data?.map((test) => (
+        <TestItem key={test.id} test={test} />
       ))}
     </Overlay>
   );
 };
 
-const Test: React.FC<{
-  test: { account_id: string; id: string; question: string };
+const TestItem: React.FC<{
+  test: Test;
 }> = ({ test }) => {
-  const [expanded, setExpanded] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const [expanded, setExpanded] = useState(false);
+
+  const { data, isFetching } = useQuery(
+    ["test", test.id, serviceConfig],
+    () => getTest(test.id, serviceConfig),
+    { refetchOnWindowFocus: false, enabled: expanded }
+  );
+
   return (
     <div
       className={classNames(styles.test, {
@@ -50,7 +55,7 @@ const Test: React.FC<{
     >
       <header onClick={() => setExpanded(!expanded)}>
         <span>{test.question}</span>
-        {loading ? (
+        {isFetching ? (
           <LoaderIcon className={styles.loaderIcon} />
         ) : (
           <ChevronIcon
@@ -60,35 +65,14 @@ const Test: React.FC<{
           />
         )}
       </header>
-      {expanded && <VariantList id={test.id} setLoading={setLoading} />}
+      {expanded && data && <VariantList variants={data} />}
     </div>
   );
 };
 
 const VariantList: React.FC<{
-  id: string;
-  setLoading: (b: boolean) => void;
-}> = ({ id, setLoading }) => {
-  const [variants, setVariants] = useState<string[]>([]);
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const fetchVariants = async () => {
-    try {
-      setLoading(true);
-      const variants = await getTest(
-        id,
-        serviceConfig,
-        new AbortController().signal
-      );
-      setVariants(variants);
-    } catch {
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    void fetchVariants();
-  }, []);
-
+  variants: string[];
+}> = ({ variants }) => {
   return (
     <section className={styles.variants}>
       {variants.map((variant) => {

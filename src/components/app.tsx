@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../hooks/navigation-store";
 import { useDefaultHeight } from "../hooks/use-default-height";
@@ -11,6 +12,8 @@ import ReloadPrompt from "./reload-prompt/reload-prompt";
 import StatusBar from "./status-bar/status-bar";
 import Welcome from "./welcome/welcome";
 
+const queryClient = new QueryClient();
+
 function App() {
   const { panel, overlay } = useNavigationStore(
     select("panel", "overlay"),
@@ -19,19 +22,21 @@ function App() {
   const { ref, defaultHeight } = useDefaultHeight();
 
   return (
-    <div className={styles.app}>
-      <main>
-        <section className={styles.topSection}>
-          {panel === "welcome" && <Welcome ref={ref} />}
-          {panel === "editor" && <EditorPanel />}
-        </section>
-        <Footer defaultHeight={defaultHeight} />
-        <StatusBar />
-      </main>
-      <Overlays overlay={overlay} />
-      <ReloadPrompt />
-      <Notifications />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className={styles.app}>
+        <main>
+          <section className={styles.topSection}>
+            {panel === "welcome" && <Welcome ref={ref} />}
+            {panel === "editor" && <EditorPanel />}
+          </section>
+          <Footer defaultHeight={defaultHeight} />
+          <StatusBar />
+        </main>
+        <Overlays overlay={overlay} />
+        <ReloadPrompt />
+        <Notifications />
+      </div>
+    </QueryClientProvider>
   );
 }
 

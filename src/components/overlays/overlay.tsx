@@ -5,7 +5,7 @@ import CloseIcon from "../icons/close-icon";
 import styles from "./overlay.module.css";
 
 const Overlay: React.FC<{
-  children: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[];
   position: "right" | "left";
   title: string;
   description: string;
