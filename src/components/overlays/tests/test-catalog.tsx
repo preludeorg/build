@@ -12,7 +12,7 @@ import VariantIcon from "../../icons/variant-icon";
 import Overlay from "../overlay";
 import styles from "./test-catalog.module.css";
 
-const TestCatalog = () => {
+const TestCatalog: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { fetch, loading, tests } = useTestsStore(
     select("fetch", "loading", "tests"),

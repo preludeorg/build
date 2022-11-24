@@ -7,9 +7,7 @@ import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
 import DragHandle from "./icons/drag-handle-icon";
 import { Notifications } from "./notifications/notifications";
-import Servers from "./overlays/servers/servers";
-import TestCatalog from "./overlays/tests/test-catalog";
-import VerifiedTests from "./overlays/verified-tests/verified-tests";
+import Overlays from "./overlays/overlays";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
 import StatusBar from "./status-bar/status-bar";
 import Terminal from "./terminal/terminal";
@@ -68,9 +66,7 @@ function App() {
         )}
         <StatusBar />
       </main>
-      {overlay === "servers" && <Servers />}
-      {overlay === "testCatalog" && <TestCatalog />}
-      {overlay === "verifiedTests" && <VerifiedTests />}
+      <Overlays overlay={overlay} />
       <ReloadPrompt />
       <Notifications />
     </div>
