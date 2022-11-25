@@ -33,18 +33,6 @@ button:focus {
   transform: rotate(0deg);
 }
 
-.helpIcon {
-  width: 1rem;
-  height: 1rem;
-  fill: var(--color-primary-10);
-  margin: auto 0;
-}
-
-.helpIcon:hover {
-  fill: var(--white);
-  cursor: pointer;
-}
-
 .variants {
   display: flex;
   flex-direction: column;
