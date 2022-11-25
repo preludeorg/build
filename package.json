@@ -12,7 +12,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint --fix src && tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.1",
