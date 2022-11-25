@@ -88,10 +88,6 @@ button:focus {
   fill: var(--color-primary-10);
 }
 
-.loading {
-  animation: loader 1.2s linear infinite;
-}
-
 .delete {
   border: none;
   background: none;

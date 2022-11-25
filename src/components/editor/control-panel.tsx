@@ -8,7 +8,8 @@ import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
-import LoaderIcon from "../icons/loader-icon";
+import { Loading } from "../icons/loading";
+
 import PlayIcon from "../icons/play-icon";
 import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
@@ -27,12 +28,7 @@ const ControlPanel: React.FC = () => {
   }, shallow);
 
   const { write, showIndicator, hideIndicator, takeControl } = useTerminalStore(
-    select(
-      "write",
-      "showIndicator",
-      "hideIndicator",
-      "takeControl"
-    )
+    select("write", "showIndicator", "hideIndicator", "takeControl")
   );
 
   const handleBuild = async () => {
@@ -69,7 +65,7 @@ const ControlPanel: React.FC = () => {
         disabled={!validTest || loading}
         className={styles.test}
       >
-        {loading ? <LoaderIcon className={styles.loaderIcon} /> : <PlayIcon />}
+        {loading ? <Loading /> : <PlayIcon />}
         <span>Build</span>
       </button>
     </div>

@@ -1,7 +1,7 @@
 import classNames from "classnames";
-import { LoaderIcon } from "react-hot-toast";
 import useNavigationStore from "../../hooks/navigation-store";
 import CloseIcon from "../icons/close-icon";
+import { Loading } from "../icons/loading";
 import styles from "./overlay.module.css";
 
 const Overlay: React.FC<{
@@ -34,7 +34,7 @@ const Overlay: React.FC<{
         <div className={styles.title}>
           <span className={styles.legend}>
             {title}
-            {loading && <LoaderIcon className={styles.loaderIcon} />}
+            {loading && <Loading />}
           </span>
         </div>
         <span className={styles.description}>{description}</span>

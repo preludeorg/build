@@ -114,13 +114,6 @@
   color: var(--white);
 }
 
-.loaderIcon {
-  width: 1rem;
-  height: 1rem;
-  fill: var(--white);
-  animation: loader 1.2s linear infinite;
-}
-
 @keyframes loader {
   0% {
     transform: rotate(0deg);

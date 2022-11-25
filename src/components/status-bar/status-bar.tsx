@@ -8,7 +8,7 @@ import { useConfig } from "../../hooks/use-config";
 import { select } from "../../lib/utils/select";
 import DownloadIcon from "../icons/download-icon";
 import FolderIcon from "../icons/folder-icon";
-import LoaderIcon from "../icons/loader-icon";
+import { Loading } from "../icons/loading";
 import SettingsIcon from "../icons/settings-icon";
 import styles from "./status-bar.module.css";
 
@@ -71,7 +71,7 @@ const StatusBar: React.FC = () => {
       <section className={styles.right}>
         {statusIndicator?.loading === true && (
           <div className={styles.statusIndicator}>
-            <LoaderIcon className={styles.loaderIcon} />
+            <Loading />
             <span>{statusIndicator.message}</span>
           </div>
         )}

@@ -29,21 +29,6 @@
   fill: var(--black);
 }
 
-.test > .loaderIcon {
-  width: 1rem;
-  height: 1rem;
-  animation: loader 1.2s linear infinite;
-}
-
-@keyframes loader {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .test:disabled {
   cursor: not-allowed;
   color: var(--color-primary-10);
@@ -53,21 +38,6 @@
 
 .test:disabled > svg {
   fill: var(--color-primary-10);
-}
-
-.loaderIcon {
-  width: 1rem;
-  height: 1rem;
-  animation: loader 1s linear infinite;
-}
-
-@keyframes loader {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 .deployContainer {

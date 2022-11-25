@@ -12,7 +12,13 @@ import ReloadPrompt from "./reload-prompt/reload-prompt";
 import StatusBar from "./status-bar/status-bar";
 import Welcome from "./welcome/welcome";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   const { panel, overlay } = useNavigationStore(

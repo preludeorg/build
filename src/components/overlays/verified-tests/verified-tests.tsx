@@ -1,48 +1,61 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Test } from "@theprelude/sdk";
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../../hooks/auth-store";
-import useTestsStore, { selectVerifiedTest } from "../../../hooks/tests-store";
-import { createURL, deleteVerified } from "../../../lib/api";
+import { useTests } from "../../../hooks/use-tests";
+import { createURL, deleteVerified, verifiedTests } from "../../../lib/api";
 import { parseBuildVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
 import ChevronIcon from "../../icons/chevron-icon";
 import CloseIcon from "../../icons/close-icon";
 import CopyIcon from "../../icons/copy-icon";
 import DownloadIcon from "../../icons/download-icon";
-import LoaderIcon from "../../icons/loader-icon";
+import { Loading } from "../../icons/loading";
 import Trashcan from "../../icons/trashcan-icon";
 import VariantIcon from "../../icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 import Overlay from "../overlay";
 import styles from "./verified-test.module.css";
 
+const filterVST = (test: Test, vst: string[]) => {
+  return vst.filter((v) => parseBuildVariant(v)?.id === test.id);
+};
+
 const VerifiedTests: React.FC = () => {
+  const { data: tests, isLoading: isLoadingTests } = useTests();
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { fetch, loading } = useTestsStore(select("fetch", "loading"), shallow);
-  const tests = useTestsStore(selectVerifiedTest, shallow);
-  useEffect(() => {
-    void fetch(serviceConfig);
-  }, []);
+  const verified = useQuery(["verified-tests", serviceConfig], () =>
+    verifiedTests(serviceConfig)
+  );
+
+  const isLoading = isLoadingTests || verified.isLoading;
 
   return (
     <Overlay
-      loading={loading}
+      loading={isLoading}
       position="right"
       title="Verified Security Tests"
       description="Verified Security Tests (VSTs) are production-ready tests. Your
     authored VSTs appear below."
     >
-      {tests.map((test) => (
-        <Test key={test.id} test={test} />
-      ))}
+      {verified.data &&
+        tests?.map((test) => (
+          <TestItem
+            key={test.id}
+            test={test}
+            variants={filterVST(test, verified.data)}
+          />
+        ))}
     </Overlay>
   );
 };
 
-const Test: React.FC<{
-  test: { id: string; question: string; variants: string[] };
-}> = ({ test }) => {
+const TestItem: React.FC<{
+  test: Test;
+  variants: string[];
+}> = ({ test, variants }) => {
   const [expanded, setExpanded] = useState(true);
   return (
     <div
@@ -60,7 +73,7 @@ const Test: React.FC<{
       </header>
       {expanded && (
         <section className={styles.variants}>
-          {test.variants.map((variant) => {
+          {variants.map((variant) => {
             return <Variant key={variant} variant={variant} />;
           })}
         </section>
@@ -100,6 +113,7 @@ const CopyButton: React.FC<{
 }> = ({ variant, linkAvailable, setLinkAvailable, url, setURL }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const [loading, setLoading] = useState(false);
+
   const handleDownloadLink = async (variant: string) => {
     setLoading(true);
     try {
@@ -129,7 +143,7 @@ const CopyButton: React.FC<{
         <>
           {loading ? (
             <button className={styles.copy}>
-              <LoaderIcon className={styles.loading} />
+              <Loading />
             </button>
           ) : (
             <button
@@ -147,7 +161,7 @@ const CopyButton: React.FC<{
 
 const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { fetch } = useTestsStore(select("fetch"), shallow);
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [deletePrompt, setDeletePrompt] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -168,7 +182,7 @@ const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
     try {
       setLoading(true);
       await deleteVerified(variant, serviceConfig);
-      await fetch(serviceConfig);
+      await queryClient.invalidateQueries(["verified-tests"]);
       notifySuccess("Verified security test deleted.");
     } catch (e) {
       notifyError("Failed to delete verified security test", e);
@@ -183,11 +197,7 @@ const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
         onClick={() => setDeletePrompt(!deletePrompt)}
         className={styles.delete}
       >
-        {loading ? (
-          <LoaderIcon className={styles.loading} />
-        ) : (
-          <Trashcan className={styles.variantIcon} />
-        )}
+        {loading ? <Loading /> : <Trashcan className={styles.variantIcon} />}
       </button>
       {deletePrompt ? (
         <div className={styles.deletePrompt}>

@@ -75,20 +75,3 @@
   padding: 0 0.75rem;
   margin: 0.5rem 0 1.125rem;
 }
-
-.loaderIcon {
-  width: 1rem;
-  height: 1rem;
-  fill: var(--white);
-  animation: loader 1.2s linear infinite;
-  margin: auto 0;
-}
-
-@keyframes loader {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
