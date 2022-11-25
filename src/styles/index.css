@@ -19,3 +19,7 @@ body {
   background: var(--color-secondary-20);
   border-radius: 0.25rem;
 }
+
+button:focus {
+  outline: none;
+}
