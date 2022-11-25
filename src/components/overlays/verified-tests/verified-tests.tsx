@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Test } from "@theprelude/sdk";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../../hooks/auth-store";
 import { useTests } from "../../../hooks/use-tests";
@@ -9,19 +9,18 @@ import { parseBuildVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
 import Accordion from "../../ds/accordion/accordion";
 import {
+  AccordionAction,
   AccordionItem,
   AccordionList,
 } from "../../ds/accordion/accordion-list";
 import { useAccordion } from "../../ds/accordion/use-accordion";
-import CloseIcon from "../../icons/close-icon";
+import ConfirmDialog from "../../ds/dialog/confirm-dialog";
 import CopyIcon from "../../icons/copy-icon";
 import DownloadIcon from "../../icons/download-icon";
-import { Loading } from "../../icons/loading";
 import Trashcan from "../../icons/trashcan-icon";
 import VariantIcon from "../../icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 import Overlay from "../overlay";
-import styles from "./verified-test.module.css";
 
 const filterVST = (test: Test, vst: string[]) => {
   return vst.filter((v) => parseBuildVariant(v)?.id === test.id);
@@ -37,7 +36,7 @@ const VerifiedTests: React.FC = () => {
   const isLoading = tests.isLoading || verified.isLoading;
   const testIds = useMemo(
     () => new Set(verified.data?.map((t) => parseBuildVariant(t)?.id ?? "")),
-    verified.data
+    [verified.data]
   );
 
   return (
@@ -81,10 +80,12 @@ const TestItem: React.FC<{
             icon={
               <VariantIcon platform={parseBuildVariant(variant)?.platform} />
             }
-            actions={[
-              <CopyButton variant={variant} />,
-              <DeleteButton variant={variant} />,
-            ]}
+            actions={
+              <>
+                <CopyButton variant={variant} />
+                <DeleteButton variant={variant} />
+              </>
+            }
           />
         ))}
       </AccordionList>
@@ -96,116 +97,67 @@ const CopyButton: React.FC<{
   variant: string;
 }> = ({ variant }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const [url, setURL] = useState<null | string>(null);
-  const generateURL = useMutation(
+  const { data, mutate, isLoading } = useMutation(
     (variant: string) => createURL(variant, serviceConfig),
     {
-      onSuccess: ({ url }) => {
+      onSuccess: () => {
         notifySuccess(
           "Link generated. Click the copy icon to add it to your clipboard. Link expires in 10 minutes."
         );
-        setURL(url);
       },
     }
   );
 
   const handleCopy = async () => {
     try {
-      if (!url) {
+      if (!data?.url) {
         throw new Error("no url");
       }
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(data.url);
       notifySuccess("Link copied to clipboard.");
     } catch (error) {
       notifyError("Failed to copy to clipboard", error);
     }
   };
 
-  if (generateURL.isLoading) {
+  if (!data?.url) {
     return (
-      <button className={styles.copy}>
-        <Loading />
-      </button>
+      <AccordionAction
+        loading={isLoading}
+        onClick={() => mutate(variant)}
+        icon={<DownloadIcon />}
+      />
     );
   }
 
-  if (!url) {
-    return (
-      <button
-        onClick={() => generateURL.mutate(variant)}
-        className={styles.copy}
-      >
-        <DownloadIcon />
-      </button>
-    );
-  }
-
-  return (
-    <button onClick={handleCopy} className={styles.copy}>
-      <CopyIcon />
-    </button>
-  );
+  return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
 };
 
 const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const queryClient = useQueryClient();
-  const [loading, setLoading] = useState(false);
-  const [deletePrompt, setDeletePrompt] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const handleClick = (e: MouseEvent) => {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
-      setDeletePrompt(false);
+  const { mutate, isLoading } = useMutation(
+    (variant: string) => deleteVerified(variant, serviceConfig),
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(["verified-tests"]);
+        notifySuccess("Verified security test deleted.");
+      },
+      onError: (e) => {
+        notifyError("Failed to delete verified security test", e);
+      },
     }
-  };
+  );
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClick);
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, [ref.current]);
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      await deleteVerified(variant, serviceConfig);
-      await queryClient.invalidateQueries(["verified-tests"]);
-      notifySuccess("Verified security test deleted.");
-    } catch (e) {
-      notifyError("Failed to delete verified security test", e);
-    } finally {
-      setLoading(false);
-      setDeletePrompt(false);
-    }
-  };
   return (
-    <div className={styles.deleteContainer} ref={ref}>
-      <button
-        onClick={() => setDeletePrompt(!deletePrompt)}
-        className={styles.delete}
-      >
-        {loading ? <Loading /> : <Trashcan className={styles.variantIcon} />}
-      </button>
-      {deletePrompt ? (
-        <div className={styles.deletePrompt}>
-          <div className={styles.message}>
-            <span>Do you want to delete this variant?</span>
-            <button onClick={() => setDeletePrompt(false)}>
-              <CloseIcon />
-            </button>
-          </div>
-          <div className={styles.confirmation}>
-            <button onClick={handleDelete} className={styles.approve}>
-              Yes
-            </button>
-            <button onClick={() => setDeletePrompt(false)}>No</button>
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
-    </div>
+    <ConfirmDialog
+      message="Do you want to delete this variant?"
+      onAffirm={() => {
+        mutate(variant);
+      }}
+    >
+      <AccordionAction loading={isLoading} icon={<Trashcan />} />
+    </ConfirmDialog>
   );
 };
 
