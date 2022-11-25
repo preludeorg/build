@@ -53,18 +53,14 @@ const TestItem: React.FC<{
     >
       {data && (
         <AccordionList>
-          {data.map((variant) => {
-            return (
-              <AccordionItem
-                key={variant}
-                title={variant}
-                icon={
-                  <VariantIcon platform={parseVariant(variant)?.platform} />
-                }
-                actions={[]}
-              />
-            );
-          })}
+          {data.map((variant) => (
+            <AccordionItem
+              key={variant}
+              title={variant}
+              icon={<VariantIcon platform={parseVariant(variant)?.platform} />}
+              actions={[]}
+            />
+          ))}
         </AccordionList>
       )}
     </Accordion>

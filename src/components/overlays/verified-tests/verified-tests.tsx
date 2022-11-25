@@ -74,21 +74,19 @@ const TestItem: React.FC<{
       title={test.question}
     >
       <AccordionList>
-        {variants.map((variant) => {
-          return (
-            <AccordionItem
-              key={variant}
-              title={variant}
-              icon={
-                <VariantIcon platform={parseBuildVariant(variant)?.platform} />
-              }
-              actions={[
-                <CopyButton variant={variant} />,
-                <DeleteButton variant={variant} />,
-              ]}
-            />
-          );
-        })}
+        {variants.map((variant) => (
+          <AccordionItem
+            key={variant}
+            title={variant}
+            icon={
+              <VariantIcon platform={parseBuildVariant(variant)?.platform} />
+            }
+            actions={[
+              <CopyButton variant={variant} />,
+              <DeleteButton variant={variant} />,
+            ]}
+          />
+        ))}
       </AccordionList>
     </Accordion>
   );
