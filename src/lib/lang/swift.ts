@@ -1,13 +1,16 @@
 import { StreamLanguage } from "@codemirror/language";
 import { swift } from "@codemirror/legacy-modes/mode/swift";
-import { Linter } from "./linter";
 import template from "./templates/template.swift?raw";
+import { Language } from "./types";
 
-export default class Swift {
-  static linters: Linter[] = [
+const language: Language = {
+  ext: "swift",
+  template,
+  mode: [StreamLanguage.define(swift)],
+  linters: [
     { regex: /\s+test\(.*\)/g, message: "Required test method missing" },
     { regex: /\s+clean\(.*\)/g, message: "Required clean method missing" },
-  ];
-  static mode = [StreamLanguage.define(swift)];
-  static bootstrap = template;
-}
+  ],
+};
+
+export default language;

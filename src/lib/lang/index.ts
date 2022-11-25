@@ -1,16 +1,16 @@
-import C from "./c";
-import CS from "./cs";
-import GO from "./go";
-import Swift from "./swift";
+import c from "./c";
+import cs from "./cs";
+import go from "./go";
+import swift from "./swift";
+
+const languages = [c, cs, go, swift];
 
 export function getLanguage(ext: string) {
-  if (ext === "cs") {
-    return CS;
-  } else if (ext === "swift") {
-    return Swift;
-  } else if(ext === "go"){
-    return GO;
-  }else{
-    return C;
+  const language = languages.find((language) => language.ext === ext);
+
+  if (!language) {
+    throw new Error("unsupported language");
   }
+
+  return language;
 }

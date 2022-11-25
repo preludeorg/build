@@ -21,12 +21,13 @@
   width: 1rem;
   height: 1rem;
   fill: var(--white);
-  transform: rotate(180deg);
+  transform: rotate(0deg);
   margin: auto 0;
+  transition: transform 250ms;
 }
 
 .accordion.active > header > svg {
-  transform: rotate(0deg);
+  transform: rotate(180deg);
 }
 
 .list {
@@ -57,4 +58,21 @@
   height: 1.25rem;
   fill: var(--white);
   flex-shrink: 0;
+}
+
+.action {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.action > svg {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--color-primary-10);
+}
+
+.action > svg:hover {
+  fill: var(--white);
 }
