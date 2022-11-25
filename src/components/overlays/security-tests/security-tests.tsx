@@ -61,20 +61,14 @@ const TestItem: React.FC<{
           />
         )}
       </header>
-      {expanded && data && <VariantList variants={data} />}
+      {expanded && data && (
+        <section className={styles.variants}>
+          {data.map((variant) => {
+            return <Variant key={variant} variant={variant} />;
+          })}
+        </section>
+      )}
     </div>
-  );
-};
-
-const VariantList: React.FC<{
-  variants: string[];
-}> = ({ variants }) => {
-  return (
-    <section className={styles.variants}>
-      {variants.map((variant) => {
-        return <Variant key={variant} variant={variant} />;
-      })}
-    </section>
   );
 };
 
