@@ -1,83 +1,67 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Test } from "@theprelude/sdk";
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import shallow from "zustand/shallow";
-import useAuthStore from "../../hooks/auth-store";
-import useNavigationStore from "../../hooks/navigation-store";
-import useTestsStore from "../../hooks/tests-store";
-import { createURL, deleteVerified } from "../../lib/api";
-import { parseBuildVariant } from "../../lib/utils/parse-variant";
-import { select } from "../../lib/utils/select";
-import ChevronIcon from "../icons/chevron-icon";
-import CloseIcon from "../icons/close-icon";
-import CopyIcon from "../icons/copy-icon";
-import DownloadIcon from "../icons/download-icon";
-import HelpIcon from "../icons/help-icon";
-import LoaderIcon from "../icons/loader-icon";
-import Trashcan from "../icons/trashcan-icon";
-import VariantIcon from "../icons/variant-icon";
-import { notifyError, notifySuccess } from "../notifications/notifications";
+import useAuthStore from "../../../hooks/auth-store";
+import { useTests } from "../../../hooks/use-tests";
+import { createURL, deleteVerified, verifiedTests } from "../../../lib/api";
+import { parseBuildVariant } from "../../../lib/utils/parse-variant";
+import { select } from "../../../lib/utils/select";
+import ChevronIcon from "../../icons/chevron-icon";
+import CloseIcon from "../../icons/close-icon";
+import CopyIcon from "../../icons/copy-icon";
+import DownloadIcon from "../../icons/download-icon";
+import { Loading } from "../../icons/loading";
+import Trashcan from "../../icons/trashcan-icon";
+import VariantIcon from "../../icons/variant-icon";
+import { notifyError, notifySuccess } from "../../notifications/notifications";
+import Overlay from "../overlay";
 import styles from "./verified-test.module.css";
 
-const VerifiedTests: React.FC = () => {
-  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { fetch, loading } = useTestsStore(select("fetch", "loading"), shallow);
-  const tests = useTestsStore((state) => {
-    return state.tests.map((test) => {
-      return {
-        id: test.id,
-        question: test.question,
-        variants: state.builtVariants.filter((v) => v.startsWith(test.id)),
-      };
-    });
-  }, shallow);
+const filterVST = (test: Test, vst: string[]) => {
+  return vst.filter((v) => parseBuildVariant(v)?.id === test.id);
+};
 
-  useEffect(() => {
-    void fetch(serviceConfig);
-  }, []);
+const VerifiedTests: React.FC = () => {
+  const tests = useTests();
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const verified = useQuery(["verified-tests", serviceConfig], () =>
+    verifiedTests(serviceConfig)
+  );
+
+  const isLoading = tests.isLoading || verified.isLoading;
+  const testIds = useMemo(
+    () => new Set(verified.data?.map((t) => parseBuildVariant(t)?.id ?? "")),
+    verified.data
+  );
 
   return (
-    <div className={styles.overlay}>
-      <div
-        className={styles.backdrop}
-        onClick={() => {
-          hideOverlay();
-        }}
-      />
-      <div className={classNames(styles.panel, styles.right)}>
-        <button className={styles.close} onClick={() => hideOverlay()}>
-          <CloseIcon />
-        </button>
-        <div className={styles.title}>
-          <span className={styles.legend}>
-            Verified Security Tests{" "}
-            {loading ? (
-              <LoaderIcon className={styles.loaderIcon} />
-            ) : (
-              <a
-                href="https://docs.prelude.org/v2/docs/deploying-security-tests"
-                target="_blank"
-              >
-                <HelpIcon className={styles.helpIcon} />
-              </a>
-            )}
-          </span>
-        </div>
-        <span className={styles.description}>
-          Verified Security Tests (VSTs) are production-ready tests. Your
-          authored VSTs appear below.
-        </span>
-        {tests.map((test) => (
-          <Test key={test.id} test={test} />
-        ))}
-      </div>
-    </div>
+    <Overlay
+      loading={isLoading}
+      position="right"
+      title="Verified Security Tests"
+      description="Verified Security Tests (VSTs) are production-ready tests. Your
+    authored VSTs appear below."
+    >
+      {verified.data &&
+        tests.data
+          ?.filter((test) => testIds.has(test.id))
+          .map((test) => (
+            <TestItem
+              key={test.id}
+              test={test}
+              variants={filterVST(test, verified.data)}
+            />
+          ))}
+    </Overlay>
   );
 };
 
-const Test: React.FC<{
-  test: { id: string; question: string; variants: string[] };
-}> = ({ test }) => {
+const TestItem: React.FC<{
+  test: Test;
+  variants: string[];
+}> = ({ test, variants }) => {
   const [expanded, setExpanded] = useState(true);
   return (
     <div
@@ -95,7 +79,7 @@ const Test: React.FC<{
       </header>
       {expanded && (
         <section className={styles.variants}>
-          {test.variants.map((variant) => {
+          {variants.map((variant) => {
             return <Variant key={variant} variant={variant} />;
           })}
         </section>
@@ -135,6 +119,7 @@ const CopyButton: React.FC<{
 }> = ({ variant, linkAvailable, setLinkAvailable, url, setURL }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const [loading, setLoading] = useState(false);
+
   const handleDownloadLink = async (variant: string) => {
     setLoading(true);
     try {
@@ -164,7 +149,7 @@ const CopyButton: React.FC<{
         <>
           {loading ? (
             <button className={styles.copy}>
-              <LoaderIcon className={styles.loading} />
+              <Loading />
             </button>
           ) : (
             <button
@@ -182,7 +167,7 @@ const CopyButton: React.FC<{
 
 const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { fetch } = useTestsStore(select("fetch"), shallow);
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [deletePrompt, setDeletePrompt] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -203,7 +188,7 @@ const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
     try {
       setLoading(true);
       await deleteVerified(variant, serviceConfig);
-      await fetch(serviceConfig);
+      await queryClient.invalidateQueries(["verified-tests"]);
       notifySuccess("Verified security test deleted.");
     } catch (e) {
       notifyError("Failed to delete verified security test", e);
@@ -218,11 +203,7 @@ const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
         onClick={() => setDeletePrompt(!deletePrompt)}
         className={styles.delete}
       >
-        {loading ? (
-          <LoaderIcon className={styles.loading} />
-        ) : (
-          <Trashcan className={styles.variantIcon} />
-        )}
+        {loading ? <Loading /> : <Trashcan className={styles.variantIcon} />}
       </button>
       {deletePrompt ? (
         <div className={styles.deletePrompt}>

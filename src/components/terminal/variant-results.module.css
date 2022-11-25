@@ -169,10 +169,6 @@ ul {
   fill: var(--white);
 }
 
-.loaderIcon {
-  animation: loader 1s linear infinite;
-}
-
 @keyframes loader {
   0% {
     transform: rotate(0deg);

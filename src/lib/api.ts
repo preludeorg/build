@@ -26,7 +26,7 @@ export const newAccount = async (
 
 export const getTestList = async (
   config: ServiceConfig,
-  signal: AbortSignal
+  signal?: AbortSignal
 ) => {
   const service = new Service(config);
   return service.build.listTests({ signal, headers: productHeader() });
@@ -35,7 +35,7 @@ export const getTestList = async (
 export const getTest = async (
   id: string,
   config: ServiceConfig,
-  signal: AbortSignal
+  signal?: AbortSignal
 ) => {
   const service = new Service(config);
   return service.build.getTest(id, { signal, headers: productHeader() });

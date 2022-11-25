@@ -13,7 +13,7 @@ import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
 import CopyIcon from "../icons/copy-icon";
 import DownloadIcon from "../icons/download-icon";
-import LoaderIcon from "../icons/loader-icon";
+import { Loading } from "../icons/loading";
 import TimeIcon from "../icons/time-icon";
 import VariantIcon from "../icons/variant-icon";
 import { notifyError, notifySuccess } from "../notifications/notifications";
@@ -291,9 +291,7 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({ variant }) => {
         >
           {loading ? (
             <>
-              <LoaderIcon
-                className={classNames(styles.downloadIcon, styles.loaderIcon)}
-              />
+              <Loading className={styles.downloadIcon} />
               <span>Generating link...</span>
             </>
           ) : (
