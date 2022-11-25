@@ -1,13 +1,17 @@
+import { Credentials } from "@theprelude/sdk";
 import create from "zustand";
 import { persist } from "zustand/middleware";
-import { Credentials } from "@theprelude/sdk";
-import { isExitError } from "../lib/commands/helpers";
 import { getTestList, newAccount } from "../lib/api";
+import { isExitError } from "../lib/commands/helpers";
 
 interface AuthStore {
   host: string;
   serverType: "prelude" | "custom";
   credentials?: Credentials;
+  seenTooltip: boolean;
+  tooltipVisible: boolean;
+  showTooltip: () => void;
+  hideTooltip: () => void;
   createAccount: (handle: string, signal: AbortSignal) => Promise<Credentials>;
   login: (
     record: {
@@ -24,7 +28,7 @@ interface AuthStore {
 const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
-      host: "https://detect.dev.prelude.org",
+      host: import.meta.env.VITE_PRELUDE_SERVICE_URL,
       serverType: "prelude",
       async createAccount(handle, signal: AbortSignal) {
         const { host } = get();
@@ -51,9 +55,33 @@ const useAuthStore = create<AuthStore>()(
         const credentials = { account: "", token: "" };
         set(() => ({ host, credentials }));
       },
+      seenTooltip: false,
+      tooltipVisible: false,
+      showTooltip() {
+        const { seenTooltip } = get();
+
+        if (seenTooltip) {
+          return;
+        }
+
+        set(() => ({ tooltipVisible: true, seenTooltip: true }));
+
+        setTimeout(() => {
+          set(() => ({ tooltipVisible: false }));
+        }, 5000);
+      },
+      hideTooltip() {
+        set(() => ({ tooltipVisible: false }));
+      },
     }),
     {
       name: "prelude-credentials",
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(
+            ([key]) => !["tooltipVisible"].includes(key)
+          )
+        ),
     }
   )
 );

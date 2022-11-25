@@ -1,10 +1,37 @@
 /* Welcome Screen */
+
 .welcome {
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 3.125rem;
+}
+
+@media (--bp-md) {
+  .welcome {
+    padding: 1rem;
+  }
 }
 
 .welcome header {
   display: flex;
+  flex-direction: row;
+}
+
+.intro {
+  display: flex;
+  flex-direction: row;
+}
+
+.wordmark {
+  fill: var(--white);
+}
+
+.line {
+  border-bottom: 1px solid var(--gray-30);
+  width: 57%;
+  margin: 1rem 0;
+}
+
+.tagline {
+  margin: 0;
 }
 
 .install {
@@ -35,17 +62,6 @@
 
 .install button svg {
   fill: var(--white);
-}
-
-.header {
-  font-size: var(--text-xxxl);
-  margin: 0;
-  line-height: 3.5rem;
-}
-
-.tagline {
-  margin: 0;
-  line-height: 2rem;
 }
 
 .blockContainer {

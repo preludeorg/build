@@ -2,7 +2,7 @@ import DarwinIcon from "./darwin-icon";
 import LinuxIcon from "./linux-icon";
 import WindowsIcon from "./windows-icon";
 
-const VariantIcon: React.FC<{ platform?: string; className: string }> = ({
+const VariantIcon: React.FC<{ platform?: string; className?: string }> = ({
   platform,
   className,
 }) => {

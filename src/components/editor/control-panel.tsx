@@ -3,11 +3,12 @@ import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import useEditorStore from "../../hooks/editor-store";
 import useTerminalStore from "../../hooks/terminal-store";
-import { build } from "../../lib/api";
+import { build, getTestList } from "../../lib/api";
 import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
+import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
-import LoaderIcon from "../icons/loader-icon";
+import { Loading } from "../icons/loading";
 import PlayIcon from "../icons/play-icon";
 import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
@@ -25,25 +26,31 @@ const ControlPanel: React.FC = () => {
     };
   }, shallow);
 
-  const { write, showIndicator, hideIndicator, currentTest } = useTerminalStore(
-    select("write", "showIndicator", "hideIndicator", "currentTest")
+  const { write, showIndicator, hideIndicator, takeControl } = useTerminalStore(
+    select("write", "showIndicator", "hideIndicator", "takeControl")
   );
 
   const handleBuild = async () => {
     try {
       setLoading(true);
       showIndicator("Building...");
+      const signal = takeControl().signal;
       const results = await build(currentTabId, serviceConfig);
+      const test = (await getTestList(serviceConfig, signal)).find(
+        (t) => t.id === parseVariant(currentTabId)?.id
+      );
 
-      if (!currentTest) {
+      if (!test) {
         throw new Error("missing test");
       }
 
-      write(
-        <VariantResults question={currentTest.question} results={results} />
-      );
+      write(<VariantResults question={test.question} results={results} />);
     } catch (e) {
-      write(<ErrorMessage message={`failed to build variant`} />);
+      write(
+        <ErrorMessage
+          message={`failed to build variant: ${(e as Error).message}`}
+        />
+      );
     } finally {
       setLoading(false);
       hideIndicator();
@@ -57,7 +64,7 @@ const ControlPanel: React.FC = () => {
         disabled={!validTest || loading}
         className={styles.test}
       >
-        {loading ? <LoaderIcon className={styles.loaderIcon} /> : <PlayIcon />}
+        {loading ? <Loading /> : <PlayIcon />}
         <span>Build</span>
       </button>
     </div>

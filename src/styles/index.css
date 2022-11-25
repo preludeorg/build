@@ -5,6 +5,9 @@
 
 body {
   background-color: var(--color-secondary-40);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 ::-webkit-scrollbar {
@@ -15,4 +18,8 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-secondary-20);
   border-radius: 0.25rem;
+}
+
+button:focus {
+  outline: none;
 }

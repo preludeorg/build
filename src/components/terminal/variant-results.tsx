@@ -1,17 +1,21 @@
 import { ComputeResult } from "@theprelude/sdk";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import { createURL } from "../../lib/api";
+import { parseBuildVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
 import AlertIcon from "../icons/alert-icon";
 import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
 import CopyIcon from "../icons/copy-icon";
 import DownloadIcon from "../icons/download-icon";
-import LoaderIcon from "../icons/loader-icon";
+import { Loading } from "../icons/loading";
 import TimeIcon from "../icons/time-icon";
+import VariantIcon from "../icons/variant-icon";
 import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./variant-results.module.css";
 
@@ -19,6 +23,8 @@ interface Props {
   question: string;
   results: ComputeResult[];
 }
+
+const TIMEOUT_LINK = 1000 * 60 * 10;
 
 const VariantResults: React.FC<Props> = ({ results, question }) => {
   const sucesses = results.filter((result) =>
@@ -59,11 +65,12 @@ const isEmpty = (val: string | Array<unknown>): boolean =>
 
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
   const [expanded, setExpanded] = useState(false);
-  const [linkAvailable, setLinkAvailable] = useState(false);
-  const [url, setURL] = useState("");
-  const [loading, setLoading] = useState(false);
+
   const status = result.steps.map((s) => s.status);
   const isPass = status.every((e) => e === 0);
+  const hasSuccessPublish = result.steps.some(
+    (s) => s.step.toLowerCase() === "publish" && s.status === 0
+  );
   return (
     <li className={styles.variantContainer}>
       <div className={styles.variant} onClick={() => setExpanded(!expanded)}>
@@ -73,26 +80,12 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
           <AlertIcon className={styles.alertIcon} />
         )}
         <span className={styles.name}>{result.name}</span>
-        {!expanded && isPass ? (
-          <DownloadLink
-            variant={result.name}
-            linkAvailable={linkAvailable}
-            setLinkAvailable={setLinkAvailable}
-            url={url}
-            setURL={setURL}
-            loading={loading}
-            setLoading={setLoading}
-          />
-        ) : (
-          ""
-        )}
         <ChevronIcon
           className={classNames(styles.chevronIcon, {
             [styles.activeChevron]: expanded,
           })}
         />
       </div>
-
       {expanded && (
         <ul className={classNames(styles.steps)}>
           {result.steps.map((s) => (
@@ -126,20 +119,29 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
               </div>
 
               {!isEmpty(s.output) && <VariantOutput step={s} />}
-
-              {s.step.toLowerCase() === "publish" && s.status !== 1 && (
-                <DownloadLink
-                  variant={result.name}
-                  linkAvailable={linkAvailable}
-                  setLinkAvailable={setLinkAvailable}
-                  url={url}
-                  setURL={setURL}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              )}
             </li>
           ))}
+          {hasSuccessPublish && (
+            <li className={classNames(styles.step, styles.stepCentered)}>
+              <div className={styles.info}>
+                <div className={styles.infoDeployBlock}>
+                  <ChevronIcon className={styles.stepChevron} />
+                  <span>DEPLOY on</span>
+                  <VariantIcon
+                    className={styles.deployIcon}
+                    platform={parseBuildVariant(result.name)?.platform}
+                  />
+                  <span>
+                    {parseBuildVariant(result.name)?.platform}-
+                    {parseBuildVariant(result.name)?.arch}
+                  </span>
+
+                  <div className={styles.divider} />
+                  <DownloadLink variant={result.name} />
+                </div>
+              </div>
+            </li>
+          )}
         </ul>
       )}
     </li>
@@ -203,68 +205,99 @@ const VariantOutput: React.FC<{
 
 interface DownloadLinkProps {
   variant: string;
-  linkAvailable: boolean;
-  setLinkAvailable: (b: boolean) => void;
-  url: string;
-  setURL: (u: string) => void;
-  loading: boolean;
-  setLoading: (b: boolean) => void;
 }
 
-const DownloadLink: React.FC<DownloadLinkProps> = ({
-  variant,
-  linkAvailable,
-  setLinkAvailable,
-  url,
-  setURL,
-  loading,
-  setLoading,
-}) => {
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+const DownloadLink: React.FC<DownloadLinkProps> = ({ variant }) => {
+  const { host, credentials, showTooltip } = useAuthStore(
+    select("host", "credentials", "showTooltip"),
+    shallow
+  );
+  const [linkAvailable, setLinkAvailable] = useState(false);
+  const [url, setURL] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [remaining, setRemaining] = useState(0);
+
+  useEffect(() => {
+    if (!linkAvailable) {
+      return;
+    }
+    const interval = setInterval(() => {
+      setRemaining((state) => (state <= 0 ? 0 : state - 1000));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [linkAvailable]);
+
   const handleDownloadLink = async (variant: string) => {
     setLoading(true);
     try {
-      const { url } = await createURL(variant, serviceConfig);
+      const { url } = await createURL(variant, { host, credentials });
       setURL(url);
       setLinkAvailable(true);
+      setRemaining(TIMEOUT_LINK);
+      setTimeout(() => {
+        setLinkAvailable(false);
+      }, TIMEOUT_LINK);
     } catch {
     } finally {
       setLoading(false);
+      showTooltip();
     }
   };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      notifySuccess("Link copied to clipboard. Link expires in 10 minutes.");
+      notifySuccess("Link copied to clipboard");
     } catch (error) {
       notifyError("Failed to copy to clipboard", error);
     }
   };
+
+  const minutes = Math.floor(remaining / 1000 / 60);
+  const seconds = remaining / 1000 - minutes * 60;
   return (
     <div onClick={(e) => e.stopPropagation()}>
       {linkAvailable && url ? (
         <div className={classNames(styles.download, styles.copy)}>
+          {/* <span>
+            Use curl or wget to deploy the Detect node on your instance.
+          </span> */}
           <input type="url" value={url} readOnly className={styles.url}></input>
           <button className={styles.iconContainer} onClick={() => handleCopy()}>
             <CopyIcon className={styles.copyIcon} />
           </button>
+
+          <div style={{ width: 20, height: 20, marginTop: -6 }}>
+            <CircularProgressbar
+              value={(remaining / TIMEOUT_LINK) * 100}
+              strokeWidth={50}
+              styles={buildStyles({
+                strokeLinecap: "butt",
+                backgroundColor: "#D9D9D9",
+                pathColor: "#3D4246",
+              })}
+            />
+          </div>
+          <span>
+            Expires in {minutes.toString().padStart(2, "0")}:
+            {seconds.toString().padStart(2, "0")}
+          </span>
         </div>
       ) : (
         <button
-          className={styles.download}
+          className={styles.downloadButton}
           onClick={() => handleDownloadLink(variant)}
         >
           {loading ? (
             <>
-              <LoaderIcon
-                className={classNames(styles.downloadIcon, styles.loaderIcon)}
-              />
+              <Loading className={styles.downloadIcon} />
               <span>Generating link...</span>
             </>
           ) : (
             <>
               <DownloadIcon className={styles.downloadIcon} />
-              <span>Download link</span>
+              <span>Generate Deploy Link</span>
             </>
           )}
         </button>

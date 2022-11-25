@@ -1,13 +1,16 @@
 import { StreamLanguage } from "@codemirror/language";
 import { csharp } from "@codemirror/legacy-modes/mode/clike";
-import { Linter } from "./linter";
 import template from "./templates/template.cs?raw";
+import { Language } from "./types";
 
-export default class CS {
-  static linters: Linter[] = [
+const language: Language = {
+  ext: "cs",
+  template,
+  mode: [StreamLanguage.define(csharp)],
+  linters: [
     { regex: /void\s+Test\(.*\)/g, message: "Required test method missing" },
     { regex: /void\s+Clean\(.*\)/g, message: "Required clean method missing" },
-  ];
-  static mode = [StreamLanguage.define(csharp)];
-  static bootstrap = template;
-}
+  ],
+};
+
+export default language;

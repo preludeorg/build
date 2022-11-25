@@ -12,13 +12,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint --fix src && tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.1",
     "@codemirror/legacy-modes": "^6.0.1",
     "@codemirror/theme-one-dark": "^6.0.1",
     "@headlessui/react": "^1.7.4",
+    "@tanstack/react-query": "^4.16.1",
     "@theprelude/sdk": "^0.9.11",
     "classnames": "^2.3.2",
     "codemirror": "^6.0.1",
@@ -26,6 +29,7 @@
     "ini": "^3.0.1",
     "re-resizable": "^6.9.9",
     "react": "^18.2.0",
+    "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
     "uuid": "^9.0.0",
