@@ -1,18 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { Test } from "@theprelude/sdk";
-import classNames from "classnames";
-import { useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../../hooks/auth-store";
 import { useTests } from "../../../hooks/use-tests";
 import { getTest } from "../../../lib/api";
 import { parseVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
-import ChevronIcon from "../../icons/chevron-icon";
-import { Loading } from "../../icons/loading";
+import Accordion from "../../ds/accordion/accordion";
+import {
+  AccordionItem,
+  AccordionList,
+} from "../../ds/accordion/accordion-list";
+import { useAccordion } from "../../ds/accordion/use-accordion";
 import VariantIcon from "../../icons/variant-icon";
 import Overlay from "../overlay";
-import styles from "./security-tests.module.css";
 
 const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
@@ -35,53 +36,34 @@ const TestItem: React.FC<{
   test: Test;
 }> = ({ test }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const [expanded, setExpanded] = useState(false);
+  const accordion = useAccordion();
 
   const { data, isFetching } = useQuery(
     ["test", test.id, serviceConfig],
     () => getTest(test.id, serviceConfig),
-    { enabled: expanded }
+    { enabled: accordion.expanded }
   );
 
   return (
-    <div
-      className={classNames(styles.test, {
-        [styles.active]: expanded,
-      })}
+    <Accordion
+      title={test.question}
+      loading={isFetching}
+      expanded={accordion.expanded}
+      onToggle={accordion.toogle}
     >
-      <header onClick={() => setExpanded(!expanded)}>
-        <span>{test.question}</span>
-        {isFetching ? (
-          <Loading />
-        ) : (
-          <ChevronIcon
-            className={classNames(styles.chevronIcon, {
-              [styles.activeChevron]: expanded,
-            })}
-          />
-        )}
-      </header>
-      {expanded && data && (
-        <section className={styles.variants}>
-          {data.map((variant) => {
-            return <Variant key={variant} variant={variant} />;
-          })}
-        </section>
+      {data && (
+        <AccordionList>
+          {data.map((variant) => (
+            <AccordionItem
+              key={variant}
+              title={variant}
+              icon={<VariantIcon platform={parseVariant(variant)?.platform} />}
+              actions={[]}
+            />
+          ))}
+        </AccordionList>
       )}
-    </div>
-  );
-};
-
-const Variant: React.FC<{
-  variant: string;
-}> = ({ variant }) => {
-  const platform = parseVariant(variant)?.platform;
-
-  return (
-    <div>
-      <VariantIcon className={styles.variantIcon} platform={platform} />
-      <span>{variant}</span>
-    </div>
+    </Accordion>
   );
 };
 

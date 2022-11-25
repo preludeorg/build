@@ -1,6 +1,5 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Test } from "@theprelude/sdk";
-import classNames from "classnames";
 import { useEffect, useMemo, useRef, useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../../hooks/auth-store";
@@ -8,7 +7,12 @@ import { useTests } from "../../../hooks/use-tests";
 import { createURL, deleteVerified, verifiedTests } from "../../../lib/api";
 import { parseBuildVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
-import ChevronIcon from "../../icons/chevron-icon";
+import Accordion from "../../ds/accordion/accordion";
+import {
+  AccordionItem,
+  AccordionList,
+} from "../../ds/accordion/accordion-list";
+import { useAccordion } from "../../ds/accordion/use-accordion";
 import CloseIcon from "../../icons/close-icon";
 import CopyIcon from "../../icons/copy-icon";
 import DownloadIcon from "../../icons/download-icon";
@@ -62,106 +66,84 @@ const TestItem: React.FC<{
   test: Test;
   variants: string[];
 }> = ({ test, variants }) => {
-  const [expanded, setExpanded] = useState(true);
+  const accordion = useAccordion(true);
   return (
-    <div
-      className={classNames(styles.test, {
-        [styles.active]: expanded,
-      })}
+    <Accordion
+      expanded={accordion.expanded}
+      onToggle={accordion.toogle}
+      title={test.question}
     >
-      <header onClick={() => setExpanded(!expanded)}>
-        <span>{test.question}</span>
-        <ChevronIcon
-          className={classNames(styles.chevronIcon, {
-            [styles.activeChevron]: expanded,
-          })}
-        />
-      </header>
-      {expanded && (
-        <section className={styles.variants}>
-          {variants.map((variant) => {
-            return <Variant key={variant} variant={variant} />;
-          })}
-        </section>
-      )}
-    </div>
-  );
-};
-
-const Variant: React.FC<{
-  variant: string;
-}> = ({ variant }) => {
-  const [linkAvailable, setLinkAvailable] = useState(false);
-  const [url, setURL] = useState("");
-  const platform = parseBuildVariant(variant)?.platform;
-  return (
-    <div>
-      <VariantIcon className={styles.variantIcon} platform={platform} />
-      <span>{variant}</span>
-      <CopyButton
-        variant={variant}
-        linkAvailable={linkAvailable}
-        setLinkAvailable={setLinkAvailable}
-        url={url}
-        setURL={setURL}
-      />
-      <DeleteButton variant={variant} />
-    </div>
+      <AccordionList>
+        {variants.map((variant) => (
+          <AccordionItem
+            key={variant}
+            title={variant}
+            icon={
+              <VariantIcon platform={parseBuildVariant(variant)?.platform} />
+            }
+            actions={[
+              <CopyButton variant={variant} />,
+              <DeleteButton variant={variant} />,
+            ]}
+          />
+        ))}
+      </AccordionList>
+    </Accordion>
   );
 };
 
 const CopyButton: React.FC<{
   variant: string;
-  linkAvailable: boolean;
-  setLinkAvailable: (b: boolean) => void;
-  url: string;
-  setURL: (u: string) => void;
-}> = ({ variant, linkAvailable, setLinkAvailable, url, setURL }) => {
+}> = ({ variant }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const [loading, setLoading] = useState(false);
-
-  const handleDownloadLink = async (variant: string) => {
-    setLoading(true);
-    try {
-      const { url } = await createURL(variant, serviceConfig);
-      setURL(url);
-      setLinkAvailable(true);
-    } catch {
-    } finally {
-      setLoading(false);
+  const [url, setURL] = useState<null | string>(null);
+  const generateURL = useMutation(
+    (variant: string) => createURL(variant, serviceConfig),
+    {
+      onSuccess: ({ url }) => {
+        notifySuccess(
+          "Link generated. Click the copy icon to add it to your clipboard. Link expires in 10 minutes."
+        );
+        setURL(url);
+      },
     }
-  };
+  );
+
   const handleCopy = async () => {
     try {
+      if (!url) {
+        throw new Error("no url");
+      }
       await navigator.clipboard.writeText(url);
-      notifySuccess("Link copied to clipboard. Link expires in 10 minutes.");
+      notifySuccess("Link copied to clipboard.");
     } catch (error) {
       notifyError("Failed to copy to clipboard", error);
     }
   };
+
+  if (generateURL.isLoading) {
+    return (
+      <button className={styles.copy}>
+        <Loading />
+      </button>
+    );
+  }
+
+  if (!url) {
+    return (
+      <button
+        onClick={() => generateURL.mutate(variant)}
+        className={styles.copy}
+      >
+        <DownloadIcon />
+      </button>
+    );
+  }
+
   return (
-    <>
-      {linkAvailable && url ? (
-        <button onClick={handleCopy} className={styles.copy}>
-          <CopyIcon />
-        </button>
-      ) : (
-        <>
-          {loading ? (
-            <button className={styles.copy}>
-              <Loading />
-            </button>
-          ) : (
-            <button
-              onClick={() => handleDownloadLink(variant)}
-              className={styles.copy}
-            >
-              <DownloadIcon />
-            </button>
-          )}
-        </>
-      )}
-    </>
+    <button onClick={handleCopy} className={styles.copy}>
+      <CopyIcon />
+    </button>
   );
 };
 

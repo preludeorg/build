@@ -1,12 +1,8 @@
-button:focus {
-  outline: none;
-}
-
-.test {
+.accordion {
   margin-bottom: 0.25rem;
 }
 
-.test > header {
+.accordion > header {
   font-size: var(--text-base);
   padding: 0.5rem 0.5rem 0.5rem 0.75rem;
   background: var(--color-secondary-30);
@@ -16,12 +12,12 @@ button:focus {
   cursor: pointer;
 }
 
-.test:hover > header,
-.test.active > header {
+.accordion:hover > header,
+.accordion.active > header {
   background: var(--color-secondary-10);
 }
 
-.chevronIcon {
+.accordion > header > svg {
   width: 1rem;
   height: 1rem;
   fill: var(--white);
@@ -29,16 +25,16 @@ button:focus {
   margin: auto 0;
 }
 
-.activeChevron {
+.accordion.active > header > svg {
   transform: rotate(0deg);
 }
 
-.variants {
+.list {
   display: flex;
   flex-direction: column;
 }
 
-.variants > div {
+.item {
   font-size: var(--text-xs);
   display: flex;
   flex-direction: row;
@@ -48,15 +44,15 @@ button:focus {
   align-items: center;
 }
 
-.variants > div:first-child {
+.item:first-child {
   border-top: none;
 }
 
-.variants > div > span {
+.item span {
   margin-right: auto;
 }
 
-.variantIcon {
+.item svg {
   width: 1.25rem;
   height: 1.25rem;
   fill: var(--white);
