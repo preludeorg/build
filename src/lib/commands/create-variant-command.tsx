@@ -2,8 +2,8 @@ import { format } from "date-fns";
 import { z, ZodError, ZodInvalidEnumValueIssue } from "zod";
 import { inquire } from "../../components/terminal/question";
 import {
-  TerminalMessage,
   ErrorMessage,
+  TerminalMessage,
 } from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
@@ -125,7 +125,7 @@ export const createVariantCommand: Command = {
       }
 
       const code = getLanguage(language)
-        .bootstrap.replaceAll("$NAME", file)
+        .template.replaceAll("$NAME", file)
         .replaceAll("$QUESTION", currentTest.question)
         .replaceAll(
           "$CREATED",

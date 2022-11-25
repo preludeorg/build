@@ -1,13 +1,16 @@
-import { go } from "@codemirror/legacy-modes/mode/go";
 import { StreamLanguage } from "@codemirror/language";
-import { Linter } from "./linter";
+import { go } from "@codemirror/legacy-modes/mode/go";
 import template from "./templates/template.go?raw";
+import { Language } from "./types";
 
-export default class GO {
-  static linters: Linter[] = [
+const language: Language = {
+  ext: "go",
+  template,
+  mode: [StreamLanguage.define(go)],
+  linters: [
     { regex: /func\s+test\(.*\)/g, message: "Required test method missing" },
     { regex: /func\s+clean\(.*\)/g, message: "Required clean method missing" },
-  ];
-  static mode = [StreamLanguage.define(go)];
-  static bootstrap = template;
-}
+  ],
+};
+
+export default language;
