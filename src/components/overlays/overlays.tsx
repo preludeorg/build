@@ -1,11 +1,11 @@
 import React from "react";
+import SecurityTests from "./security-tests/security-tests";
 import Servers from "./servers/servers";
-import TestCatalog from "./tests/test-catalog";
 import VerifiedTests from "./verified-tests/verified-tests";
 
 const overlays: Record<string, React.FC> = {
   servers: Servers,
-  testCatalog: TestCatalog,
+  securityTests: SecurityTests,
   verifiedTests: VerifiedTests,
 };
 

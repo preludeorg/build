@@ -1,5 +1,4 @@
 import { Popover, Transition } from "@headlessui/react";
-import classNames from "classnames";
 import shallow from "zustand/shallow";
 import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 import useNavigationStore from "../../hooks/navigation-store";
@@ -75,44 +74,42 @@ const StatusBar: React.FC = () => {
             <span>{statusIndicator.message}</span>
           </div>
         )}
-        <div className={classNames(styles.stat, styles.verified)}>
-          <button
-            onClick={() => {
-              showOverlay("testCatalog");
-            }}
-          >
-            <FolderIcon className={styles.icon} />
-            <span>Tests</span>
-          </button>
-        </div>
         {isConnected && (
-          <div className={classNames(styles.stat, styles.verified)}>
-            <button
-              onClick={() => {
-                showOverlay("verifiedTests");
-                hideTooltip();
-              }}
-            >
-              <DownloadIcon className={styles.icon} />
-              <span>Verified</span>
-            </button>
-            <Transition
-              show={tooltipVisible}
-              className={styles.notification}
-              as="div"
-              enter={styles.enter}
-              enterFrom={styles.enterFrom}
-              enterTo={styles.enterTo}
-              leave={styles.leave}
-              leaveFrom={styles.leaveFrom}
-              leaveTo={styles.leaveTo}
-            >
-              <span>
-                Click "Verified" to view all the previously built Verified
-                Security tests
-              </span>
-            </Transition>
-          </div>
+          <>
+            <div className={styles.stat}>
+              <button onClick={() => showOverlay("securityTests")}>
+                <FolderIcon className={styles.icon} />
+                <span>Security Tests</span>
+              </button>
+            </div>
+            <div className={styles.stat}>
+              <button
+                onClick={() => {
+                  showOverlay("verifiedTests");
+                  hideTooltip();
+                }}
+              >
+                <DownloadIcon className={styles.icon} />
+                <span>Verified</span>
+              </button>
+              <Transition
+                show={tooltipVisible}
+                className={styles.notification}
+                as="div"
+                enter={styles.enter}
+                enterFrom={styles.enterFrom}
+                enterTo={styles.enterTo}
+                leave={styles.leave}
+                leaveFrom={styles.leaveFrom}
+                leaveTo={styles.leaveTo}
+              >
+                <span>
+                  Click "Verified" to view all the previously built Verified
+                  Security tests
+                </span>
+              </Transition>
+            </div>
+          </>
         )}
       </section>
     </div>

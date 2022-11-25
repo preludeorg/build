@@ -12,15 +12,15 @@ import ChevronIcon from "../../icons/chevron-icon";
 import { Loading } from "../../icons/loading";
 import VariantIcon from "../../icons/variant-icon";
 import Overlay from "../overlay";
-import styles from "./test-catalog.module.css";
+import styles from "./security-tests.module.css";
 
-const TestCatalog: React.FC = () => {
+const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
 
   return (
     <Overlay
       position="right"
-      title="Tests"
+      title="Security Tests"
       description="Your authored Tests and their applicable Variants appear below."
       loading={isLoading}
     >
@@ -91,4 +91,4 @@ const Variant: React.FC<{
   );
 };
 
-export default TestCatalog;
+export default SecurityTests;

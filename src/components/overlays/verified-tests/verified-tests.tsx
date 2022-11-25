@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Test } from "@theprelude/sdk";
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../../hooks/auth-store";
 import { useTests } from "../../../hooks/use-tests";
@@ -24,13 +24,17 @@ const filterVST = (test: Test, vst: string[]) => {
 };
 
 const VerifiedTests: React.FC = () => {
-  const { data: tests, isLoading: isLoadingTests } = useTests();
+  const tests = useTests();
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const verified = useQuery(["verified-tests", serviceConfig], () =>
     verifiedTests(serviceConfig)
   );
 
-  const isLoading = isLoadingTests || verified.isLoading;
+  const isLoading = tests.isLoading || verified.isLoading;
+  const testIds = useMemo(
+    () => new Set(verified.data?.map((t) => parseBuildVariant(t)?.id ?? "")),
+    verified.data
+  );
 
   return (
     <Overlay
@@ -41,13 +45,15 @@ const VerifiedTests: React.FC = () => {
     authored VSTs appear below."
     >
       {verified.data &&
-        tests?.map((test) => (
-          <TestItem
-            key={test.id}
-            test={test}
-            variants={filterVST(test, verified.data)}
-          />
-        ))}
+        tests.data
+          ?.filter((test) => testIds.has(test.id))
+          .map((test) => (
+            <TestItem
+              key={test.id}
+              test={test}
+              variants={filterVST(test, verified.data)}
+            />
+          ))}
     </Overlay>
   );
 };
