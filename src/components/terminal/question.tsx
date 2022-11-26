@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   ParseParams,
   SafeParseReturnType,
@@ -6,8 +6,15 @@ import {
   ZodInvalidEnumValueIssue,
 } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
-import focusTerminal from "../../utils/focus-terminal";
+import {
+  combine,
+  key,
+  ModifierKeys,
+  SpecialKeys,
+  when,
+} from "../../lib/keyboard";
 import styles from "./commands.module.css";
+import Readline, { useReadline } from "./readline";
 
 interface Validator {
   options?: string[];
@@ -34,55 +41,25 @@ export const Question: React.FC<QuestionProps> = ({
   onAnswer,
   onInvalidAnswer,
   validator = z.string() as Validator,
-  signal,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [answer, setAnswer] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const exit = () => {
-    setAnswer("");
-    onExit();
-  };
-
-  useEffect(() => {
-    if (!signal) {
-      return;
-    }
-
-    signal.addEventListener("abort", exit);
-    return () => {
-      signal.removeEventListener("abort", exit);
-    };
-  }, []);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [inputRef.current]);
-
-  const handleKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Escape" /** || ctrl-c */) {
-      e.preventDefault();
-      const value = inputRef.current?.value ?? "";
-      setAnswer(value);
+  const readline = useReadline("", ({ input, terminate }) => [
+    when([key(SpecialKeys.ESCAPE), combine(ModifierKeys.CTRL, "c")]).do(() => {
+      terminate();
       onExit();
-      focusTerminal();
-      return false;
-    }
+    }),
 
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const value = (inputRef.current?.value ?? "").trim();
-      setAnswer(value);
+    when(SpecialKeys.ENTER).do(() => {
+      terminate();
+      const value = input.trim();
       if (value === "" && defaultValue) {
         onAnswer(defaultValue);
-        focusTerminal();
         return;
       }
 
       if (value === "") {
         onInvalidAnswer(value);
-        focusTerminal();
         return;
       }
 
@@ -105,13 +82,8 @@ export const Question: React.FC<QuestionProps> = ({
 
         onInvalidAnswer(value);
       }
-
-      focusTerminal();
-      return false;
-    }
-
-    return true;
-  };
+    }),
+  ]);
 
   const choice = Array.isArray(validator.options)
     ? `(${validator.options.join(", ")})`
@@ -124,12 +96,7 @@ export const Question: React.FC<QuestionProps> = ({
         <span className={styles.message}>
           {[message, choice, def].filter((m) => !!m).join(" ")}:
         </span>
-        <input
-          readOnly={answer !== null}
-          ref={inputRef}
-          type="text"
-          onKeyDown={handleKey}
-        />
+        <Readline {...readline} />
       </div>
       {error && <div>{error}</div>}
     </>

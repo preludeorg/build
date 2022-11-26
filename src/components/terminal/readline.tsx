@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { useState } from "react";
+import useTerminalStore from "../../hooks/terminal-store";
 
 import { useKeyboard } from "../../hooks/use-keyboard";
 import {
@@ -9,6 +10,7 @@ import {
   SpecialKeys,
   when,
 } from "../../lib/keyboard";
+import { select } from "../../lib/utils/select";
 import Focusable from "./focusable";
 import styles from "./terminal.module.css";
 
@@ -34,9 +36,11 @@ export const useReadline = (
   const [input, setInput] = useState(defaultInput);
   const [caretPosition, setCaretPosition] = useState(defaultInput.length);
   const [terminated, setTerminated] = useState(false);
+  const { setFocusable } = useTerminalStore(select("setFocusable"));
 
   const terminate = () => {
     setTerminated(true);
+    setFocusable(false);
   };
 
   const [beforeCaretText, afterCaretText] = splitStringAtIndex(
@@ -79,7 +83,6 @@ export const useReadline = (
     }),
     when([
       combine(ModifierKeys.COMMAND, "c"),
-      combine(ModifierKeys.CTRL, "c"),
       combine(ModifierKeys.COMMAND, "v"),
       combine(ModifierKeys.CTRL, "v"),
     ]).do(() => {

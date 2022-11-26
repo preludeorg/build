@@ -19,16 +19,7 @@ const Focusable: React.FC<Props> = ({ render, ...props }) => {
     setFocused(false);
   };
 
-  const { setFocusable } = useTerminalStore(
-    select(
-      "abort",
-      "processCommand",
-      "commandsHistory",
-      "autoComplete",
-      "setFocusable",
-      "hasFocusable"
-    )
-  );
+  const { setFocusable } = useTerminalStore(select("setFocusable"));
 
   useEffect(() => {
     setFocusable(true);
