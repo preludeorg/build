@@ -37,6 +37,17 @@ The Build UI is a <a href="https://web.dev/progressive-web-apps/">Progressive We
 
 PWA's can run anywhere, on any device you can load a browser. To use the GUI - click on the "Launch Prelude Build" CTAs on https://www.preludesecurity.com/.
 
+### Quickstart
+
+1. [Register new account](https://docs.prelude.org/docs/build-getting-started#register-new-account)
+2. [List security tests](https://docs.prelude.org/docs/build-getting-started#list-security-tests)
+3. [List Variants](https://docs.prelude.org/docs/build-getting-started#list-variants)
+4. [Create a new security test](https://docs.prelude.org/docs/build-getting-started#create-a-new-security-test)
+5. [Create a new variant](https://docs.prelude.org/docs/build-getting-started#create-a-new-variant)
+6. [Compile variant](https://docs.prelude.org/docs/build-getting-started#compile-variant)
+7. [Generate URL for complied variant](https://docs.prelude.org/docs/build-getting-started#generate-url-for-complied-variant)
+8. [List all complied variants](https://docs.prelude.org/docs/build-getting-started#list-all-complied-variants)
+
 <h4>Prelude CLI</h4>
 
 The Prelude Command Line Interface (CLI) supplies programmatic access to the full suite of APIs. It is written in Python and as such, is multi-platform and can install anywhere Python exists through PIP.
