@@ -6,9 +6,12 @@ export const SpecialKeys = {
   ARROW_DOWN: "ArrowDown",
   ARROW_LEFT: "ArrowLeft",
   ARROW_RIGHT: "ArrowRight",
+  TAB: "Tab",
+} as const;
+
+export const ModifierKeys = {
   CTRL: "Control",
   COMMAND: "Command",
-  TAB: "Tab",
 } as const;
 
 type UpperCaseCharacter =
@@ -42,6 +45,7 @@ type UpperCaseCharacter =
 type Character = UpperCaseCharacter | Lowercase<UpperCaseCharacter>;
 export type SpecialKey = typeof SpecialKeys[keyof typeof SpecialKeys];
 export type Key = SpecialKey | Character;
+export type ModifierKey = typeof ModifierKeys[keyof typeof ModifierKeys];
 
 interface SingleKey {
   type: "single";
@@ -57,15 +61,17 @@ export function key(key: Key | Character): SingleKey {
 
 interface CombinationKey {
   type: "combination";
-  keys: Key[];
+  key: Key;
+  modifier: ModifierKey;
 }
 
 type KeyMatch = SingleKey | CombinationKey;
 
-export function combine(...keys: Key[]): CombinationKey {
+export function combine(mod: ModifierKey, key: Key): CombinationKey {
   return {
     type: "combination",
-    keys,
+    key,
+    modifier: mod,
   };
 }
 
@@ -100,14 +106,14 @@ export function matcher(marcos: Macro[]) {
 }
 
 function matchKey(key: Key, event: MatchEvent): boolean {
-  if (event.ctrlKey && key === SpecialKeys.CTRL) {
-    true;
-  }
-
   return event.key.toLowerCase() === key.toLowerCase();
 }
 function isCombinationMatch(match: CombinationKey, event: MatchEvent): boolean {
-  return match.keys.every((key) => matchKey(key, event));
+  const modMatch =
+    (event.ctrlKey && match.modifier === ModifierKeys.CTRL) ||
+    (event.metaKey && match.modifier === ModifierKeys.COMMAND);
+
+  return modMatch && matchKey(match.key, event);
 }
 
 export function when(args: Key | Macro["when"]) {

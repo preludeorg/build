@@ -10,7 +10,7 @@ import useTerminalStore, {
   splitStringAtIndex,
 } from "../../hooks/terminal-store";
 import { useKeyboard } from "../../hooks/use-keyboard";
-import { combine, SpecialKeys, when } from "../../lib/keyboard";
+import { combine, ModifierKeys, SpecialKeys, when } from "../../lib/keyboard";
 import { select } from "../../lib/utils/select";
 import focusTerminal from "../../utils/focus-terminal";
 import PrimaryPrompt from "./primary-prompt";
@@ -101,22 +101,8 @@ const useReadline = (defaultInput = "") => {
   const autoComplete = useTerminalStore((state) => state.autoComplete);
   const setFocusable = useTerminalStore((state) => state.setFocusable);
 
-  console.log(caretPosition);
-
-  const arrowLeft = () => {
-    if (caretPosition > 0) {
-      setCaretPosition(caretPosition - 1);
-    }
-  };
-
-  const arrowRight = () => {
-    if (caretPosition > 0) {
-      setCaretPosition(caretPosition + 1);
-    }
-  };
-
   const keyboard = useKeyboard(() => [
-    when(combine(SpecialKeys.CTRL, "c")).do(() => {
+    when(combine(ModifierKeys.CTRL, "c")).do(() => {
       setTerminated(true);
       setFocusable(false);
       abort();
@@ -152,9 +138,10 @@ const useReadline = (defaultInput = "") => {
       }
     }),
     when(SpecialKeys.ARROW_UP).do(() => {
-      const input = getPreviousCommand(historyPointer, commandsHistory);
-      if (input) {
-        setCaretPosition(input.length);
+      const command = getPreviousCommand(historyPointer, commandsHistory);
+      setInput(command);
+      if (command) {
+        setCaretPosition(command.length);
       }
 
       if (historyPointer > 0) {
@@ -162,26 +149,35 @@ const useReadline = (defaultInput = "") => {
       }
     }),
     when(SpecialKeys.ARROW_DOWN).do(() => {
-      const input = getNextCommand(historyPointer, commandsHistory);
-      setCaretPosition(input ? input.length : 0);
+      const command = getNextCommand(historyPointer, commandsHistory);
+      setInput(command);
+      setCaretPosition(command ? command.length : 0);
 
       if (historyPointer + 1 <= commandsHistory.length) {
         setHistoryPointer(historyPointer + 1);
       }
     }),
-    when(SpecialKeys.ARROW_LEFT).do(arrowLeft),
-    when(SpecialKeys.ARROW_RIGHT).do(arrowRight),
+    when(SpecialKeys.ARROW_LEFT).do(() => {
+      if (caretPosition > 0) {
+        setCaretPosition(caretPosition - 1);
+      }
+    }),
+    when(SpecialKeys.ARROW_RIGHT).do(() => {
+      if (caretPosition < input.length) {
+        setCaretPosition(caretPosition + 1);
+      }
+    }),
     when([
-      combine(SpecialKeys.COMMAND, "c"),
-      combine(SpecialKeys.CTRL, "c"),
+      combine(ModifierKeys.COMMAND, "c"),
+      combine(ModifierKeys.CTRL, "c"),
     ]).do(async () => {
       const selectedText = window.getSelection()?.toString();
       if (!selectedText) return;
       await navigator.clipboard.writeText(selectedText);
     }),
     when([
-      combine(SpecialKeys.COMMAND, "v"),
-      combine(SpecialKeys.CTRL, "v"),
+      combine(ModifierKeys.COMMAND, "v"),
+      combine(ModifierKeys.CTRL, "v"),
     ]).do(async () => {
       const pastedText = await navigator.clipboard.readText();
       const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
