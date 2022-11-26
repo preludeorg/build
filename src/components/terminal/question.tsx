@@ -6,7 +6,6 @@ import {
   ZodInvalidEnumValueIssue,
 } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
-import { isControlC } from "../../lib/keys";
 import focusTerminal from "../../utils/focus-terminal";
 import styles from "./commands.module.css";
 
@@ -62,7 +61,7 @@ export const Question: React.FC<QuestionProps> = ({
   }, [inputRef.current]);
 
   const handleKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Escape" || isControlC(e)) {
+    if (e.key === "Escape" /** || ctrl-c */) {
       e.preventDefault();
       const value = inputRef.current?.value ?? "";
       setAnswer(value);

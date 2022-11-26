@@ -9,7 +9,8 @@ import useTerminalStore, {
   getSuggestions,
   splitStringAtIndex,
 } from "../../hooks/terminal-store";
-import { isControlC } from "../../lib/keys";
+import { useKeyboard } from "../../hooks/use-keyboard";
+import { combine, SpecialKeys, when } from "../../lib/keyboard";
 import { select } from "../../lib/utils/select";
 import focusTerminal from "../../utils/focus-terminal";
 import PrimaryPrompt from "./primary-prompt";
@@ -48,15 +49,6 @@ function useTerminal() {
       clear();
     };
   }, []);
-
-  // React.useEffect(() => {
-  //   // Bind the event listener
-  //   ref.current?.addEventListener("keydown", handleKeyDownEvent);
-  //   return () => {
-  //     // Unbind the event listener on clean up
-  //     ref.current?.removeEventListener("keydown", handleKeyDownEvent);
-  //   };
-  // });
 
   useScrollToBottom(bufferedContent, ref);
 
@@ -102,13 +94,104 @@ const useReadline = (defaultInput = "") => {
   const [input, setInput] = useState(defaultInput);
   const [caretPosition, setCaretPosition] = useState(defaultInput.length);
   const [terminated, setTerminated] = useState(false);
-
   const processCommand = useTerminalStore((state) => state.processCommand);
   const commandsHistory = useTerminalStore((state) => state.commandsHistory);
   const [historyPointer, setHistoryPointer] = useState(commandsHistory.length);
   const abort = useTerminalStore((state) => state.abort);
   const autoComplete = useTerminalStore((state) => state.autoComplete);
   const setFocusable = useTerminalStore((state) => state.setFocusable);
+
+  console.log(caretPosition);
+
+  const arrowLeft = () => {
+    if (caretPosition > 0) {
+      setCaretPosition(caretPosition - 1);
+    }
+  };
+
+  const arrowRight = () => {
+    if (caretPosition > 0) {
+      setCaretPosition(caretPosition + 1);
+    }
+  };
+
+  const keyboard = useKeyboard(() => [
+    when(combine(SpecialKeys.CTRL, "c")).do(() => {
+      setTerminated(true);
+      setFocusable(false);
+      abort();
+    }),
+    when(SpecialKeys.ENTER).do(() => {
+      setTerminated(true);
+      setFocusable(false);
+      processCommand(input);
+    }),
+    when(SpecialKeys.TAB).do(() => {
+      if (input !== "") return;
+      const options = getSuggestions(input);
+      if (options.length === 0) return;
+      if (options.length === 1) {
+        setInput(options[0]);
+        setCaretPosition(options[0].length);
+      } else {
+        autoComplete(options);
+        setFocusable(false);
+        setTerminated(true);
+      }
+    }),
+    when(SpecialKeys.BACKSPACE).do(() => {
+      const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
+        input,
+        caretPosition
+      );
+
+      setInput(caretTextBefore.slice(0, -1) + caretTextAfter);
+
+      if (input.length !== 0) {
+        setCaretPosition(caretPosition - 1);
+      }
+    }),
+    when(SpecialKeys.ARROW_UP).do(() => {
+      const input = getPreviousCommand(historyPointer, commandsHistory);
+      if (input) {
+        setCaretPosition(input.length);
+      }
+
+      if (historyPointer > 0) {
+        setHistoryPointer(historyPointer - 1);
+      }
+    }),
+    when(SpecialKeys.ARROW_DOWN).do(() => {
+      const input = getNextCommand(historyPointer, commandsHistory);
+      setCaretPosition(input ? input.length : 0);
+
+      if (historyPointer + 1 <= commandsHistory.length) {
+        setHistoryPointer(historyPointer + 1);
+      }
+    }),
+    when(SpecialKeys.ARROW_LEFT).do(arrowLeft),
+    when(SpecialKeys.ARROW_RIGHT).do(arrowRight),
+    when([
+      combine(SpecialKeys.COMMAND, "c"),
+      combine(SpecialKeys.CTRL, "c"),
+    ]).do(async () => {
+      const selectedText = window.getSelection()?.toString();
+      if (!selectedText) return;
+      await navigator.clipboard.writeText(selectedText);
+    }),
+    when([
+      combine(SpecialKeys.COMMAND, "v"),
+      combine(SpecialKeys.CTRL, "v"),
+    ]).do(async () => {
+      const pastedText = await navigator.clipboard.readText();
+      const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
+        input || "",
+        caretPosition
+      );
+      setInput(caretTextBefore + pastedText + caretTextAfter);
+      setCaretPosition(caretPosition + pastedText.length);
+    }),
+  ]);
 
   const handleFocus = () => {
     setFocused(true);
@@ -128,116 +211,25 @@ const useReadline = (defaultInput = "") => {
       return;
     }
 
-    const eventKey = event.key;
-
-    if (isControlC(event)) {
-      setTerminated(true);
-      setFocusable(false);
-      abort();
-      return;
-    }
-
     event.preventDefault();
 
-    if (eventKey === "Enter") {
-      setTerminated(true);
-      setFocusable(false);
-      processCommand(input);
+    const handled = keyboard.handleKey(event);
+
+    if (handled) {
       return;
     }
 
-    if (eventKey === "Tab" && input !== "") {
-      const options = getSuggestions(input);
-
-      if (options.length === 0) return;
-
-      if (options.length === 1) {
-        setInput(options[0]);
-        setCaretPosition(options[0].length);
-      } else {
-        autoComplete(options);
-        setFocusable(false);
-        setTerminated(true);
-      }
+    if (!event.key || event.key.length > 1) {
       return;
     }
 
-    let nextInput: string | null = null;
-    let nextPosition = caretPosition;
-    let nextHistoryPointer = historyPointer;
+    const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
+      input,
+      caretPosition
+    );
 
-    if (eventKey === "Backspace") {
-      const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-        input,
-        caretPosition
-      );
-      nextInput = caretTextBefore.slice(0, -1) + caretTextAfter;
-      if (input && input.length !== 0) {
-        nextPosition = caretPosition - 1;
-      }
-    } else if (eventKey === "ArrowUp") {
-      nextInput = getPreviousCommand(historyPointer, commandsHistory);
-      if (historyPointer > 0) {
-        nextHistoryPointer = historyPointer - 1;
-      }
-      if (nextInput) {
-        nextPosition = nextInput.length;
-      }
-    } else if (eventKey === "ArrowDown") {
-      nextInput = getNextCommand(historyPointer, commandsHistory);
-      if (historyPointer + 1 <= commandsHistory.length) {
-        nextHistoryPointer = historyPointer + 1;
-      }
-      if (nextInput) {
-        nextPosition = nextInput.length;
-      } else {
-        nextPosition = 0;
-      }
-    } else if (eventKey === "ArrowLeft") {
-      if (caretPosition > 0) {
-        nextPosition = caretPosition - 1;
-      }
-      nextInput = input;
-    } else if (eventKey === "ArrowRight") {
-      if (caretPosition < input.length) {
-        nextPosition = caretPosition + 1;
-      }
-      nextInput = input;
-    } else if (
-      (event.metaKey || event.ctrlKey) &&
-      eventKey.toLowerCase() === "v"
-    ) {
-      const pastedText = await navigator.clipboard.readText();
-      const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-        input || "",
-        caretPosition
-      );
-      nextInput = caretTextBefore + pastedText + caretTextAfter;
-      nextPosition = caretPosition + pastedText.length;
-    } else if (
-      (event.metaKey || event.ctrlKey) &&
-      eventKey.toLowerCase() === "c"
-    ) {
-      const selectedText = window.getSelection()?.toString();
-      if (!selectedText) return;
-      await navigator.clipboard.writeText(selectedText);
-      nextInput = input;
-    } else {
-      if (eventKey && eventKey.length === 1) {
-        const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-          input,
-          caretPosition
-        );
-        nextInput = caretTextBefore + eventKey + caretTextAfter;
-        nextPosition = caretPosition + 1;
-      } else {
-        nextInput = input;
-      }
-    }
-
-    setHistoryPointer(nextHistoryPointer);
-    setInput(nextInput ?? "");
-    setCaretPosition(nextPosition);
+    setInput(caretTextBefore + event.key + caretTextAfter);
+    setCaretPosition(caretPosition + 1);
   };
 
   useEffect(() => {

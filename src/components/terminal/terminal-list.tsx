@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
-import { isControlC } from "../../lib/keys";
+
 import focusTerminal from "../../utils/focus-terminal";
 import ArrowRight from "../icons/arrow-right";
 import styles from "./commands.module.css";
@@ -89,7 +89,8 @@ function TerminalList<T>({
       return false;
     }
 
-    if (e.key === "e" || e.key === "Escape" || isControlC(e)) {
+    if (e.key === "e" || e.key === "Escape") {
+      // or control c
       e.preventDefault();
       setExited(true);
       onExit();
@@ -168,7 +169,9 @@ function TerminalList<T>({
   };
 
   const handleFilterKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Escape" || isControlC(e)) {
+    if (e.key === "Escape") {
+      //or control c
+
       e.preventDefault();
       setFilter("");
       setValue(1);
