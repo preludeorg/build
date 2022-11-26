@@ -33,14 +33,28 @@ export const useCommand: Command = {
   hidden: () => isConnected(),
   async exec(args) {
     try {
-      const { createAccount, host } = authState();
+      const { createAccount, host, credentials } = authState();
       const { takeControl } = terminalState();
       const signal = takeControl().signal;
+
+      if (credentials) {
+        const confirm = await inquire({
+          message: "overriding existing account. do you want to continue?",
+          defaultValue: "no",
+          validator: z.enum(["yes", "no"]),
+          signal,
+        });
+
+        if (confirm === "no") {
+          return <TerminalMessage message="exited" />;
+        }
+      }
+
       const handle = await getAnswer(args, signal);
 
-      const credentials = await createAccount(handle, signal);
+      const newAccount = await createAccount(handle, signal);
 
-      return <WelcomeMessage host={host} credentials={credentials} />;
+      return <WelcomeMessage host={host} credentials={newAccount} />;
     } catch (e) {
       if (isExitError(e)) {
         return <TerminalMessage message="exited" />;

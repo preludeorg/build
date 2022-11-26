@@ -37,7 +37,7 @@ const WelcomeMessage: React.FC<{ host: string; credentials?: Credentials }> = ({
         >
           click here
         </a>{" "}
-        to import it
+        to import credentials
       </span>
       <br />
       <br />
