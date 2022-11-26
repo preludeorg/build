@@ -6,13 +6,6 @@ import { TerminalMessage } from "../components/terminal/terminal-message";
 import { commands } from "../lib/commands";
 import { commonBeginning } from "../lib/utils/common-beginning";
 
-export function splitStringAtIndex(value: string, index: number) {
-  if (!value) {
-    return ["", ""];
-  }
-  return [value.substring(0, index), value.substring(index)];
-}
-
 export function getSuggestions(input: string) {
   return Object.keys(commands).filter((o) => o.startsWith(input));
 }
@@ -66,7 +59,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
               {options.join(" ")}
             </div>
           ),
-          print(<CurrentLine input={commonBeginning(options)} />),
+          print(<CurrentLine defaultInput={commonBeginning(options)} />),
         ],
       };
     });

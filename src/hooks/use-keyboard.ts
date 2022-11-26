@@ -1,7 +1,7 @@
 import { Macro, matcher } from "../lib/keyboard";
 
-export const useKeyboard = (create: () => Macro[]) => {
-  const handleKey = matcher(create());
+export const useKeyboard = (macros: Macro[]) => {
+  const handleEvent = matcher(macros);
 
-  return { handleKey };
+  return { handleEvent };
 };

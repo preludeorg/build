@@ -75,12 +75,11 @@ export function combine(mod: ModifierKey, key: Key): CombinationKey {
   };
 }
 
+type MatchEvent = React.KeyboardEvent<HTMLInputElement> | KeyboardEvent;
 export interface Macro {
   when: KeyMatch | KeyMatch[];
-  do: () => void | Promise<void>;
+  do: (event: MatchEvent) => void | Promise<void>;
 }
-
-type MatchEvent = React.KeyboardEvent<HTMLInputElement> | KeyboardEvent;
 
 export function matcher(marcos: Macro[]) {
   return (event: MatchEvent): boolean => {
@@ -100,7 +99,7 @@ export function matcher(marcos: Macro[]) {
       return false;
     }
 
-    void marco.do();
+    void marco.do(event);
     return true;
   };
 }

@@ -76,8 +76,7 @@
   font-weight: normal;
 }
 
-.readline {
+.focusable {
   position: relative;
   display: inline;
-  outline: none;
 }
