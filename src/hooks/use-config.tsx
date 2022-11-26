@@ -45,7 +45,12 @@ export const useConfig = () => {
     takeControl,
     write,
     reset: resetTerminal,
-  } = useTerminalStore(select("takeControl", "write", "reset"), shallow);
+    showIndicator,
+    hideIndicator,
+  } = useTerminalStore(
+    select("takeControl", "write", "reset", "showIndicator", "hideIndicator"),
+    shallow
+  );
 
   const resetEditor = useEditorStore((state) => state.reset);
   const navigate = useNavigationStore((state) => state.navigate);
@@ -61,6 +66,8 @@ export const useConfig = () => {
         );
         return;
       }
+
+      showIndicator("Importing credentials...");
 
       const authenticated = await login(
         {
@@ -95,6 +102,8 @@ export const useConfig = () => {
       }
 
       write(<ErrorMessage message="failed to import credentials" />);
+    } finally {
+      hideIndicator();
     }
   };
 

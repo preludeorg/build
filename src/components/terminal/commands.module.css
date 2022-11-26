@@ -152,6 +152,11 @@
   color: var(--gray-10);
 }
 
+.helpText a {
+  color: var(--white);
+  cursor: pointer;
+}
+
 .question {
   display: flex;
   gap: 0.25rem;
