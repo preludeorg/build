@@ -2,11 +2,40 @@ import { Credentials } from "@theprelude/sdk";
 import { useConfig } from "../../hooks/use-config";
 import styles from "./commands.module.css";
 
-const WelcomeMessage: React.FC<{ host: string; credentials?: Credentials }> = ({
-  host,
-  credentials,
-}) => {
-  const { handleImport } = useConfig();
+const WelcomeMessage: React.FC<{
+  host: string;
+  credentials?: Credentials;
+  isNewAccount?: boolean;
+}> = ({ host, credentials, isNewAccount }) => {
+  const { handleImport, handleExport } = useConfig();
+
+  console.log(isNewAccount);
+
+  if (host && credentials && isNewAccount) {
+    return (
+      <div className={styles.welcomeMessage}>
+        account created.{" "}
+        <span className={styles.helpText}>
+          <a
+            onClick={() => {
+              void handleExport();
+            }}
+          >
+            click here
+          </a>{" "}
+          to backup credentials
+        </span>
+        <br />
+        <br />
+        Connected to {host}
+        <br />
+        <br />
+        <span className={styles.helpText}>
+          type "list-tests" to show all your tests
+        </span>
+      </div>
+    );
+  }
 
   if (host && credentials) {
     return (

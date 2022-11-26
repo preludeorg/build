@@ -155,6 +155,11 @@
 .helpText a {
   color: var(--white);
   cursor: pointer;
+  font-weight: bold;
+}
+
+.helpText a:hover {
+  text-decoration: dashed underline;
 }
 
 .question {

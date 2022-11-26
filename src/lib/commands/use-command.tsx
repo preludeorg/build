@@ -54,7 +54,9 @@ export const useCommand: Command = {
 
       const newAccount = await createAccount(handle, signal);
 
-      return <WelcomeMessage host={host} credentials={newAccount} />;
+      return (
+        <WelcomeMessage host={host} credentials={newAccount} isNewAccount />
+      );
     } catch (e) {
       if (isExitError(e)) {
         return <TerminalMessage message="exited" />;
