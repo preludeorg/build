@@ -24,7 +24,7 @@ const PrimaryPrompt: React.FC<Props> = ({ children, test }) => {
           </div>
         )}
         <span>$</span>
-        <div className={styles.lineText}>{children}</div>
+        {children}
       </div>
     </div>
   );

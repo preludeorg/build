@@ -44,46 +44,50 @@ export const Question: React.FC<QuestionProps> = ({
 }) => {
   const [error, setError] = useState<string | null>(null);
 
-  const readline = useReadline("", ({ input, terminate }) => [
-    when([key(SpecialKeys.ESCAPE), combine(ModifierKeys.CTRL, "c")]).do(() => {
-      terminate();
-      onExit();
-    }),
+  const readline = useReadline({
+    extraMacros: ({ input, terminate }) => [
+      when([key(SpecialKeys.ESCAPE), combine(ModifierKeys.CTRL, "c")]).do(
+        () => {
+          terminate();
+          onExit();
+        }
+      ),
 
-    when(SpecialKeys.ENTER).do(() => {
-      terminate();
-      const value = input.trim();
-      if (value === "" && defaultValue) {
-        onAnswer(defaultValue);
-        return;
-      }
-
-      if (value === "") {
-        onInvalidAnswer(value);
-        return;
-      }
-
-      const result = validator.safeParse(value);
-
-      if (result.success) {
-        onAnswer(result.data as string);
-      } else {
-        const e = result.error;
-        if (e.errors[0].code === "invalid_enum_value") {
-          const error = e.errors[0] as ZodInvalidEnumValueIssue;
-          setError(
-            `error: "${error.received}" is not one of: ${error.options.join(
-              " | "
-            )}`
-          );
-        } else {
-          setError(result.error.message);
+      when(SpecialKeys.ENTER).do(() => {
+        terminate();
+        const value = input.trim();
+        if (value === "" && defaultValue) {
+          onAnswer(defaultValue);
+          return;
         }
 
-        onInvalidAnswer(value);
-      }
-    }),
-  ]);
+        if (value === "") {
+          onInvalidAnswer(value);
+          return;
+        }
+
+        const result = validator.safeParse(value);
+
+        if (result.success) {
+          onAnswer(result.data as string);
+        } else {
+          const e = result.error;
+          if (e.errors[0].code === "invalid_enum_value") {
+            const error = e.errors[0] as ZodInvalidEnumValueIssue;
+            setError(
+              `error: "${error.received}" is not one of: ${error.options.join(
+                " | "
+              )}`
+            );
+          } else {
+            setError(result.error.message);
+          }
+
+          onInvalidAnswer(value);
+        }
+      }),
+    ],
+  });
 
   const choice = Array.isArray(validator.options)
     ? `(${validator.options.join(", ")})`

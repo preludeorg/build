@@ -29,14 +29,24 @@ interface ReadlineState {
   terminate: () => void;
 }
 
-export const useReadline = (
+export const useReadline = ({
   defaultInput = "",
-  extraMacros?: (state: ReadlineState) => Macro[]
-) => {
-  const [input, setInput] = useState(defaultInput);
+  extraMacros,
+  onChange,
+}: {
+  defaultInput?: string;
+  extraMacros?: (state: ReadlineState) => Macro[];
+  onChange?: (input: string) => void;
+}) => {
+  const [input, _setInput] = useState(defaultInput);
   const [caretPosition, setCaretPosition] = useState(defaultInput.length);
   const [terminated, setTerminated] = useState(false);
   const { setFocusable } = useTerminalStore(select("setFocusable"));
+
+  const setInput = (input: string) => {
+    _setInput(input);
+    onChange?.(input);
+  };
 
   const terminate = () => {
     setTerminated(true);
@@ -154,25 +164,33 @@ const Readline: React.FC<{
   handlePaste,
 }) => {
   if (terminated) {
-    return <span className={styles.preWhiteSpace}>{input}</span>;
+    return (
+      <div className={styles.lineText}>
+        <span className={styles.preWhiteSpace}>{input}</span>{" "}
+      </div>
+    );
   }
 
   return (
-    <Focusable
-      onKeyDown={handleKeyDown}
-      onPaste={handlePaste}
-      render={({ focused }) => (
-        <>
-          <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-          <span
-            className={classNames(styles.caret, { [styles.focused]: focused })}
-          >
-            <span className={styles.caretAfter} />
-          </span>
-          <span className={styles.preWhiteSpace}>{afterCaretText}</span>
-        </>
-      )}
-    />
+    <div className={styles.lineText}>
+      <Focusable
+        onKeyDown={handleKeyDown}
+        onPaste={handlePaste}
+        render={({ focused }) => (
+          <>
+            <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
+            <span
+              className={classNames(styles.caret, {
+                [styles.focused]: focused,
+              })}
+            >
+              <span className={styles.caretAfter} />
+            </span>
+            <span className={styles.preWhiteSpace}>{afterCaretText}</span>
+          </>
+        )}
+      />
+    </div>
   );
 };
 

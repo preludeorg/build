@@ -82,9 +82,9 @@ export const CurrentLine: React.FC<{
     );
   const [historyPointer, setHistoryPointer] = useState(commandsHistory.length);
 
-  const readline = useReadline(
+  const readline = useReadline({
     defaultInput,
-    ({ terminate, input, setInput, setCaretPosition }) => [
+    extraMacros: ({ terminate, input, setInput, setCaretPosition }) => [
       when(combine(ModifierKeys.CTRL, "c")).do(() => {
         terminate();
         abort();
@@ -125,8 +125,8 @@ export const CurrentLine: React.FC<{
           setHistoryPointer(historyPointer + 1);
         }
       }),
-    ]
-  );
+    ],
+  });
 
   return (
     <>
