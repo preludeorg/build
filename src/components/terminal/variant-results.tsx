@@ -111,7 +111,7 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
           <AlertIcon className={styles.alertIcon} />
         )}
         <span className={styles.name}>{result.name}</span>
-        {!expanded && (
+        {!expanded && hasSuccessPublish && (
           <>
             <div className={styles.divider} />
             <DownloadLink
