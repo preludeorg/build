@@ -50,6 +50,7 @@ ul {
   fill: var(--white);
   transform: rotate(180deg);
   margin-left: auto;
+  transition: transform 250ms;
 }
 
 .activeChevron {
