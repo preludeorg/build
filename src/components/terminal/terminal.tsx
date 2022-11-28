@@ -7,7 +7,7 @@ import useTerminalStore, {
   getPreviousCommand,
   getSuggestions,
 } from "../../hooks/terminal-store";
-import { combine, ModifierKeys, SpecialKeys, when } from "../../lib/keyboard";
+import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import { select } from "../../lib/utils/select";
 import focusTerminal from "../../utils/focus-terminal";
 import PrimaryPrompt from "./primary-prompt";
@@ -85,15 +85,15 @@ export const CurrentLine: React.FC<{
   const readline = useReadline({
     defaultInput,
     extraMacros: ({ terminate, input, setInput, setCaretPosition }) => [
-      when(combine(ModifierKeys.CTRL, "c")).do(() => {
+      press(combine(ModifierKeys.CTRL, "c")).do(() => {
         terminate();
         abort();
       }),
-      when(SpecialKeys.ENTER).do(() => {
+      press(SpecialKeys.ENTER).do(() => {
         terminate();
         processCommand(input);
       }),
-      when(SpecialKeys.TAB).do(() => {
+      press(SpecialKeys.TAB).do(() => {
         if (input !== "") return;
         const options = getSuggestions(input);
         if (options.length === 0) return;
@@ -105,7 +105,7 @@ export const CurrentLine: React.FC<{
           terminate();
         }
       }),
-      when(SpecialKeys.ARROW_UP).do(() => {
+      press(SpecialKeys.ARROW_UP).do(() => {
         const command = getPreviousCommand(historyPointer, commandsHistory);
         setInput(command);
         if (command) {
@@ -116,7 +116,7 @@ export const CurrentLine: React.FC<{
           setHistoryPointer(historyPointer - 1);
         }
       }),
-      when(SpecialKeys.ARROW_DOWN).do(() => {
+      press(SpecialKeys.ARROW_DOWN).do(() => {
         const command = getNextCommand(historyPointer, commandsHistory);
         setInput(command);
         setCaretPosition(command ? command.length : 0);
