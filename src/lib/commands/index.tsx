@@ -10,6 +10,7 @@ import { Command, Commands } from "./types";
 import { useCommand } from "./use-command";
 
 const helpCommand: Command = {
+  alias:["h"],
   hidden: () => true,
   exec() {
     const commandsList = Object.keys(commands)
