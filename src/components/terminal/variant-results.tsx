@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { ComputeResult } from "@theprelude/sdk";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
@@ -5,6 +6,7 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
+import { useTimer } from "../../hooks/use-timer";
 import { createURL } from "../../lib/api";
 import { parseBuildVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
@@ -23,8 +25,6 @@ interface Props {
   question: string;
   results: ComputeResult[];
 }
-
-const TIMEOUT_LINK = 1000 * 60 * 10;
 
 const VariantResults: React.FC<Props> = ({ results, question }) => {
   const sucesses = results.filter((result) =>
@@ -60,17 +60,48 @@ const VariantResults: React.FC<Props> = ({ results, question }) => {
 
 export default VariantResults;
 
-const isEmpty = (val: string | Array<unknown>): boolean =>
-  (Array.isArray(val) && val.length === 0) || val === "";
-
+const TIMEOUT_LINK = 10 * 60 * 1000;
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
   const [expanded, setExpanded] = useState(false);
+  const [deployURL, setDeployURL] = useState<string | null>(null);
+  const { host, credentials, showTooltip } = useAuthStore(
+    select("host", "credentials", "showTooltip"),
+    shallow
+  );
+  const mutation = useMutation(
+    () => createURL(result.name, { host, credentials }),
+    {
+      onSuccess: ({ url }) => {
+        setDeployURL(url);
+      },
+      onSettled: () => {
+        showTooltip();
+      },
+    }
+  );
+
+  const timer = useTimer({
+    time: TIMEOUT_LINK,
+    onComplete() {
+      setDeployURL(null);
+    },
+  });
+
+  useEffect(() => {
+    if (deployURL) {
+      timer.start();
+    }
+    () => {
+      timer.cancel();
+    };
+  }, [deployURL]);
 
   const status = result.steps.map((s) => s.status);
   const isPass = status.every((e) => e === 0);
   const hasSuccessPublish = result.steps.some(
     (s) => s.step.toLowerCase() === "publish" && s.status === 0
   );
+
   return (
     <li className={styles.variantContainer}>
       <div className={styles.variant} onClick={() => setExpanded(!expanded)}>
@@ -80,6 +111,18 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
           <AlertIcon className={styles.alertIcon} />
         )}
         <span className={styles.name}>{result.name}</span>
+        {!expanded && hasSuccessPublish && (
+          <>
+            <div className={styles.divider} />
+            <DownloadLink
+              deployURL={deployURL}
+              onClick={() => mutation.mutate()}
+              loading={mutation.isLoading}
+              timer={timer}
+            />
+          </>
+        )}
+
         <ChevronIcon
           className={classNames(styles.chevronIcon, {
             [styles.activeChevron]: expanded,
@@ -118,7 +161,7 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
                 </div>
               </div>
 
-              {!isEmpty(s.output) && <VariantOutput step={s} />}
+              {s.output.length !== 0 && <VariantOutput step={s} />}
             </li>
           ))}
           {hasSuccessPublish && (
@@ -137,7 +180,12 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
                   </span>
 
                   <div className={styles.divider} />
-                  <DownloadLink variant={result.name} />
+                  <DownloadLink
+                    deployURL={deployURL}
+                    onClick={() => mutation.mutate()}
+                    loading={mutation.isLoading}
+                    timer={timer}
+                  />
                 </div>
               </div>
             </li>
@@ -204,73 +252,48 @@ const VariantOutput: React.FC<{
 };
 
 interface DownloadLinkProps {
-  variant: string;
+  onClick: () => void;
+  deployURL: string | null;
+  loading: boolean;
+  timer: { percent: number; minutes: number; seconds: number };
 }
 
-const DownloadLink: React.FC<DownloadLinkProps> = ({ variant }) => {
-  const { host, credentials, showTooltip } = useAuthStore(
-    select("host", "credentials", "showTooltip"),
-    shallow
-  );
-  const [linkAvailable, setLinkAvailable] = useState(false);
-  const [url, setURL] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [remaining, setRemaining] = useState(0);
-
-  useEffect(() => {
-    if (!linkAvailable) {
-      return;
-    }
-    const interval = setInterval(() => {
-      setRemaining((state) => (state <= 0 ? 0 : state - 1000));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [linkAvailable]);
-
-  const handleDownloadLink = async (variant: string) => {
-    setLoading(true);
-    try {
-      const { url } = await createURL(variant, { host, credentials });
-      setURL(url);
-      setLinkAvailable(true);
-      setRemaining(TIMEOUT_LINK);
-      setTimeout(() => {
-        setLinkAvailable(false);
-      }, TIMEOUT_LINK);
-    } catch {
-    } finally {
-      setLoading(false);
-      showTooltip();
-    }
-  };
-
+const DownloadLink: React.FC<DownloadLinkProps> = ({
+  onClick,
+  deployURL,
+  loading,
+  timer,
+}) => {
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(url);
+      if (!deployURL) {
+        throw new Error("missing url");
+      }
+      await navigator.clipboard.writeText(deployURL);
       notifySuccess("Link copied to clipboard");
     } catch (error) {
       notifyError("Failed to copy to clipboard", error);
     }
   };
 
-  const minutes = Math.floor(remaining / 1000 / 60);
-  const seconds = remaining / 1000 - minutes * 60;
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      {linkAvailable && url ? (
+      {deployURL ? (
         <div className={classNames(styles.download, styles.copy)}>
-          {/* <span>
-            Use curl or wget to deploy the Detect node on your instance.
-          </span> */}
-          <input type="url" value={url} readOnly className={styles.url}></input>
+          <input
+            type="url"
+            value={deployURL}
+            readOnly
+            className={styles.url}
+          ></input>
           <button className={styles.iconContainer} onClick={() => handleCopy()}>
             <CopyIcon className={styles.copyIcon} />
           </button>
 
           <div style={{ width: 20, height: 20, marginTop: -6 }}>
             <CircularProgressbar
-              value={(remaining / TIMEOUT_LINK) * 100}
+              counterClockwise
+              value={timer.percent}
               strokeWidth={50}
               styles={buildStyles({
                 strokeLinecap: "butt",
@@ -280,15 +303,12 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({ variant }) => {
             />
           </div>
           <span>
-            Expires in {minutes.toString().padStart(2, "0")}:
-            {seconds.toString().padStart(2, "0")}
+            Expires in {timer.minutes.toString().padStart(2, "0")}:
+            {timer.seconds.toString().padStart(2, "0")}
           </span>
         </div>
       ) : (
-        <button
-          className={styles.downloadButton}
-          onClick={() => handleDownloadLink(variant)}
-        >
+        <button className={styles.downloadButton} onClick={onClick}>
           {loading ? (
             <>
               <Loading className={styles.downloadIcon} />
