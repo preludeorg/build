@@ -2,13 +2,7 @@ import classNames from "classnames";
 import { useMemo, useState } from "react";
 import { terminalState } from "../../hooks/terminal-store";
 import { useKeyboard } from "../../hooks/use-keyboard";
-import {
-  combine,
-  key,
-  ModifierKeys,
-  SpecialKeys,
-  when,
-} from "../../lib/keyboard";
+import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import ArrowRight from "../icons/arrow-right";
 import styles from "./commands.module.css";
 import Focusable from "./focusable";
@@ -53,20 +47,20 @@ function TerminalList<T>({
   }, [filter]);
 
   const keyboard = useKeyboard([
-    when("f").do(() => {
+    press("f").do(() => {
       setMode("filter");
       setPage(1);
     }),
-    when([key(SpecialKeys.ESCAPE), key("e")]).do(() => {
+    press(SpecialKeys.ESCAPE, "e").do(() => {
       setExited(true);
       onExit();
     }),
-    when(SpecialKeys.ENTER).do(() => {
+    press(SpecialKeys.ENTER).do(() => {
       const itemIndex = index - 1 + offset;
       setExited(true);
       onSelect(filteredItems[itemIndex]);
     }),
-    when(SpecialKeys.ARROW_RIGHT).do(() => {
+    press(SpecialKeys.ARROW_RIGHT).do(() => {
       const nextPage = page + 1;
 
       if (nextPage > totalPages) {
@@ -76,7 +70,7 @@ function TerminalList<T>({
       setPage(nextPage);
       setValue(1);
     }),
-    when(SpecialKeys.ARROW_LEFT).do(() => {
+    press(SpecialKeys.ARROW_LEFT).do(() => {
       const prevPage = page - 1;
 
       if (prevPage <= 0) {
@@ -86,14 +80,14 @@ function TerminalList<T>({
       setPage(prevPage);
       setValue(1);
     }),
-    when(SpecialKeys.ARROW_UP).do(() => {
+    press(SpecialKeys.ARROW_UP).do(() => {
       if (index === 1) {
         setValue(pageItems.length);
         return;
       }
       setValue(index - 1);
     }),
-    when(SpecialKeys.ARROW_DOWN).do(() => {
+    press(SpecialKeys.ARROW_DOWN).do(() => {
       if (index === pageItems.length) {
         setValue(1);
         return;
@@ -107,14 +101,12 @@ function TerminalList<T>({
       setFilter(input);
     },
     extraMacros: () => [
-      when([key(SpecialKeys.ESCAPE), combine(ModifierKeys.CTRL, "c")]).do(
-        () => {
-          setFilter("");
-          setValue(1);
-          setMode("list");
-        }
-      ),
-      when(SpecialKeys.ENTER).do(() => {
+      press(SpecialKeys.ESCAPE, combine(ModifierKeys.CTRL, "c")).do(() => {
+        setFilter("");
+        setValue(1);
+        setMode("list");
+      }),
+      press(SpecialKeys.ENTER).do(() => {
         if (index !== null) {
           const itemIndex = index - 1 + offset;
           setExited(true);

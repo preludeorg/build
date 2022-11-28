@@ -6,13 +6,7 @@ import {
   ZodInvalidEnumValueIssue,
 } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
-import {
-  combine,
-  key,
-  ModifierKeys,
-  SpecialKeys,
-  when,
-} from "../../lib/keyboard";
+import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import styles from "./commands.module.css";
 import Readline, { useReadline } from "./readline";
 
@@ -46,14 +40,12 @@ export const Question: React.FC<QuestionProps> = ({
 
   const readline = useReadline({
     extraMacros: ({ input, terminate }) => [
-      when([key(SpecialKeys.ESCAPE), combine(ModifierKeys.CTRL, "c")]).do(
-        () => {
-          terminate();
-          onExit();
-        }
-      ),
+      press(SpecialKeys.ESCAPE, combine(ModifierKeys.CTRL, "c")).do(() => {
+        terminate();
+        onExit();
+      }),
 
-      when(SpecialKeys.ENTER).do(() => {
+      press(SpecialKeys.ENTER).do(() => {
         terminate();
         const value = input.trim();
         if (value === "" && defaultValue) {

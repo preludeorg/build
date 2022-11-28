@@ -12,64 +12,27 @@ export const SpecialKeys = {
 export const ModifierKeys = {
   CTRL: "Control",
   COMMAND: "Command",
+  SHIFT: "Shift",
+  ALT: "Alt",
 } as const;
 
-type UpperCaseCharacter =
-  | "A"
-  | "B"
-  | "C"
-  | "D"
-  | "E"
-  | "F"
-  | "G"
-  | "H"
-  | "I"
-  | "J"
-  | "K"
-  | "L"
-  | "M"
-  | "N"
-  | "O"
-  | "P"
-  | "Q"
-  | "R"
-  | "S"
-  | "T"
-  | "U"
-  | "V"
-  | "W"
-  | "X"
-  | "Y"
-  | "Z";
-
-type Character = UpperCaseCharacter | Lowercase<UpperCaseCharacter>;
 export type SpecialKey = typeof SpecialKeys[keyof typeof SpecialKeys];
-export type Key = SpecialKey | Character;
+export type Key = string;
 export type ModifierKey = typeof ModifierKeys[keyof typeof ModifierKeys];
 
-interface SingleKey {
-  type: "single";
+interface KeyMatch {
   key: Key;
+  modifier?: ModifierKey;
 }
 
-export function key(key: Key | Character): SingleKey {
+export function key(key: Key): KeyMatch {
   return {
-    type: "single",
     key,
   };
 }
 
-interface CombinationKey {
-  type: "combination";
-  key: Key;
-  modifier: ModifierKey;
-}
-
-type KeyMatch = SingleKey | CombinationKey;
-
-export function combine(mod: ModifierKey, key: Key): CombinationKey {
+export function combine(mod: ModifierKey, key: Key): KeyMatch {
   return {
-    type: "combination",
     key,
     modifier: mod,
   };
@@ -77,21 +40,20 @@ export function combine(mod: ModifierKey, key: Key): CombinationKey {
 
 type MatchEvent = React.KeyboardEvent<HTMLInputElement> | KeyboardEvent;
 export interface Macro {
-  when: KeyMatch | KeyMatch[];
+  press: KeyMatch | KeyMatch[];
   do: (event: MatchEvent) => void | Promise<void>;
 }
 
 export function matcher(marcos: Macro[]) {
   return (event: MatchEvent): boolean => {
     const marco = marcos.find((marco) => {
-      const when = Array.isArray(marco.when) ? marco.when : [marco.when];
-      return when.some((keyMatch) => {
-        switch (keyMatch.type) {
-          case "single":
-            return matchKey(keyMatch.key, event);
-          case "combination":
-            return isCombinationMatch(keyMatch, event);
+      const press = Array.isArray(marco.press) ? marco.press : [marco.press];
+      return press.some((keyMatch) => {
+        if (keyMatch.modifier) {
+          return matchCombinationKey(keyMatch, event);
         }
+
+        return matchKey(keyMatch.key, event);
       });
     });
 
@@ -107,23 +69,30 @@ export function matcher(marcos: Macro[]) {
 function matchKey(key: Key, event: MatchEvent): boolean {
   return event.key.toLowerCase() === key.toLowerCase();
 }
-function isCombinationMatch(match: CombinationKey, event: MatchEvent): boolean {
+
+function matchCombinationKey(match: KeyMatch, event: MatchEvent): boolean {
   const modMatch =
     (event.ctrlKey && match.modifier === ModifierKeys.CTRL) ||
-    (event.metaKey && match.modifier === ModifierKeys.COMMAND);
+    (event.metaKey && match.modifier === ModifierKeys.COMMAND) ||
+    (event.shiftKey && match.modifier === ModifierKeys.SHIFT) ||
+    (event.altKey && match.modifier === ModifierKeys.ALT);
 
   return modMatch && matchKey(match.key, event);
 }
 
-export function when(args: Key | Macro["when"]) {
-  const when = typeof args === "string" ? key(args) : args;
+export function press(...args: (Key | KeyMatch)[]) {
+  const press = args.map((arg) => (typeof arg === "string" ? key(arg) : arg));
 
   return {
     do: (func: Macro["do"]) => {
       return {
-        when,
+        press,
         do: func,
       };
     },
   };
+}
+
+export function hasModifierKey(event: MatchEvent) {
+  return event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
 }

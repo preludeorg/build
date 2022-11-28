@@ -1,14 +1,14 @@
 import classNames from "classnames";
 import { useState } from "react";
 import useTerminalStore from "../../hooks/terminal-store";
-
 import { useKeyboard } from "../../hooks/use-keyboard";
 import {
   combine,
+  hasModifierKey,
   Macro,
   ModifierKeys,
+  press,
   SpecialKeys,
-  when,
 } from "../../lib/keyboard";
 import { select } from "../../lib/utils/select";
 import Focusable from "./focusable";
@@ -68,7 +68,7 @@ export const useReadline = ({
     }) ?? [];
 
   const keyboard = useKeyboard([
-    when(SpecialKeys.BACKSPACE).do((event) => {
+    press(SpecialKeys.BACKSPACE).do((event) => {
       event.preventDefault();
       const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
         input,
@@ -81,27 +81,20 @@ export const useReadline = ({
         setCaretPosition(caretPosition - 1);
       }
     }),
-    when(SpecialKeys.ARROW_LEFT).do(() => {
+    press(SpecialKeys.ARROW_LEFT).do(() => {
       if (caretPosition > 0) {
         setCaretPosition(caretPosition - 1);
       }
     }),
-    when(SpecialKeys.ARROW_RIGHT).do(() => {
+    press(SpecialKeys.ARROW_RIGHT).do(() => {
       if (caretPosition < input.length) {
         setCaretPosition(caretPosition + 1);
       }
     }),
-    when([
-      combine(ModifierKeys.COMMAND, "c"),
-      combine(ModifierKeys.COMMAND, "v"),
-      combine(ModifierKeys.CTRL, "v"),
-    ]).do(() => {
-      // noop
-    }),
-    when([
+    press(
       combine(ModifierKeys.COMMAND, "a"),
-      combine(ModifierKeys.CTRL, "a"),
-    ]).do((e) => {
+      combine(ModifierKeys.CTRL, "a")
+    ).do((e) => {
       e.preventDefault();
     }),
     ...macros,
@@ -124,7 +117,7 @@ export const useReadline = ({
       return;
     }
 
-    if (event.key.length === 1) {
+    if (event.key.length === 1 && !hasModifierKey(event)) {
       const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
         input,
         caretPosition
