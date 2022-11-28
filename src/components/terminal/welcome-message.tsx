@@ -9,8 +9,6 @@ const WelcomeMessage: React.FC<{
 }> = ({ host, credentials, isNewAccount }) => {
   const { handleImport, handleExport } = useConfig();
 
-  console.log(isNewAccount);
-
   if (host && credentials && isNewAccount) {
     return (
       <div className={styles.welcomeMessage}>

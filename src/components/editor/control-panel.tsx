@@ -9,7 +9,6 @@ import { validate } from "../../lib/lang/linter";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
 import { Loading } from "../icons/loading";
-
 import PlayIcon from "../icons/play-icon";
 import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
@@ -27,7 +26,7 @@ const ControlPanel: React.FC = () => {
     };
   }, shallow);
 
-  const { write, showIndicator, hideIndicator, takeControl } = useTerminalStore(
+  const { write, showIndicator, hideIndicator } = useTerminalStore(
     select("write", "showIndicator", "hideIndicator", "takeControl")
   );
 
@@ -35,9 +34,8 @@ const ControlPanel: React.FC = () => {
     try {
       setLoading(true);
       showIndicator("Building...");
-      const signal = takeControl().signal;
       const results = await build(currentTabId, serviceConfig);
-      const test = (await getTestList(serviceConfig, signal)).find(
+      const test = (await getTestList(serviceConfig)).find(
         (t) => t.id === parseVariant(currentTabId)?.id
       );
 

@@ -163,20 +163,6 @@
 }
 
 .question {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.question input {
-  background: none;
-  border: none;
-  caret-color: var(--white);
-  color: var(--white);
-  width: 100%;
-}
-
-.question input:focus {
-  outline: none;
 }
 
 .question .message {

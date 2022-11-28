@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   ParseParams,
   SafeParseReturnType,
@@ -6,9 +6,9 @@ import {
   ZodInvalidEnumValueIssue,
 } from "zod";
 import { terminalState } from "../../hooks/terminal-store";
-import { isControlC } from "../../lib/keys";
-import focusTerminal from "../../utils/focus-terminal";
+import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import styles from "./commands.module.css";
+import Readline, { useReadline } from "./readline";
 
 interface Validator {
   options?: string[];
@@ -35,84 +35,51 @@ export const Question: React.FC<QuestionProps> = ({
   onAnswer,
   onInvalidAnswer,
   validator = z.string() as Validator,
-  signal,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [answer, setAnswer] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const exit = () => {
-    setAnswer("");
-    onExit();
-  };
+  const readline = useReadline({
+    extraMacros: ({ input, terminate }) => [
+      press(SpecialKeys.ESCAPE, combine(ModifierKeys.CTRL, "c")).do(() => {
+        terminate();
+        onExit();
+      }),
 
-  useEffect(() => {
-    if (!signal) {
-      return;
-    }
-
-    signal.addEventListener("abort", exit);
-    return () => {
-      signal.removeEventListener("abort", exit);
-    };
-  }, []);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [inputRef.current]);
-
-  const handleKey: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Escape" || isControlC(e)) {
-      e.preventDefault();
-      const value = inputRef.current?.value ?? "";
-      setAnswer(value);
-      onExit();
-      focusTerminal();
-      return false;
-    }
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const value = (inputRef.current?.value ?? "").trim();
-      setAnswer(value);
-      if (value === "" && defaultValue) {
-        onAnswer(defaultValue);
-        focusTerminal();
-        return;
-      }
-
-      if (value === "") {
-        onInvalidAnswer(value);
-        focusTerminal();
-        return;
-      }
-
-      const result = validator.safeParse(value);
-
-      if (result.success) {
-        onAnswer(result.data as string);
-      } else {
-        const e = result.error;
-        if (e.errors[0].code === "invalid_enum_value") {
-          const error = e.errors[0] as ZodInvalidEnumValueIssue;
-          setError(
-            `error: "${error.received}" is not one of: ${error.options.join(
-              " | "
-            )}`
-          );
-        } else {
-          setError(result.error.message);
+      press(SpecialKeys.ENTER).do(() => {
+        terminate();
+        const value = input.trim();
+        if (value === "" && defaultValue) {
+          onAnswer(defaultValue);
+          return;
         }
 
-        onInvalidAnswer(value);
-      }
+        if (value === "") {
+          onInvalidAnswer(value);
+          return;
+        }
 
-      focusTerminal();
-      return false;
-    }
+        const result = validator.safeParse(value);
 
-    return true;
-  };
+        if (result.success) {
+          onAnswer(result.data as string);
+        } else {
+          const e = result.error;
+          if (e.errors[0].code === "invalid_enum_value") {
+            const error = e.errors[0] as ZodInvalidEnumValueIssue;
+            setError(
+              `error: "${error.received}" is not one of: ${error.options.join(
+                " | "
+              )}`
+            );
+          } else {
+            setError(result.error.message);
+          }
+
+          onInvalidAnswer(value);
+        }
+      }),
+    ],
+  });
 
   const choice = Array.isArray(validator.options)
     ? `(${validator.options.join(", ")})`
@@ -125,12 +92,7 @@ export const Question: React.FC<QuestionProps> = ({
         <span className={styles.message}>
           {[message, choice, def].filter((m) => !!m).join(" ")}:
         </span>
-        <input
-          readOnly={answer !== null}
-          ref={inputRef}
-          type="text"
-          onKeyDown={handleKey}
-        />
+        <Readline {...readline} />
       </div>
       {error && <div>{error}</div>}
     </>

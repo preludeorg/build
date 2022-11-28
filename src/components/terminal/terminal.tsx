@@ -1,12 +1,17 @@
-import classNames from "classnames";
-import React from "react";
+import { Test } from "@theprelude/sdk";
+import React, { useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
-import useTerminalStore, { selectCaretText } from "../../hooks/terminal-store";
-import { isControlC } from "../../lib/keys";
+import useTerminalStore, {
+  getNextCommand,
+  getPreviousCommand,
+  getSuggestions,
+} from "../../hooks/terminal-store";
+import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import { select } from "../../lib/utils/select";
 import focusTerminal from "../../utils/focus-terminal";
 import PrimaryPrompt from "./primary-prompt";
+import Readline, { useReadline } from "./readline";
 import styles from "./terminal.module.css";
 import WelcomeMessage from "./welcome-message";
 
@@ -23,97 +28,27 @@ const useScrollToBottom = (
 function useTerminal() {
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { bufferedContent, inputEnabled } = useTerminalStore(
-    select("bufferedContent", "inputEnabled"),
+  const { bufferedContent } = useTerminalStore(
+    select("bufferedContent"),
     shallow
   );
 
-  const {
-    abort,
-    setFocus,
-    handleKey,
-    processCommand,
-    write,
-    clear,
-    autoComplete,
-  } = useTerminalStore(
-    select(
-      "abort",
-      "setFocus",
-      "handleKey",
-      "processCommand",
-      "write",
-      "clear",
-      "autoComplete"
-    ),
-    shallow
-  );
+  const { write, clear } = useTerminalStore(select("write", "clear"), shallow);
 
   const { host, credentials } = useAuthStore(
     select("host", "credentials"),
     shallow
   );
 
-  const handleKeyDownEvent = (event: KeyboardEvent) => {
-    if (isControlC(event)) {
-      abort();
-      return;
-    }
-
-    if (!inputEnabled) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const eventKey = event.key;
-
-    if (eventKey === "Enter") {
-      processCommand();
-      return;
-    }
-
-    if (eventKey === "Tab") {
-      autoComplete();
-      return;
-    }
-
-    void handleKey(event);
-  };
-
-  const handleFocus = () => {
-    setFocus(document.activeElement === ref.current);
-  };
-
   React.useEffect(() => {
     write(<WelcomeMessage host={host} credentials={credentials} />);
+    write(<CurrentLine />);
     return () => {
       clear();
     };
   }, []);
 
-  React.useEffect(() => {
-    // Bind the event listener
-    ref.current?.addEventListener("keydown", handleKeyDownEvent);
-    return () => {
-      // Unbind the event listener on clean up
-      ref.current?.removeEventListener("keydown", handleKeyDownEvent);
-    };
-  });
-
-  React.useEffect(() => {
-    // Bind the event listener
-    document.addEventListener("focusin", handleFocus, true);
-    document.addEventListener("blur", handleFocus, true);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener("focusin", handleFocus, true);
-      document.removeEventListener("blur", handleFocus, true);
-    };
-  });
-
   useScrollToBottom(bufferedContent, ref);
-  useScrollToBottom(inputEnabled, ref);
 
   return { bufferedContent, ref };
 }
@@ -122,48 +57,81 @@ const Terminal: React.FC = () => {
   const { ref, bufferedContent } = useTerminal();
   return (
     <div
-      onFocus={(e) => {
+      onMouseUp={(e) => {
         e.preventDefault();
         focusTerminal();
       }}
       id="terminal"
-      tabIndex={0}
       ref={ref}
       className={styles.terminal}
     >
-      {bufferedContent.map((el, index) => {
-        return <React.Fragment key={index}>{el}</React.Fragment>;
+      {bufferedContent.map((item) => {
+        return <React.Fragment key={item.key}>{item.content}</React.Fragment>;
       })}
-      <CurrentLine />
     </div>
   );
 };
 
-const CurrentLine = () => {
-  const { focused, inputEnabled, currentTest } = useTerminalStore(
-    select("focused", "inputEnabled", "currentTest"),
-    shallow
-  );
+export const CurrentLine: React.FC<{
+  currentTest?: Test;
+  defaultInput?: string;
+}> = ({ currentTest, defaultInput }) => {
+  const { abort, processCommand, commandsHistory, autoComplete } =
+    useTerminalStore(
+      select("abort", "processCommand", "commandsHistory", "autoComplete")
+    );
+  const [historyPointer, setHistoryPointer] = useState(commandsHistory.length);
 
-  const [beforeCaretText, afterCaretText] = useTerminalStore(
-    selectCaretText,
-    shallow
-  );
+  const readline = useReadline({
+    defaultInput,
+    extraMacros: ({ terminate, input, setInput, setCaretPosition }) => [
+      press(combine(ModifierKeys.CTRL, "c")).do(() => {
+        terminate();
+        abort();
+      }),
+      press(SpecialKeys.ENTER).do(() => {
+        terminate();
+        processCommand(input);
+      }),
+      press(SpecialKeys.TAB).do(() => {
+        if (input !== "") return;
+        const options = getSuggestions(input);
+        if (options.length === 0) return;
+        if (options.length === 1) {
+          setInput(options[0]);
+          setCaretPosition(options[0].length);
+        } else {
+          autoComplete(options);
+          terminate();
+        }
+      }),
+      press(SpecialKeys.ARROW_UP).do(() => {
+        const command = getPreviousCommand(historyPointer, commandsHistory);
+        setInput(command);
+        if (command) {
+          setCaretPosition(command.length);
+        }
 
-  if (!inputEnabled) {
-    return <></>;
-  }
+        if (historyPointer > 0) {
+          setHistoryPointer(historyPointer - 1);
+        }
+      }),
+      press(SpecialKeys.ARROW_DOWN).do(() => {
+        const command = getNextCommand(historyPointer, commandsHistory);
+        setInput(command);
+        setCaretPosition(command ? command.length : 0);
+
+        if (historyPointer + 1 <= commandsHistory.length) {
+          setHistoryPointer(historyPointer + 1);
+        }
+      }),
+    ],
+  });
 
   return (
     <>
       <PrimaryPrompt test={currentTest}>
-        <span className={styles.preWhiteSpace}>{beforeCaretText}</span>
-        <span
-          className={classNames(styles.caret, { [styles.focused]: focused })}
-        >
-          <span className={styles.caretAfter} />
-        </span>
-        <span className={styles.preWhiteSpace}>{afterCaretText}</span>
+        <Readline {...readline} />
       </PrimaryPrompt>
     </>
   );

@@ -1,37 +1,37 @@
 import { Test } from "@theprelude/sdk";
+import * as uuid from "uuid";
 import create from "zustand";
-import PrimaryPrompt from "../components/terminal/primary-prompt";
+import { CurrentLine } from "../components/terminal/terminal";
 import { TerminalMessage } from "../components/terminal/terminal-message";
-import styles from "../components/terminal/terminal.module.css";
 import { commands } from "../lib/commands";
-
 import { commonBeginning } from "../lib/utils/common-beginning";
 
-function splitStringAtIndex(value: string, index: number) {
-  if (!value) {
-    return ["", ""];
-  }
-  return [value.substring(0, index), value.substring(index)];
+export function getSuggestions(input: string) {
+  return Object.keys(commands).filter((o) => o.startsWith(input));
 }
+
+interface Content {
+  key: React.Key;
+  content: JSX.Element;
+}
+
+const print = (element: JSX.Element): Content => {
+  return { key: uuid.v4(), content: element };
+};
 
 interface TerminalStore {
   currentTest?: Test;
-  focused: boolean;
-  inputEnabled: boolean;
-  input: string;
-  caretPosition: number;
+  hasFocusable: boolean;
   commandsHistory: string[];
-  historyPointer: number;
-  bufferedContent: Array<string | JSX.Element>;
+  bufferedContent: Array<Content>;
   abortController?: AbortController;
-  setFocus: (focused: boolean) => void;
+  setFocusable: (focused: boolean) => void;
   clear: () => void;
   reset: () => void;
-  handleKey: (event: KeyboardEvent) => Promise<void>;
-  processCommand: () => void;
-  write: (content: string | JSX.Element) => void;
+  processCommand: (input: string) => void;
+  write: (content: JSX.Element) => void;
   switchTest: (test?: Test) => void;
-  autoComplete: () => void;
+  autoComplete: (options: string[]) => void;
   takeControl: () => AbortController;
   abort: () => void;
   statusIndicator?: {
@@ -43,49 +43,26 @@ interface TerminalStore {
 }
 
 const useTerminalStore = create<TerminalStore>((set, get) => ({
-  inputEnabled: true,
-  focused: false,
-  input: "",
-  caretPosition: 0,
+  hasFocusable: false,
   bufferedContent: [],
   commandsHistory: [],
-  historyPointer: 0,
-
-  setFocus: (focused: boolean) => {
-    set(() => ({ focused }));
+  setFocusable: (hasFocusable: boolean) => {
+    set(() => ({ hasFocusable }));
   },
-  autoComplete: () => {
-    const { input } = get();
-    const options = Object.keys(commands).filter((o) => o.startsWith(input));
-    if (input === "" || options.length === 0) {
-      return;
-    }
-
-    if (options.length === 1) {
-      set(() => ({
-        input: options[0],
-        caretPosition: options[0].length + 1,
-      }));
-    } else {
-      set((state) => {
-        const waiting = (
-          <>
-            <PrimaryPrompt test={state.currentTest}>
-              <span className={styles.preWhiteSpace}>{input}</span>
-            </PrimaryPrompt>
+  autoComplete: (options: string[]) => {
+    set((state) => {
+      return {
+        bufferedContent: [
+          ...state.bufferedContent,
+          print(
             <div style={{ color: "var(--color-primary-10)" }}>
               {options.join(" ")}
             </div>
-          </>
-        );
-
-        return {
-          bufferedContent: [...state.bufferedContent, waiting],
-          input: commonBeginning(options),
-          caretPosition: commonBeginning(options).length + 1,
-        };
-      });
-    }
+          ),
+          print(<CurrentLine defaultInput={commonBeginning(options)} />),
+        ],
+      };
+    });
   },
   takeControl() {
     const { abortController } = get();
@@ -97,26 +74,15 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     return controller;
   },
   abort: () => {
-    const { input, abortController, inputEnabled } = get();
+    const { abortController } = get();
     abortController?.abort();
 
-    if (!inputEnabled) {
-      return;
-    }
-
     set((state) => {
-      const waiting = (
-        <>
-          <PrimaryPrompt test={state.currentTest}>
-            <span className={styles.preWhiteSpace}>{input}</span>
-          </PrimaryPrompt>
-        </>
-      );
-
       return {
-        bufferedContent: [...state.bufferedContent, waiting],
-        input: "",
-        caretPosition: 0,
+        bufferedContent: [
+          ...state.bufferedContent,
+          print(<CurrentLine currentTest={state.currentTest} />),
+        ],
       };
     });
   },
@@ -138,174 +104,94 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   switchTest(test?: Test) {
     set(() => ({ currentTest: test }));
   },
-  async handleKey(event: KeyboardEvent) {
-    const { focused, inputEnabled } = get();
-    if (!focused || !inputEnabled) {
-      return;
-    }
 
-    const eventKey = event.key;
+  async processCommand(input) {
+    try {
+      const { commandsHistory } = get();
+      const [commandName, ...rest] = input.trim().split(" ");
+      let output: JSX.Element = <></>;
 
-    const { input, commandsHistory } = get();
-    let { caretPosition, historyPointer } = get();
+      if (input !== "") {
+        set(() => {
+          const commands = [...commandsHistory, input];
+          return {
+            commandsHistory: commands,
+            historyPointer: commands.length,
+          };
+        });
+      }
 
-    let nextInput: string | null = null;
+      if (commandName === "clear") {
+        set((state) => ({
+          bufferedContent: [
+            print(<CurrentLine currentTest={state.currentTest} />),
+          ],
+        }));
+        return;
+      }
 
-    if (eventKey === "Backspace") {
-      const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-        input,
-        caretPosition
+      if (commandName === "") {
+        set((state) => ({
+          bufferedContent: [
+            ...state.bufferedContent,
+            print(<CurrentLine currentTest={state.currentTest} />),
+          ],
+        }));
+        return;
+      }
+
+      const commandArguments = rest.join(" ");
+      const commandKey = Object.keys(commands).find(
+        (c) => commandName === c || commands[c].alias?.includes(commandName)
       );
-      nextInput = caretTextBefore.slice(0, -1) + caretTextAfter;
-      if (input && input.length !== 0) {
-        caretPosition = caretPosition - 1;
-      }
-    } else if (eventKey === "ArrowUp") {
-      nextInput = getPreviousCommand(historyPointer, commandsHistory);
-      if (historyPointer > 0) {
-        historyPointer = historyPointer - 1;
-      }
-      if (nextInput) {
-        caretPosition = nextInput.length;
-      }
-    } else if (eventKey === "ArrowDown") {
-      nextInput = getNextCommand(historyPointer, commandsHistory);
-      if (historyPointer + 1 <= commandsHistory.length) {
-        historyPointer = historyPointer + 1;
-      }
-      if (nextInput) {
-        caretPosition = nextInput.length;
-      } else {
-        caretPosition = 0;
-      }
-    } else if (eventKey === "ArrowLeft") {
-      if (caretPosition > 0) {
-        caretPosition = caretPosition - 1;
-      }
-      nextInput = input;
-    } else if (eventKey === "ArrowRight") {
-      if (caretPosition < input.length) {
-        caretPosition = caretPosition + 1;
-      }
-      nextInput = input;
-    } else if (
-      (event.metaKey || event.ctrlKey) &&
-      eventKey.toLowerCase() === "v"
-    ) {
-      const pastedText = await navigator.clipboard.readText();
-      const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-        input || "",
-        caretPosition
-      );
-      nextInput = caretTextBefore + pastedText + caretTextAfter;
-      caretPosition = caretPosition + pastedText.length;
-    } else if (
-      (event.metaKey || event.ctrlKey) &&
-      eventKey.toLowerCase() === "c"
-    ) {
-      const selectedText = window.getSelection()?.toString();
-      if (!selectedText) return;
-      await navigator.clipboard.writeText(selectedText);
-      nextInput = input;
-    } else {
-      if (eventKey && eventKey.length === 1) {
-        const [caretTextBefore, caretTextAfter] = splitStringAtIndex(
-          input,
-          caretPosition
+      const command = commandKey ? commands[commandKey] : null;
+      const isEnabled = command?.enabled?.() ?? true;
+
+      if (command && isEnabled) {
+        output = await command.exec(commandArguments);
+      } else if (command && !isEnabled) {
+        output = (
+          <TerminalMessage
+            message={`command "${commandName}" is unavailable.`}
+            helpText={`type "help" to list avaliable commmands`}
+          />
         );
-        nextInput = caretTextBefore + eventKey + caretTextAfter;
-        caretPosition = caretPosition + 1;
       } else {
-        nextInput = input;
+        output = (
+          <TerminalMessage message={`command not found: ${commandName}`} />
+        );
       }
-    }
-    set(() => ({
-      input: nextInput ?? "",
-      processInput: false,
-      caretPosition,
-      historyPointer,
-    }));
-  },
-  async processCommand() {
-    const { input, commandsHistory } = get();
-    const [commandName, ...rest] = input.trim().split(" ");
-    let output: string | JSX.Element = "";
 
-    if (input !== "") {
-      set(() => {
-        const commands = [...commandsHistory, input];
+      set((state) => {
         return {
-          commandsHistory: commands,
-          historyPointer: commands.length,
+          bufferedContent: [
+            ...state.bufferedContent,
+            print(output),
+            print(<CurrentLine currentTest={state.currentTest} />),
+          ],
+        };
+      });
+    } catch (err) {}
+  },
+  write(content) {
+    const { hasFocusable } = get();
+    if (!hasFocusable) {
+      set((state) => ({
+        bufferedContent: [...state.bufferedContent, print(content)],
+      }));
+    } else {
+      set((state) => {
+        const newBufferedContent = [...state.bufferedContent];
+        newBufferedContent.splice(
+          newBufferedContent.length - 1,
+          0,
+          print(content)
+        );
+        return {
+          bufferedContent: newBufferedContent,
         };
       });
     }
-
-    if (commandName === "clear") {
-      set(() => ({
-        bufferedContent: [],
-        input: "",
-        caretPosition: 0,
-      }));
-      return;
-    }
-
-    set((state) => {
-      const waiting = (
-        <PrimaryPrompt test={state.currentTest}>
-          <span className={styles.preWhiteSpace}>{input}</span>
-        </PrimaryPrompt>
-      );
-
-      return {
-        bufferedContent: [...state.bufferedContent, waiting],
-        input: "",
-        caretPosition: 0,
-        inputEnabled: false,
-      };
-    });
-
-    if (commandName === "") {
-      set(() => ({
-        inputEnabled: true,
-      }));
-      return;
-    }
-
-    const commandArguments = rest.join(" ");
-    const commandKey = Object.keys(commands).find(
-      (c) => commandName === c || commands[c].alias?.includes(commandName)
-    );
-    const command = commandKey ? commands[commandKey] : null;
-    const isEnabled = command?.enabled?.() ?? true;
-
-    if (command && isEnabled) {
-      output = await command.exec(commandArguments);
-    } else if (command && !isEnabled) {
-      output = (
-        <TerminalMessage
-          message={`command "${commandName}" is unavailable.`}
-          helpText={`type "help" to list avaliable commmands`}
-        />
-      );
-    } else {
-      output = `command not found: ${commandName}`;
-    }
-
-    set((state) => {
-      const nextBufferedContent = <span>{output}</span>;
-
-      return {
-        bufferedContent: [...state.bufferedContent, nextBufferedContent],
-        input: "",
-        inputEnabled: true,
-      };
-    });
-  },
-  write(content) {
-    set((state) => ({
-      bufferedContent: [...state.bufferedContent, content],
-    }));
   },
   showIndicator(message) {
     set(() => {
@@ -323,7 +209,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   },
 }));
 
-const getPreviousCommand = (
+export const getPreviousCommand = (
   historyPointer: number,
   commandsHistory: string[]
 ) => {
@@ -340,7 +226,10 @@ const getPreviousCommand = (
   return command;
 };
 
-const getNextCommand = (historyPointer: number, commandsHistory: string[]) => {
+export const getNextCommand = (
+  historyPointer: number,
+  commandsHistory: string[]
+) => {
   if (historyPointer + 1 <= commandsHistory.length) {
     const command = commandsHistory[historyPointer + 1];
 
@@ -351,14 +240,5 @@ const getNextCommand = (historyPointer: number, commandsHistory: string[]) => {
 };
 
 export default useTerminalStore;
-
-export const selectCaretText = (state: TerminalStore) => {
-  const [beforeCaretText, afterCaretText] = splitStringAtIndex(
-    state.input,
-    state.caretPosition
-  );
-
-  return [beforeCaretText, afterCaretText];
-};
 
 export const terminalState = () => useTerminalStore.getState();
