@@ -94,5 +94,5 @@ export function press(...args: (Key | KeyMatch)[]) {
 }
 
 export function hasModifierKey(event: MatchEvent) {
-  return event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
+  return event.ctrlKey || event.metaKey;
 }
