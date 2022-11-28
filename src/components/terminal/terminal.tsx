@@ -41,8 +41,12 @@ function useTerminal() {
   );
 
   React.useEffect(() => {
-    write(<WelcomeMessage host={host} credentials={credentials} />);
-    write(<CurrentLine />);
+    write(
+      <>
+        <WelcomeMessage host={host} credentials={credentials} />
+        <CurrentLine />
+      </>
+    );
     return () => {
       clear();
     };
