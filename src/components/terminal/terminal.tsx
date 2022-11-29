@@ -27,7 +27,6 @@ const useScrollToBottom = (
 
 function useTerminal() {
   const ref = React.useRef<HTMLDivElement>(null);
-
   const { bufferedContent } = useTerminalStore(
     select("bufferedContent"),
     shallow
@@ -41,15 +40,8 @@ function useTerminal() {
   );
 
   React.useEffect(() => {
-    write(
-      <>
-        <WelcomeMessage host={host} credentials={credentials} />
-        <CurrentLine />
-      </>
-    );
-    return () => {
-      clear();
-    };
+    clear();
+    write(<WelcomeMessage host={host} credentials={credentials} />);
   }, []);
 
   useScrollToBottom(bufferedContent, ref);
@@ -97,16 +89,18 @@ export const CurrentLine: React.FC<{
         terminate();
         processCommand(input);
       }),
-      press(SpecialKeys.TAB).do(() => {
-        if (input !== "") return;
+      press(SpecialKeys.TAB).do((event) => {
+        event.preventDefault();
+
+        if (input === "") return;
         const options = getSuggestions(input);
         if (options.length === 0) return;
         if (options.length === 1) {
           setInput(options[0]);
           setCaretPosition(options[0].length);
         } else {
-          autoComplete(options);
           terminate();
+          autoComplete(options);
         }
       }),
       press(SpecialKeys.ARROW_UP).do(() => {

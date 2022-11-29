@@ -27,7 +27,6 @@ interface TerminalStore {
   abortController?: AbortController;
   setFocusable: (focused: boolean) => void;
   clear: () => void;
-  reset: () => void;
   processCommand: (input: string) => void;
   write: (content: JSX.Element) => void;
   switchTest: (test?: Test) => void;
@@ -52,6 +51,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
   autoComplete: (options: string[]) => {
     set((state) => {
       return {
+        hasFocusable: true,
         bufferedContent: [
           ...state.bufferedContent,
           print(
@@ -87,24 +87,14 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
     });
   },
   clear() {
-    set(() => ({
-      bufferedContent: [],
-      input: "",
-      caretPosition: 0,
-    }));
-  },
-  reset() {
-    set(() => ({
-      currentTest: undefined,
-      bufferedContent: [],
-      input: "",
-      caretPosition: 0,
+    set((state) => ({
+      hasFocusable: true,
+      bufferedContent: [print(<CurrentLine currentTest={state.currentTest} />)],
     }));
   },
   switchTest(test?: Test) {
     set(() => ({ currentTest: test }));
   },
-
   async processCommand(input) {
     try {
       const { commandsHistory } = get();
@@ -123,6 +113,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
       if (commandName === "clear") {
         set((state) => ({
+          hasFocusable: true,
           bufferedContent: [
             print(<CurrentLine currentTest={state.currentTest} />),
           ],
@@ -132,6 +123,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
       if (commandName === "") {
         set((state) => ({
+          hasFocusable: true,
           bufferedContent: [
             ...state.bufferedContent,
             print(<CurrentLine currentTest={state.currentTest} />),
@@ -164,6 +156,7 @@ const useTerminalStore = create<TerminalStore>((set, get) => ({
 
       set((state) => {
         return {
+          hasFocusable: true,
           bufferedContent: [
             ...state.bufferedContent,
             print(output),

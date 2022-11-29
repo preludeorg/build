@@ -44,11 +44,19 @@ export const useConfig = () => {
   const {
     takeControl,
     write,
-    reset: resetTerminal,
     showIndicator,
     hideIndicator,
+    clear,
+    switchTest,
   } = useTerminalStore(
-    select("takeControl", "write", "reset", "showIndicator", "hideIndicator"),
+    select(
+      "takeControl",
+      "write",
+      "clear",
+      "switchTest",
+      "showIndicator",
+      "hideIndicator"
+    ),
     shallow
   );
 
@@ -80,7 +88,8 @@ export const useConfig = () => {
       );
 
       if (authenticated) {
-        resetTerminal();
+        switchTest();
+        clear();
         resetEditor();
         navigate("welcome");
         write(
@@ -89,8 +98,6 @@ export const useConfig = () => {
             helpText={`type "list-tests" to show all your tests`}
           />
         );
-
-        focusTerminal();
       } else {
         write(
           <ErrorMessage message="failed to import credentials: unable to authenticate" />

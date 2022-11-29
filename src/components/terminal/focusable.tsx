@@ -28,7 +28,7 @@ const Focusable: React.FC<Props> = ({ render, ...props }) => {
     () => {
       setFocusable(false);
     };
-  }, [ref]);
+  }, [ref.current]);
 
   return (
     <div className={styles.focusable}>
