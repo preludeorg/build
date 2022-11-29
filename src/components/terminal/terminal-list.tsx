@@ -107,11 +107,8 @@ function TerminalList<T>({
         setMode("list");
       }),
       press(SpecialKeys.ENTER).do(() => {
-        if (index !== null) {
-          const itemIndex = index - 1 + offset;
-          setExited(true);
-          onSelect(filteredItems[itemIndex]);
-        }
+        setValue(1);
+        setMode("list");
       }),
     ],
   });
