@@ -4,6 +4,7 @@ import shallow from "zustand/shallow";
 import useAuthStore, { selectIsConnected } from "../../../hooks/auth-store";
 import useTerminalStore from "../../../hooks/terminal-store";
 import { select } from "../../../lib/utils/select";
+import Button from "../../ds/button/button";
 import { InputGroup } from "../../forms/input";
 import CopyIcon from "../../icons/copy-icon";
 import Overlay from "../overlay";
@@ -146,14 +147,9 @@ const Servers: React.FC = () => {
             }
           />
         </div>
-        <button
-          type="submit"
-          className={classNames(styles.connect, {
-            [styles.disconnect]: isConnected,
-          })}
-        >
+        <Button type="submit" intent={isConnected ? "error" : "primary"}>
           {isConnected ? "Disconnect" : "Connect"}
-        </button>
+        </Button>
       </form>
     </Overlay>
   );

@@ -12,8 +12,8 @@ const ConfirmDialog: React.FC<{
   children: JSX.Element | JSX.Element[];
 }> = ({
   message,
-  affirmative = "Yes",
-  negative = "No",
+  affirmative = "Yes, delete",
+  negative = "No, don't delete",
   children,
   onAffirm,
   onDecline,
@@ -36,8 +36,6 @@ const ConfirmDialog: React.FC<{
                   close();
                   onAffirm();
                 }}
-                intent={"primary"}
-                size={"regular"}
               >
                 {affirmative}
               </Button>
@@ -47,7 +45,6 @@ const ConfirmDialog: React.FC<{
                   onDecline?.();
                 }}
                 intent={"secondary"}
-                size={"regular"}
               >
                 {negative}
               </Button>

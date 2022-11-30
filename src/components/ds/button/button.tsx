@@ -1,20 +1,21 @@
 import styles from "./button.module.css";
 import { Loading } from "../../icons/loading";
-import classNames from "classnames";
+import classNames from "classnames/bind";
 import React, { ButtonHTMLAttributes } from "react";
+const cx = classNames.bind(styles);
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  intent: "primary" | "secondary" | "success";
-  size: "small" | "regular" | "medium" | "large";
+  intent?: "primary" | "secondary" | "success" | "error";
+  size?: "small" | "regular" | "medium" | "large";
   icon?: JSX.Element;
   iconPosition?: "left" | "right";
   loading?: boolean;
-  children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
-  intent,
-  size,
+  className,
+  intent = "primary",
+  size = "small",
   icon,
   iconPosition = "left",
   loading,
@@ -22,18 +23,7 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   return (
-    <button
-      {...props}
-      className={classNames(styles.button, {
-        [styles.primary]: intent === "primary",
-        [styles.secondary]: intent === "secondary",
-        [styles.success]: intent === "success",
-        [styles.small]: size === "small",
-        [styles.regular]: size === "regular",
-        [styles.medium]: size === "medium",
-        [styles.large]: size === "large",
-      })}
-    >
+    <button {...props} className={cx("button", intent, size, className)}>
       {icon && iconPosition === "left" ? (
         <>
           {loading ? <Loading /> : icon}

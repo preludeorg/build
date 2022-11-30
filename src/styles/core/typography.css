@@ -13,6 +13,11 @@
   --text-xl: 1.5rem;
   --text-xxl: 2rem;
   --text-xxxl: 2.5rem;
+
+  /* button type scale  */
+  --button-sm: 0.875;
+  --button-rg: 1rem;
+  --button-lg: 1.125rem;
 }
 
 body {
