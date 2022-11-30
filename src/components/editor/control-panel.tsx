@@ -8,7 +8,7 @@ import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
-import { Loading } from "../icons/loading";
+import Button from "../ds/button/button";
 import PlayIcon from "../icons/play-icon";
 import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
@@ -58,14 +58,14 @@ const ControlPanel: React.FC = () => {
 
   return (
     <div className={styles.controlPanel}>
-      <button
-        onClick={handleBuild}
+      <Button
+        handleClick={handleBuild}
+        text="Build"
+        icon={<PlayIcon />}
         disabled={!validTest || loading}
-        className={styles.test}
-      >
-        {loading ? <Loading /> : <PlayIcon />}
-        <span>Build</span>
-      </button>
+        loading={loading}
+        variant="build"
+      />
     </div>
   );
 };

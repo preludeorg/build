@@ -1,5 +1,6 @@
 import { Popover } from "@headlessui/react";
 import CloseIcon from "../../icons/close-icon";
+import Button from "../button/button";
 import styles from "./dialog.module.css";
 
 const ConfirmDialog: React.FC<{
@@ -17,6 +18,14 @@ const ConfirmDialog: React.FC<{
   onAffirm,
   onDecline,
 }) => {
+  const handleAffirm = () => {
+    close();
+    onAffirm();
+  };
+  const handleDecline = () => {
+    close;
+    onDecline?.();
+  };
   return (
     <Popover className={styles.confirm}>
       <Popover.Button as="div">{children}</Popover.Button>
@@ -30,23 +39,16 @@ const ConfirmDialog: React.FC<{
               </button>
             </div>
             <div className={styles.options}>
-              <button
-                onClick={() => {
-                  close();
-                  onAffirm();
-                }}
-                className={styles.approve}
-              >
-                {affirmative}
-              </button>
-              <button
-                onClick={() => {
-                  close();
-                  onDecline?.();
-                }}
-              >
-                {negative}
-              </button>
+              <Button
+                text={affirmative}
+                handleClick={handleAffirm}
+                variant="affirm"
+              />
+              <Button
+                text={negative}
+                handleClick={handleDecline}
+                variant="decline"
+              />
             </div>
           </>
         )}

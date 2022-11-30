@@ -6,40 +6,6 @@
   padding: 0.5rem;
 }
 
-.test {
-  font-family: var(--font-primary);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: max-content;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.25rem;
-  background-color: var(--color-success);
-  border: none;
-  gap: 0.5rem;
-  color: var(--black);
-  margin-left: auto;
-  cursor: pointer;
-  line-height: 1.25rem;
-}
-
-.test > svg {
-  width: 1rem;
-  height: 1rem;
-  fill: var(--black);
-}
-
-.test:disabled {
-  cursor: not-allowed;
-  color: var(--color-primary-10);
-  background-color: var(--color-secondary-30);
-  border: 1px solid var(--gray-30);
-}
-
-.test:disabled > svg {
-  fill: var(--color-primary-10);
-}
-
 .deployContainer {
   position: relative;
 }
