@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import React, { useEffect } from "react";
 import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
@@ -7,6 +6,7 @@ import rectangle3 from "../../assets/rectangle3.png";
 import useNavigationStore from "../../hooks/navigation-store";
 import { isPWA } from "../../lib/utils/pwa";
 import { select } from "../../lib/utils/select";
+import Button from "../ds/button/button";
 import ArrowRight from "../icons/arrow-right";
 import DownloadIcon from "../icons/download-icon";
 import PreludeWordmark from "../icons/prelude-wordmark";
@@ -66,15 +66,11 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           <h2 className={styles.tagline}>Security Test Authoring</h2>
         </section>
         <section className={styles.install}>
-          <button
-            onClick={handleInstall}
-            className={classNames({
-              [styles.showInstaller]: !isInstalled && Boolean(installer),
-            })}
-          >
-            <DownloadIcon />
-            Install
-          </button>
+          {!isInstalled && Boolean(installer) && (
+            <Button onClick={handleInstall} icon={<DownloadIcon />}>
+              Install
+            </Button>
+          )}
         </section>
       </header>
       <div className={styles.blockContainer}>

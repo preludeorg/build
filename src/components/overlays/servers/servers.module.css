@@ -71,32 +71,6 @@ want to handle storing server input data*/
   cursor: pointer;
 }
 
-.connect {
-  height: 2rem;
-  padding: 0.5rem 0;
-  width: 100%;
-  background-color: var(--color-primary-20);
-  border-radius: 0.25rem;
-  border: 1px solid var(--color-primary-20);
-  color: #fff;
-  text-align: center;
-}
-
-.connect:hover {
-  background-color: var(--color-primary-30);
-  cursor: pointer;
-}
-
-.disconnect {
-  background-color: var(--color-alert);
-  border: 1px solid var(--color-alert);
-}
-
-.disconnect:hover {
-  background-color: var(--color-darkAlert);
-  border: 1px solid var(--color-darkAlert);
-}
-
 /* Connected Server Overlay */
 
 .container {

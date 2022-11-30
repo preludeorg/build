@@ -1,5 +1,6 @@
 import { Popover } from "@headlessui/react";
 import CloseIcon from "../../icons/close-icon";
+import Button from "../button/button";
 import styles from "./dialog.module.css";
 
 const ConfirmDialog: React.FC<{
@@ -11,8 +12,8 @@ const ConfirmDialog: React.FC<{
   children: JSX.Element | JSX.Element[];
 }> = ({
   message,
-  affirmative = "Yes",
-  negative = "No",
+  affirmative = "Yes, delete",
+  negative = "No, don't delete",
   children,
   onAffirm,
   onDecline,
@@ -30,23 +31,23 @@ const ConfirmDialog: React.FC<{
               </button>
             </div>
             <div className={styles.options}>
-              <button
+              <Button
                 onClick={() => {
                   close();
                   onAffirm();
                 }}
-                className={styles.approve}
               >
                 {affirmative}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   close();
                   onDecline?.();
                 }}
+                intent={"secondary"}
               >
                 {negative}
-              </button>
+              </Button>
             </div>
           </>
         )}

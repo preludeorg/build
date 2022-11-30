@@ -10,12 +10,12 @@ import { useTimer } from "../../hooks/use-timer";
 import { createURL } from "../../lib/api";
 import { parseBuildVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
+import Button from "../ds/button/button";
 import AlertIcon from "../icons/alert-icon";
 import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
 import CopyIcon from "../icons/copy-icon";
 import DownloadIcon from "../icons/download-icon";
-import { Loading } from "../icons/loading";
 import TimeIcon from "../icons/time-icon";
 import VariantIcon from "../icons/variant-icon";
 import { notifyError, notifySuccess } from "../notifications/notifications";
@@ -308,19 +308,15 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
           </span>
         </div>
       ) : (
-        <button className={styles.downloadButton} onClick={onClick}>
-          {loading ? (
-            <>
-              <Loading className={styles.downloadIcon} />
-              <span>Generating link...</span>
-            </>
-          ) : (
-            <>
-              <DownloadIcon className={styles.downloadIcon} />
-              <span>Generate Deploy Link</span>
-            </>
-          )}
-        </button>
+        <Button
+          onClick={onClick}
+          intent={"secondary"}
+          size={"small"}
+          icon={<DownloadIcon />}
+          loading={loading}
+        >
+          {loading ? "Generating link..." : "Generate Deploy Link"}
+        </Button>
       )}
     </div>
   );
