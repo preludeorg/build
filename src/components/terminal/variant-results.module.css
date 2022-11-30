@@ -155,21 +155,6 @@ ul {
   cursor: default;
 }
 
-.iconContainer {
-  border: none;
-  cursor: pointer;
-  background: var(--gray-30);
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  height: 2rem;
-}
-
-.copyIcon {
-  height: 1rem;
-  width: 1rem;
-  fill: var(--white);
-}
-
 .url {
   background-color: transparent;
   padding: 0;

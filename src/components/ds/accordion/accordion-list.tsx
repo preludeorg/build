@@ -1,4 +1,5 @@
 import { Loading } from "../../icons/loading";
+import IconButton from "../button/icon-button";
 import styles from "./accordion.module.css";
 
 export const AccordionList: React.FC<{
@@ -27,8 +28,12 @@ export const AccordionAction: React.FC<{
   onClick?: () => void;
 }> = ({ icon, onClick, loading }) => {
   return (
-    <button onClick={onClick} disabled={loading} className={styles.action}>
-      {loading ? <Loading /> : icon}
-    </button>
+    <IconButton
+      onClick={onClick}
+      intent="primary"
+      icon={icon}
+      loading={loading}
+      disabled={loading}
+    />
   );
 };

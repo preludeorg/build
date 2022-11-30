@@ -52,12 +52,6 @@
   display: flex;
 }
 
-.message > button > svg {
-  height: 1rem;
-  width: 1rem;
-  fill: var(--white);
-}
-
 .options {
   display: flex;
   flex-direction: row;

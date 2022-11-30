@@ -1,6 +1,7 @@
 import { Popover } from "@headlessui/react";
 import CloseIcon from "../../icons/close-icon";
 import Button from "../button/button";
+import IconButton from "../button/icon-button";
 import styles from "./dialog.module.css";
 
 const ConfirmDialog: React.FC<{
@@ -26,9 +27,11 @@ const ConfirmDialog: React.FC<{
           <>
             <div className={styles.message}>
               <span>{message}</span>
-              <button onClick={() => close()}>
-                <CloseIcon />
-              </button>
+              <IconButton
+                className="close"
+                onClick={() => close()}
+                icon={<CloseIcon />}
+              />
             </div>
             <div className={styles.options}>
               <Button
