@@ -1,4 +1,3 @@
-import { Loading } from "../../icons/loading";
 import IconButton from "../button/icon-button";
 import styles from "./accordion.module.css";
 
