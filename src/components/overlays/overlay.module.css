@@ -32,6 +32,10 @@
   right: 0;
 }
 
+.close {
+  margin-left: 95%;
+}
+
 .title {
   display: flex;
   flex-direction: row;

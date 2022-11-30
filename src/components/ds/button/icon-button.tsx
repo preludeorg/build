@@ -1,8 +1,9 @@
-import styles from "./button.module.css";
+import styles from "./icon-button.module.css";
 import { Loading } from "../../icons/loading";
-import classNames from "classnames/bind";
+import cn from "classnames/bind";
+import classNames from "classnames";
 import React, { ButtonHTMLAttributes } from "react";
-const cx = classNames.bind(styles);
+const cx = cn.bind(styles);
 
 export interface ButtonIconProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,7 +19,10 @@ const IconButton: React.FC<ButtonIconProps> = ({
   ...props
 }) => {
   return (
-    <button {...props} className={cx("iconButton", intent, className)}>
+    <button
+      {...props}
+      className={classNames(cx("iconButton", intent), className)}
+    >
       {loading ? <Loading /> : icon}
     </button>
   );

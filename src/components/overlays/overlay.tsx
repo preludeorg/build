@@ -29,7 +29,7 @@ const Overlay: React.FC<{
         })}
       >
         <IconButton
-          className="close"
+          className={styles.close}
           onClick={() => hideOverlay()}
           icon={<CloseIcon />}
           intent="primary"

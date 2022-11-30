@@ -99,7 +99,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       <span>{tabName.replace(id, "")}</span>
       <div className={styles.closeContainer}>
         <IconButton
-          className="tab"
+          className={styles.iconButton}
           onClick={(e) => {
             e.stopPropagation();
             const hasTabs = closeTab(tabName);

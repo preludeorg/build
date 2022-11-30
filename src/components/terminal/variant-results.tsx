@@ -288,7 +288,7 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
             className={styles.url}
           ></input>
           <IconButton
-            className="copy"
+            className={styles.copyIconButton}
             onClick={() => handleCopy()}
             intent="primary"
             icon={<CopyIcon />}

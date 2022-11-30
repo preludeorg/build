@@ -57,118 +57,57 @@
 }
 
 /* intents */
-.button.primary {
+.primary {
   background-color: var(--color-primary-20);
   border: 1px solid var(--color-primary-20);
   color: var(--white);
 }
 
-.button.primary:hover {
+.primary:hover {
   background-color: var(--color-primary-30);
   border: 1px solid var(--color-primary-10);
   color: var(--white);
 }
 
-.button.secondary {
+.secondary {
   background: none;  
   border: 1px solid var(--color-primary-10);
   color: var(--white);
 }
 
-.button.secondary:hover {
+.secondary:hover {
   background-color: var(--color-secondary-20);
   border: 1px solid var(--color-primary-10);
 }
 
-.button.error {
+.error {
   background-color: var(--color-alert);
   border: 1px solid var(--color-alert);
   color: var(--white);
 }
 
-.button.error:hover {
+.error:hover {
   background-color: var(--color-deepAlert);
   border: 1px solid var(--black);
 }
 
-.button.primary > svg,
-.button.secondary > svg,
-.button.error > svg {
+.primary > svg,
+.secondary > svg,
+.error > svg {
   fill: var(--white);
 }
 
-.button.success {
+.success {
   background-color: var(--color-success);
   border: 1px solid var(--color-success);
   color: #000;
 }
 
-.button.success > svg {
+.success > svg {
   fill: #000;
 }
 
-.button.success:hover {
+.success:hover {
   background-color: var(--color-deepSuccess);
   border: 1px solid var(--color-deepSuccess);
-}
-
-/* icon buttons */
-
-.iconButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.25rem;
-  height: max-content;
-  width: max-content;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.iconButton > svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.iconButton.primary > svg {
-  fill: var(--color-primary-10);
-}
-
-.iconButton.secondary > svg {
-  fill: var(--white);
-}
-
-.iconButton.error > svg {
-  fill: var(--color-alert);
-}
-
-.iconButton.success > svg {
-  fill: var(--color-success);
-}
-
-.iconButton:hover > svg {
-  fill: var(--white);
-}
-
-/* custom classes */
-.tab > svg {
-  width: 1.25rem !important;
-  height: 1.25rem !important;
-}
-
-.tab:hover {
-  background-color: var(--black);
-}
-
-.copy {
-  border: none;
-  background: var(--gray-30);
-  padding: 0.5rem 0.75rem;
-  height: 2rem;
-}
-
-.close {
-  margin-left: 95%;
 }

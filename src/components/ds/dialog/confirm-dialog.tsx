@@ -28,7 +28,7 @@ const ConfirmDialog: React.FC<{
             <div className={styles.message}>
               <span>{message}</span>
               <IconButton
-                className="close"
+                className={styles.close}
                 onClick={() => close()}
                 icon={<CloseIcon />}
               />

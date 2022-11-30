@@ -166,8 +166,11 @@ ul {
   outline: none;
 }
 
-.copyIcon:hover {
-  fill: var(--white);
+.copyIconButton {
+  border: none;
+  background: var(--gray-30);
+  padding: 0.5rem 0.75rem;
+  height: 2rem;
 }
 
 .output {

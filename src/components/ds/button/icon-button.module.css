@@ -1,0 +1,37 @@
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  height: max-content;
+  width: max-content;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.iconButton > svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.iconButton:hover > svg {
+  fill: var(--white);
+}
+
+.primary > svg {
+  fill: var(--color-primary-10);
+}
+
+.secondary > svg {
+  fill: var(--white);
+}
+
+.error > svg {
+  fill: var(--color-alert);
+}
+
+.success > svg {
+  fill: var(--color-success);
+}
