@@ -4,12 +4,8 @@
   flex-direction: row;
   align-items: center;
   width: max-content;
-  padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
-  background: none;
-  border: 1px solid var(--color-primary-10);
   gap: 0.5rem;
-  color: var(--white);
   cursor: pointer;
 }
 
@@ -19,51 +15,56 @@
   fill: var(--white);
 }
 
-.button:hover {
+.small,
+.regular {
+  padding: 0.5rem 0.75rem;
+}
+
+.medium,
+.large {
+  padding: 0.75rem 1rem;
+}
+
+.primary {
+  background-color: var(--color-primary-20);
+  border: 1px solid var(--color-primary-20);
+  color: var(--white);
+}
+
+.primary:hover,
+.success:hover {
+  background-color: var(--color-primary-30);
+  border: 1px solid var(--color-primary-10);
+  color: var(--white);
+}
+
+.secondary {
+  background: none;  
+  border: 1px solid var(--color-primary-10);
+  color: var(--white);
+}
+
+.secondary:hover {
   background-color: var(--color-secondary-20);
+  border: 1px solid var(--color-primary-10);
 }
 
-.affirm {
-  padding: 0.5rem 3rem !important;
-  background-color: var(--color-secondary-10) !important;
-  border: 1px solid var(--color-secondary-10) !important;
-}
-
-.decline {
-  padding: 0.5rem 3rem !important;
-}
-
-.build {
+.success {
   background-color: var(--color-success);
   border: 1px solid var(--color-success);
   color: var(--black);
-  margin-left: auto;
 }
 
-.build > svg {
+.success > svg {
   fill: var(--black) !important;
 }
 
-.build:disabled {
-  cursor: not-allowed;
-  color: var(--color-primary-10) !important;
-  background-color: var(--color-secondary-30) !important;
-  border: 1px solid var(--gray-30) !important;
-}
-
-.build:disabled > svg {
-  fill: var(--color-primary-10) !important;
-}
-
-.build:hover {
-  background-color: var(--color-success);
-}
-
-.build:disabled:hover {
+.button:disabled {
   background-color: var(--color-secondary-30);
+  border: 1px solid var(--gray-30);
+  color: var(--color-primary-10);
 }
 
-.download {
-  white-space: nowrap;
-  height: 2rem;
+.button:disabled > svg {
+  fill: var(--color-primary-10) !important;
 }

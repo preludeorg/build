@@ -18,14 +18,6 @@ const ConfirmDialog: React.FC<{
   onAffirm,
   onDecline,
 }) => {
-  const handleAffirm = () => {
-    close();
-    onAffirm();
-  };
-  const handleDecline = () => {
-    close();
-    onDecline?.();
-  };
   return (
     <Popover className={styles.confirm}>
       <Popover.Button as="div">{children}</Popover.Button>
@@ -40,15 +32,25 @@ const ConfirmDialog: React.FC<{
             </div>
             <div className={styles.options}>
               <Button
-                text={affirmative}
-                handleClick={handleAffirm}
-                variant="affirm"
-              />
+                onClick={() => {
+                  close();
+                  onAffirm();
+                }}
+                intent={"primary"}
+                size={"regular"}
+              >
+                {affirmative}
+              </Button>
               <Button
-                text={negative}
-                handleClick={handleDecline}
-                variant="decline"
-              />
+                onClick={() => {
+                  close();
+                  onDecline?.();
+                }}
+                intent={"secondary"}
+                size={"regular"}
+              >
+                {negative}
+              </Button>
             </div>
           </>
         )}

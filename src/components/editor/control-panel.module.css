@@ -1,6 +1,7 @@
 .controlPanel {
   display: flex;
   flex-direction: row;
+  justify-content: right;
   background-color: var(--color-secondary-20);
   border-top: 1px solid var(--color-secondary-10);
   padding: 0.5rem;

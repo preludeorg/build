@@ -1,28 +1,50 @@
 import styles from "./button.module.css";
 import { Loading } from "../../icons/loading";
 import classNames from "classnames";
+import React, { ButtonHTMLAttributes } from "react";
 
-const Button: React.FC<{
-  handleClick?: () => void;
-  text: string;
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  intent: "primary" | "secondary" | "success";
+  size: "small" | "regular" | "medium" | "large";
   icon?: JSX.Element;
+  iconPosition?: "left" | "right";
   loading?: boolean;
-  disabled?: boolean;
-  variant?: "affirm" | "decline" | "build" | "download";
-}> = ({ handleClick, text, icon, loading, disabled = true, variant }) => {
+  children: React.ReactNode;
+}
+
+const Button: React.FC<ButtonProps> = ({
+  intent,
+  size,
+  icon,
+  iconPosition = "left",
+  loading,
+  children,
+  ...props
+}) => {
   return (
     <button
-      onClick={handleClick}
+      {...props}
       className={classNames(styles.button, {
-        [styles.affirm]: variant === "affirm",
-        [styles.decline]: variant === "decline",
-        [styles.build]: variant === "build",
-        [styles.download]: variant === "download",
+        [styles.primary]: intent === "primary",
+        [styles.secondary]: intent === "secondary",
+        [styles.success]: intent === "success",
+        [styles.small]: size === "small",
+        [styles.regular]: size === "regular",
+        [styles.medium]: size === "medium",
+        [styles.large]: size === "large",
       })}
-      disabled={disabled}
     >
-      {loading ? <Loading /> : icon}
-      <span>{text}</span>
+      {icon && iconPosition === "left" ? (
+        <>
+          {loading ? <Loading /> : icon}
+          <span>{children}</span>
+        </>
+      ) : (
+        <>
+          <span>{children}</span>
+          {loading ? <Loading /> : icon}
+        </>
+      )}
     </button>
   );
 };

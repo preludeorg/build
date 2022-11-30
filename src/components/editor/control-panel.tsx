@@ -59,13 +59,15 @@ const ControlPanel: React.FC = () => {
   return (
     <div className={styles.controlPanel}>
       <Button
-        handleClick={handleBuild}
-        text="Build"
+        onClick={handleBuild}
+        intent={"success"}
+        size={"small"}
         icon={<PlayIcon />}
         disabled={!validTest || loading}
         loading={loading}
-        variant="build"
-      />
+      >
+        Build
+      </Button>
     </div>
   );
 };

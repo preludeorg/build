@@ -309,12 +309,14 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
         </div>
       ) : (
         <Button
-          handleClick={onClick}
-          text={loading ? "Generating link..." : "Generate Deploy Link"}
+          onClick={onClick}
+          intent={"secondary"}
+          size={"small"}
           icon={<DownloadIcon />}
           loading={loading}
-          variant="download"
-        />
+        >
+          {loading ? "Generating link..." : "Generate Deploy Link"}
+        </Button>
       )}
     </div>
   );
