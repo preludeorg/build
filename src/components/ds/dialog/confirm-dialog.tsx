@@ -23,7 +23,7 @@ const ConfirmDialog: React.FC<{
     onAffirm();
   };
   const handleDecline = () => {
-    close;
+    close();
     onDecline?.();
   };
   return (
