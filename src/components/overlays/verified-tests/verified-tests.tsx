@@ -20,7 +20,7 @@ import DownloadIcon from "../../ds/icons/download-icon";
 import Trashcan from "../../ds/icons/trashcan-icon";
 import VariantIcon from "../../ds/icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
-import Overlay from "../overlay";
+import Overlay from "../../../components/ds/overlay/overlay";
 
 const filterVST = (test: Test, vst: string[]) => {
   return vst.filter((v) => parseBuildVariant(v)?.id === test.id);
