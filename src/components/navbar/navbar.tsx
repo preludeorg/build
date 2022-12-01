@@ -1,7 +1,7 @@
 import classNames from "classnames";
-import EditorIcon from "../icons/editor-icon";
-import HostsIcon from "../icons/hosts-icon";
-import SettingsIcon from "../icons/settings-icon";
+import EditorIcon from "../ds/icons/editor-icon";
+import HostsIcon from "../ds/icons/hosts-icon";
+import SettingsIcon from "../ds/icons/settings-icon";
 import styles from "./navbar.module.css";
 
 interface Props {

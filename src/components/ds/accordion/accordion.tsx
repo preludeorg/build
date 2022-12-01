@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import ChevronIcon from "../../icons/chevron-icon";
-import { Loading } from "../../icons/loading";
+import ChevronIcon from "../icons/chevron-icon";
+import { Loading } from "../icons/loading";
 import styles from "./accordion.module.css";
 
 const Accordion: React.FC<{

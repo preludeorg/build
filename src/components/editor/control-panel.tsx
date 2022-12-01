@@ -9,7 +9,7 @@ import { validate } from "../../lib/lang/linter";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
 import Button from "../ds/button/button";
-import PlayIcon from "../icons/play-icon";
+import PlayIcon from "../ds/icons/play-icon";
 import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
 import styles from "./control-panel.module.css";

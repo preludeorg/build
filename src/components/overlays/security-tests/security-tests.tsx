@@ -16,9 +16,9 @@ import {
 } from "../../ds/accordion/accordion-list";
 import { useAccordion } from "../../ds/accordion/use-accordion";
 import ConfirmDialog from "../../ds/dialog/confirm-dialog";
-import EditorIcon from "../../icons/editor-icon";
-import Trashcan from "../../icons/trashcan-icon";
-import VariantIcon from "../../icons/variant-icon";
+import EditorIcon from "../../ds/icons/editor-icon";
+import Trashcan from "../../ds/icons/trashcan-icon";
+import VariantIcon from "../../ds/icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 import Overlay from "../overlay";
 

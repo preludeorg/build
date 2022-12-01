@@ -1,5 +1,5 @@
 import { Popover } from "@headlessui/react";
-import CloseIcon from "../../icons/close-icon";
+import CloseIcon from "../icons/close-icon";
 import Button from "../button/button";
 import IconButton from "../button/icon-button";
 import styles from "./dialog.module.css";
