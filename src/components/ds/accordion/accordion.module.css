@@ -53,26 +53,9 @@
   margin-right: auto;
 }
 
-.item svg {
+.item > svg {
   width: 1.25rem;
   height: 1.25rem;
   fill: var(--white);
   flex-shrink: 0;
-}
-
-.action {
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-}
-
-.action > svg {
-  width: 1rem;
-  height: 1rem;
-  fill: var(--color-primary-10);
-}
-
-.action > svg:hover {
-  fill: var(--white);
 }

@@ -12,6 +12,7 @@ import { lint } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
+import IconButton from "../ds/button/icon-button";
 import CloseIcon from "../icons/close-icon";
 import VariantIcon from "../icons/variant-icon";
 import { notifyError } from "../notifications/notifications";
@@ -97,8 +98,8 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       <span className={styles.truncate}>{id}</span>
       <span>{tabName.replace(id, "")}</span>
       <div className={styles.closeContainer}>
-        <button
-          className={styles.close}
+        <IconButton
+          className={styles.iconButton}
           onClick={(e) => {
             e.stopPropagation();
             const hasTabs = closeTab(tabName);
@@ -106,9 +107,9 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
               navigate("welcome");
             }
           }}
-        >
-          <CloseIcon />
-        </button>
+          intent={"primary"}
+          icon={<CloseIcon />}
+        />
       </div>
     </li>
   );

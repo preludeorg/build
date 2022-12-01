@@ -52,12 +52,6 @@
   display: flex;
 }
 
-.message > button > svg {
-  height: 1rem;
-  width: 1rem;
-  fill: var(--white);
-}
-
 .options {
   display: flex;
   flex-direction: row;
@@ -65,4 +59,8 @@
   align-items: center;
   justify-content: center;
   column-gap: 1rem;
+}
+
+.close {
+  margin-left: 95%;
 }

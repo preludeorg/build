@@ -33,24 +33,7 @@
 }
 
 .close {
-  background: none;
-  border: none;
-  margin-left: auto;
-  padding: 0 0.5rem 0 0;
-}
-
-.close > svg {
-  width: 1rem;
-  height: 1rem;
-  fill: var(--color-primary-10);
-}
-
-.close:hover {
-  cursor: pointer;
-}
-
-.close > svg:hover {
-  fill: var(--white);
+  margin-left: 95%;
 }
 
 .title {

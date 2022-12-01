@@ -61,7 +61,6 @@ const ControlPanel: React.FC = () => {
       <Button
         onClick={handleBuild}
         intent={"success"}
-        size={"small"}
         icon={<PlayIcon />}
         disabled={!validTest || loading}
         loading={loading}

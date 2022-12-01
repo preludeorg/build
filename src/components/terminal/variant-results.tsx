@@ -11,6 +11,7 @@ import { createURL } from "../../lib/api";
 import { parseBuildVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
 import Button from "../ds/button/button";
+import IconButton from "../ds/button/icon-button";
 import AlertIcon from "../icons/alert-icon";
 import CheckmarkIcon from "../icons/checkmark-icon";
 import ChevronIcon from "../icons/chevron-icon";
@@ -286,10 +287,12 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
             readOnly
             className={styles.url}
           ></input>
-          <button className={styles.iconContainer} onClick={() => handleCopy()}>
-            <CopyIcon className={styles.copyIcon} />
-          </button>
-
+          <IconButton
+            className={styles.copyIconButton}
+            onClick={() => handleCopy()}
+            intent="primary"
+            icon={<CopyIcon />}
+          />
           <div style={{ width: 20, height: 20, marginTop: -6 }}>
             <CircularProgressbar
               counterClockwise

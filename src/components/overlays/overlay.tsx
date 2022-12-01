@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import useNavigationStore from "../../hooks/navigation-store";
+import IconButton from "../ds/button/icon-button";
 import CloseIcon from "../icons/close-icon";
 import { Loading } from "../icons/loading";
 import styles from "./overlay.module.css";
@@ -27,9 +28,12 @@ const Overlay: React.FC<{
           [styles.left]: position === "left",
         })}
       >
-        <button className={styles.close} onClick={() => hideOverlay()}>
-          <CloseIcon />
-        </button>
+        <IconButton
+          className={styles.close}
+          onClick={() => hideOverlay()}
+          icon={<CloseIcon />}
+          intent="primary"
+        />
 
         <div className={styles.title}>
           <span className={styles.legend}>
