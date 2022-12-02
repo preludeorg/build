@@ -4,7 +4,7 @@ import { Loading } from "../icons/loading";
 import styles from "./accordion.module.css";
 
 const Accordion: React.FC<{
-  title: string;
+  title: React.ReactNode;
   children?: JSX.Element | JSX.Element[];
   loading?: boolean;
   expanded: boolean;
@@ -17,7 +17,7 @@ const Accordion: React.FC<{
       })}
     >
       <header onClick={onToggle}>
-        <span>{title}</span>
+        <div>{title}</div>
         {loading ? <Loading /> : <ChevronIcon className={styles.expand} />}
       </header>
       {expanded && children}

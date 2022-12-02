@@ -16,6 +16,7 @@ import { select } from "../../lib/utils/select";
 import IconButton from "../ds/button/icon-button";
 import CloseIcon from "../ds/icons/close-icon";
 import VariantIcon from "../ds/icons/variant-icon";
+import LockedTest from "../locked-test/locked-test";
 import { notifyError } from "../notifications/notifications";
 import ControlPanel from "./control-panel";
 import Editor from "./editor";
@@ -102,6 +103,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       <VariantIcon platform={platform} className={styles.icon} />
       <span className={styles.truncate}>{id}</span>
       <span>{tabName.replace(id, "")}</span>
+      <LockedTest showTooltip={false} />
       <div className={styles.closeContainer}>
         <IconButton
           className={styles.iconButton}
