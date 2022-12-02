@@ -1,11 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Test } from "@theprelude/sdk";
 import shallow from "zustand/shallow";
+import Overlay from "../../../components/ds/overlay/overlay";
 import useAuthStore from "../../../hooks/auth-store";
 import useNavigationStore from "../../../hooks/navigation-store";
 import { useTab } from "../../../hooks/use-tab";
 import { useTests } from "../../../hooks/use-tests";
-import { deleteVariant, getTest, getVariant } from "../../../lib/api";
+import {
+  deleteVariant,
+  getTest,
+  getVariant,
+  isPreludeTest,
+} from "../../../lib/api";
 import { parseVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
 import Accordion from "../../ds/accordion/accordion";
@@ -20,7 +26,6 @@ import EditorIcon from "../../ds/icons/editor-icon";
 import Trashcan from "../../ds/icons/trashcan-icon";
 import VariantIcon from "../../ds/icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
-import Overlay from "../../../components/ds/overlay/overlay";
 
 const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
@@ -51,6 +56,8 @@ const TestItem: React.FC<{
     { enabled: accordion.expanded }
   );
 
+  const readonly = isPreludeTest(test);
+
   return (
     <Accordion
       title={test.question}
@@ -67,8 +74,10 @@ const TestItem: React.FC<{
               icon={<VariantIcon platform={parseVariant(variant)?.platform} />}
               actions={
                 <>
-                  <OpenButton variant={variant} />
-                  <DeleteButton variant={variant} testId={test.id} />
+                  <OpenButton variant={variant} readonly={readonly} />
+                  {!readonly && (
+                    <DeleteButton variant={variant} testId={test.id} />
+                  )}
                 </>
               }
             />
@@ -79,7 +88,10 @@ const TestItem: React.FC<{
   );
 };
 
-const OpenButton: React.FC<{ variant: string }> = ({ variant }) => {
+const OpenButton: React.FC<{ variant: string; readonly: boolean }> = ({
+  variant,
+  readonly,
+}) => {
   const { open } = useTab();
   const hideOverlay = useNavigationStore((state) => state.hideOverlay);
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
@@ -87,7 +99,7 @@ const OpenButton: React.FC<{ variant: string }> = ({ variant }) => {
     (variant: string) => getVariant(variant, serviceConfig),
     {
       onSuccess: async (code) => {
-        open({ name: variant, code });
+        open({ name: variant, code, readonly });
         hideOverlay();
         notifySuccess("Opened variant. all changes will auto-save");
       },

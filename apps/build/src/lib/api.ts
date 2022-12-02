@@ -1,4 +1,4 @@
-import { Service, ServiceConfig } from "@theprelude/sdk";
+import { Service, ServiceConfig, Test } from "@theprelude/sdk";
 import { isPWA } from "./utils/pwa";
 
 function productHeader(): HeadersInit {
@@ -10,6 +10,7 @@ function productHeader(): HeadersInit {
 export interface Variant {
   name: string;
   code: string;
+  readonly?: boolean;
 }
 
 export const newAccount = async (
@@ -127,3 +128,5 @@ export const createURL = async (name: string, config: ServiceConfig) => {
   const service = new Service(config);
   return await service.build.createURL(name, { headers: productHeader() });
 };
+
+export const isPreludeTest = (test: Test) => test.account_id === "prelude";
