@@ -6,7 +6,7 @@ import useTerminalStore from "../../../hooks/terminal-store";
 import { select } from "../../../lib/utils/select";
 import Button from "../../ds/button/button";
 import { InputGroup } from "../../forms/input";
-import CopyIcon from "../../icons/copy-icon";
+import CopyIcon from "../../ds/icons/copy-icon";
 import Overlay from "../overlay";
 import styles from "./servers.module.css";
 

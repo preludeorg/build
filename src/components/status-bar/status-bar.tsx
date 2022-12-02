@@ -5,10 +5,10 @@ import useNavigationStore from "../../hooks/navigation-store";
 import useTerminalStore from "../../hooks/terminal-store";
 import { useConfig } from "../../hooks/use-config";
 import { select } from "../../lib/utils/select";
-import DownloadIcon from "../icons/download-icon";
-import FolderIcon from "../icons/folder-icon";
-import { Loading } from "../icons/loading";
-import SettingsIcon from "../icons/settings-icon";
+import DownloadIcon from "../ds/icons/download-icon";
+import FolderIcon from "../ds/icons/folder-icon";
+import { Loading } from "../ds/icons/loading";
+import SettingsIcon from "../ds/icons/settings-icon";
 import styles from "./status-bar.module.css";
 
 const StatusBar: React.FC = () => {

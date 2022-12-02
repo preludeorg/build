@@ -1,5 +1,5 @@
 import styles from "./icon-button.module.css";
-import { Loading } from "../../icons/loading";
+import { Loading } from "../icons/loading";
 import cn from "classnames/bind";
 import classNames from "classnames";
 import React, { ButtonHTMLAttributes } from "react";

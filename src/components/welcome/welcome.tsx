@@ -7,9 +7,9 @@ import useNavigationStore from "../../hooks/navigation-store";
 import { isPWA } from "../../lib/utils/pwa";
 import { select } from "../../lib/utils/select";
 import Button from "../ds/button/button";
-import ArrowRight from "../icons/arrow-right";
-import DownloadIcon from "../icons/download-icon";
-import PreludeWordmark from "../icons/prelude-wordmark";
+import ArrowRight from "../ds/icons/arrow-right";
+import DownloadIcon from "../ds/icons/download-icon";
+import PreludeWordmark from "../ds/icons/prelude-wordmark";
 import WelcomeBlock from "./welcome-block";
 import styles from "./welcome.module.css";
 

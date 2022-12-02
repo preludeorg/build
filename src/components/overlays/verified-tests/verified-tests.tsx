@@ -15,10 +15,10 @@ import {
 } from "../../ds/accordion/accordion-list";
 import { useAccordion } from "../../ds/accordion/use-accordion";
 import ConfirmDialog from "../../ds/dialog/confirm-dialog";
-import CopyIcon from "../../icons/copy-icon";
-import DownloadIcon from "../../icons/download-icon";
-import Trashcan from "../../icons/trashcan-icon";
-import VariantIcon from "../../icons/variant-icon";
+import CopyIcon from "../../ds/icons/copy-icon";
+import DownloadIcon from "../../ds/icons/download-icon";
+import Trashcan from "../../ds/icons/trashcan-icon";
+import VariantIcon from "../../ds/icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 import Overlay from "../overlay";
 
