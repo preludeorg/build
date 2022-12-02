@@ -7,7 +7,7 @@ import { select } from "../../../lib/utils/select";
 import Button from "../../ds/button/button";
 import { InputGroup } from "../../forms/input";
 import CopyIcon from "../../ds/icons/copy-icon";
-import Overlay from "../overlay";
+import Overlay from "../../../components/ds/overlay/overlay";
 import styles from "./servers.module.css";
 
 const Servers: React.FC = () => {

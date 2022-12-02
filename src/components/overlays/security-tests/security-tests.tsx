@@ -20,7 +20,7 @@ import EditorIcon from "../../ds/icons/editor-icon";
 import Trashcan from "../../ds/icons/trashcan-icon";
 import VariantIcon from "../../ds/icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
-import Overlay from "../overlay";
+import Overlay from "../../../components/ds/overlay/overlay";
 
 const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
