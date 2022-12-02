@@ -54,8 +54,6 @@ const EditorWindow: React.FC = () => {
     shallow
   );
 
-  console.log("readonly", readonly);
-
   const extensions = React.useMemo(
     () => [...getLanguage(ext).mode, EditorState.readOnly.of(readonly)],
     [ext, readonly]
