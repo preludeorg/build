@@ -1,13 +1,13 @@
 import { terminalList } from "../../components/terminal/terminal-list";
 import {
-  TerminalMessage,
   ErrorMessage,
+  TerminalMessage,
 } from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { deleteTest, getTestList } from "../api";
+import { deleteTest, getTestList, isPreludeTest } from "../api";
 import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { NO_TESTS_MESSAGE } from "./messages";
 import { Command } from "./types";
@@ -31,13 +31,15 @@ export const deleteTestCommand: Command = {
       const { navigate } = navigatorState();
       const signal = takeControl().signal;
 
-      const tests = await getTestList(
-        {
-          host,
-          credentials,
-        },
-        signal
-      );
+      const tests = (
+        await getTestList(
+          {
+            host,
+            credentials,
+          },
+          signal
+        )
+      ).filter((test) => !isPreludeTest(test));
 
       if (tests.length === 0) {
         return NO_TESTS_MESSAGE;

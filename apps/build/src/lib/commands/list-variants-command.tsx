@@ -8,7 +8,7 @@ import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
-import { getTest, getVariant } from "../api";
+import { getTest, getVariant, isPreludeTest } from "../api";
 import { parseVariant } from "../utils/parse-variant";
 import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { NO_VARIANTS_MESSAGE } from "./messages";
@@ -83,6 +83,7 @@ export const listVariantsCommand: Command = {
             return {
               name: v,
               code,
+              readonly: isPreludeTest(currentTest),
             };
           })
         );

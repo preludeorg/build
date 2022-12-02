@@ -1,3 +1,4 @@
+import { EditorState } from "@codemirror/state";
 import { ServiceConfig } from "@theprelude/sdk";
 import classNames from "classnames";
 import React from "react";
@@ -42,17 +43,21 @@ const processVariant = debounce(saveVariant, 1000);
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
-  const { currentTabId, ext, buffer, updateBuffer } = useEditorStore(
+  const { currentTabId, ext, buffer, updateBuffer, readonly } = useEditorStore(
     (state) => ({
       currentTabId: state.currentTabId,
       ext: state.tabs[state.currentTabId].extension,
       updateBuffer: state.updateCurrentBuffer,
       buffer: selectBuffer(state),
+      readonly: state.tabs[state.currentTabId].variant.readonly ?? false,
     }),
     shallow
   );
 
-  const extensions = React.useMemo(() => getLanguage(ext).mode, [ext]);
+  const extensions = React.useMemo(
+    () => [...getLanguage(ext).mode, EditorState.readOnly.of(readonly)],
+    [ext, readonly]
+  );
 
   return (
     <div className={styles.window}>

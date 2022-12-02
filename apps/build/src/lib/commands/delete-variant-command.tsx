@@ -1,21 +1,26 @@
 import { terminalList } from "../../components/terminal/terminal-list";
 import {
-  TerminalMessage,
   ErrorMessage,
+  TerminalMessage,
 } from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { deleteVariant, getTest } from "../api";
-import { isConnected, isExitError, isInTestContext } from "./helpers";
+import {
+  isConnected,
+  isExitError,
+  isInTestContext,
+  isPreludeTestContext,
+} from "./helpers";
 import { NO_VARIANTS_MESSAGE } from "./messages";
 import { Command } from "./types";
 
 export const deleteVariantCommand: Command = {
   alias: ["dv"],
   desc: "delete variant from current test",
-  enabled: () => isConnected() && isInTestContext(),
+  enabled: () => isConnected() && isInTestContext() && !isPreludeTestContext(),
   async exec() {
     const { currentTest, takeControl, showIndicator, hideIndicator } =
       terminalState();

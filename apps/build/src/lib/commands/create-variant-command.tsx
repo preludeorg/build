@@ -12,7 +12,12 @@ import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
 import { createVariant, getVariant, Variant, variantExists } from "../api";
 import { getLanguage } from "../lang";
-import { isConnected, isExitError, isInTestContext } from "./helpers";
+import {
+  isConnected,
+  isExitError,
+  isInTestContext,
+  isPreludeTestContext,
+} from "./helpers";
 import { Command } from "./types";
 
 const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
@@ -65,7 +70,7 @@ export const createVariantCommand: Command = {
   alias: ["cv"],
   args: "[platform] [arch] [language]",
   desc: "create variant in current test",
-  enabled: () => isConnected() && isInTestContext(),
+  enabled: () => isConnected() && isInTestContext() && !isPreludeTestContext(),
   async exec(args) {
     const { takeControl, currentTest, showIndicator, hideIndicator } =
       terminalState();
