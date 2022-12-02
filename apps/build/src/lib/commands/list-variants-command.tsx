@@ -89,14 +89,18 @@ export const listVariantsCommand: Command = {
         );
         variants.forEach(openTab);
 
+        const saveMessage = isPreludeTest(currentTest)
+          ? " in readonly mode"
+          : ". all changes will auto-save";
+
         navigate("editor");
         focusTerminal();
         return (
           <TerminalMessage
             message={
               variant === OPEN_ALL
-                ? "opened all variants. all changes will auto-save"
-                : "opened variant. all changes will auto-save"
+                ? `opened all variants${saveMessage}`
+                : `opened variant${saveMessage}`
             }
           />
         );

@@ -12,6 +12,12 @@
   cursor: pointer;
 }
 
+.accordion > header > div {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .accordion:hover > header,
 .accordion.active > header {
   background: var(--color-secondary-10);

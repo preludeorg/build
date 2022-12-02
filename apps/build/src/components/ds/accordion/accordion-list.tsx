@@ -1,3 +1,4 @@
+import React from "react";
 import IconButton from "../button/icon-button";
 import styles from "./accordion.module.css";
 
@@ -9,7 +10,7 @@ export const AccordionList: React.FC<{
 
 export const AccordionItem: React.FC<{
   icon: JSX.Element;
-  title: string;
+  title: React.ReactNode;
   actions: JSX.Element;
 }> = ({ icon, title, actions }) => {
   return (

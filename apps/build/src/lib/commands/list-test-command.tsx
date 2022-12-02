@@ -1,3 +1,4 @@
+import LockedTest from "../../components/locked-test/locked-test";
 import { terminalList } from "../../components/terminal/terminal-list";
 import {
   ErrorMessage,
@@ -5,7 +6,7 @@ import {
 } from "../../components/terminal/terminal-message";
 import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { getTestList } from "../api";
+import { getTestList, isPreludeTest } from "../api";
 import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
 import { Command } from "./types";
@@ -43,7 +44,11 @@ export const listTestsCommand: Command = {
         filterOn: (test) => test.question,
         renderItem: (test) => (
           <>
-            <span>{test.question}</span> <span>[{test.id}]</span>
+            <span style={{ display: "flex", alignItems: "center" }}>
+              {test.question}{" "}
+              {isPreludeTest(test) && <LockedTest showTooltip />}{" "}
+            </span>{" "}
+            <span>[{test.id}]</span>
           </>
         ),
         signal,

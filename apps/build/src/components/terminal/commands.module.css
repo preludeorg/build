@@ -78,6 +78,10 @@
   opacity: 0.5;
 }
 
+.item.selected .content svg {
+  fill: var(--black);
+}
+
 .terminalList:focus-within .item.selected .content {
   opacity: 1;
 }

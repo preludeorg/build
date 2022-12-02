@@ -25,6 +25,7 @@ import ConfirmDialog from "../../ds/dialog/confirm-dialog";
 import EditorIcon from "../../ds/icons/editor-icon";
 import Trashcan from "../../ds/icons/trashcan-icon";
 import VariantIcon from "../../ds/icons/variant-icon";
+import LockedTest from "../../locked-test/locked-test";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 
 const SecurityTests: React.FC = () => {
@@ -60,7 +61,12 @@ const TestItem: React.FC<{
 
   return (
     <Accordion
-      title={test.question}
+      title={
+        <>
+          {test.question}
+          {readonly && <LockedTest showTooltip />}
+        </>
+      }
       loading={isFetching}
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
