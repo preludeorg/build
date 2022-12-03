@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "Display": "Vite",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowJs": false,
+    "esModuleInterop": false,
+    "jsx": "react-jsx",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "module": "ESNext",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": false,
+    "target": "ESNext",
+    "types": [
+      "vite/client",
+      "vite-plugin-pwa/client"
+    ]
+  }
+}
