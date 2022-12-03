@@ -107,7 +107,10 @@ const OpenButton: React.FC<{ variant: string; readonly: boolean }> = ({
       onSuccess: async (code) => {
         open({ name: variant, code, readonly });
         hideOverlay();
-        notifySuccess("Opened variant. all changes will auto-save");
+        const saveMessage = readonly
+          ? " in read-only mode"
+          : ". all changes will auto-save";
+        notifySuccess(`Opened variant${saveMessage}`);
       },
       onError: (e) => {
         notifyError("Failed to open variant.", e);

@@ -90,7 +90,7 @@ export const listVariantsCommand: Command = {
         variants.forEach(openTab);
 
         const saveMessage = isPreludeTest(currentTest)
-          ? " in readonly mode"
+          ? " in read-only mode"
           : ". all changes will auto-save";
 
         navigate("editor");
