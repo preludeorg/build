@@ -3,8 +3,7 @@ module.exports = {
   plugins: ["unicorn"],
   extends: [
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended"
   ],
   parserOptions: {
     ecmaVersion: "latest",
