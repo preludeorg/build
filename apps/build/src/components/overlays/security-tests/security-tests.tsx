@@ -35,7 +35,7 @@ const SecurityTests: React.FC = () => {
     <Overlay
       position="right"
       title="Security Tests"
-      description="Your authored Tests and their applicable Variants appear below."
+      description="Open any test and build it to create a Verified Security Test."
       loading={isLoading}
     >
       {data?.map((test) => (
