@@ -3,7 +3,7 @@ module.exports = {
   extends: ["custom"],
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: ["./tsconfig.json"],
+    project: ["./tsconfig.json", "./tsconfig.vite.json"],
   },
-  ignorePatterns: ["node_modules"],
+  ignorePatterns: ["node_modules", "dist"],
 };
