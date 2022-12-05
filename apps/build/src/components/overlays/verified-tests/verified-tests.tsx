@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Test } from "@theprelude/sdk";
 import { useMemo } from "react";
 import shallow from "zustand/shallow";
+import Overlay from "../../../components/ds/overlay/overlay";
 import useAuthStore from "../../../hooks/auth-store";
 import { useTests } from "../../../hooks/use-tests";
 import { createURL, deleteVerified, verifiedTests } from "../../../lib/api";
@@ -20,7 +21,6 @@ import DownloadIcon from "../../ds/icons/download-icon";
 import Trashcan from "../../ds/icons/trashcan-icon";
 import VariantIcon from "../../ds/icons/variant-icon";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
-import Overlay from "../../../components/ds/overlay/overlay";
 
 const filterVST = (test: Test, vst: string[]) => {
   return vst.filter((v) => parseBuildVariant(v)?.id === test.id);
@@ -44,8 +44,7 @@ const VerifiedTests: React.FC = () => {
       loading={isLoading}
       position="right"
       title="Verified Security Tests"
-      description="Verified Security Tests (VSTs) are production-ready tests. Your
-    authored VSTs appear below."
+      description="Copy the URL to a VST and execute it on any host."
     >
       {verified.data &&
         tests.data
