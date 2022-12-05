@@ -72,7 +72,7 @@ const Editor: React.FC<{
     return () => {
       view.destroy();
     };
-  }, [editorRef.current, buffer, extensions]);
+  }, [buffer, extensions, onChange]);
 
   return <div className={styles.editor} ref={editorRef} />;
 };
