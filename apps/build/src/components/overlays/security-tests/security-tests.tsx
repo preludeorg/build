@@ -1,7 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Accordion,
+  AccordionAction,
+  AccordionItem,
+  AccordionList,
+  ConfirmDialog,
+  EditorIcon,
+  Overlay,
+  Trashcan,
+  useAccordion,
+  VariantIcon,
+} from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
 import shallow from "zustand/shallow";
-import Overlay from "../../../components/ds/overlay/overlay";
+
 import useAuthStore from "../../../hooks/auth-store";
 import useNavigationStore from "../../../hooks/navigation-store";
 import { useTab } from "../../../hooks/use-tab";
@@ -14,25 +26,16 @@ import {
 } from "../../../lib/api";
 import { parseVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
-import Accordion from "../../ds/accordion/accordion";
-import {
-  AccordionAction,
-  AccordionItem,
-  AccordionList,
-} from "../../ds/accordion/accordion-list";
-import { useAccordion } from "../../ds/accordion/use-accordion";
-import ConfirmDialog from "../../ds/dialog/confirm-dialog";
-import EditorIcon from "../../ds/icons/editor-icon";
-import Trashcan from "../../ds/icons/trashcan-icon";
-import VariantIcon from "../../ds/icons/variant-icon";
 import LockedTest from "../../locked-test/locked-test";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 
 const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
+  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
 
   return (
     <Overlay
+      hideOverlay={hideOverlay}
       position="right"
       title="Security Tests"
       description="Open any test and build it to create a Verified Security Test."

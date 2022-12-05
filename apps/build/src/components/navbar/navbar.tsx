@@ -1,7 +1,5 @@
+import { EditorIcon, HostsIcon, SettingsIcon } from "@theprelude/ds";
 import classNames from "classnames";
-import EditorIcon from "../ds/icons/editor-icon";
-import HostsIcon from "../ds/icons/hosts-icon";
-import SettingsIcon from "../ds/icons/settings-icon";
 import styles from "./navbar.module.css";
 
 interface Props {

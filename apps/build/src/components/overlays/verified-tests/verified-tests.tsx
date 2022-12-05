@@ -1,25 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Accordion,
+  AccordionAction,
+  AccordionItem,
+  AccordionList,
+  ConfirmDialog,
+  CopyIcon,
+  DownloadIcon,
+  Overlay,
+  Trashcan,
+  useAccordion,
+  VariantIcon,
+} from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
 import { useMemo } from "react";
 import shallow from "zustand/shallow";
-import Overlay from "../../../components/ds/overlay/overlay";
+
 import useAuthStore from "../../../hooks/auth-store";
+import useNavigationStore from "../../../hooks/navigation-store";
 import { useTests } from "../../../hooks/use-tests";
 import { createURL, deleteVerified, verifiedTests } from "../../../lib/api";
 import { parseBuildVariant } from "../../../lib/utils/parse-variant";
 import { select } from "../../../lib/utils/select";
-import Accordion from "../../ds/accordion/accordion";
-import {
-  AccordionAction,
-  AccordionItem,
-  AccordionList,
-} from "../../ds/accordion/accordion-list";
-import { useAccordion } from "../../ds/accordion/use-accordion";
-import ConfirmDialog from "../../ds/dialog/confirm-dialog";
-import CopyIcon from "../../ds/icons/copy-icon";
-import DownloadIcon from "../../ds/icons/download-icon";
-import Trashcan from "../../ds/icons/trashcan-icon";
-import VariantIcon from "../../ds/icons/variant-icon";
+
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 
 const filterVST = (test: Test, vst: string[]) => {
@@ -32,15 +35,16 @@ const VerifiedTests: React.FC = () => {
   const verified = useQuery(["verified-tests", serviceConfig], () =>
     verifiedTests(serviceConfig)
   );
-
   const isLoading = tests.isLoading || verified.isLoading;
   const testIds = useMemo(
     () => new Set(verified.data?.map((t) => parseBuildVariant(t)?.id ?? "")),
     [verified.data]
   );
+  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
 
   return (
     <Overlay
+      hideOverlay={hideOverlay}
       loading={isLoading}
       position="right"
       title="Verified Security Tests"
