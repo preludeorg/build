@@ -11,7 +11,7 @@ concurrency:
 env:
   AWS_REGION: ${{ secrets.BUCKET_REGION }}
   S3_BUCKET: ${{ secrets.BUCKET_NAME }}
-  DIST_DIR: ./apps/build/dist
+  DIST_DIR: ./apps/platform/dist
   CF_DIST_ID: ${{ secrets.CLOUDFRONT_ID }}
   NODE_VER: 18
 

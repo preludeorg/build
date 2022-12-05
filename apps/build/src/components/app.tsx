@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
   },
 });
 
-function App() {
+function Build() {
   const { panel, overlay } = useNavigationStore(
     select("panel", "overlay"),
     shallow
@@ -46,4 +46,4 @@ function App() {
   );
 }
 
-export default App;
+export default Build;

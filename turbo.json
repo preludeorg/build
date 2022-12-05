@@ -3,12 +3,14 @@
   "pipeline": {
     "build": {},
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "cache": false
     },
     "dev": {
       "cache": false
     },
     "typecheck": {
+      "cache": false,
       "outputs": []
     }
   }
