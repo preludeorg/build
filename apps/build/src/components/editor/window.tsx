@@ -43,7 +43,16 @@ const processVariant = debounce(saveVariant, 1000);
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const tabKeys = useEditorStore((state) => Object.keys(state.tabs), shallow);
+  const tabs = useEditorStore(
+    (state) =>
+      Object.keys(state.tabs).map((key) => {
+        return {
+          id: state.tabs[key].variant.name,
+          readonly: state.tabs[key].variant.readonly ?? false,
+        };
+      }),
+    shallow
+  );
   const { currentTabId, ext, buffer, updateBuffer, readonly } = useEditorStore(
     (state) => ({
       currentTabId: state.currentTabId,
@@ -64,8 +73,8 @@ const EditorWindow: React.FC = () => {
     <div className={styles.window}>
       <nav>
         <ul>
-          {tabKeys.map((id) => (
-            <Tab key={id} tabId={id} />
+          {tabs.map((tab) => (
+            <Tab key={tab.id} readonly={tab.readonly} tabId={tab.id} />
           ))}
         </ul>
       </nav>
@@ -85,7 +94,10 @@ const EditorWindow: React.FC = () => {
 
 export default EditorWindow;
 
-const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
+const Tab: React.FC<{ tabId: string; readonly: boolean }> = ({
+  tabId,
+  readonly,
+}) => {
   const tabName = useEditorStore((state) => state.tabs[tabId].variant.name);
   const { currentTabId, switchTab, closeTab } = useEditorStore(
     select("currentTabId", "switchTab", "closeTab"),
@@ -103,7 +115,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       <VariantIcon platform={platform} className={styles.icon} />
       <span className={styles.truncate}>{id}</span>
       <span>{tabName.replace(id, "")}</span>
-      <LockedTest showTooltip={false} />
+      {readonly && <LockedTest showTooltip={false} />}
       <div className={styles.closeContainer}>
         <IconButton
           className={styles.iconButton}

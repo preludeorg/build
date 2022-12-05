@@ -35,7 +35,7 @@ const SecurityTests: React.FC = () => {
     <Overlay
       position="right"
       title="Security Tests"
-      description="Your authored Tests and their applicable Variants appear below."
+      description="Open any test and build it to create a Verified Security Test."
       loading={isLoading}
     >
       {data?.map((test) => (
@@ -107,7 +107,10 @@ const OpenButton: React.FC<{ variant: string; readonly: boolean }> = ({
       onSuccess: async (code) => {
         open({ name: variant, code, readonly });
         hideOverlay();
-        notifySuccess("Opened variant. all changes will auto-save");
+        const saveMessage = readonly
+          ? " in read-only mode"
+          : ". all changes will auto-save";
+        notifySuccess(`Opened variant${saveMessage}`);
       },
       onError: (e) => {
         notifyError("Failed to open variant.", e);
