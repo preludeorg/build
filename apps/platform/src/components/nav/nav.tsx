@@ -11,9 +11,6 @@ const Nav: React.FC = () => {
         <a href="/" className={cx("item", { active: true })}>
           <BuildIcon />
         </a>
-        <a href="/build" className={cx("item", { active: false })}>
-          <BuildIcon />
-        </a>
       </section>
     </nav>
   );

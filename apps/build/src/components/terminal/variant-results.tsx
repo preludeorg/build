@@ -13,6 +13,8 @@ import {
   CopyIcon,
   DownloadIcon,
   IconButton,
+  notifyError,
+  notifySuccess,
   TimeIcon,
   VariantIcon,
 } from "@theprelude/ds";
@@ -23,7 +25,6 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import shallow from "zustand/shallow";
 import { useTimer } from "../../hooks/use-timer";
-import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./variant-results.module.css";
 
 interface Props {
