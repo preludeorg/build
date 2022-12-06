@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Header from "./header/header";
 import Nav from "./nav/nav";
 import styles from "./platform.module.css";
+import ReloadPrompt from "./reload-prompt/reload-prompt";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ function Platform() {
           <RouterProvider router={router} />
         </main>
       </div>
+      <ReloadPrompt />
     </QueryClientProvider>
   );
 }
