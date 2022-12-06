@@ -87,7 +87,7 @@
   display: flex;
   flex-direction: column;
   row-gap: 0.25rem;
-  width: max-content;
+  width: 12rem;
   padding: 0.25rem;
   background: var(--black);
   border: 1px solid var(--gray-30);
@@ -111,7 +111,7 @@
 
 .options:before {
   content: "";
-  right: 10%;
+  right: 8%;
   top: -4%;
   position: absolute;
   padding: 0.2rem;
@@ -119,7 +119,7 @@
   border-top: 1px solid var(--gray-30);
   border-right: 1px solid var(--gray-30);
   rotate: 315deg;
-  translate: 25% 5%;
+  translate: 40% 5%;
 }
 
 .create {
