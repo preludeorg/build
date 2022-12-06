@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Build from "@theprelude/build";
+import { Notifications } from "@theprelude/ds";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Header from "./header/header";
 import Nav from "./nav/nav";
@@ -30,6 +31,7 @@ function Platform() {
         <main className={styles.wrapper}>
           <RouterProvider router={router} />
         </main>
+        <Notifications />
       </div>
       <ReloadPrompt />
     </QueryClientProvider>
