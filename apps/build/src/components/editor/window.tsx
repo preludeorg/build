@@ -1,4 +1,5 @@
 import { EditorState } from "@codemirror/state";
+import { CloseIcon, IconButton, VariantIcon } from "@theprelude/ds";
 import { ServiceConfig } from "@theprelude/sdk";
 import classNames from "classnames";
 import React from "react";
@@ -13,9 +14,6 @@ import { lint } from "../../lib/lang/linter";
 import { debounce } from "../../lib/utils/debounce";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
-import IconButton from "../ds/button/icon-button";
-import CloseIcon from "../ds/icons/close-icon";
-import VariantIcon from "../ds/icons/variant-icon";
 import LockedTest from "../locked-test/locked-test";
 import { notifyError } from "../notifications/notifications";
 import ControlPanel from "./control-panel";

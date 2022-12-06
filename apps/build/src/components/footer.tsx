@@ -1,6 +1,6 @@
+import { DragHandle } from "@theprelude/ds";
 import { Resizable } from "re-resizable";
 import styles from "./app.module.css";
-import DragHandle from "./ds/icons/drag-handle-icon";
 import Terminal from "./terminal/terminal";
 
 const Footer: React.FC<{ defaultHeight: string | null }> = ({

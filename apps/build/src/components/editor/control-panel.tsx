@@ -1,3 +1,4 @@
+import { Button, PlayIcon } from "@theprelude/ds";
 import { useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
@@ -8,8 +9,6 @@ import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
 import { parseVariant } from "../../lib/utils/parse-variant";
 import { select } from "../../lib/utils/select";
-import Button from "../ds/button/button";
-import PlayIcon from "../ds/icons/play-icon";
 import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
 import styles from "./control-panel.module.css";
