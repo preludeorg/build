@@ -6,7 +6,12 @@ import {
   select,
   useAuthStore,
 } from "@theprelude/core";
-import { CloseIcon, IconButton, VariantIcon } from "@theprelude/ds";
+import {
+  CloseIcon,
+  IconButton,
+  notifyError,
+  VariantIcon,
+} from "@theprelude/ds";
 import { ServiceConfig } from "@theprelude/sdk";
 import classNames from "classnames";
 import React from "react";
@@ -17,7 +22,6 @@ import { terminalState } from "../../hooks/terminal-store";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
 import LockedTest from "../locked-test/locked-test";
-import { notifyError } from "../notifications/notifications";
 import ControlPanel from "./control-panel";
 import Editor from "./editor";
 import styles from "./editor.module.pcss";

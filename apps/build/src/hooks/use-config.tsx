@@ -1,8 +1,8 @@
 import { select, useAuthStore } from "@theprelude/core";
+import { notifyError } from "@theprelude/ds";
 import ini from "ini";
 import { z } from "zod";
 import shallow from "zustand/shallow";
-import { notifyError } from "../components/notifications/notifications";
 import {
   ErrorMessage,
   TerminalMessage,
