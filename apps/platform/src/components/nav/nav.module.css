@@ -11,7 +11,7 @@
 .top {
   gap: 0.75rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
 }
 
@@ -21,6 +21,7 @@
   align-items: center;
   padding: 0.5rem;
   border-radius: 50%;
+  margin: 0 auto;
 }
 
 .item:hover,

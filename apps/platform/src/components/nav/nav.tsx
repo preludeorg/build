@@ -8,7 +8,10 @@ const Nav: React.FC = () => {
   return (
     <nav className={cx("nav")}>
       <section className={cx("top")}>
-        <a className={cx("item", { active: true })}>
+        <a href="/" className={cx("item", { active: true })}>
+          <BuildIcon />
+        </a>
+        <a href="/build" className={cx("item", { active: false })}>
           <BuildIcon />
         </a>
       </section>
