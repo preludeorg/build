@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
   AlertIcon,
   Button,
+  CheckmarkIcon,
   ChevronIcon,
   CopyIcon,
   DownloadIcon,
@@ -14,7 +15,6 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { CheckmarkIcon } from "react-hot-toast";
 import shallow from "zustand/shallow";
 import useAuthStore from "../../hooks/auth-store";
 import { useTimer } from "../../hooks/use-timer";
