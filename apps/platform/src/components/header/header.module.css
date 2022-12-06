@@ -40,22 +40,40 @@
 
 .right .account {
   position: relative;
+}
+
+.tag {
   display: flex;
   flex-direction: row;
+  align-items: center;
   padding: 0.25rem 0.5rem;
   column-gap: 0.25rem;
   border: 1px dashed var(--gray-20);
   border-radius: 0.75rem;
+  background: none;
 }
 
-.right .account > svg {
+.tag svg {
   fill: var(--gray-10);
   width: 1rem;
   height: 1rem;
 }
 
-.right .account > span {
+.tag span {
   color: var(--gray-10);
+}
+
+.tag:hover svg,
+.tag:hover span,
+.tag:hover {
+  fill: var(--white);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.chevron {
+  transform: rotate(0deg);
+  transition: transform 250ms;
 }
 
 .activeChevron {
@@ -91,6 +109,19 @@
   border-bottom: 1px solid var(--color-secondary-10);
 }
 
+.options:before {
+  content: "";
+  right: 10%;
+  top: -4%;
+  position: absolute;
+  padding: 0.2rem;
+  background: var(--black);
+  border-top: 1px solid var(--gray-30);
+  border-right: 1px solid var(--gray-30);
+  rotate: 315deg;
+  translate: 25% 5%;
+}
+
 .create {
   position: absolute;
   right: 0;
@@ -102,6 +133,17 @@
   padding: 0.75rem;
   background: #000;
   border-radius: 0.25rem;
+}
+
+.create:before {
+  content: "";
+  translate: 25%;
+  right: 6%;
+  top: -2%;
+  position: absolute;
+  padding: 0.2rem;
+  background: #000;
+  rotate: 315deg;
 }
 
 .title {
@@ -142,4 +184,8 @@
   border-radius: 0.25rem;
   outline: none;
   color: var(--white);
+}
+
+.checkmark {
+  padding: 0.5rem 0.75rem;
 }
