@@ -1,0 +1,15 @@
+.platform {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "nav main"
+    "nav main";
+  grid-template-rows: 3.5rem 1fr;
+  grid-template-columns: 3.5rem 1fr;
+}
+
+.wrapper {
+  grid-area: main;
+  height: calc(100vh - 3.5rem);
+  overflow: hidden;
+}
