@@ -15,6 +15,8 @@ import {
   ConfirmDialog,
   CopyIcon,
   DownloadIcon,
+  notifyError,
+  notifySuccess,
   Overlay,
   Trashcan,
   useAccordion,
@@ -25,7 +27,6 @@ import { useMemo } from "react";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../../hooks/navigation-store";
 import { useTests } from "../../../hooks/use-tests";
-import { notifyError, notifySuccess } from "../../notifications/notifications";
 
 const filterVST = (test: Test, vst: string[]) => {
   return vst.filter((v) => parseBuildVariant(v)?.id === test.id);

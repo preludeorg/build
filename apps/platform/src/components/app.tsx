@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Build from "@theprelude/build";
+import { Notifications } from "@theprelude/ds";
 import Welcome from "@theprelude/welcome";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import Header from "./header/header";
@@ -23,6 +24,7 @@ function Root() {
         <main className={styles.wrapper}>
           <Outlet />
         </main>
+        <Notifications />
       </div>
     </QueryClientProvider>
   );

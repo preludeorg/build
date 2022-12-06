@@ -4,6 +4,7 @@ export * from "./components/accordion/use-accordion";
 export * from "./components/button/button";
 export * from "./components/button/icon-button";
 export * from "./components/dialog/confirm-dialog";
+export * from "./components/forms/input";
 /* Icons */
 export * from "./components/icons/alert-icon";
 export * from "./components/icons/arrow-right";
@@ -34,5 +35,6 @@ export * from "./components/icons/time-icon";
 export * from "./components/icons/trashcan-icon";
 export * from "./components/icons/variant-icon";
 export * from "./components/icons/windows-icon";
+export * from "./components/notifications/notifications";
 export * from "./components/overlay/overlay";
 export * from "./components/tooltip/tooltip";

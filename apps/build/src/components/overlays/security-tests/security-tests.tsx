@@ -15,6 +15,8 @@ import {
   AccordionList,
   ConfirmDialog,
   EditorIcon,
+  notifyError,
+  notifySuccess,
   Overlay,
   Trashcan,
   useAccordion,
@@ -26,7 +28,6 @@ import useNavigationStore from "../../../hooks/navigation-store";
 import { useTab } from "../../../hooks/use-tab";
 import { useTests } from "../../../hooks/use-tests";
 import LockedTest from "../../locked-test/locked-test";
-import { notifyError, notifySuccess } from "../../notifications/notifications";
 
 const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
