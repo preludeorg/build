@@ -1,5 +1,5 @@
 import { Service, ServiceConfig, Test } from "@theprelude/sdk";
-import { isPWA } from "./utils/pwa";
+import { isPWA } from "../utils/pwa";
 
 function productHeader(): HeadersInit {
   return {

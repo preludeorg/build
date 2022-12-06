@@ -1,5 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createURL,
+  deleteVerified,
+  parseBuildVariant,
+  select,
+  useAuthStore,
+  verifiedTests,
+} from "@theprelude/core";
+import {
   Accordion,
   AccordionAction,
   AccordionItem,
@@ -15,14 +23,8 @@ import {
 import { Test } from "@theprelude/sdk";
 import { useMemo } from "react";
 import shallow from "zustand/shallow";
-
-import useAuthStore from "../../../hooks/auth-store";
 import useNavigationStore from "../../../hooks/navigation-store";
 import { useTests } from "../../../hooks/use-tests";
-import { createURL, deleteVerified, verifiedTests } from "../../../lib/api";
-import { parseBuildVariant } from "../../../lib/utils/parse-variant";
-import { select } from "../../../lib/utils/select";
-
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 
 const filterVST = (test: Test, vst: string[]) => {

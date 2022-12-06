@@ -1,3 +1,4 @@
+import { select } from "@theprelude/core";
 import classNames from "classnames";
 import { useState } from "react";
 import useTerminalStore from "../../hooks/terminal-store";
@@ -10,7 +11,6 @@ import {
   press,
   SpecialKeys,
 } from "../../lib/keyboard";
-import { select } from "../../lib/utils/select";
 import Focusable from "./focusable";
 import styles from "./terminal.module.css";
 

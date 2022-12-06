@@ -1,5 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  deleteVariant,
+  getTest,
+  getVariant,
+  isPreludeTest,
+  parseVariant,
+  select,
+  useAuthStore,
+} from "@theprelude/core";
+import {
   Accordion,
   AccordionAction,
   AccordionItem,
@@ -13,19 +22,9 @@ import {
 } from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
 import shallow from "zustand/shallow";
-
-import useAuthStore from "../../../hooks/auth-store";
 import useNavigationStore from "../../../hooks/navigation-store";
 import { useTab } from "../../../hooks/use-tab";
 import { useTests } from "../../../hooks/use-tests";
-import {
-  deleteVariant,
-  getTest,
-  getVariant,
-  isPreludeTest,
-} from "../../../lib/api";
-import { parseVariant } from "../../../lib/utils/parse-variant";
-import { select } from "../../../lib/utils/select";
 import LockedTest from "../../locked-test/locked-test";
 import { notifyError, notifySuccess } from "../../notifications/notifications";
 

@@ -1,4 +1,5 @@
 import { Popover, Transition } from "@headlessui/react";
+import { select, selectIsConnected, useAuthStore } from "@theprelude/core";
 import {
   DownloadIcon,
   FolderIcon,
@@ -6,11 +7,9 @@ import {
   SettingsIcon,
 } from "@theprelude/ds";
 import shallow from "zustand/shallow";
-import useAuthStore, { selectIsConnected } from "../../hooks/auth-store";
 import useNavigationStore from "../../hooks/navigation-store";
 import useTerminalStore from "../../hooks/terminal-store";
 import { useConfig } from "../../hooks/use-config";
-import { select } from "../../lib/utils/select";
 import styles from "./status-bar.module.css";
 
 const StatusBar: React.FC = () => {

@@ -1,14 +1,17 @@
+import {
+  build,
+  getTestList,
+  parseVariant,
+  select,
+  useAuthStore,
+} from "@theprelude/core";
 import { Button, PlayIcon } from "@theprelude/ds";
 import { useState } from "react";
 import shallow from "zustand/shallow";
-import useAuthStore from "../../hooks/auth-store";
 import useEditorStore from "../../hooks/editor-store";
 import useTerminalStore from "../../hooks/terminal-store";
-import { build, getTestList } from "../../lib/api";
 import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
-import { parseVariant } from "../../lib/utils/parse-variant";
-import { select } from "../../lib/utils/select";
 import { ErrorMessage } from "../terminal/terminal-message";
 import VariantResults from "../terminal/variant-results";
 import styles from "./control-panel.module.css";

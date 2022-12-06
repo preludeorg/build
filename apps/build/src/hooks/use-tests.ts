@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { getTestList, select, useAuthStore } from "@theprelude/core";
 import shallow from "zustand/shallow";
-import { getTestList } from "../lib/api";
-import { select } from "../lib/utils/select";
-import useAuthStore from "./auth-store";
 
 export const useTests = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);

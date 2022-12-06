@@ -1,3 +1,10 @@
+import {
+  authState,
+  createVariant,
+  getVariant,
+  Variant,
+  variantExists,
+} from "@theprelude/core";
 import { format } from "date-fns";
 import { z, ZodError, ZodInvalidEnumValueIssue } from "zod";
 import { inquire } from "../../components/terminal/question";
@@ -5,12 +12,10 @@ import {
   ErrorMessage,
   TerminalMessage,
 } from "../../components/terminal/terminal-message";
-import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
 import focusTerminal from "../../utils/focus-terminal";
-import { createVariant, getVariant, Variant, variantExists } from "../api";
 import { getLanguage } from "../lang";
 import {
   isConnected,
