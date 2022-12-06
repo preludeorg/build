@@ -1,9 +1,13 @@
 .platform {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "nav main"
+    "nav main";
+  grid-template-rows: 3.5rem 1fr;
+  grid-template-columns: 3.5rem 1fr;
 }
 
 .wrapper {
-  display: flex;
-  flex-direction: row;
+  grid-area: main;
 }

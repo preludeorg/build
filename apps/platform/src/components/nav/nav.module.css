@@ -1,5 +1,5 @@
 .nav {
-  min-width: 3.5rem;
+  grid-area: nav;
   border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;

@@ -7,10 +7,10 @@ function Platform() {
   return (
     <div className={styles.platform}>
       <Header />
-      <div className={styles.wrapper}>
-        <Nav />
+      <Nav />
+      <main className={styles.wrapper}>
         <Build />
-      </div>
+      </main>
     </div>
   );
 }
