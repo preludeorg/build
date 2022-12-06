@@ -28,6 +28,7 @@ export * from "./components/icons/lock-icon";
 export * from "./components/icons/play-icon";
 export * from "./components/icons/prelude-icon";
 export * from "./components/icons/prelude-wordmark";
+export * from "./components/icons/pulse-icon";
 export * from "./components/icons/settings-icon";
 export * from "./components/icons/time-icon";
 export * from "./components/icons/trashcan-icon";

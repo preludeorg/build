@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Build from "@theprelude/build";
+import Welcome from "@theprelude/welcome";
 import Header from "./header/header";
 import Nav from "./nav/nav";
 import styles from "./platform.module.css";
@@ -19,7 +20,7 @@ function Platform() {
         <Header />
         <Nav />
         <main className={styles.wrapper}>
-          <Build />
+          <Welcome />
         </main>
       </div>
     </QueryClientProvider>

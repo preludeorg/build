@@ -1,0 +1,7 @@
+:global(body) {
+  background-color: #1a2121;
+}
+
+.welcome {
+  padding: 2rem;
+}

@@ -7,7 +7,7 @@ const Header: React.FC = () => {
       <section className={styles.brand}>
         <PreludeIcon className={styles.logo} />
         <span className={styles.divider} />
-        <h1>Build</h1>
+        <h1>Welcome</h1>
       </section>
       <section className={styles.right}></section>
     </header>
