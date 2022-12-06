@@ -2,7 +2,6 @@ import { Credentials } from "@theprelude/sdk";
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import { getTestList, newAccount } from "../lib/api";
-import { isExitError } from "../lib/commands/helpers";
 
 interface AuthStore {
   host: string;
@@ -21,11 +20,11 @@ interface AuthStore {
       serverType: "prelude" | "custom";
     },
     signal: AbortSignal
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   disconnect: () => void;
 }
 
-const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
       host: import.meta.env.VITE_PRELUDE_SERVICE_URL,
@@ -39,16 +38,8 @@ const useAuthStore = create<AuthStore>()(
       },
       async login({ host, account, token, serverType }, signal) {
         const credentials = { account, token };
-        try {
-          await getTestList({ host, credentials }, signal);
-          set(() => ({ host, credentials, serverType }));
-          return true;
-        } catch (err) {
-          if (isExitError(err)) {
-            throw err;
-          }
-          return false;
-        }
+        await getTestList({ host, credentials }, signal);
+        set(() => ({ host, credentials, serverType }));
       },
       disconnect() {
         const host = "";
@@ -85,8 +76,6 @@ const useAuthStore = create<AuthStore>()(
     }
   )
 );
-
-export default useAuthStore;
 
 export const selectIsConnected = (state: AuthStore) => !!state.credentials;
 

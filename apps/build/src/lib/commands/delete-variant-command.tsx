@@ -1,13 +1,12 @@
+import { authState, deleteVariant, getTest } from "@theprelude/core";
 import { terminalList } from "../../components/terminal/terminal-list";
 import {
   ErrorMessage,
   TerminalMessage,
 } from "../../components/terminal/terminal-message";
-import { authState } from "../../hooks/auth-store";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { deleteVariant, getTest } from "../api";
 import {
   isConnected,
   isExitError,

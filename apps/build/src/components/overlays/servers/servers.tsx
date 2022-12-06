@@ -1,11 +1,11 @@
+import { select, selectIsConnected, useAuthStore } from "@theprelude/core";
 import { Button, CopyIcon, Overlay } from "@theprelude/ds";
 import classNames from "classnames";
 import { useState } from "react";
 import shallow from "zustand/shallow";
-import useAuthStore, { selectIsConnected } from "../../../hooks/auth-store";
+
 import useNavigationStore from "../../../hooks/navigation-store";
 import useTerminalStore from "../../../hooks/terminal-store";
-import { select } from "../../../lib/utils/select";
 import { InputGroup } from "../../forms/input";
 import styles from "./servers.module.css";
 
@@ -29,26 +29,27 @@ const Servers: React.FC = () => {
   const [type, setType] = useState(serverType);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
-    if (isConnected) {
-      disconnect();
-      return;
-    }
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const host = formData.get("host") as string;
-    const accountID = formData.get("accountID") as string;
-    const token = formData.get("token") as string;
-    const isLoggedIn = await login(
-      { host, account: accountID, token, serverType: type },
-      takeControl().signal
-    );
-    if (isLoggedIn) {
+    try {
+      if (isConnected) {
+        disconnect();
+        return;
+      }
+      e.preventDefault();
+      const formData = new FormData(e.target as HTMLFormElement);
+      const host = formData.get("host") as string;
+      const accountID = formData.get("accountID") as string;
+      const token = formData.get("token") as string;
+      await login(
+        { host, account: accountID, token, serverType: type },
+        takeControl().signal
+      );
+
       write(
         <span style={{ color: "green" }}>
           Connecting to server {host as string}
         </span>
       );
-    }
+    } catch (e) {}
   };
 
   const copyText = async (text: string) => {

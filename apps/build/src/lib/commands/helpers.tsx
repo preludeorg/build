@@ -1,7 +1,5 @@
-import { authState } from "../../hooks/auth-store";
+import { authState, isPreludeTest } from "@theprelude/core";
 import { terminalState } from "../../hooks/terminal-store";
-import { isPreludeTest } from "../api";
-
 export const isConnected = () => !!authState().credentials;
 export const isInTestContext = () => !!terminalState().currentTest;
 

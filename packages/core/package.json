@@ -1,0 +1,39 @@
+{
+  "name": "@theprelude/core",
+  "description": "Core state and business logic shared between apps",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "src/main.ts",
+  "types": "src/main.ts",
+  "author": {
+    "name": "Prelude Research",
+    "email": "support@prelude.org"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/main.ts",
+      "require": "./src/main.ts"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@theprelude/sdk": "^0.9.11",
+    "zustand": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "prettier": "^2.7.1",
+    "typescript": "^4.9.3",
+    "eslint-config-custom": "*",
+    "tsconfig": "*"
+  }
+}

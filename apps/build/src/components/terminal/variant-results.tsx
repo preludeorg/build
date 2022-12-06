@@ -1,5 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import {
+  createURL,
+  parseBuildVariant,
+  select,
+  useAuthStore,
+} from "@theprelude/core";
+import {
   AlertIcon,
   Button,
   CheckmarkIcon,
@@ -16,11 +22,7 @@ import { useEffect, useState } from "react";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import shallow from "zustand/shallow";
-import useAuthStore from "../../hooks/auth-store";
 import { useTimer } from "../../hooks/use-timer";
-import { createURL } from "../../lib/api";
-import { parseBuildVariant } from "../../lib/utils/parse-variant";
-import { select } from "../../lib/utils/select";
 import { notifyError, notifySuccess } from "../notifications/notifications";
 import styles from "./variant-results.module.css";
 
