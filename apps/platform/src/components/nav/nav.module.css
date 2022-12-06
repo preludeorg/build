@@ -1,0 +1,41 @@
+.nav {
+  min-width: 3.5rem;
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 0;
+  justify-content: space-between;
+}
+
+.nav .top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item {
+  margin: 0 auto;
+  padding: 0.25rem;
+  border-radius: 50%;
+}
+
+.item:hover {
+  background-color: var(--transparent-white);
+  cursor: pointer;
+}
+
+.item:hover svg {
+  fill: var(--white);
+}
+
+.item svg {
+  width: 2rem;
+  height: 2rem;
+  fill: var(--gray-10);
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

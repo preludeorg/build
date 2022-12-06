@@ -1,0 +1,37 @@
+.header {
+  display: flex;
+  border-bottom: 1px var(--gray-30) solid;
+  height: 3.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  padding: 0.75rem 0 0.75rem 0.75rem;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: 1.5rem;
+}
+
+.brand .divider {
+  border-left: 1px var(--gray-30) solid;
+  margin-left: 0.68rem;
+  margin-right: 0.5rem;
+  height: 1rem;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.logo {
+  fill: var(--white);
+  width: 2rem;
+  height: 1.5rem;
+}
+
+.right {
+  display: flex;
+}
