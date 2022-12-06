@@ -1,6 +1,6 @@
+import { select } from "@theprelude/core";
 import { InputHTMLAttributes, useEffect, useRef, useState } from "react";
 import useTerminalStore from "../../hooks/terminal-store";
-import { select } from "../../lib/utils/select";
 import styles from "./terminal.module.css";
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {

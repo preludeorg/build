@@ -1,10 +1,10 @@
+import { commonBeginning } from "@theprelude/core";
 import { Test } from "@theprelude/sdk";
 import * as uuid from "uuid";
 import create from "zustand";
 import { CurrentLine } from "../components/terminal/terminal";
 import { TerminalMessage } from "../components/terminal/terminal-message";
 import { commands } from "../lib/commands";
-import { commonBeginning } from "../lib/utils/common-beginning";
 
 export function getSuggestions(input: string) {
   return Object.keys(commands).filter((o) => o.startsWith(input));

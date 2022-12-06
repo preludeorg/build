@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Build from "@theprelude/build";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Header from "./header/header";
@@ -17,16 +18,26 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+        
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function Platform() {
   return (
-    <div className={styles.platform}>
-      <Header />
-      <Nav />
-      <main className={styles.wrapper}>
-        <RouterProvider router={router} />
-      </main>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className={styles.platform}>
+        <Header />
+        <Nav />
+        <main className={styles.wrapper}>
+          <RouterProvider router={router} />
+        </main>
+      </div>
+    </QueryClientProvider>
   );
 }
 

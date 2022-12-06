@@ -1,5 +1,5 @@
+import { selectIsConnected, useAuthStore } from "@theprelude/core";
 import classNames from "classnames";
-import useAuthStore, { selectIsConnected } from "../../../hooks/auth-store";
 import useNavigationStore from "../../../hooks/navigation-store";
 import styles from "./servers.module.css";
 

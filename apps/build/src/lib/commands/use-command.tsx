@@ -1,3 +1,4 @@
+import { authState } from "@theprelude/core";
 import { z, ZodError } from "zod";
 import { inquire } from "../../components/terminal/question";
 import {
@@ -5,7 +6,6 @@ import {
   TerminalMessage,
 } from "../../components/terminal/terminal-message";
 import WelcomeMessage from "../../components/terminal/welcome-message";
-import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { isConnected, isExitError } from "./helpers";
 import { Command } from "./types";

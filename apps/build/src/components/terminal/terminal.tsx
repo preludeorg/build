@@ -1,14 +1,13 @@
+import { select, useAuthStore } from "@theprelude/core";
 import { Test } from "@theprelude/sdk";
 import React, { useState } from "react";
 import shallow from "zustand/shallow";
-import useAuthStore from "../../hooks/auth-store";
 import useTerminalStore, {
   getNextCommand,
   getPreviousCommand,
   getSuggestions,
 } from "../../hooks/terminal-store";
 import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
-import { select } from "../../lib/utils/select";
 import focusTerminal from "../../utils/focus-terminal";
 import PrimaryPrompt from "./primary-prompt";
 import Readline, { useReadline } from "./readline";

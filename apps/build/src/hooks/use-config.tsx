@@ -1,3 +1,4 @@
+import { select, useAuthStore } from "@theprelude/core";
 import ini from "ini";
 import { z } from "zod";
 import shallow from "zustand/shallow";
@@ -7,9 +8,7 @@ import {
   TerminalMessage,
 } from "../components/terminal/terminal-message";
 import { isExitError } from "../lib/commands/helpers";
-import { select } from "../lib/utils/select";
 import focusTerminal from "../utils/focus-terminal";
-import useAuthStore from "./auth-store";
 import useEditorStore from "./editor-store";
 import useNavigationStore from "./navigation-store";
 import useTerminalStore from "./terminal-store";
@@ -77,7 +76,7 @@ export const useConfig = () => {
 
       showIndicator("Importing credentials...");
 
-      const authenticated = await login(
+      await login(
         {
           host: config.default.hq,
           account: config.default.account,
@@ -87,28 +86,24 @@ export const useConfig = () => {
         takeControl().signal
       );
 
-      if (authenticated) {
-        switchTest();
-        clear();
-        resetEditor();
-        navigate("welcome");
-        write(
-          <TerminalMessage
-            message={`credentials imported successfully.`}
-            helpText={`type "list-tests" to show all your tests`}
-          />
-        );
-      } else {
-        write(
-          <ErrorMessage message="failed to import credentials: unable to authenticate" />
-        );
-      }
+      switchTest();
+      clear();
+      resetEditor();
+      navigate("welcome");
+      write(
+        <TerminalMessage
+          message={`credentials imported successfully.`}
+          helpText={`type "list-tests" to show all your tests`}
+        />
+      );
     } catch (err) {
       if (isExitError(err)) {
         return write(<TerminalMessage message="exited" />);
       }
 
-      write(<ErrorMessage message="failed to import credentials" />);
+      write(
+        <ErrorMessage message="failed to import credentials: unable to authenticate" />
+      );
     } finally {
       hideIndicator();
     }

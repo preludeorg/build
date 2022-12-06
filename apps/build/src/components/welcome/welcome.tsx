@@ -1,3 +1,4 @@
+import { isPWA, select } from "@theprelude/core";
 import {
   ArrowRight,
   Button,
@@ -10,8 +11,6 @@ import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
 import rectangle3 from "../../assets/rectangle3.png";
 import useNavigationStore from "../../hooks/navigation-store";
-import { isPWA } from "../../lib/utils/pwa";
-import { select } from "../../lib/utils/select";
 import WelcomeBlock from "./welcome-block";
 import styles from "./welcome.module.css";
 

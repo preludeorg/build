@@ -1,6 +1,5 @@
+import { select, Variant } from "@theprelude/core";
 import shallow from "zustand/shallow";
-import { Variant } from "../lib/api";
-import { select } from "../lib/utils/select";
 import useEditorStore from "./editor-store";
 import useNavigationStore from "./navigation-store";
 

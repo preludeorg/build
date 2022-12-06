@@ -1,12 +1,11 @@
+import { authState, getTestList, isPreludeTest } from "@theprelude/core";
 import LockedTest from "../../components/locked-test/locked-test";
 import { terminalList } from "../../components/terminal/terminal-list";
 import {
   ErrorMessage,
   TerminalMessage,
 } from "../../components/terminal/terminal-message";
-import { authState } from "../../hooks/auth-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { getTestList, isPreludeTest } from "../api";
 import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
 import { Command } from "./types";
