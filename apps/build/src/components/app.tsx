@@ -5,7 +5,6 @@ import { useDefaultHeight } from "../hooks/use-default-height";
 import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
 import Footer from "./footer";
-import { Notifications } from "./notifications/notifications";
 import Overlays from "./overlays/overlays";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
 import StatusBar from "./status-bar/status-bar";
@@ -30,7 +29,6 @@ function Build() {
       </main>
       <Overlays overlay={overlay} />
       <ReloadPrompt />
-      <Notifications />
     </div>
   );
 }
