@@ -9,10 +9,11 @@ const Nav: React.FC = () => {
   return (
     <nav className={cx("nav")}>
       <section className={cx("top")}>
-        <Link to="/build">
-          <a className={cx("item", { active: true })}>
-            <BuildIcon />
-          </a>
+        <Link to="/build" className={cx("item", { active: true })}>
+          <BuildIcon />
+        </Link>
+        <Link to="/build" className={cx("item", { active: false })}>
+          <BuildIcon />
         </Link>
       </section>
     </nav>
