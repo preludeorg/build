@@ -1,5 +1,5 @@
+import { Button } from "@theprelude/ds";
 import { useRegisterSW } from "virtual:pwa-register/react";
-import Button from "../ds/button/button";
 import styles from "./reload-prompt.module.css";
 
 function ReloadPrompt() {

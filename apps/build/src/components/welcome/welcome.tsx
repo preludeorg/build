@@ -1,3 +1,9 @@
+import {
+  ArrowRight,
+  Button,
+  DownloadIcon,
+  PreludeWordmark,
+} from "@theprelude/ds";
 import React, { useEffect } from "react";
 import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
@@ -6,10 +12,6 @@ import rectangle3 from "../../assets/rectangle3.png";
 import useNavigationStore from "../../hooks/navigation-store";
 import { isPWA } from "../../lib/utils/pwa";
 import { select } from "../../lib/utils/select";
-import Button from "../ds/button/button";
-import ArrowRight from "../ds/icons/arrow-right";
-import DownloadIcon from "../ds/icons/download-icon";
-import PreludeWordmark from "../ds/icons/prelude-wordmark";
 import WelcomeBlock from "./welcome-block";
 import styles from "./welcome.module.css";
 

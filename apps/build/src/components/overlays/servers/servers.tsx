@@ -1,13 +1,12 @@
+import { Button, CopyIcon, Overlay } from "@theprelude/ds";
 import classNames from "classnames";
 import { useState } from "react";
 import shallow from "zustand/shallow";
 import useAuthStore, { selectIsConnected } from "../../../hooks/auth-store";
+import useNavigationStore from "../../../hooks/navigation-store";
 import useTerminalStore from "../../../hooks/terminal-store";
 import { select } from "../../../lib/utils/select";
-import Button from "../../ds/button/button";
 import { InputGroup } from "../../forms/input";
-import CopyIcon from "../../ds/icons/copy-icon";
-import Overlay from "../../../components/ds/overlay/overlay";
 import styles from "./servers.module.css";
 
 const Servers: React.FC = () => {
@@ -19,6 +18,7 @@ const Servers: React.FC = () => {
     select("host", "credentials", "serverType"),
     shallow
   );
+  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
 
   const { isConnected, login, disconnect } = useAuthStore((state) => ({
     isConnected: selectIsConnected(state),
@@ -59,6 +59,7 @@ const Servers: React.FC = () => {
 
   return (
     <Overlay
+      hideOverlay={hideOverlay}
       position="right"
       title="Servers"
       description="By default, Build is backed by the hosted Prelude Server. You can

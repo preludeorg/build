@@ -1,0 +1,34 @@
+{
+  "name": "@theprelude/ds",
+  "description": "Design system used for prelude applications",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "src/main.tsx",
+  "types": "src/main.tsx",
+  "author": {
+    "name": "Prelude Research",
+    "email": "support@prelude.org"
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.4",
+    "classnames": "^2.3.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "postcss-preset-env": "^7.8.2",
+    "prettier": "^2.7.1",
+    "typescript": "^4.9.3",
+    "eslint-config-custom": "*",
+    "tsconfig": "*"
+  }
+}

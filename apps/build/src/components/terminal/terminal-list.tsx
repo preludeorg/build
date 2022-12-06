@@ -1,9 +1,9 @@
+import { ArrowRight } from "@theprelude/ds";
 import classNames from "classnames";
 import { useMemo, useState } from "react";
 import { terminalState } from "../../hooks/terminal-store";
 import { useKeyboard } from "../../hooks/use-keyboard";
 import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
-import ArrowRight from "../ds/icons/arrow-right";
 import styles from "./commands.module.css";
 import Focusable from "./focusable";
 import Readline, { useReadline } from "./readline";
