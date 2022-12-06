@@ -10,6 +10,16 @@
     "name": "Prelude Research",
     "email": "support@prelude.org"
   },
+  "exports": {
+    ".": {
+      "import": "./src/main.tsx",
+      "require": "./src/main.tsx"
+    },
+    "./system.css": {
+      "import": "./src/styles/system.css",
+      "require": "./src/styles/system.css"
+    }
+  },
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",

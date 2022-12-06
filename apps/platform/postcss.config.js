@@ -6,7 +6,7 @@ export default {
       stage: 1,
       features: {
         "custom-media-queries": {
-          importFrom: "src/styles/core/breakpoints.css",
+          importFrom: "src/styles/breakpoints.css",
         },
       },
     }),

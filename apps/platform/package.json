@@ -19,6 +19,7 @@
   "dependencies": {
     "@theprelude/sdk": "^0.9.11",
     "@theprelude/build": "*",
+    "@theprelude/ds": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0",
