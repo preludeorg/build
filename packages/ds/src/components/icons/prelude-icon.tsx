@@ -1,4 +1,6 @@
-const PreludeIcon: React.FC<{ className?: string }> = ({ className }) => {
+export const PreludeIcon: React.FC<{ className?: string }> = ({
+  className,
+}) => {
   return (
     <svg
       className={className}
@@ -14,5 +16,3 @@ const PreludeIcon: React.FC<{ className?: string }> = ({ className }) => {
     </svg>
   );
 };
-
-export default PreludeIcon;

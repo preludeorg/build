@@ -5,37 +5,37 @@
   flex-direction: column;
   padding: 0.75rem 0;
   justify-content: space-between;
+  background: rgba(0, 0, 0, 0.2);
 }
 
-.nav .top {
-  display: flex;
-  flex-direction: column;
+.top {
   gap: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .item {
-  margin: 0 auto;
-  padding: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
   border-radius: 50%;
 }
 
-.item:hover {
+.item:hover,
+.item.active {
   background-color: var(--transparent-white);
   cursor: pointer;
 }
 
-.item:hover svg {
+.item:hover svg,
+.item.active svg {
   fill: var(--white);
 }
 
 .item svg {
-  width: 2rem;
-  height: 2rem;
+  width: 1.563rem;
+  height: 1.563rem;
   fill: var(--gray-10);
-}
-
-.bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }

@@ -17,8 +17,9 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@theprelude/sdk": "^0.9.11",
     "@theprelude/build": "*",
+    "@theprelude/sdk": "^0.9.11",
+    "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0",
@@ -30,11 +31,11 @@
     "@types/react-dom": "^18.0.6",
     "@types/uuid": "^8.3.4",
     "@vitejs/plugin-react": "^2.1.0",
+    "eslint-config-custom": "*",
     "postcss-preset-env": "^7.8.2",
     "prettier": "^2.7.1",
+    "tsconfig": "*",
     "typescript": "^4.9.3",
-    "vite": "^3.2.4",
-    "eslint-config-custom": "*",
-    "tsconfig": "*"
+    "vite": "^3.2.4"
   }
 }

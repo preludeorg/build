@@ -1,4 +1,4 @@
-import PreludeIcon from "../icons/prelude-icon";
+import { PreludeIcon } from "@theprelude/ds";
 import styles from "./header.module.css";
 
 const Header: React.FC = () => {
@@ -7,7 +7,7 @@ const Header: React.FC = () => {
       <section className={styles.brand}>
         <PreludeIcon className={styles.logo} />
         <span className={styles.divider} />
-        <h1>Prelude Build</h1>
+        <h1>Build</h1>
       </section>
       <section className={styles.right}></section>
     </header>

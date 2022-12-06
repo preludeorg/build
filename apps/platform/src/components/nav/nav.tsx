@@ -1,16 +1,17 @@
-import BuildIcon from "../icons/build-icon";
+import { BuildIcon } from "@theprelude/ds";
+import classNames from "classnames/bind";
 import styles from "./nav.module.css";
+
+const cx = classNames.bind(styles);
 
 const Nav: React.FC = () => {
   return (
-    <nav className={styles.nav}>
-      <section className={styles.top}>
-        <a className={styles.item}>
+    <nav className={cx("nav")}>
+      <section className={cx("top")}>
+        <a className={cx("item", { active: true })}>
           <BuildIcon />
         </a>
       </section>
-
-      <section className={styles.bottom}></section>
     </nav>
   );
 };

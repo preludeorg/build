@@ -4,6 +4,7 @@
   height: 3.5rem;
   justify-content: space-between;
   align-items: center;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .brand {

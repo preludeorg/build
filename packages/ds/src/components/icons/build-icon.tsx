@@ -1,4 +1,4 @@
-const BuildIcon: React.FC<{ className?: string }> = ({ className }) => {
+export const BuildIcon: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <svg
       className={className}
@@ -16,5 +16,3 @@ const BuildIcon: React.FC<{ className?: string }> = ({ className }) => {
     </svg>
   );
 };
-
-export default BuildIcon;

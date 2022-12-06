@@ -7,6 +7,7 @@ export * from "./components/dialog/confirm-dialog";
 /* Icons */
 export * from "./components/icons/alert-icon";
 export * from "./components/icons/arrow-right";
+export * from "./components/icons/build-icon";
 export * from "./components/icons/checkmark-icon";
 export * from "./components/icons/chevron-icon";
 export * from "./components/icons/close-icon";
@@ -25,6 +26,7 @@ export * from "./components/icons/loader-icon";
 export * from "./components/icons/loading";
 export * from "./components/icons/lock-icon";
 export * from "./components/icons/play-icon";
+export * from "./components/icons/prelude-icon";
 export * from "./components/icons/prelude-wordmark";
 export * from "./components/icons/settings-icon";
 export * from "./components/icons/time-icon";
