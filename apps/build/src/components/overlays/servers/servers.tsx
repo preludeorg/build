@@ -1,12 +1,12 @@
 import { select, selectIsConnected, useAuthStore } from "@theprelude/core";
-import { Button, CopyIcon, Overlay } from "@theprelude/ds";
+import { Button, CopyIcon, InputGroup, Overlay } from "@theprelude/ds";
 import classNames from "classnames";
 import { useState } from "react";
 import shallow from "zustand/shallow";
 
 import useNavigationStore from "../../../hooks/navigation-store";
 import useTerminalStore from "../../../hooks/terminal-store";
-import { InputGroup } from "../../forms/input";
+
 import styles from "./servers.module.css";
 
 const Servers: React.FC = () => {
