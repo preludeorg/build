@@ -4,6 +4,7 @@ export * from "./components/accordion/use-accordion";
 export * from "./components/button/button";
 export * from "./components/button/icon-button";
 export * from "./components/dialog/confirm-dialog";
+export * from "./components/forms/input";
 /* Icons */
 export * from "./components/icons/alert-icon";
 export * from "./components/icons/arrow-right";
