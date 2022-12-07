@@ -32,6 +32,7 @@
 
 .tagline {
   margin: 0;
+  font-size: var(--headline-sm);
 }
 
 .install {
@@ -92,6 +93,7 @@
 
 .title {
   margin: 0 0 16px;
+  font-size: var(--headline-sm);
 }
 
 @media (--bp-lg-only) {

@@ -48,7 +48,7 @@
 }
 
 .legend {
-  font-size: var(--text-xxl);
+  font-size: var(--headline-rg);
   padding: 0.5rem;
   color: var(--white);
   display: flex;

@@ -18,7 +18,7 @@ const Header = () => {
       <section className={styles.brand}>
         <PreludeIcon className={styles.logo} />
         <span className={styles.divider} />
-        <h1>Build</h1>
+        <h4>Build</h4>
       </section>
       <section className={styles.right}>
         <Popover className={styles.account}>
