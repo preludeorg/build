@@ -19,7 +19,7 @@ interface AuthStore {
       token: string;
       serverType: "prelude" | "custom";
     },
-    signal: AbortSignal
+    signal?: AbortSignal
   ) => Promise<void>;
   disconnect: () => void;
 }

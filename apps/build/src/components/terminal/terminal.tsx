@@ -1,18 +1,39 @@
-import { select, useAuthStore } from "@theprelude/core";
+import { emitter, select, useAuthStore } from "@theprelude/core";
 import { Test } from "@theprelude/sdk";
 import React, { useState } from "react";
 import shallow from "zustand/shallow";
+import { editorState } from "../../hooks/editor-store";
+import { navigatorState } from "../../hooks/navigation-store";
 import useTerminalStore, {
   getNextCommand,
   getPreviousCommand,
   getSuggestions,
+  terminalState,
 } from "../../hooks/terminal-store";
 import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import focusTerminal from "../../utils/focus-terminal";
 import PrimaryPrompt from "./primary-prompt";
 import Readline, { useReadline } from "./readline";
+import { TerminalMessage } from "./terminal-message";
 import styles from "./terminal.module.css";
 import WelcomeMessage from "./welcome-message";
+
+emitter.on("import", () => {
+  const { switchTest, clear, write } = terminalState();
+  const { reset } = editorState();
+  const { navigate } = navigatorState();
+
+  switchTest();
+  clear();
+  reset();
+  navigate("welcome");
+  write(
+    <TerminalMessage
+      message={`credentials imported successfully.`}
+      helpText={`type "list-tests" to show all your tests`}
+    />
+  );
+});
 
 const useScrollToBottom = (
   changesToWatch: unknown,

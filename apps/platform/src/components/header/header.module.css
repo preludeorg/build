@@ -95,13 +95,13 @@
   border-radius: 0.25rem;
 }
 
-.options span {
+.options a {
   padding: 0.5rem;
   color: var(--white);
   font-size: var(--text-sm);
 }
 
-.options span:hover {
+.options a:hover {
   background-color: var(--color-secondary-20);
   cursor: pointer;
 }

@@ -23,17 +23,20 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
+    "ini": "^3.0.1",
+    "@theprelude/sdk": "^0.9.13",
+    "eventemitter3": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@theprelude/sdk": "^0.9.13",
-    "zustand": "^4.1.2"
+    "zustand": "^4.1.2",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "prettier": "^2.7.1",
-    "typescript": "^4.9.3",
     "eslint-config-custom": "*",
-    "tsconfig": "*"
+    "prettier": "^2.7.1",
+    "tsconfig": "*",
+    "typescript": "^4.9.3"
   }
 }
