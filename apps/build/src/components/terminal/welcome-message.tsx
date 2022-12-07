@@ -1,5 +1,4 @@
-import { Credentials } from "@theprelude/sdk";
-import { useConfig } from "../../hooks/use-config";
+import { Credentials, useConfig } from "@theprelude/core";
 import styles from "./commands.module.css";
 
 const WelcomeMessage: React.FC<{

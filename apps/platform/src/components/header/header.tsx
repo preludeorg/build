@@ -1,4 +1,5 @@
 import { Popover } from "@headlessui/react";
+import { useConfig } from "@theprelude/core";
 import {
   CheckmarkIcon,
   ChevronIcon,
@@ -48,7 +49,10 @@ const Panel = ({ close }: { close: () => void }) => {
   return (
     <>
       {overlay === "options" && (
-        <Options showAccountManager={() => setOverlay("accountManager")} />
+        <Options
+          close={close}
+          showAccountManager={() => setOverlay("accountManager")}
+        />
       )}
       {overlay === "accountManager" && <AccountManager close={close} />}
     </>
@@ -57,13 +61,29 @@ const Panel = ({ close }: { close: () => void }) => {
 
 const Options: React.FC<{
   showAccountManager: () => void;
-}> = ({ showAccountManager }) => {
+  close: () => void;
+}> = ({ showAccountManager, close }) => {
+  const { handleExport, handleImport } = useConfig();
   return (
     <div className={styles.options} onClick={(e) => e.stopPropagation()}>
-      <span onClick={showAccountManager}>Create a handle</span>
+      <a onClick={showAccountManager}>Create a handle</a>
       <div className={styles.divider} />
-      <span>Import credentials</span>
-      <span>Export credentials</span>
+      <a
+        onClick={() => {
+          void handleImport();
+          close();
+        }}
+      >
+        Import credentials
+      </a>
+      <a
+        onClick={() => {
+          void handleExport();
+          close();
+        }}
+      >
+        Export credentials
+      </a>
     </div>
   );
 };
@@ -73,9 +93,6 @@ const AccountManager: React.FC<{
 }> = ({ close }) => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const handle = formData.get("handle") as string;
-
     close();
   };
 
