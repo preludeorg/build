@@ -12,9 +12,8 @@
   padding: 0.75rem 0 0.75rem 0.75rem;
 }
 
-.brand h1 {
+.brand h4 {
   margin: 0;
-  font-size: var(--text-lg);
   line-height: 1.5rem;
 }
 
