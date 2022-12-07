@@ -68,6 +68,7 @@
 .tag:hover {
   fill: var(--white);
   color: var(--white);
+  border-color: var(--white);
   cursor: pointer;
 }
 
@@ -176,7 +177,7 @@
   align-items: center;
 }
 
-.create form input{
+.create form input {
   margin-right: auto;
   background: none;
   padding: 0.5rem 0.75rem;

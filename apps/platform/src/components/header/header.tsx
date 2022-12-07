@@ -1,3 +1,4 @@
+import { Popover } from "@headlessui/react";
 import {
   CheckmarkIcon,
   ChevronIcon,
@@ -6,13 +7,11 @@ import {
   PreludeIcon,
   UserIcon,
 } from "@theprelude/ds";
-import { Popover } from "@headlessui/react";
+import classNames from "classnames";
 import { useState } from "react";
 import styles from "./header.module.css";
-import classNames from "classnames";
 
 const Header = () => {
-  const [overlay, setOverlay] = useState("");
   return (
     <header className={styles.header}>
       <section className={styles.brand}>
@@ -22,43 +21,46 @@ const Header = () => {
       </section>
       <section className={styles.right}>
         <Popover className={styles.account}>
-          <Popover.Button
-            className={styles.tag}
-            onClick={() => {
-              overlay === "" ? setOverlay("options") : setOverlay("");
-            }}
-          >
-            <UserIcon />
-            <span>anonymous-user-23231</span>
-            <ChevronIcon
-              className={classNames(styles.chevron, {
-                [styles.activeChevron]: overlay !== "",
-              })}
-            />
-          </Popover.Button>
-          <Popover.Panel className={styles.prompt}>
-            {() => (
-              <>
-                {overlay === "options" && <Options setOverlay={setOverlay} />}
-
-                {overlay === "accountManager" && (
-                  <AccountManager setOverlay={setOverlay} />
-                )}
-              </>
-            )}
-          </Popover.Panel>
+          {({ open }) => (
+            <>
+              <Popover.Button className={styles.tag}>
+                <UserIcon />
+                <span>anonymous-user-23231</span>
+                <ChevronIcon
+                  className={classNames(styles.chevron, {
+                    [styles.activeChevron]: open,
+                  })}
+                />
+              </Popover.Button>
+              <Popover.Panel className={styles.prompt}>
+                {({ close }) => <Panel close={close} />}
+              </Popover.Panel>
+            </>
+          )}
         </Popover>
       </section>
     </header>
   );
 };
 
+const Panel = ({ close }: { close: () => void }) => {
+  const [overlay, setOverlay] = useState("options");
+  return (
+    <>
+      {overlay === "options" && (
+        <Options showAccountManager={() => setOverlay("accountManager")} />
+      )}
+      {overlay === "accountManager" && <AccountManager close={close} />}
+    </>
+  );
+};
+
 const Options: React.FC<{
-  setOverlay: (o: string) => void;
-}> = ({ setOverlay }) => {
+  showAccountManager: () => void;
+}> = ({ showAccountManager }) => {
   return (
     <div className={styles.options} onClick={(e) => e.stopPropagation()}>
-      <span onClick={() => setOverlay("accountManager")}>Create a handle</span>
+      <span onClick={showAccountManager}>Create a handle</span>
       <div className={styles.divider} />
       <span>Import credentials</span>
       <span>Export credentials</span>
@@ -67,12 +69,14 @@ const Options: React.FC<{
 };
 
 const AccountManager: React.FC<{
-  setOverlay: (o: string) => void;
-}> = ({ setOverlay }) => {
+  close: () => void;
+}> = ({ close }) => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const handle = formData.get("handle") as string;
+
+    close();
   };
 
   return (
@@ -82,7 +86,7 @@ const AccountManager: React.FC<{
         <IconButton
           className={styles.close}
           icon={<CloseIcon />}
-          onClick={() => setOverlay("")}
+          onClick={close}
         />
       </div>
       <div className={styles.divider} />
