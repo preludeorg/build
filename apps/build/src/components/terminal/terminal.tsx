@@ -1,6 +1,6 @@
-import { emitter, select, useAuthStore } from "@theprelude/core";
+import { authState, emitter, select, useAuthStore } from "@theprelude/core";
 import { Test } from "@theprelude/sdk";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
@@ -14,26 +14,9 @@ import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import focusTerminal from "../../utils/focus-terminal";
 import PrimaryPrompt from "./primary-prompt";
 import Readline, { useReadline } from "./readline";
-import { TerminalMessage } from "./terminal-message";
+import { ErrorMessage, TerminalMessage } from "./terminal-message";
 import styles from "./terminal.module.css";
 import WelcomeMessage from "./welcome-message";
-
-emitter.on("import", () => {
-  const { switchTest, clear, write } = terminalState();
-  const { reset } = editorState();
-  const { navigate } = navigatorState();
-
-  switchTest();
-  clear();
-  reset();
-  navigate("welcome");
-  write(
-    <TerminalMessage
-      message={`credentials imported successfully.`}
-      helpText={`type "list-tests" to show all your tests`}
-    />
-  );
-});
 
 const useScrollToBottom = (
   changesToWatch: unknown,
@@ -45,32 +28,81 @@ const useScrollToBottom = (
   }, [changesToWatch]);
 };
 
-function useTerminal() {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const { bufferedContent } = useTerminalStore(
-    select("bufferedContent"),
-    shallow
+const onAuthReady = ({ newAccount = false }: { newAccount?: boolean }) => {
+  const { credentials, host } = authState();
+  const { clear, write } = terminalState();
+
+  clear();
+  write(
+    <WelcomeMessage
+      host={host}
+      credentials={credentials}
+      isNewAccount={newAccount}
+    />
   );
+};
 
-  const { write, clear } = useTerminalStore(select("write", "clear"), shallow);
-
-  const { host, credentials } = useAuthStore(
-    select("host", "credentials"),
-    shallow
+const onImport = () => {
+  const { switchTest, clear, write } = terminalState();
+  const { reset } = editorState();
+  const { navigate } = navigatorState();
+  switchTest();
+  clear();
+  reset();
+  navigate("welcome");
+  write(
+    <TerminalMessage
+      message={`credentials imported successfully.`}
+      helpText={`type "list-tests" to show all your tests`}
+    />
   );
+};
 
-  React.useEffect(() => {
-    clear();
-    write(<WelcomeMessage host={host} credentials={credentials} />);
-  }, []);
+const onAuthError = ({ error }: { error: string }) => {
+  const { write } = terminalState();
 
-  useScrollToBottom(bufferedContent, ref);
-
-  return { bufferedContent, ref };
-}
+  write(
+    <ErrorMessage
+      message={`failed to create account${error !== "" ? `: ${error}` : ""}`}
+    />
+  );
+};
 
 const Terminal: React.FC = () => {
-  const { ref, bufferedContent } = useTerminal();
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const { host, credentials } = useAuthStore(
+    select("credentials", "host"),
+    shallow
+  );
+  const { bufferedContent, clear, write } = useTerminalStore(
+    select("bufferedContent", "clear", "write"),
+    shallow
+  );
+  useScrollToBottom(bufferedContent, ref);
+
+  const setRef = useCallback((node: HTMLDivElement) => {
+    ref.current = node;
+
+    if (credentials) {
+      clear();
+      write(<WelcomeMessage host={host} credentials={credentials} />);
+    } else {
+      write(<TerminalMessage message="initializing..." />);
+    }
+  }, []);
+
+  useEffect(() => {
+    emitter.on("import", onImport);
+    emitter.on("auth-ready", onAuthReady);
+    emitter.on("auth-error", onAuthError);
+
+    return () => {
+      emitter.off("import", onImport);
+      emitter.off("auth-ready", onAuthReady);
+      emitter.off("auth-error", onAuthError);
+    };
+  }, []);
+
   return (
     <div
       onMouseUp={(e) => {
@@ -78,7 +110,7 @@ const Terminal: React.FC = () => {
         focusTerminal();
       }}
       id="terminal"
-      ref={ref}
+      ref={setRef}
       className={styles.terminal}
     >
       {bufferedContent.map((item) => {

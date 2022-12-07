@@ -16,10 +16,18 @@ export interface Variant {
 export const newAccount = async (
   handle: string,
   host: string,
-  signal: AbortSignal
+  signal?: AbortSignal
 ) => {
   const service = new Service({ host });
   return await service.iam.newAccount(handle, {
+    signal,
+    headers: productHeader(),
+  });
+};
+
+export const getUsers = async (config: ServiceConfig, signal?: AbortSignal) => {
+  const service = new Service(config);
+  return await service.iam.getUsers({
     signal,
     headers: productHeader(),
   });

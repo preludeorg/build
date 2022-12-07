@@ -1,10 +1,11 @@
 import { Popover } from "@headlessui/react";
-import { useConfig } from "@theprelude/core";
+import { select, useAuthStore, useConfig } from "@theprelude/core";
 import {
   CheckmarkIcon,
   ChevronIcon,
   CloseIcon,
   IconButton,
+  Loading,
   PreludeIcon,
   UserIcon,
 } from "@theprelude/ds";
@@ -13,6 +14,11 @@ import { useState } from "react";
 import styles from "./header.module.css";
 
 const Header = () => {
+  const { initializing, handle, credentials, initialize } = useAuthStore(
+    select("initializing", "handle", "credentials", "initialize")
+  );
+
+  const noUser = !initializing && !credentials;
   return (
     <header className={styles.header}>
       <section className={styles.brand}>
@@ -21,24 +27,46 @@ const Header = () => {
         <h1>Build</h1>
       </section>
       <section className={styles.right}>
-        <Popover className={styles.account}>
-          {({ open }) => (
-            <>
-              <Popover.Button className={styles.tag}>
-                <UserIcon />
-                <span>anonymous-user-23231</span>
-                <ChevronIcon
-                  className={classNames(styles.chevron, {
-                    [styles.activeChevron]: open,
-                  })}
-                />
-              </Popover.Button>
-              <Popover.Panel className={styles.prompt}>
-                {({ close }) => <Panel close={close} />}
-              </Popover.Panel>
-            </>
-          )}
-        </Popover>
+        {noUser ? (
+          <div className={styles.account}>
+            <button
+              onClick={() => {
+                void initialize();
+              }}
+              className={styles.tag}
+            >
+              <span>Failed to create an account. Click to try again.</span>
+            </button>
+          </div>
+        ) : (
+          <Popover className={styles.account}>
+            {({ open }) => (
+              <>
+                <Popover.Button
+                  disabled={initializing || noUser}
+                  className={styles.tag}
+                >
+                  {initializing ? (
+                    <Loading />
+                  ) : (
+                    <>
+                      <UserIcon />
+                      <span>{handle}</span>
+                      <ChevronIcon
+                        className={classNames(styles.chevron, {
+                          [styles.activeChevron]: open,
+                        })}
+                      />
+                    </>
+                  )}
+                </Popover.Button>
+                <Popover.Panel className={styles.prompt}>
+                  {({ close }) => <Panel close={close} />}
+                </Popover.Panel>
+              </>
+            )}
+          </Popover>
+        )}
       </section>
     </header>
   );

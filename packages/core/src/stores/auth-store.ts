@@ -1,14 +1,23 @@
 import { Credentials } from "@theprelude/sdk";
 import create from "zustand";
 import { persist } from "zustand/middleware";
-import { getTestList, newAccount } from "../lib/api";
+import { getUsers, newAccount } from "../lib/api";
+import { emitter } from "../main";
+
+const generateHandle = () => {
+  const number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+  return `anonymous-user-${number}`;
+};
 
 interface AuthStore {
   host: string;
   serverType: "prelude" | "custom";
   credentials?: Credentials;
+  handle?: string;
   seenTooltip: boolean;
   tooltipVisible: boolean;
+  initializing?: boolean;
+  initialize: () => Promise<void>;
   showTooltip: () => void;
   hideTooltip: () => void;
   createAccount: (handle: string, signal: AbortSignal) => Promise<Credentials>;
@@ -31,15 +40,43 @@ export const useAuthStore = create<AuthStore>()(
       serverType: "prelude",
       async createAccount(handle, signal: AbortSignal) {
         const { host } = get();
-
         const credentials = await newAccount(handle, host, signal);
-        set(() => ({ credentials }));
+        set(() => ({ credentials, handle }));
         return credentials;
       },
       async login({ host, account, token, serverType }, signal) {
         const credentials = { account, token };
-        await getTestList({ host, credentials }, signal);
+        await getUsers({ host, credentials }, signal);
         set(() => ({ host, credentials, serverType }));
+      },
+      async initialize() {
+        try {
+          const { host, credentials, handle } = get();
+          set(() => ({ initializing: true }));
+
+          if (credentials && !handle) {
+            /** Get handle for user */
+            emitter.emit("auth-ready", { newAccount: false });
+            return;
+          }
+
+          if (credentials) {
+            /** Already logged in */
+            emitter.emit("auth-ready", { newAccount: false });
+            return;
+          }
+
+          const newHandle = generateHandle();
+          /** Create new account for anonymous user */
+          const newCredentials = await newAccount(newHandle, host);
+
+          set(() => ({ credentials: newCredentials, handle: newHandle }));
+          emitter.emit("auth-ready", { newAccount: true });
+        } catch (e) {
+          emitter.emit("auth-error", { error: (e as Error).message });
+        } finally {
+          set(() => ({ initializing: false }));
+        }
       },
       disconnect() {
         const host = "";
