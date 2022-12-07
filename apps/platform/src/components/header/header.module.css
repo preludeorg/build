@@ -83,6 +83,7 @@
 
 .options {
   position: absolute;
+  z-index: 10;
   right: 0;
   top: 120%;
   display: flex;
@@ -112,6 +113,7 @@
 
 .options:before {
   content: "";
+  z-index: 10;
   right: 8%;
   top: -4%;
   position: absolute;
@@ -125,6 +127,7 @@
 
 .create {
   position: absolute;
+  z-index: 10;
   right: 0;
   top: 120%;
   display: flex;
@@ -138,6 +141,7 @@
 
 .create:before {
   content: "";
+  z-index: 10;
   translate: 25%;
   right: 6%;
   top: -2%;
