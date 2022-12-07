@@ -1,12 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Build from "@theprelude/build";
-import { Notifications } from "@theprelude/ds";
-import Welcome from "@theprelude/welcome";
+import { Loading, Notifications } from "@theprelude/ds";
+import React, { Suspense } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import Header from "./header/header";
 import Nav from "./nav/nav";
 import styles from "./platform.module.css";
 import ReloadPrompt from "./reload-prompt/reload-prompt";
+
+const Build = React.lazy(() => import("@theprelude/build"));
+const Welcome = React.lazy(() => import("@theprelude/welcome"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,7 +25,9 @@ function Root() {
         <Header />
         <Nav />
         <main className={styles.wrapper}>
-          <Outlet />
+          <Suspense fallback={<Loading />}>
+            <Outlet />
+          </Suspense>
         </main>
         <Notifications />
       </div>
