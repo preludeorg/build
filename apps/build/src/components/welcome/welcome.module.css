@@ -1,7 +1,7 @@
 /* Welcome Screen */
 
 .welcome {
-  padding: 1.5rem 3.125rem;
+  padding: 1.5rem;
 }
 
 @media (--bp-md) {
@@ -20,19 +20,15 @@
   flex-direction: row;
 }
 
-.wordmark {
-  fill: var(--white);
+.headline {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
 }
 
-.line {
-  border-bottom: 1px solid var(--gray-30);
-  width: 57%;
-  margin: 1rem 0;
-}
-
-.tagline {
+.headline h2,
+.headline h4 {
   margin: 0;
-  font-size: var(--headline-sm);
 }
 
 .install {
