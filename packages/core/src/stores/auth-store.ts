@@ -14,6 +14,7 @@ interface AuthStore {
   serverType: "prelude" | "custom";
   credentials?: Credentials;
   handle?: string;
+  isAnonymous?: boolean;
   seenTooltip: boolean;
   tooltipVisible: boolean;
   initializing?: boolean;
@@ -31,6 +32,7 @@ interface AuthStore {
     signal?: AbortSignal
   ) => Promise<void>;
   disconnect: () => void;
+  changeHandle: (handle: string) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -38,6 +40,7 @@ export const useAuthStore = create<AuthStore>()(
     (set, get) => ({
       host: import.meta.env.VITE_PRELUDE_SERVICE_URL,
       serverType: "prelude",
+      isAnonymous: false,
       async createAccount(handle, signal: AbortSignal) {
         const { host } = get();
         const credentials = await newAccount(handle, host, signal);
@@ -55,7 +58,7 @@ export const useAuthStore = create<AuthStore>()(
           set(() => ({ initializing: true }));
 
           if (credentials && !handle) {
-            /** Get handle for user */
+            /** TODO: Get handle for user */
             emitter.emit("auth-ready", { newAccount: false });
             return;
           }
@@ -70,7 +73,11 @@ export const useAuthStore = create<AuthStore>()(
           /** Create new account for anonymous user */
           const newCredentials = await newAccount(newHandle, host);
 
-          set(() => ({ credentials: newCredentials, handle: newHandle }));
+          set(() => ({
+            credentials: newCredentials,
+            handle: newHandle,
+            isAnonymous: true,
+          }));
           emitter.emit("auth-ready", { newAccount: true });
         } catch (e) {
           emitter.emit("auth-error", { error: (e as Error).message });
@@ -101,15 +108,24 @@ export const useAuthStore = create<AuthStore>()(
       hideTooltip() {
         set(() => ({ tooltipVisible: false }));
       },
+      changeHandle(handle) {
+        set(() => ({ isAnonymous: false, handle }));
+      },
     }),
     {
       name: "prelude-credentials",
-      partialize: (state) =>
-        Object.fromEntries(
+
+      partialize: (state) => {
+        if (state.isAnonymous) {
+          return null;
+        }
+
+        return Object.fromEntries(
           Object.entries(state).filter(
             ([key]) => !["tooltipVisible"].includes(key)
           )
-        ),
+        );
+      },
     }
   )
 );

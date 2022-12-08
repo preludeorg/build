@@ -5,7 +5,9 @@ import {
   ChevronIcon,
   CloseIcon,
   IconButton,
+  Input,
   Loading,
+  notifySuccess,
   PreludeIcon,
   UserIcon,
 } from "@theprelude/ds";
@@ -13,10 +15,25 @@ import classNames from "classnames";
 import { useState } from "react";
 import styles from "./header.module.css";
 
+/** TODO: Warn then clean up account */
+// window.onbeforeunload = (e) => {
+//   e.cancelBubble = false;
+
+//   console.log(e);
+//   return "Hlelo";
+// };
+
 const Header = () => {
-  const { initializing, handle, credentials, initialize } = useAuthStore(
-    select("initializing", "handle", "credentials", "initialize")
-  );
+  const { initializing, handle, credentials, initialize, isAnonymous } =
+    useAuthStore(
+      select(
+        "initializing",
+        "handle",
+        "credentials",
+        "initialize",
+        "isAnonymous"
+      )
+    );
 
   const noUser = !initializing && !credentials;
   return (
@@ -44,7 +61,9 @@ const Header = () => {
               <>
                 <Popover.Button
                   disabled={initializing || noUser}
-                  className={styles.tag}
+                  className={classNames(styles.tag, {
+                    [styles.anonymous]: isAnonymous,
+                  })}
                 >
                   {initializing ? (
                     <Loading />
@@ -91,10 +110,13 @@ const Options: React.FC<{
   showAccountManager: () => void;
   close: () => void;
 }> = ({ showAccountManager, close }) => {
+  const { isAnonymous } = useAuthStore(select("isAnonymous"));
   const { handleExport, handleImport } = useConfig();
   return (
     <div className={styles.options} onClick={(e) => e.stopPropagation()}>
-      <a onClick={showAccountManager}>Create a handle</a>
+      <a onClick={showAccountManager}>
+        {isAnonymous ? "Create a handle" : "Update handle"}
+      </a>
       <div className={styles.divider} />
       <a
         onClick={() => {
@@ -119,9 +141,24 @@ const Options: React.FC<{
 const AccountManager: React.FC<{
   close: () => void;
 }> = ({ close }) => {
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+  const [handle, setHandle] = useState("");
+  const { changeHandle } = useAuthStore(select("changeHandle"));
+
+  /** TODO: Use mutate to change handle */
+  // const { mutate, isLoading } = useMutation((handle: string) => handle, {
+  //   onSuccess: async () => {
+  //     close();
+  //   },
+  //   onError: (e) => {
+  //     notifyError("Failed to delete security test variant.", e);
+  //   },
+  // });
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    changeHandle(handle);
     close();
+    notifySuccess("Handle updated successfully");
   };
 
   return (
@@ -140,11 +177,18 @@ const AccountManager: React.FC<{
         and run.
       </p>
       <form onSubmit={handleSubmit}>
-        <input type="text" name={"handle"}></input>
+        <Input
+          ref={(el) => el?.focus()}
+          type="text"
+          name="handle"
+          placeholder="Type your handle"
+          onChange={(e) => setHandle(e.target.value)}
+        />
         <IconButton
           className={styles.checkmark}
           type="submit"
           icon={<CheckmarkIcon />}
+          disabled={handle === ""}
           intent="secondary"
         />
       </form>

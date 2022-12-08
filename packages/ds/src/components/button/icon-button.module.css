@@ -45,3 +45,15 @@
 .success > svg {
   fill: var(--color-success);
 }
+
+.iconButton:disabled,
+.iconButton:disabled:hover {
+  background-color: var(--color-secondary-30);
+  border: 1px solid var(--gray-30);
+  color: var(--color-primary-10);
+  cursor: not-allowed;
+}
+
+.iconButton:disabled > svg {
+  fill: var(--color-primary-10);
+}

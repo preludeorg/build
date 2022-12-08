@@ -1,13 +1,19 @@
 import classNames from "classnames";
-import { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes } from "react";
 import styles from "./input.module.css";
 
-export const Input: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({
-  className,
-  ...props
-}) => {
-  return <input className={classNames(styles.input, className)} {...props} />;
-};
+export const Input = React.forwardRef<
+  HTMLInputElement,
+  InputHTMLAttributes<HTMLInputElement>
+>(({ className, ...props }, ref) => {
+  return (
+    <input
+      ref={ref}
+      className={classNames(styles.input, className)}
+      {...props}
+    />
+  );
+});
 
 export interface InputGroupProps extends InputHTMLAttributes<HTMLInputElement> {
   groupClassName?: string;
