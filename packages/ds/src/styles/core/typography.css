@@ -6,18 +6,22 @@
   /* set base values */
   --text-base: 16px;
 
-  /* type scale */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.5rem;
-  --text-xxl: 2rem;
-  --text-xxxl: 2.5rem;
+  /* headline type scale */
+  --headline-lg: 2.5; /* Large */
+  --headline-rg: 2rem; /* Regular */
+  --headline-sm: 1.5rem; /* Small */
+  --headline-xs: 1.125rem; /* Tiny */
+
+  /* text type scale */
+  --text-lg: 1.125rem; /* Large */
+  --text-rg: 1rem; /* Regular */
+  --text-sm: 0.875rem; /* Small */
+  --text-xs: 0.75rem; /* Tiny */
 
   /* button type scale  */
-  --button-sm: 0.875;
-  --button-rg: 1rem;
-  --button-lg: 1.125rem;
+  --button-lg: 1.125rem; /* Large */
+  --button-rg: 1rem; /* Regular */
+  --button-sm: 0.875; /* Small */
 }
 
 body {
@@ -37,22 +41,22 @@ form legend {
 
 /* text size */
 .text--xxxl {
-  font-size: var(--text-xxxl);
+  font-size: var(--headline-lg);
 }
 
 h1,
 .text--xxl {
-  font-size: var(--text-xxl);
+  font-size: var(--headline-lg);
 }
 
 h2,
 .text--xl {
-  font-size: var(--text-xl);
+  font-size: var(--headline-rg);
 }
 
 h3,
 .text--lg {
-  font-size: var(--text-lg);
+  font-size: var(--headline-sm);
 }
 
 .text--base {
@@ -61,7 +65,7 @@ h3,
 
 h4,
 .text--md {
-  font-size: var(--text-md);
+  font-size: var(--headline-xs);
 }
 
 .text--sm,

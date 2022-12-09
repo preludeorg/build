@@ -2,7 +2,7 @@
 
 <a href="https://www.preludesecurity.com/">Prelude Build</a> is an easy-to-use IDE - purpose built for authoring, testing and verifying security tests for use in real environments. Our goal is to provide a consistent and repeatable way to write, verify and deploy tests for any scale.
 
-![image](https://user-images.githubusercontent.com/813716/203120833-775232b6-b036-4a53-9aa5-32d48321b41b.png)
+https://user-images.githubusercontent.com/813716/206263410-9cae39fd-1140-4a8c-b534-777718faed77.mp4
 
 ## What is Prelude?
 

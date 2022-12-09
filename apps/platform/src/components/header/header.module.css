@@ -12,9 +12,8 @@
   padding: 0.75rem 0 0.75rem 0.75rem;
 }
 
-.brand h1 {
+.brand h4 {
   margin: 0;
-  font-size: var(--text-lg);
   line-height: 1.5rem;
 }
 
@@ -87,6 +86,7 @@
 
 .options {
   position: absolute;
+  z-index: 10;
   right: 0;
   top: 120%;
   display: flex;
@@ -116,6 +116,7 @@
 
 .options:before {
   content: "";
+  z-index: 10;
   right: 8%;
   top: -4%;
   position: absolute;
@@ -129,6 +130,7 @@
 
 .create {
   position: absolute;
+  z-index: 10;
   right: 0;
   top: 120%;
   display: flex;
@@ -142,6 +144,7 @@
 
 .create:before {
   content: "";
+  z-index: 10;
   translate: 25%;
   right: 6%;
   top: -2%;
