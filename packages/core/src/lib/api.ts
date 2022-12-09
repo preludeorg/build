@@ -1,4 +1,4 @@
-import { Service, ServiceConfig, Test } from "@theprelude/sdk";
+import { Permissions, Service, ServiceConfig, Test } from "@theprelude/sdk";
 import { isPWA } from "../utils/pwa";
 
 function productHeader(): HeadersInit {
@@ -135,6 +135,30 @@ export const deleteVerified = async (name: string, config: ServiceConfig) => {
 export const createURL = async (name: string, config: ServiceConfig) => {
   const service = new Service(config);
   return await service.build.createURL(name, { headers: productHeader() });
+};
+
+export const purgeAccount = async (config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.iam.purgeAccount({
+    headers: productHeader(),
+    keepalive: true,
+  });
+};
+
+export const changeUserHandle = async (
+  toHandle: string,
+  fromHandle: string,
+  config: ServiceConfig
+) => {
+  const service = new Service(config);
+
+  const user = await service.iam.createUser(Permissions.ADMIN, toHandle, {
+    headers: productHeader(),
+  });
+
+  await service.iam.deleteUser(fromHandle, { headers: productHeader() });
+
+  return user;
 };
 
 export const isPreludeTest = (test: Test) => test.account_id === "prelude";

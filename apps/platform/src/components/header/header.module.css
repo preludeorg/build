@@ -62,8 +62,12 @@
   height: 1rem;
 }
 
-.tag span {
+.tag.anonymous span {
   color: var(--gray-10);
+}
+
+.tag span {
+  color: var(--white);
 }
 
 .tag:hover svg,

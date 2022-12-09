@@ -1,5 +1,13 @@
 import { Popover } from "@headlessui/react";
-import { select, useAuthStore, useConfig } from "@theprelude/core";
+import { useMutation } from "@tanstack/react-query";
+import {
+  authState,
+  changeUserHandle,
+  purgeAccount,
+  select,
+  useAuthStore,
+  useConfig,
+} from "@theprelude/core";
 import {
   CheckmarkIcon,
   ChevronIcon,
@@ -7,21 +15,14 @@ import {
   IconButton,
   Input,
   Loading,
+  notifyError,
   notifySuccess,
   PreludeIcon,
   UserIcon,
 } from "@theprelude/ds";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./header.module.css";
-
-/** TODO: Warn then clean up account */
-// window.onbeforeunload = (e) => {
-//   e.cancelBubble = false;
-
-//   console.log(e);
-//   return "Hlelo";
-// };
 
 const Header = () => {
   const { initializing, handle, credentials, initialize, isAnonymous } =
@@ -34,6 +35,34 @@ const Header = () => {
         "isAnonymous"
       )
     );
+
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    const { isAnonymous } = authState();
+
+    if (isAnonymous) {
+      e.preventDefault();
+      return (e.returnValue = "are you sure?");
+    }
+
+    return void 0;
+  };
+
+  const handleUnload = async () => {
+    const { isAnonymous, host, credentials } = authState();
+    if (isAnonymous) {
+      await purgeAccount({ host, credentials });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("unload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", handleUnload);
+    };
+  }, []);
 
   const noUser = !initializing && !credentials;
   return (
@@ -142,23 +171,36 @@ const AccountManager: React.FC<{
   close: () => void;
 }> = ({ close }) => {
   const [handle, setHandle] = useState("");
-  const { changeHandle } = useAuthStore(select("changeHandle"));
+  const {
+    changeHandle,
+    host,
+    credentials,
+    handle: fromHandle,
+  } = useAuthStore(select("changeHandle", "host", "credentials", "handle"));
 
-  /** TODO: Use mutate to change handle */
-  // const { mutate, isLoading } = useMutation((handle: string) => handle, {
-  //   onSuccess: async () => {
-  //     close();
-  //   },
-  //   onError: (e) => {
-  //     notifyError("Failed to delete security test variant.", e);
-  //   },
-  // });
+  const { mutate, isLoading } = useMutation(
+    (handle: string) => {
+      if (!fromHandle) {
+        throw new Error("expected user to have a handle");
+      }
+
+      return changeUserHandle(handle, fromHandle, { host, credentials });
+    },
+    {
+      onSuccess: async ({ token }) => {
+        close();
+        changeHandle(handle, token);
+        notifySuccess("Handle updated successfully");
+      },
+      onError: (e) => {
+        notifyError("Failed to change user handle.", e);
+      },
+    }
+  );
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    changeHandle(handle);
-    close();
-    notifySuccess("Handle updated successfully");
+    mutate(handle);
   };
 
   return (
@@ -185,10 +227,11 @@ const AccountManager: React.FC<{
           onChange={(e) => setHandle(e.target.value)}
         />
         <IconButton
+          loading={isLoading}
           className={styles.checkmark}
           type="submit"
           icon={<CheckmarkIcon />}
-          disabled={handle === ""}
+          disabled={handle === "" || isLoading}
           intent="secondary"
         />
       </form>

@@ -63,7 +63,7 @@ const onAuthError = ({ error }: { error: string }) => {
 
   write(
     <ErrorMessage
-      message={`failed to create account${error !== "" ? `: ${error}` : ""}`}
+      message={`failed to authenticate${error !== "" ? `: ${error}` : ""}`}
     />
   );
 };

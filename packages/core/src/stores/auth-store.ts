@@ -1,4 +1,4 @@
-import { Credentials } from "@theprelude/sdk";
+import { Credentials, Permissions } from "@theprelude/sdk";
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import { getUsers, newAccount } from "../lib/api";
@@ -32,7 +32,7 @@ interface AuthStore {
     signal?: AbortSignal
   ) => Promise<void>;
   disconnect: () => void;
-  changeHandle: (handle: string) => void;
+  changeHandle: (handle: string, token: string) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -47,24 +47,35 @@ export const useAuthStore = create<AuthStore>()(
         set(() => ({ credentials, handle }));
         return credentials;
       },
-      async login({ host, account, token, serverType }, signal) {
+      async login({ host, account, token, serverType }) {
         const credentials = { account, token };
-        await getUsers({ host, credentials }, signal);
-        set(() => ({ host, credentials, serverType }));
+        const users = await getUsers({ host, credentials });
+        const user =
+          users.find((user) => user.permission === Permissions.ADMIN) ??
+          users[0];
+
+        set(() => ({
+          host,
+          credentials,
+          serverType,
+          handle: user.handle,
+          isAnonymous: false,
+        }));
       },
       async initialize() {
         try {
-          const { host, credentials, handle } = get();
+          const { host, credentials } = get();
           set(() => ({ initializing: true }));
 
-          if (credentials && !handle) {
-            /** TODO: Get handle for user */
-            emitter.emit("auth-ready", { newAccount: false });
-            return;
-          }
-
           if (credentials) {
-            /** Already logged in */
+            const users = await getUsers({ host, credentials });
+            const user =
+              users.find((user) => user.permission === Permissions.ADMIN) ??
+              users[0];
+
+            set(() => ({
+              handle: user.handle,
+            }));
             emitter.emit("auth-ready", { newAccount: false });
             return;
           }
@@ -72,7 +83,6 @@ export const useAuthStore = create<AuthStore>()(
           const newHandle = generateHandle();
           /** Create new account for anonymous user */
           const newCredentials = await newAccount(newHandle, host);
-
           set(() => ({
             credentials: newCredentials,
             handle: newHandle,
@@ -108,8 +118,18 @@ export const useAuthStore = create<AuthStore>()(
       hideTooltip() {
         set(() => ({ tooltipVisible: false }));
       },
-      changeHandle(handle) {
-        set(() => ({ isAnonymous: false, handle }));
+      changeHandle(handle, token) {
+        set((state) => {
+          if (!state.credentials) {
+            throw new Error("expected credentials to be set");
+          }
+
+          return {
+            isAnonymous: false,
+            handle,
+            credentials: { ...state.credentials, token },
+          };
+        });
       },
     }),
     {
