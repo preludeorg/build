@@ -25,22 +25,30 @@ import { useEffect, useState } from "react";
 import styles from "./header.module.css";
 
 const Header = () => {
-  const { initializing, handle, credentials, initialize, isAnonymous } =
-    useAuthStore(
-      select(
-        "initializing",
-        "handle",
-        "credentials",
-        "initialize",
-        "isAnonymous"
-      )
-    );
+  const {
+    initializing,
+    handle,
+    credentials,
+    initialize,
+    isAnonymous,
+    dataLossWarning,
+  } = useAuthStore(
+    select(
+      "initializing",
+      "handle",
+      "credentials",
+      "initialize",
+      "isAnonymous",
+      "dataLossWarning"
+    )
+  );
 
   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    const { isAnonymous } = authState();
+    const { isAnonymous, setDataLossWarning } = authState();
 
     if (isAnonymous) {
       e.preventDefault();
+      setDataLossWarning(true);
       return (e.returnValue = "are you sure?");
     }
 
@@ -108,8 +116,13 @@ const Header = () => {
                     </>
                   )}
                 </Popover.Button>
-                <Popover.Panel className={styles.prompt}>
-                  {({ close }) => <Panel close={close} />}
+                <Popover.Panel
+                  static={dataLossWarning}
+                  className={styles.prompt}
+                >
+                  {({ close }) => (
+                    <Panel showWarning={dataLossWarning} close={close} />
+                  )}
                 </Popover.Panel>
               </>
             )}
@@ -120,18 +133,24 @@ const Header = () => {
   );
 };
 
-const Panel = ({ close }: { close: () => void }) => {
+const Panel = ({
+  close,
+  showWarning,
+}: {
+  close: () => void;
+  showWarning?: boolean;
+}) => {
   const [overlay, setOverlay] = useState("options");
+
+  if (overlay === "accountManager" || showWarning) {
+    return <AccountManager close={close} />;
+  }
+
   return (
-    <>
-      {overlay === "options" && (
-        <Options
-          close={close}
-          showAccountManager={() => setOverlay("accountManager")}
-        />
-      )}
-      {overlay === "accountManager" && <AccountManager close={close} />}
-    </>
+    <Options
+      close={close}
+      showAccountManager={() => setOverlay("accountManager")}
+    />
   );
 };
 
@@ -176,19 +195,30 @@ const AccountManager: React.FC<{
     host,
     credentials,
     handle: fromHandle,
-  } = useAuthStore(select("changeHandle", "host", "credentials", "handle"));
+    setDataLossWarning,
+    dataLossWarning,
+  } = useAuthStore(
+    select(
+      "changeHandle",
+      "host",
+      "credentials",
+      "handle",
+      "setDataLossWarning",
+      "dataLossWarning"
+    )
+  );
 
   const { mutate, isLoading } = useMutation(
     (handle: string) => {
       if (!fromHandle) {
         throw new Error("expected user to have a handle");
       }
-
       return changeUserHandle(handle, fromHandle, { host, credentials });
     },
     {
       onSuccess: async ({ token }) => {
         close();
+        setDataLossWarning(false);
         changeHandle(handle, token);
         notifySuccess("Handle updated successfully");
       },
@@ -210,13 +240,17 @@ const AccountManager: React.FC<{
         <IconButton
           className={styles.close}
           icon={<CloseIcon />}
-          onClick={close}
+          onClick={() => {
+            setDataLossWarning(false);
+            close();
+          }}
         />
       </div>
       <div className={styles.divider} />
       <p>
-        You can change your handle at any time to access the tests you create
-        and run.
+        {dataLossWarning
+          ? "Create a handle to persist your account. Otherwise your account will be not exist beyond this session"
+          : "Change your account handle and credentials."}
       </p>
       <form onSubmit={handleSubmit}>
         <Input

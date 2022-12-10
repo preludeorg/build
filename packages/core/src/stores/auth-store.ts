@@ -18,9 +18,12 @@ interface AuthStore {
   seenTooltip: boolean;
   tooltipVisible: boolean;
   initializing?: boolean;
+  dataLossWarning?: boolean;
   initialize: () => Promise<void>;
+  changeHandle: (handle: string, token: string) => void;
   showTooltip: () => void;
   hideTooltip: () => void;
+  setDataLossWarning: (warn: boolean) => void;
   createAccount: (handle: string, signal: AbortSignal) => Promise<Credentials>;
   login: (
     record: {
@@ -32,7 +35,6 @@ interface AuthStore {
     signal?: AbortSignal
   ) => Promise<void>;
   disconnect: () => void;
-  changeHandle: (handle: string, token: string) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -100,6 +102,9 @@ export const useAuthStore = create<AuthStore>()(
         const credentials = { account: "", token: "" };
         set(() => ({ host, credentials }));
       },
+      setDataLossWarning(warn) {
+        set(() => ({ dataLossWarning: warn }));
+      },
       seenTooltip: false,
       tooltipVisible: false,
       showTooltip() {
@@ -130,6 +135,8 @@ export const useAuthStore = create<AuthStore>()(
             credentials: { ...state.credentials, token },
           };
         });
+
+        emitter.emit("handle-changed");
       },
     }),
     {
@@ -142,7 +149,7 @@ export const useAuthStore = create<AuthStore>()(
 
         return Object.fromEntries(
           Object.entries(state).filter(
-            ([key]) => !["tooltipVisible"].includes(key)
+            ([key]) => !["tooltipVisible", "dataLossWarning"].includes(key)
           )
         );
       },

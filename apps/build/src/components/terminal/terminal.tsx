@@ -12,6 +12,7 @@ import useTerminalStore, {
 } from "../../hooks/terminal-store";
 import { combine, ModifierKeys, press, SpecialKeys } from "../../lib/keyboard";
 import focusTerminal from "../../utils/focus-terminal";
+import HandleChangeMessage from "./handle-change-message";
 import PrimaryPrompt from "./primary-prompt";
 import Readline, { useReadline } from "./readline";
 import { ErrorMessage, TerminalMessage } from "./terminal-message";
@@ -68,6 +69,11 @@ const onAuthError = ({ error }: { error: string }) => {
   );
 };
 
+const onHandleChange = () => {
+  const { write } = terminalState();
+  write(<HandleChangeMessage />);
+};
+
 const Terminal: React.FC = () => {
   const ref = React.useRef<HTMLDivElement | null>(null);
   const { host, credentials } = useAuthStore(
@@ -95,11 +101,13 @@ const Terminal: React.FC = () => {
     emitter.on("import", onImport);
     emitter.on("auth-ready", onAuthReady);
     emitter.on("auth-error", onAuthError);
+    emitter.on("handle-changed", onHandleChange);
 
     return () => {
       emitter.off("import", onImport);
       emitter.off("auth-ready", onAuthReady);
       emitter.off("auth-error", onAuthError);
+      emitter.off("handle-changed", onHandleChange);
     };
   }, []);
 

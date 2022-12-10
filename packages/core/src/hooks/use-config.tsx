@@ -2,7 +2,8 @@ import { notifyError, notifySuccess } from "@theprelude/ds";
 import ini from "ini";
 import { z } from "zod";
 import shallow from "zustand/shallow";
-import { emitter } from "../main";
+import { purgeAccount } from "../lib/api";
+import { emitter } from "../lib/emitter";
 import { useAuthStore } from "../stores/auth-store";
 import { select } from "../utils/select";
 
@@ -28,8 +29,8 @@ const configSchema = z.object({
 });
 
 export const useConfig = () => {
-  const { login, host, credentials } = useAuthStore(
-    select("login", "host", "credentials"),
+  const { login, host, credentials, isAnonymous } = useAuthStore(
+    select("login", "host", "credentials", "isAnonymous"),
     shallow
   );
 
@@ -49,6 +50,10 @@ export const useConfig = () => {
         token: config.default.token,
         serverType: "prelude",
       });
+
+      if (credentials && isAnonymous) {
+        await purgeAccount({ host, credentials });
+      }
 
       notifySuccess("Credentials imported successfully.");
       emitter.emit("import");
