@@ -174,14 +174,16 @@ const Options: React.FC<{
       >
         Import credentials
       </a>
-      <a
-        onClick={() => {
-          void handleExport();
-          close();
-        }}
-      >
-        Export credentials
-      </a>
+      {!isAnonymous && (
+        <a
+          onClick={() => {
+            void handleExport();
+            close();
+          }}
+        >
+          Export credentials
+        </a>
+      )}
     </div>
   );
 };

@@ -29,8 +29,8 @@ const useScrollToBottom = (
   }, [changesToWatch]);
 };
 
-const onAuthReady = ({ newAccount = false }: { newAccount?: boolean }) => {
-  const { credentials, host } = authState();
+const onAuthReady = () => {
+  const { credentials, host, isAnonymous } = authState();
   const { clear, write } = terminalState();
 
   clear();
@@ -38,7 +38,7 @@ const onAuthReady = ({ newAccount = false }: { newAccount?: boolean }) => {
     <WelcomeMessage
       host={host}
       credentials={credentials}
-      isNewAccount={newAccount}
+      isAnonymous={isAnonymous}
     />
   );
 };
@@ -76,8 +76,8 @@ const onHandleChange = () => {
 
 const Terminal: React.FC = () => {
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const { host, credentials } = useAuthStore(
-    select("credentials", "host"),
+  const { host, credentials, isAnonymous } = useAuthStore(
+    select("credentials", "host", "isAnonymous"),
     shallow
   );
   const { bufferedContent, clear, write } = useTerminalStore(
@@ -91,7 +91,13 @@ const Terminal: React.FC = () => {
 
     if (credentials) {
       clear();
-      write(<WelcomeMessage host={host} credentials={credentials} />);
+      write(
+        <WelcomeMessage
+          host={host}
+          credentials={credentials}
+          isAnonymous={isAnonymous}
+        />
+      );
     } else {
       write(<TerminalMessage message="initializing..." />);
     }

@@ -4,37 +4,11 @@ import styles from "./commands.module.css";
 const WelcomeMessage: React.FC<{
   host: string;
   credentials?: Credentials;
-  isNewAccount?: boolean;
-}> = ({ host, credentials, isNewAccount }) => {
-  const { handleImport, handleExport } = useConfig();
+  isAnonymous?: boolean;
+}> = ({ host, credentials, isAnonymous }) => {
+  const { handleImport } = useConfig();
 
-  if (host && credentials && isNewAccount) {
-    return (
-      <div className={styles.welcomeMessage}>
-        account created.{" "}
-        <span className={styles.helpText}>
-          <a
-            onClick={() => {
-              void handleExport();
-            }}
-          >
-            click here
-          </a>{" "}
-          to backup credentials
-        </span>
-        <br />
-        <br />
-        Connected to {host}
-        <br />
-        <br />
-        <span className={styles.helpText}>
-          type "list-tests" to show all your tests
-        </span>
-      </div>
-    );
-  }
-
-  if (host && credentials) {
+  if (host && credentials && !isAnonymous) {
     return (
       <div className={styles.welcomeMessage}>
         Welcome to Prelude Build
@@ -49,9 +23,13 @@ const WelcomeMessage: React.FC<{
       </div>
     );
   }
+
   return (
     <div className={styles.welcomeMessage}>
       Welcome to Prelude Build
+      <br />
+      <br />
+      Connected to {host}
       <br />
       <br />
       <span className={styles.helpText}>
@@ -68,7 +46,7 @@ const WelcomeMessage: React.FC<{
       <br />
       <br />
       <span className={styles.helpText}>
-        or type "use" to create a new account
+        type "list-tests" to show all your tests
       </span>
     </div>
   );
