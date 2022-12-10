@@ -1,18 +1,78 @@
 import { Popover } from "@headlessui/react";
-import { useConfig } from "@theprelude/core";
+import { useMutation } from "@tanstack/react-query";
+import {
+  authState,
+  changeUserHandle,
+  purgeAccount,
+  select,
+  useAuthStore,
+  useConfig,
+} from "@theprelude/core";
 import {
   CheckmarkIcon,
   ChevronIcon,
   CloseIcon,
   IconButton,
+  Input,
+  Loading,
+  notifyError,
+  notifySuccess,
   PreludeIcon,
   UserIcon,
 } from "@theprelude/ds";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./header.module.css";
 
 const Header = () => {
+  const {
+    initializing,
+    handle,
+    credentials,
+    initialize,
+    isAnonymous,
+    dataLossWarning,
+  } = useAuthStore(
+    select(
+      "initializing",
+      "handle",
+      "credentials",
+      "initialize",
+      "isAnonymous",
+      "dataLossWarning"
+    )
+  );
+
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    const { isAnonymous, setDataLossWarning } = authState();
+
+    if (isAnonymous) {
+      e.preventDefault();
+      setDataLossWarning(true);
+      return (e.returnValue = "are you sure?");
+    }
+
+    return void 0;
+  };
+
+  const handleUnload = async () => {
+    const { isAnonymous, host, credentials } = authState();
+    if (isAnonymous) {
+      await purgeAccount({ host, credentials });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("unload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", handleUnload);
+    };
+  }, []);
+
+  const noUser = !initializing && !credentials;
   return (
     <header className={styles.header}>
       <section className={styles.brand}>
@@ -21,41 +81,76 @@ const Header = () => {
         <h4>Build</h4>
       </section>
       <section className={styles.right}>
-        <Popover className={styles.account}>
-          {({ open }) => (
-            <>
-              <Popover.Button className={styles.tag}>
-                <UserIcon />
-                <span>anonymous-user-23231</span>
-                <ChevronIcon
-                  className={classNames(styles.chevron, {
-                    [styles.activeChevron]: open,
+        {noUser ? (
+          <div className={styles.account}>
+            <button
+              onClick={() => {
+                void initialize();
+              }}
+              className={styles.tag}
+            >
+              <span>Failed to create an account. Click to try again.</span>
+            </button>
+          </div>
+        ) : (
+          <Popover className={styles.account}>
+            {({ open }) => (
+              <>
+                <Popover.Button
+                  disabled={initializing || noUser}
+                  className={classNames(styles.tag, {
+                    [styles.anonymous]: isAnonymous,
                   })}
-                />
-              </Popover.Button>
-              <Popover.Panel className={styles.prompt}>
-                {({ close }) => <Panel close={close} />}
-              </Popover.Panel>
-            </>
-          )}
-        </Popover>
+                >
+                  {initializing ? (
+                    <Loading />
+                  ) : (
+                    <>
+                      <UserIcon />
+                      <span>{handle}</span>
+                      <ChevronIcon
+                        className={classNames(styles.chevron, {
+                          [styles.activeChevron]: open,
+                        })}
+                      />
+                    </>
+                  )}
+                </Popover.Button>
+                <Popover.Panel
+                  static={dataLossWarning}
+                  className={styles.prompt}
+                >
+                  {({ close }) => (
+                    <Panel showWarning={dataLossWarning} close={close} />
+                  )}
+                </Popover.Panel>
+              </>
+            )}
+          </Popover>
+        )}
       </section>
     </header>
   );
 };
 
-const Panel = ({ close }: { close: () => void }) => {
+const Panel = ({
+  close,
+  showWarning,
+}: {
+  close: () => void;
+  showWarning?: boolean;
+}) => {
   const [overlay, setOverlay] = useState("options");
+
+  if (overlay === "accountManager" || showWarning) {
+    return <AccountManager close={close} />;
+  }
+
   return (
-    <>
-      {overlay === "options" && (
-        <Options
-          close={close}
-          showAccountManager={() => setOverlay("accountManager")}
-        />
-      )}
-      {overlay === "accountManager" && <AccountManager close={close} />}
-    </>
+    <Options
+      close={close}
+      showAccountManager={() => setOverlay("accountManager")}
+    />
   );
 };
 
@@ -63,10 +158,13 @@ const Options: React.FC<{
   showAccountManager: () => void;
   close: () => void;
 }> = ({ showAccountManager, close }) => {
+  const { isAnonymous } = useAuthStore(select("isAnonymous"));
   const { handleExport, handleImport } = useConfig();
   return (
     <div className={styles.options} onClick={(e) => e.stopPropagation()}>
-      <a onClick={showAccountManager}>Create a handle</a>
+      <a onClick={showAccountManager}>
+        {isAnonymous ? "Create a handle" : "Update handle"}
+      </a>
       <div className={styles.divider} />
       <a
         onClick={() => {
@@ -76,14 +174,16 @@ const Options: React.FC<{
       >
         Import credentials
       </a>
-      <a
-        onClick={() => {
-          void handleExport();
-          close();
-        }}
-      >
-        Export credentials
-      </a>
+      {!isAnonymous && (
+        <a
+          onClick={() => {
+            void handleExport();
+            close();
+          }}
+        >
+          Export credentials
+        </a>
+      )}
     </div>
   );
 };
@@ -91,9 +191,48 @@ const Options: React.FC<{
 const AccountManager: React.FC<{
   close: () => void;
 }> = ({ close }) => {
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+  const [handle, setHandle] = useState("");
+  const {
+    changeHandle,
+    host,
+    credentials,
+    handle: fromHandle,
+    setDataLossWarning,
+    dataLossWarning,
+  } = useAuthStore(
+    select(
+      "changeHandle",
+      "host",
+      "credentials",
+      "handle",
+      "setDataLossWarning",
+      "dataLossWarning"
+    )
+  );
+
+  const { mutate, isLoading } = useMutation(
+    (handle: string) => {
+      if (!fromHandle) {
+        throw new Error("expected user to have a handle");
+      }
+      return changeUserHandle(handle, fromHandle, { host, credentials });
+    },
+    {
+      onSuccess: async ({ token }) => {
+        close();
+        setDataLossWarning(false);
+        changeHandle(handle, token);
+        notifySuccess("Handle updated successfully");
+      },
+      onError: (e) => {
+        notifyError("Failed to change user handle.", e);
+      },
+    }
+  );
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    close();
+    mutate(handle);
   };
 
   return (
@@ -103,20 +242,32 @@ const AccountManager: React.FC<{
         <IconButton
           className={styles.close}
           icon={<CloseIcon />}
-          onClick={close}
+          onClick={() => {
+            setDataLossWarning(false);
+            close();
+          }}
         />
       </div>
       <div className={styles.divider} />
       <p>
-        You can change your handle at any time to access the tests you create
-        and run.
+        {dataLossWarning
+          ? "Create a handle to persist your account. Otherwise your account will be not exist beyond this session"
+          : "Change your account handle and credentials."}
       </p>
       <form onSubmit={handleSubmit}>
-        <input type="text" name={"handle"}></input>
+        <Input
+          ref={(el) => el?.focus()}
+          type="text"
+          name="handle"
+          placeholder="Type your handle"
+          onChange={(e) => setHandle(e.target.value)}
+        />
         <IconButton
+          loading={isLoading}
           className={styles.checkmark}
           type="submit"
           icon={<CheckmarkIcon />}
+          disabled={handle === "" || isLoading}
           intent="secondary"
         />
       </form>

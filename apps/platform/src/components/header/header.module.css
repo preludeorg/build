@@ -47,9 +47,13 @@
   align-items: center;
   padding: 0.25rem 0.5rem;
   column-gap: 0.25rem;
-  border: 1px dashed var(--gray-20);
+  border: 1px solid var(--gray-20);
   border-radius: 0.75rem;
   background: none;
+}
+
+.tag.anonymous {
+  border: 1px dashed var(--gray-20);
 }
 
 .tag svg {
@@ -58,8 +62,12 @@
   height: 1rem;
 }
 
-.tag span {
+.tag.anonymous span {
   color: var(--gray-10);
+}
+
+.tag span {
+  color: var(--white);
 }
 
 .tag:hover svg,
@@ -178,16 +186,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 1rem;
 }
 
 .create form input {
-  margin-right: auto;
   background: none;
-  padding: 0.5rem 0.75rem;
   border: 1px solid var(--gray-10);
-  border-radius: 0.25rem;
-  outline: none;
-  color: var(--white);
 }
 
 .checkmark {
