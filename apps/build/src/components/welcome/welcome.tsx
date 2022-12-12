@@ -61,10 +61,9 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
   return (
     <div ref={ref} className={styles.welcome}>
       <header>
-        <section>
-          <PreludeWordmark className={styles.wordmark} />
-          <div className={styles.line} />
-          <h2 className={styles.tagline}>Security Test Authoring</h2>
+        <section className={styles.headline}>
+          <h2>Security Test Authoring</h2>
+          <h4>Create and manage your own security tests with Prelude Build</h4>
         </section>
         <section className={styles.install}>
           {!isInstalled && Boolean(installer) && (

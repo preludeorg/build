@@ -12,9 +12,8 @@
   padding: 0.75rem 0 0.75rem 0.75rem;
 }
 
-.brand h1 {
+.brand h4 {
   margin: 0;
-  font-size: var(--text-lg);
   line-height: 1.5rem;
 }
 
@@ -35,4 +34,166 @@
 
 .right {
   display: flex;
+  padding: 0.75rem 0.75rem 0.75rem 0;
+}
+
+.right .account {
+  position: relative;
+}
+
+.tag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  column-gap: 0.25rem;
+  border: 1px solid var(--gray-20);
+  border-radius: 0.75rem;
+  background: none;
+}
+
+.tag.anonymous {
+  border: 1px dashed var(--gray-20);
+}
+
+.tag svg {
+  fill: var(--gray-10);
+  width: 1rem;
+  height: 1rem;
+}
+
+.tag.anonymous span {
+  color: var(--gray-10);
+}
+
+.tag span {
+  color: var(--white);
+}
+
+.tag:hover svg,
+.tag:hover span,
+.tag:hover {
+  fill: var(--white);
+  color: var(--white);
+  border-color: var(--white);
+  cursor: pointer;
+}
+
+.chevron {
+  transform: rotate(0deg);
+  transition: transform 250ms;
+}
+
+.activeChevron {
+  transform: rotate(180deg);
+}
+
+.options {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  top: 120%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.25rem;
+  width: 12rem;
+  padding: 0.25rem;
+  background: var(--black);
+  border: 1px solid var(--gray-30);
+  border-radius: 0.25rem;
+}
+
+.options a {
+  padding: 0.5rem;
+  color: var(--white);
+  font-size: var(--text-sm);
+}
+
+.options a:hover {
+  background-color: var(--color-secondary-20);
+  cursor: pointer;
+}
+
+.options .divider {
+  border-bottom: 1px solid var(--color-secondary-10);
+}
+
+.options:before {
+  content: "";
+  z-index: 10;
+  right: 8%;
+  top: -4%;
+  position: absolute;
+  padding: 0.2rem;
+  background: var(--black);
+  border-top: 1px solid var(--gray-30);
+  border-right: 1px solid var(--gray-30);
+  rotate: 315deg;
+  translate: 40% 5%;
+}
+
+.create {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  top: 120%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+  width: 16rem;
+  padding: 0.75rem;
+  background: #000;
+  border-radius: 0.25rem;
+}
+
+.create:before {
+  content: "";
+  z-index: 10;
+  translate: 25%;
+  right: 6%;
+  top: -2%;
+  position: absolute;
+  padding: 0.2rem;
+  background: #000;
+  rotate: 315deg;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.title > span {
+  color: var(--white);
+}
+
+.title .close {
+  margin-left: auto;
+}
+
+.create .divider {
+  border-bottom: 1px solid var(--gray-30);
+}
+
+.create > p {
+  margin: 0;
+  color: var(--white);
+  font-size: var(--text-xs);
+}
+
+.create form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.create form input {
+  background: none;
+  border: 1px solid var(--gray-10);
+}
+
+.checkmark {
+  padding: 0.5rem 0.75rem;
 }

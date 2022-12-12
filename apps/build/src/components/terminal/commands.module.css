@@ -156,13 +156,13 @@
   color: var(--gray-10);
 }
 
-.helpText a {
+span.helpText > a {
   color: var(--white);
   cursor: pointer;
   font-weight: bold;
 }
 
-.helpText a:hover {
+.helpText > a:hover {
   text-decoration: dashed underline;
 }
 

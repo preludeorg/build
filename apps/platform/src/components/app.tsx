@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { authState } from "@theprelude/core";
 import { Loading, Notifications } from "@theprelude/ds";
 import React, { Suspense } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    loader: () => {
+      void authState().initialize();
+      return true;
+    },
     children: [
       { path: "", element: <Welcome /> },
       {

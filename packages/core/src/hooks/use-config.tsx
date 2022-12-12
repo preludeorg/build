@@ -1,17 +1,11 @@
-import { select, useAuthStore } from "@theprelude/core";
-import { notifyError } from "@theprelude/ds";
+import { notifyError, notifySuccess } from "@theprelude/ds";
 import ini from "ini";
 import { z } from "zod";
 import shallow from "zustand/shallow";
-import {
-  ErrorMessage,
-  TerminalMessage,
-} from "../components/terminal/terminal-message";
-import { isExitError } from "../lib/commands/helpers";
-import focusTerminal from "../utils/focus-terminal";
-import useEditorStore from "./editor-store";
-import useNavigationStore from "./navigation-store";
-import useTerminalStore from "./terminal-store";
+import { purgeAccount } from "../lib/api";
+import { emitter } from "../lib/emitter";
+import { useAuthStore } from "../stores/auth-store";
+import { select } from "../utils/select";
 
 const readAsText = (file: Blob): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -35,32 +29,10 @@ const configSchema = z.object({
 });
 
 export const useConfig = () => {
-  const { login, host, credentials } = useAuthStore(
-    select("login", "host", "credentials"),
+  const { login, host, credentials, isAnonymous } = useAuthStore(
+    select("login", "host", "credentials", "isAnonymous"),
     shallow
   );
-
-  const {
-    takeControl,
-    write,
-    showIndicator,
-    hideIndicator,
-    clear,
-    switchTest,
-  } = useTerminalStore(
-    select(
-      "takeControl",
-      "write",
-      "clear",
-      "switchTest",
-      "showIndicator",
-      "hideIndicator"
-    ),
-    shallow
-  );
-
-  const resetEditor = useEditorStore((state) => state.reset);
-  const navigate = useNavigationStore((state) => state.navigate);
 
   const importConfig = async (content: string) => {
     try {
@@ -68,53 +40,31 @@ export const useConfig = () => {
       const { success } = configSchema.safeParse(config);
 
       if (!success) {
-        write(
-          <ErrorMessage message="failed to import credentials: invalid .ini file" />
-        );
+        notifyError("Failed to import credentials: invalid .ini file");
         return;
       }
 
-      showIndicator("Importing credentials...");
+      await login({
+        host: config.default.hq,
+        account: config.default.account,
+        token: config.default.token,
+        serverType: "prelude",
+      });
 
-      await login(
-        {
-          host: config.default.hq,
-          account: config.default.account,
-          token: config.default.token,
-          serverType: "prelude",
-        },
-        takeControl().signal
-      );
-
-      switchTest();
-      clear();
-      resetEditor();
-      navigate("welcome");
-      write(
-        <TerminalMessage
-          message={`credentials imported successfully.`}
-          helpText={`type "list-tests" to show all your tests`}
-        />
-      );
-    } catch (err) {
-      if (isExitError(err)) {
-        return write(<TerminalMessage message="exited" />);
+      if (credentials && isAnonymous) {
+        await purgeAccount({ host, credentials });
       }
 
-      write(
-        <ErrorMessage message="failed to import credentials: unable to authenticate" />
-      );
-    } finally {
-      hideIndicator();
+      notifySuccess("Credentials imported successfully.");
+      emitter.emit("import");
+    } catch (err) {
+      notifyError("Failed to import credentials: unable to authenticate");
     }
   };
 
   const handleExport = async () => {
-    focusTerminal();
     if (!credentials) {
-      write(
-        <ErrorMessage message="failed to export credentials: no credentials found" />
-      );
+      notifyError("Failed to export credentials: no credentials found");
       return;
     }
 
@@ -144,9 +94,7 @@ export const useConfig = () => {
         await fileStream.write(new Blob([config], { type: "text/plain" }));
         await fileStream.close();
 
-        write(
-          <TerminalMessage message={`credentials exported successfully`} />
-        );
+        notifySuccess("Credentials exported successfully");
       } catch (err) {
         notifyError("Failed to open file picker", err);
       }
@@ -161,11 +109,10 @@ export const useConfig = () => {
     a.download = "keychain.ini";
     a.click();
 
-    write(<TerminalMessage message={`credentials exported successfully`} />);
+    notifySuccess("Credentials exported successfully");
   };
 
   const handleImport = async () => {
-    focusTerminal();
     if ("showOpenFilePicker" in window) {
       try {
         const [handle] = await (window as any).showOpenFilePicker({
