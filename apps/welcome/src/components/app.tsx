@@ -9,7 +9,7 @@ export default function Welcome() {
         <style>{"body {  background-color: #1a2121; }"}</style>
       </Helmet>
 
-      <h1>Actionable Threat Intelligence</h1>
+      <h2>Actionable Threat Intelligence</h2>
     </div>
   );
 }
