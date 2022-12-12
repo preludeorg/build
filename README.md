@@ -1,6 +1,6 @@
 # Prelude Build
 
-<a href="https://www.preludesecurity.com/">Prelude Build</a> is an easy-to-use IDE - purpose built for authoring, testing and verifying security tests for use in real environments. Our goal is to provide a consistent and repeatable way to write, verify and deploy tests for any scale.
+<a href="https://www.preludesecurity.com/products/build">Prelude Build</a> is an easy-to-use IDE - purpose built for authoring, testing and verifying security tests for use in real environments. Our goal is to provide a consistent and repeatable way to write, verify and deploy tests for any scale.
 
 https://user-images.githubusercontent.com/813716/206263410-9cae39fd-1140-4a8c-b534-777718faed77.mp4
 
