@@ -158,14 +158,23 @@ const Options: React.FC<{
   showAccountManager: () => void;
   close: () => void;
 }> = ({ showAccountManager, close }) => {
-  const { isAnonymous } = useAuthStore(select("isAnonymous"));
+  const { isAnonymous, handle, credentials } = useAuthStore(
+    select("isAnonymous", "handle", "credentials")
+  );
   const { handleExport, handleImport } = useConfig();
   return (
     <div className={styles.options} onClick={(e) => e.stopPropagation()}>
+      <div className={styles.userCard}>
+        <span>Handle</span>
+        <p>{handle}</p>
+        <span>Account ID</span>
+        <p>{credentials?.account}</p>
+      </div>
+      <div className={styles.divider} />
       <a onClick={showAccountManager}>
         {isAnonymous ? "Create a handle" : "Update handle"}
       </a>
-      <div className={styles.divider} />
+
       <a
         onClick={() => {
           void handleImport();
