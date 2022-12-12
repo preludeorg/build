@@ -35,7 +35,7 @@ You may opt for one or both, depending on your workflow. Both are fully open-sou
 
 The Build UI is a <a href="https://web.dev/progressive-web-apps/">Progressive Web Application (PWA)</a> - which means it is a website that functions as a desktop application. This modern deployment mechanism allows the best of both worlds: you can run it as a native desktop experience (where the icon shows up in your dock) but you don't need to actually install it, as it's just browser technology under the covers.
 
-PWA's can run anywhere, on any device you can load a browser. To use the GUI - click on the "Launch Prelude Build" CTAs on https://www.preludesecurity.com/.
+PWA's can run anywhere, on any device you can load a browser. To use the GUI - click on the "Launch Prelude Build" CTAs on https://www.preludesecurity.com/products/build.
 
 ### Quickstart
 
