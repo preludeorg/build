@@ -13,8 +13,8 @@ export default ({ mode }) => {
     includeAssets: ["favicon.svg"],
     manifest: {
       id: env.VITE_PWA_ID,
-      name: "Prelude Build",
-      short_name: "Prelude Build",
+      name: "Prelude Security",
+      short_name: "Prelude Security",
       description:
         "An authoring and testing application designed specifically for Security Tests.",
       theme_color: "#21252b",
