@@ -49,12 +49,7 @@ const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const tabs = useEditorStore(
     (state) =>
-      Object.keys(state.tabs).map((key) => {
-        return {
-          id: state.tabs[key].variant.name,
-          readonly: state.tabs[key].variant.readonly ?? false,
-        };
-      }),
+      Object.keys(state.tabs).map((key) => state.tabs[key].variant.name),
     shallow
   );
   const { currentTabId, ext, buffer, updateBuffer, readonly } = useEditorStore(
@@ -78,7 +73,7 @@ const EditorWindow: React.FC = () => {
       <nav>
         <ul>
           {tabs.map((tab) => (
-            <Tab key={tab.id} readonly={tab.readonly} tabId={tab.id} />
+            <Tab key={tab} tabId={tab} />
           ))}
         </ul>
       </nav>
@@ -98,11 +93,11 @@ const EditorWindow: React.FC = () => {
 
 export default EditorWindow;
 
-const Tab: React.FC<{ tabId: string; readonly: boolean }> = ({
-  tabId,
-  readonly,
-}) => {
+const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
   const tabName = useEditorStore((state) => state.tabs[tabId].variant.name);
+  const readonly = useEditorStore(
+    (state) => state.tabs[tabId].variant.readonly ?? false
+  );
   const { currentTabId, switchTab, closeTab } = useEditorStore(
     select("currentTabId", "switchTab", "closeTab"),
     shallow
