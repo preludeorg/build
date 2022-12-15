@@ -8,8 +8,11 @@ export default function Welcome() {
         <title>Prelude | Welcome</title>
         <style>{"body {  background-color: #1a2121; }"}</style>
       </Helmet>
-
-      <h2>Actionable Threat Intelligence</h2>
+      <section className={styles.leftSection}>
+        <h2>Actionable Threat Intelligence</h2>
+      </section>
+      <div className={styles.sectionDivider} />
+      <section className={styles.rightSection}></section>
     </div>
   );
 }
