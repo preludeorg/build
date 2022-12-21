@@ -72,6 +72,14 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isAnonymous === true) {
+      (
+        document.getElementById("headlessui-popover-button-:r2:") as HTMLElement
+      ).click();
+    }
+  }, [isAnonymous]);
+
   const noUser = !initializing && !credentials;
   return (
     <header className={styles.header}>
