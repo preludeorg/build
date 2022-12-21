@@ -11,8 +11,10 @@ import {
   PulseSmallIcon,
 } from "@theprelude/ds";
 import { useTests } from "../hooks/use-tests";
+import { changePallete } from "@theprelude/core";
 
 export default function Welcome() {
+  changePallete("welcome");
   const tests = useTests();
   const testName = <>Can we exploit the Office macro CVEs?</>;
   const testDescription = (

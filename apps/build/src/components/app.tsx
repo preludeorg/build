@@ -1,4 +1,4 @@
-import { select } from "@theprelude/core";
+import { changePallete, select } from "@theprelude/core";
 import Helmet from "react-helmet";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../hooks/navigation-store";
@@ -11,6 +11,7 @@ import StatusBar from "./status-bar/status-bar";
 import Welcome from "./welcome/welcome";
 
 function Build() {
+  changePallete("build");
   const { panel, overlay } = useNavigationStore(
     select("panel", "overlay"),
     shallow
