@@ -4,13 +4,28 @@ import {
   Button,
   CheckmarkIcon,
   CopyIcon,
+  DarwinIcon,
   GithubIcon,
   IconButton,
   LinuxIcon,
   PulseSmallIcon,
 } from "@theprelude/ds";
+import { useTests } from "../hooks/use-tests";
 
 export default function Welcome() {
+  const tests = useTests();
+  const testName = <>Can we exploit the Office macro CVEs?</>;
+  const testDescription = (
+    <>
+      LockBit 2.0 is an affiliate-based Ransomware-as-a-Service (RaaS) that was
+      first observed in June 2021. This chain simulates post-exploitation
+      activity of LockBit, including deleting Volume Shadow Copies, performing a
+      UAC bypass, creating a named pipe, and writing a ransom note to the user's
+      desktop. Endpoint detection should identify LockBit 2.0 ransomware
+      activity and respond before it can cause damage. This chain must be run as
+      Administrator.
+    </>
+  );
   return (
     <div className={styles.welcome}>
       <Helmet>
@@ -23,24 +38,18 @@ export default function Welcome() {
           <h4>Verified Security Test</h4>
         </div>
         <div className={styles.test}>
-          <h2>Can we exploit the Office macro CVEs?</h2>
-          <p>
-            LockBit 2.0 is an affiliate-based Ransomware-as-a-Service (RaaS)
-            that was first observed in June 2021. This chain simulates
-            post-exploitation activity of LockBit, including deleting Volume
-            Shadow Copies, performing a UAC bypass, creating a named pipe, and
-            writing a ransom note to the user's desktop. Endpoint detection
-            should identify LockBit 2.0 ransomware activity and respond before
-            it can cause damage. This chain must be run as Administrator.
-          </p>
+          <h2>{testName}</h2>
+          <p>{testDescription}</p>
           <div className={styles.subTests}>
-            <div className={styles.subTest}>
-              <CheckmarkIcon className={styles.subTestIcon} />
-              <span>Sub Test name</span>
-              <a>
-                <GithubIcon className={styles.subTestIcon} />
-              </a>
-            </div>
+            {tests.data?.map((t) => (
+              <div className={styles.subTest} key={t.question}>
+                <CheckmarkIcon className={styles.subTestIcon} />
+                <span>{t.question}</span>
+                <a href="/" target="_blank">
+                  <GithubIcon className={styles.subTestIcon} />
+                </a>
+              </div>
+            ))}
           </div>
         </div>
         <div className={styles.execute}>
@@ -49,7 +58,10 @@ export default function Welcome() {
           </p>
           <div className={styles.platforms}>
             <Button icon={<LinuxIcon />} intent="secondary">
-              Platform Name
+              Linux
+            </Button>
+            <Button icon={<DarwinIcon />} intent="secondary">
+              Darwin
             </Button>
           </div>
           <div className={styles.command}>
