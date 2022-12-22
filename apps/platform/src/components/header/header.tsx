@@ -261,7 +261,7 @@ const AccountManager: React.FC<{
 
   const setAccountMessage = () => {
     if (dataLossWarning) {
-      return "Create a handle to persist your account. Otherwise your account will be not exist beyond this session";
+      return "Create a handle to persist your account. Otherwise your account will not exist beyond this session";
     }
     if (isAnonymous) {
       return "Set your account handle to save your tests.";
