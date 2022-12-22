@@ -1,10 +1,11 @@
 import "@theprelude/ds/system.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./components/app";
+import { RouterProvider } from "react-router";
+import router from "./components/app";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
