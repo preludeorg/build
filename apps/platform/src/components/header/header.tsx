@@ -74,9 +74,11 @@ const Header = () => {
 
   useEffect(() => {
     if (isAnonymous === true) {
-      (
-        document.getElementById("headlessui-popover-button-:r2:") as HTMLElement
-      ).click();
+      const button = Array.from(
+        document.querySelectorAll("button") as NodeListOf<HTMLElement>
+      ).filter((b) => b.id.includes("headlessui-popover-button"))[0];
+
+      button.click();
     }
   }, [isAnonymous]);
 
