@@ -216,6 +216,7 @@ const AccountManager: React.FC<{
   const [handle, setHandle] = useState("");
   const {
     changeHandle,
+    isAnonymous,
     host,
     credentials,
     handle: fromHandle,
@@ -224,6 +225,7 @@ const AccountManager: React.FC<{
   } = useAuthStore(
     select(
       "changeHandle",
+      "isAnonymous",
       "host",
       "credentials",
       "handle",
@@ -257,6 +259,17 @@ const AccountManager: React.FC<{
     mutate(handle);
   };
 
+  const setAccountMessage = () => {
+    if (dataLossWarning) {
+      return "Create a handle to persist your account. Otherwise your account will be not exist beyond this session";
+    }
+    if (isAnonymous) {
+      return "Set your account handle to save your tests.";
+    } else {
+      return "Change your account handle and credentials.";
+    }
+  };
+
   return (
     <div className={styles.create}>
       <div className={styles.title}>
@@ -271,11 +284,7 @@ const AccountManager: React.FC<{
         />
       </div>
       <div className={styles.divider} />
-      <p>
-        {dataLossWarning
-          ? "Create a handle to persist your account. Otherwise your account will be not exist beyond this session"
-          : "Change your account handle and credentials."}
-      </p>
+      <p>{setAccountMessage()}</p>
       <form onSubmit={handleSubmit}>
         <Input
           ref={(el) => el?.focus()}
