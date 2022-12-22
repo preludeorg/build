@@ -76,8 +76,11 @@ const Header = () => {
     if (isAnonymous === true) {
       const button = Array.from(
         document.querySelectorAll("button") as NodeListOf<HTMLElement>
-      ).filter((b) => b.id.includes("headlessui-popover-button"))[0];
-
+      ).filter(
+        (b) =>
+          b.id.includes("headlessui-popover-button") &&
+          b.className.includes("tag")
+      )[0];
       button.click();
     }
   }, [isAnonymous]);
