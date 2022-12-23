@@ -139,7 +139,12 @@ export const createURL = async (name: string, config: ServiceConfig) => {
 
 export const getProbeList = async (config: ServiceConfig) => {
   const service = new Service(config);
-  return await service.detect.listProbes()
+  return await service.detect.listProbes();
+};
+
+export const getActivity = async (config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.detect.describeActivity();
 };
 
 export const purgeAccount = async (config: ServiceConfig) => {

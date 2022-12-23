@@ -1,5 +1,5 @@
 .list {
-  width: 25%;
+  width: 20%;
   border-left: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
@@ -43,6 +43,20 @@
 
 .probe > svg {
   fill: var(--gray-10);
+}
+
+.probe .active {
+  padding: 4px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  margin-left: auto;
+}
+
+.probe .inactive {
+  padding: 4px;
+  border-radius: 50%;
+  background-color: var(--color-error);
+  margin-left: auto;
 }
 
 .probe:hover {
