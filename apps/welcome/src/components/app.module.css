@@ -1,0 +1,9 @@
+.welcome {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.welcome > h2 {
+  margin-top: 0;
+}

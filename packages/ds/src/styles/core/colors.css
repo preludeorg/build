@@ -12,11 +12,17 @@
   /* shades */
   --white: white;
   --transparent-white: rgba(255, 255, 255, 0.2); /* Transparent White */
+  --transparent-black: rgba(0, 0, 0, 0.2); /* Transparent Black */
   --gray-10: #939393; /* Shingle Gray */
   --gray-20: #5c6063; /* Steel Metal */
   --gray-30: #3d4246; /* Metropolis */
   --gray-40: #232323; /* Carbon */
   --black: #1e1e1e; /* Halloween Black */
+
+  /* details */
+
+  --color-detail-dark: #1A2121; /* Dark Teal */
+  --color-detail-light: #344B4B; /* Sea Teal */
 
   /* alerts */
   --color-success: #73b762;

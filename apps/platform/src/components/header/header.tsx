@@ -22,6 +22,7 @@ import {
 } from "@theprelude/ds";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./header.module.css";
 
 const Header = () => {
@@ -42,6 +43,13 @@ const Header = () => {
       "dataLossWarning"
     )
   );
+
+  const location = useLocation();
+
+  const titles: Record<string, string> = {
+    "/": "Welcome",
+    "/build": "Build",
+  };
 
   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
     const { isAnonymous, setDataLossWarning } = authState();
@@ -91,7 +99,7 @@ const Header = () => {
       <section className={styles.brand}>
         <PreludeIcon className={styles.logo} />
         <span className={styles.divider} />
-        <h4>Build</h4>
+        <h4>{titles[location.pathname] ?? ""}</h4>
       </section>
       <section className={styles.right}>
         {noUser ? (

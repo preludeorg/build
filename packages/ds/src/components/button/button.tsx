@@ -11,6 +11,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
   iconPosition?: "left" | "right";
   loading?: boolean;
+  extraIcon?: JSX.Element;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = "small",
   icon,
   iconPosition = "left",
+  extraIcon,
   loading,
   children,
   ...props
@@ -39,6 +41,7 @@ export const Button: React.FC<ButtonProps> = ({
           {loading ? <Loading /> : icon}
         </>
       )}
+      {extraIcon ? extraIcon : ""}
     </button>
   );
 };
