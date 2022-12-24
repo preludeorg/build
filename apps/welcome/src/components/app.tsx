@@ -14,14 +14,13 @@ export default function Welcome() {
   const [probe, setProbe] = useState({});
   const probes = useProbes();
   const activity = useActivity();
-  console.log(probes)
   return (
     <div className={styles.welcome}>
       <Helmet>
         <title>Prelude | Welcome</title>
         <style>{"body {  background-color: #1a2121; }"}</style>
       </Helmet>
-      {screen === "tutorial" ? <Tutorial /> : <Activity probe={probe} />}
+      {screen === "tutorial" ? <Tutorial /> : <Activity probe={probe} activity={activity} />}
       {probes?.data && probes?.data.length > 0 && (
         <ProbeList probes={probes} setScreen={setScreen} setProbe={setProbe} />
       )}
