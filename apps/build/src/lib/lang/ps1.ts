@@ -8,8 +8,8 @@ const language: Language = {
   template,
   mode: [StreamLanguage.define(powerShell)],
   linters: [
-    { regex: /function\s+Test\(.*\)/g, message: "Required test method missing" },
-    { regex: /function\s+Clean\(.*\)/g, message: "Required clean method missing" },
+    { regex: /function\s+Test/g, message: "Required test method missing" },
+    { regex: /function\s+Clean/g, message: "Required clean method missing" },
   ],
 };
 
