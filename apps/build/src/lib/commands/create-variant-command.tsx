@@ -27,7 +27,7 @@ import { Command } from "./types";
 
 const platformValidator = z.enum(["*", "darwin", "linux", "windows"]);
 const archValidator = z.enum(["*", "arm64", "x86_64"]);
-const languageValidator = z.enum(["c", "cs", "swift", "go"]);
+const languageValidator = z.enum(["c", "cs", "sh", "swift", "go"]);
 
 const getAnswers = async (args: string, signal: AbortSignal) => {
   if (args === "") {

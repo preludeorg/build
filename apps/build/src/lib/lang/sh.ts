@@ -1,6 +1,6 @@
 import { StreamLanguage } from "@codemirror/language";
 import { shell } from "@codemirror/legacy-modes/mode/shell";
-import template from "./templates/template.c?raw";
+import template from "./templates/template.sh?raw";
 import { Language } from "./types";
 
 const language: Language = {
