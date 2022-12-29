@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "ini": "^3.0.1",
-    "@theprelude/sdk": "^0.9.13",
+    "@theprelude/sdk": "/Users/mahinakaholokula/Desktop/libraries/javascript/sdk",
     "eventemitter3": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
