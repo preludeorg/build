@@ -48,11 +48,14 @@ const getAnswers = async (args: string, signal: AbortSignal) => {
           })
         : "*";
 
-    const language = await inquire({
-      message: "select a language",
-      validator: languageValidator,
-      signal,
-    });
+    const language =
+        languageValidator.options.length !== 1
+            ? await inquire({
+              message: "select a language",
+              validator: languageValidator,
+              signal,
+            })
+        : languageValidator.options[0];
 
     return { platform, arch, language };
   }
