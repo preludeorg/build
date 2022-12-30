@@ -5,10 +5,15 @@ import {
   ErrorMessage,
   TerminalMessage,
 } from "../../components/terminal/terminal-message";
+import { editorState } from "../../hooks/editor-store";
 import { terminalState } from "../../hooks/terminal-store";
 import { isConnected, isExitError, isInTestContext } from "./helpers";
 import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
 import { Command } from "./types";
+import focusTerminal from "../../utils/focus-terminal";
+import { navigatorState } from "../../hooks/navigation-store";
+import { getLanguage } from "../lang";
+import { format } from "date-fns";
 
 export const listTestsCommand: Command = {
   alias: ["lt"],
@@ -18,6 +23,9 @@ export const listTestsCommand: Command = {
   async exec() {
     const { switchTest, takeControl, showIndicator, hideIndicator } =
       terminalState();
+    const { openTab } = editorState();
+    const { navigate } = navigatorState();
+
     try {
       const { host, credentials } = authState();
 
@@ -54,6 +62,19 @@ export const listTestsCommand: Command = {
       });
 
       switchTest(test);
+
+      const code = getLanguage("go")
+        .template.replaceAll("$NAME", test.id)
+        .replaceAll("$QUESTION", test.question)
+        .replaceAll(
+          "$CREATED",
+          format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS")
+        );
+
+      openTab({ name: test.id, code });
+      navigate("editor");
+      focusTerminal();
+
       return CONTEXT_SWITCH_MESSAGE;
     } catch (e) {
       if (isExitError(e)) {

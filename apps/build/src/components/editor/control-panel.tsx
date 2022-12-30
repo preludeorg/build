@@ -23,7 +23,7 @@ const ControlPanel: React.FC = () => {
     const tab = state.tabs[state.currentTabId];
 
     return {
-      validTest: validate(tab.buffer, getLanguage(tab.extension).linters),
+      validTest: validate(tab.buffer, getLanguage("go").linters),
       currentTabId: state.currentTabId,
     };
   }, shallow);

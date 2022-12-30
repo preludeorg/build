@@ -64,7 +64,7 @@ const EditorWindow: React.FC = () => {
   );
 
   const extensions = React.useMemo(
-    () => [...getLanguage(ext).mode, EditorState.readOnly.of(readonly)],
+    () => [...getLanguage("go").mode, EditorState.readOnly.of(readonly)],
     [ext, readonly]
   );
 
@@ -136,7 +136,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
 const Linters: React.FC = () => {
   const messages = useEditorStore((state) => {
     const tab = state.tabs[state.currentTabId];
-    return lint(tab.buffer, getLanguage(tab.extension).linters);
+    return lint(tab.buffer, getLanguage("go").linters);
   }, shallow);
 
   if (messages.length === 0) return null;
