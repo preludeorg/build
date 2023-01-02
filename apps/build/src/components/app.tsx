@@ -13,7 +13,7 @@ function Build() {
     select("panel", "overlay"),
     shallow
   );
-  const { ref, defaultHeight } = useDefaultHeight();
+  const { ref } = useDefaultHeight();
 
   return (
     <div className={styles.app}>

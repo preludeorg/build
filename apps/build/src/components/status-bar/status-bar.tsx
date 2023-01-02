@@ -1,7 +1,6 @@
 import { Transition } from "@headlessui/react";
 import { select, selectIsConnected, useAuthStore } from "@theprelude/core";
-import { DownloadIcon, FolderIcon, Loading } from "@theprelude/ds";
-import shallow from "zustand/shallow";
+import { DownloadIcon, FolderIcon } from "@theprelude/ds";
 import useNavigationStore from "../../hooks/navigation-store";
 import styles from "./status-bar.module.css";
 const StatusBar: React.FC = () => {

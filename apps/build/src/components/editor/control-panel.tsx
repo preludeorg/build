@@ -1,5 +1,4 @@
 import {
-  build,
   getTestList,
   parseVariant,
   select,
@@ -28,7 +27,6 @@ const ControlPanel: React.FC = () => {
   const handleBuild = async () => {
     try {
       setLoading(true);
-      const results = await build(currentTabId, serviceConfig);
       const test = (await getTestList(serviceConfig)).find(
         (t) => t.id === parseVariant(currentTabId)?.id
       );
@@ -36,9 +34,7 @@ const ControlPanel: React.FC = () => {
       if (!test) {
         throw new Error("missing test");
       }
-
     } catch (e) {
-
     } finally {
       setLoading(false);
     }
