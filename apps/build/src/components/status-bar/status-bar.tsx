@@ -3,7 +3,6 @@ import { select, selectIsConnected, useAuthStore } from "@theprelude/core";
 import { DownloadIcon, FolderIcon, Loading } from "@theprelude/ds";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
-import useTerminalStore from "../../hooks/terminal-store";
 import styles from "./status-bar.module.css";
 const StatusBar: React.FC = () => {
   const showOverlay = useNavigationStore((state) => state.showOverlay);
@@ -11,19 +10,9 @@ const StatusBar: React.FC = () => {
   const { tooltipVisible, hideTooltip } = useAuthStore(
     select("tooltipVisible", "hideTooltip")
   );
-  const statusIndicator = useTerminalStore(
-    (state) => state.statusIndicator,
-    shallow
-  );
   return (
     <div className={styles.statusBar}>
       <section className={styles.right}>
-        {statusIndicator?.loading === true && (
-          <div className={styles.statusIndicator}>
-            <Loading />
-            <span>{statusIndicator.message}</span>
-          </div>
-        )}
         {isConnected && (
           <>
             <div className={styles.stat}>

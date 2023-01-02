@@ -4,7 +4,6 @@ import useNavigationStore from "../hooks/navigation-store";
 import { useDefaultHeight } from "../hooks/use-default-height";
 import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
-import Footer from "./footer";
 import Overlays from "./overlays/overlays";
 import StatusBar from "./status-bar/status-bar";
 import Welcome from "./welcome/welcome";
@@ -23,7 +22,6 @@ function Build() {
           {panel === "welcome" && <Welcome ref={ref} />}
           {panel === "editor" && <EditorPanel />}
         </section>
-        <Footer defaultHeight={defaultHeight} />
         <StatusBar />
       </main>
       <Overlays overlay={overlay} />

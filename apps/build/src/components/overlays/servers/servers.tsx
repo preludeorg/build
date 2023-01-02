@@ -5,15 +5,10 @@ import { useState } from "react";
 import shallow from "zustand/shallow";
 
 import useNavigationStore from "../../../hooks/navigation-store";
-import useTerminalStore from "../../../hooks/terminal-store";
 
 import styles from "./servers.module.css";
 
 const Servers: React.FC = () => {
-  const { write, takeControl } = useTerminalStore(
-    select("write", "takeControl"),
-    shallow
-  );
   const { host, credentials, serverType } = useAuthStore(
     select("host", "credentials", "serverType"),
     shallow
@@ -39,16 +34,7 @@ const Servers: React.FC = () => {
       const host = formData.get("host") as string;
       const accountID = formData.get("accountID") as string;
       const token = formData.get("token") as string;
-      await login(
-        { host, account: accountID, token, serverType: type },
-        takeControl().signal
-      );
-
-      write(
-        <span style={{ color: "green" }}>
-          Connecting to server {host as string}
-        </span>
-      );
+      await login({ host, account: accountID, token, serverType: type });
     } catch (e) {}
   };
 
