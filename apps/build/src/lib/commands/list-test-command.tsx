@@ -6,14 +6,14 @@ import {
   TerminalMessage,
 } from "../../components/terminal/terminal-message";
 import { terminalState } from "../../hooks/terminal-store";
-import { isConnected, isExitError, isInTestContext } from "./helpers";
-import { CONTEXT_SWITCH_MESSAGE, NO_TESTS_MESSAGE } from "./messages";
+import { isConnected, isExitError } from "./helpers";
+import { NO_TESTS_MESSAGE } from "./messages";
 import { Command } from "./types";
 
 export const listTestsCommand: Command = {
   alias: ["lt"],
   enabled: () => isConnected(),
-  hidden: () => isInTestContext(),
+  hidden: () => false,
   desc: "list tests in account",
   async exec() {
     const { switchTest, takeControl, showIndicator, hideIndicator } =
@@ -54,7 +54,7 @@ export const listTestsCommand: Command = {
       });
 
       switchTest(test);
-      return CONTEXT_SWITCH_MESSAGE;
+      return <TerminalMessage message="opened existing test" />;
     } catch (e) {
       if (isExitError(e)) {
         return <TerminalMessage message="exited" />;

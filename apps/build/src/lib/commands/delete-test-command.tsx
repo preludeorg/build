@@ -12,7 +12,7 @@ import {
 import { editorState } from "../../hooks/editor-store";
 import { navigatorState } from "../../hooks/navigation-store";
 import { terminalState } from "../../hooks/terminal-store";
-import { isConnected, isExitError, isInTestContext } from "./helpers";
+import { isConnected, isExitError } from "./helpers";
 import { NO_TESTS_MESSAGE } from "./messages";
 import { Command } from "./types";
 
@@ -20,7 +20,7 @@ export const deleteTestCommand: Command = {
   alias: ["dt"],
   desc: "delete test from account",
   enabled: () => isConnected(),
-  hidden: () => isInTestContext(),
+  hidden: () => false,
   async exec() {
     const {
       currentTest,

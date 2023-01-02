@@ -1,4 +1,4 @@
-import { authState, createTest } from "@theprelude/core";
+import { authState, createTest, Variant, createVariant } from "@theprelude/core";
 import * as uuid from "uuid";
 import { z, ZodError } from "zod";
 import { inquire } from "../../components/terminal/question";
@@ -7,9 +7,13 @@ import {
   TerminalMessage,
 } from "../../components/terminal/terminal-message";
 import { terminalState } from "../../hooks/terminal-store";
-import { isConnected, isExitError, isInTestContext } from "./helpers";
-import { CONTEXT_SWITCH_MESSAGE } from "./messages";
+import { isConnected, isExitError } from "./helpers";
 import { Command } from "./types";
+import {getLanguage} from "../lang";
+import {format} from "date-fns";
+import {editorState} from "../../hooks/editor-store";
+import focusTerminal from "../../utils/focus-terminal";
+import {navigatorState} from "../../hooks/navigation-store";
 
 const validator = z
   .string({
@@ -34,13 +38,14 @@ export const createTestCommand: Command = {
   alias: ["ct"],
   desc: "create test in account",
   enabled: () => isConnected(),
-  hidden: () => isInTestContext(),
+  hidden: () => false,
   async exec(args) {
     const { switchTest, showIndicator, hideIndicator, takeControl } =
       terminalState();
     try {
+      const { navigate } = navigatorState();
+      const { openTab } = editorState();
       const { host, credentials } = authState();
-
       const signal = takeControl().signal;
 
       const testId = uuid.v4();
@@ -56,7 +61,25 @@ export const createTestCommand: Command = {
         account_id: credentials?.account ?? "",
       });
 
-      return CONTEXT_SWITCH_MESSAGE;
+      let lang = 'go';
+      let file = `${testId}.${lang}`;
+      const code = getLanguage(lang)
+          .template.replaceAll("$NAME", file)
+          .replaceAll("$QUESTION", question)
+          .replaceAll(
+              "$CREATED",
+              format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS")
+          );
+      const variant: Variant = {
+        name: file,
+        code,
+      };
+      await createVariant(variant, { host, credentials }, signal);
+      openTab(variant);
+      navigate("editor");
+      focusTerminal();
+
+      return <TerminalMessage message="test created" />;
     } catch (e) {
       if (isExitError(e)) {
         return <TerminalMessage message="exited" />;

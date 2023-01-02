@@ -10,7 +10,7 @@ export interface Tab {
 function createTab(variant: Variant): Tab {
   return {
     variant,
-    extension: variant.name.split(".").pop() ?? "c",
+    extension: variant.name.split(".").pop() ?? "go",
     buffer: variant.code,
   };
 }
