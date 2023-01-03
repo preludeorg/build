@@ -43,7 +43,7 @@
 }
 
 .accordion > div > button {
-  margin-top: 4px;
+  margin-top: 4   px;
   display: flex;
   align-items: center;
   width: 2.5rem;

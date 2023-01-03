@@ -5,7 +5,6 @@ import { useDefaultHeight } from "../hooks/use-default-height";
 import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
 import Overlays from "./overlays/overlays";
-import StatusBar from "./status-bar/status-bar";
 import Browser from "./browser/browser";
 import Welcome from "./welcome/welcome";
 
@@ -23,7 +22,6 @@ function Build() {
           {panel === "welcome" && <Welcome ref={ref} />}
           {panel === "editor" && <EditorPanel />}
         </section>
-        <StatusBar />
       </main>
       <Browser />
       <Overlays overlay={overlay} />
