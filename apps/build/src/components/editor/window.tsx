@@ -1,8 +1,8 @@
 import { EditorState } from "@codemirror/state";
 import {
-  createVariant,
   debounce,
-  parseVariant,
+  uploadTest,
+  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -18,7 +18,6 @@ import React from "react";
 import shallow from "zustand/shallow";
 import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import useNavigationStore from "../../hooks/navigation-store";
-import { terminalState } from "../../hooks/terminal-store";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
 import LockedTest from "../locked-test/locked-test";
@@ -26,24 +25,20 @@ import ControlPanel from "./control-panel";
 import Editor from "./editor";
 import styles from "./editor.module.pcss";
 
-const { showIndicator, hideIndicator } = terminalState();
-
-const saveVariant = async (
+const updateCode = async (
   name: string,
   code: string,
   config: ServiceConfig
 ) => {
   try {
-    showIndicator("auto-saving...");
-    await createVariant({ name, code }, config, new AbortController().signal);
+    await uploadTest(name, code, config, new AbortController().signal);
   } catch (e) {
     notifyError("Failed to auto-save", e);
   } finally {
-    hideIndicator();
   }
 };
 
-const processVariant = debounce(saveVariant, 1000);
+const processCode = debounce(updateCode, 1000);
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
@@ -82,7 +77,7 @@ const EditorWindow: React.FC = () => {
         extensions={extensions}
         onChange={(buffer) => {
           updateBuffer(buffer);
-          void processVariant(currentTabId, buffer, serviceConfig);
+          void processCode(currentTabId, buffer, serviceConfig);
         }}
       />
       <Linters />
@@ -103,7 +98,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
     shallow
   );
   const navigate = useNavigationStore((state) => state.navigate);
-  const { id, platform } = parseVariant(tabName) ?? { id: "" };
+  const { id, platform } = parseVerifiedSecurityTest(tabName) ?? { id: "" };
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}

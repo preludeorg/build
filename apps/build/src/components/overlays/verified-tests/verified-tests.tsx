@@ -1,24 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createURL,
-  deleteVerified,
-  parseBuildVariant,
+  parseBuildVerifiedSecurityTest,
   select,
   useAuthStore,
-  verifiedTests,
 } from "@theprelude/core";
 import {
   Accordion,
   AccordionAction,
   AccordionItem,
   AccordionList,
-  ConfirmDialog,
   CopyIcon,
   DownloadIcon,
   notifyError,
   notifySuccess,
   Overlay,
-  Trashcan,
   useAccordion,
   VariantIcon,
 } from "@theprelude/ds";
@@ -29,19 +25,16 @@ import useNavigationStore from "../../../hooks/navigation-store";
 import { useTests } from "../../../hooks/use-tests";
 
 const filterVST = (test: Test, vst: string[]) => {
-  return vst.filter((v) => parseBuildVariant(v)?.id === test.id);
+  return vst.filter((v) => parseBuildVerifiedSecurityTest(v)?.id === test.id);
 };
 
 const VerifiedTests: React.FC = () => {
   const tests = useTests();
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const verified = useQuery(["verified-tests", serviceConfig], () =>
-    verifiedTests(serviceConfig)
-  );
-  const isLoading = tests.isLoading || verified.isLoading;
+  const verified = tests.data?.reduce((acc, test) => acc.concat(test?.vst), [] as string[]) || [] as string[];
+  const isLoading = tests.isLoading;
   const testIds = useMemo(
-    () => new Set(verified.data?.map((t) => parseBuildVariant(t)?.id ?? "")),
-    [verified.data]
+    () => new Set(verified.map((t) => parseBuildVerifiedSecurityTest(t)?.id ?? "")),
+    [verified]
   );
   const hideOverlay = useNavigationStore((state) => state.hideOverlay);
 
@@ -53,14 +46,14 @@ const VerifiedTests: React.FC = () => {
       title="Verified Security Tests"
       description="Copy the URL to a VST and execute it on any host."
     >
-      {verified.data &&
+      {verified &&
         tests.data
           ?.filter((test) => testIds.has(test.id))
           .map((test) => (
             <TestItem
               key={test.id}
               test={test}
-              variants={filterVST(test, verified.data)}
+              variants={filterVST(test, verified)}
             />
           ))}
     </Overlay>
@@ -76,7 +69,7 @@ const TestItem: React.FC<{
     <Accordion
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
-      title={test.question}
+      title={test.rule}
     >
       <AccordionList>
         {variants.map((variant) => (
@@ -84,12 +77,11 @@ const TestItem: React.FC<{
             key={variant}
             title={variant}
             icon={
-              <VariantIcon platform={parseBuildVariant(variant)?.platform} />
+              <VariantIcon platform={parseBuildVerifiedSecurityTest(variant)?.platform} />
             }
             actions={
               <>
                 <CopyButton variant={variant} />
-                <DeleteButton variant={variant} />
               </>
             }
           />
@@ -137,34 +129,6 @@ const CopyButton: React.FC<{
   }
 
   return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
-};
-
-const DeleteButton: React.FC<{ variant: string }> = ({ variant }) => {
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation(
-    (variant: string) => deleteVerified(variant, serviceConfig),
-    {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(["verified-tests"]);
-        notifySuccess("Verified security test deleted.");
-      },
-      onError: (e) => {
-        notifyError("Failed to delete verified security test", e);
-      },
-    }
-  );
-
-  return (
-    <ConfirmDialog
-      message="Do you want to delete this variant?"
-      onAffirm={() => {
-        mutate(variant);
-      }}
-    >
-      <AccordionAction loading={isLoading} icon={<Trashcan />} />
-    </ConfirmDialog>
-  );
 };
 
 export default VerifiedTests;

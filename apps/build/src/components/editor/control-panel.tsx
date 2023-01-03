@@ -1,7 +1,6 @@
 import {
-  build,
-  getTestList,
-  parseVariant,
+  listTests,
+  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -9,11 +8,8 @@ import { Button, PlayIcon } from "@theprelude/ds";
 import { useState } from "react";
 import shallow from "zustand/shallow";
 import useEditorStore from "../../hooks/editor-store";
-import useTerminalStore from "../../hooks/terminal-store";
 import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
-import { ErrorMessage } from "../terminal/terminal-message";
-import VariantResults from "../terminal/variant-results";
 import styles from "./control-panel.module.css";
 
 const ControlPanel: React.FC = () => {
@@ -28,33 +24,19 @@ const ControlPanel: React.FC = () => {
     };
   }, shallow);
 
-  const { write, showIndicator, hideIndicator } = useTerminalStore(
-    select("write", "showIndicator", "hideIndicator", "takeControl")
-  );
-
   const handleBuild = async () => {
     try {
       setLoading(true);
-      showIndicator("Building...");
-      const results = await build(currentTabId, serviceConfig);
-      const test = (await getTestList(serviceConfig)).find(
-        (t) => t.id === parseVariant(currentTabId)?.id
+      const test = (await listTests(serviceConfig)).find(
+        (t) => t.id === parseVerifiedSecurityTest(currentTabId)?.id
       );
 
       if (!test) {
         throw new Error("missing test");
       }
-
-      write(<VariantResults question={test.question} results={results} />);
     } catch (e) {
-      write(
-        <ErrorMessage
-          message={`failed to build variant: ${(e as Error).message}`}
-        />
-      );
     } finally {
       setLoading(false);
-      hideIndicator();
     }
   };
 

@@ -125,15 +125,6 @@
   color: var(--white);
 }
 
-.statusIndicator {
-  display: flex;
-  flex-direction: row;
-  column-gap: 0.5rem;
-  align-items: center;
-  color: var(--white);
-  padding-right: 0.5rem;
-}
-
 @keyframes loader {
   0% {
     transform: rotate(0deg);
