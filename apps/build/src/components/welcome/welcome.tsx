@@ -20,7 +20,6 @@ import { getLanguage } from "../../../../build/src/lib/lang";
 import { format } from "date-fns";
 
 const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
-  const showOverlay = useNavigationStore((state) => state.showOverlay);
   const { installer, setInstaller, isInstalled, setIsInstalled } =
     useNavigationStore(
       select("installer", "setInstaller", "isInstalled", "setIsInstalled"),
@@ -109,9 +108,6 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
       </a>
       <div className={styles.actions}>
         <CreateTest />
-        <Button onClick={() => showOverlay("securityTests")} intent="secondary">
-          View tests
-        </Button>
       </div>
     </div>
   );
@@ -151,7 +147,7 @@ const CreateTest = () => {
       <Input
         type="text"
         name="rule"
-        placeholder="Enter the rule"
+        placeholder="Enter a name"
         onChange={(e) => setRule(e.target.value)}
       />
       <Button
