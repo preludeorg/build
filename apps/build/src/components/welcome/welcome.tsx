@@ -110,7 +110,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
       <div className={styles.actions}>
         <CreateTest />
         <Button onClick={() => showOverlay("securityTests")} intent="secondary">
-          View
+          View tests
         </Button>
       </div>
     </div>
@@ -160,7 +160,7 @@ const CreateTest = () => {
         disabled={rule === "" || isLoading}
         loading={isLoading}
       >
-        Create
+        Create test
       </Button>
     </form>
   );
