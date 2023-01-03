@@ -43,8 +43,7 @@ const processCode = debounce(updateCode, 1000);
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const tabs = useEditorStore(
-    (state) =>
-      Object.keys(state.tabs).map((key) => state.tabs[key].variant.name),
+    (state) => Object.keys(state.tabs).map((key) => state.tabs[key].test.name),
     shallow
   );
   const { currentTabId, ext, buffer, updateBuffer, readonly } = useEditorStore(
@@ -53,7 +52,7 @@ const EditorWindow: React.FC = () => {
       ext: state.tabs[state.currentTabId].extension,
       updateBuffer: state.updateCurrentBuffer,
       buffer: selectBuffer(state),
-      readonly: state.tabs[state.currentTabId].variant.readonly ?? false,
+      readonly: state.tabs[state.currentTabId].readonly ?? false,
     }),
     shallow
   );
@@ -89,9 +88,9 @@ const EditorWindow: React.FC = () => {
 export default EditorWindow;
 
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
-  const tabName = useEditorStore((state) => state.tabs[tabId].variant.name);
+  const tabName = useEditorStore((state) => state.tabs[tabId].test.name);
   const readonly = useEditorStore(
-    (state) => state.tabs[tabId].variant.readonly ?? false
+    (state) => state.tabs[tabId].readonly ?? false
   );
   const { currentTabId, switchTab, closeTab } = useEditorStore(
     select("currentTabId", "switchTab", "closeTab"),

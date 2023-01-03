@@ -1,10 +1,11 @@
-import { Test } from "@theprelude/core";
+import {isPreludeTest, Test} from "@theprelude/core";
 import create from "zustand";
 
 export interface Tab {
   test: Test;
   extension: string;
   buffer: string;
+  readonly: boolean;
 }
 
 function createTab(test: Test, code: string): Tab {
@@ -12,6 +13,7 @@ function createTab(test: Test, code: string): Tab {
     test,
     extension: test.name.split(".").pop() ?? "go",
     buffer: code,
+    readonly: isPreludeTest(test),
   };
 }
 
