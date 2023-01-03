@@ -17,9 +17,10 @@ const ControlPanel: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { validTest, currentTabId } = useEditorStore((state) => {
     const tab = state.tabs[state.currentTabId];
-
     return {
-      validTest: validate(tab.buffer, getLanguage(tab.extension).linters),
+      validTest:
+        !tab.readonly &&
+        validate(tab.buffer, getLanguage(tab.extension).linters),
       currentTabId: state.currentTabId,
     };
   }, shallow);
