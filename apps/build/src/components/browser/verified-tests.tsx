@@ -1,6 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import {
   createURL,
+  downloadTest,
+  isPreludeTest,
   parseBuildVerifiedSecurityTest,
   select,
   useAuthStore,
@@ -12,6 +14,7 @@ import {
   AccordionList,
   CopyIcon,
   DownloadIcon,
+  EditorIcon,
   notifyError,
   notifySuccess,
   useAccordion,
@@ -21,10 +24,8 @@ import { Test } from "@theprelude/sdk";
 import { useMemo } from "react";
 import shallow from "zustand/shallow";
 import { useTests } from "../../hooks/use-tests";
-
-const filterVST = (test: Test, vst: string[]) => {
-  return vst.filter((v) => parseBuildVerifiedSecurityTest(v)?.id === test.id);
-};
+import { useTab } from "../../hooks/use-tab";
+import useNavigationStore from "../../hooks/navigation-store";
 
 const VerifiedTests: React.FC = () => {
   const tests = useTests();
@@ -42,41 +43,37 @@ const VerifiedTests: React.FC = () => {
       {verified &&
         tests.data
           ?.filter((test) => testIds.has(test.id))
-          .map((test) => (
-            <TestItem
-              key={test.id}
-              test={test}
-              variants={filterVST(test, verified)}
-            />
-          ))}
+          .map((test) => <TestItem key={test.id} test={test} />)}
     </div>
   );
 };
 
 const TestItem: React.FC<{
   test: Test;
-  variants: string[];
-}> = ({ test, variants }) => {
+}> = ({ test }) => {
   const accordion = useAccordion(true);
+  const readonly = isPreludeTest(test);
+
   return (
     <Accordion
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
       title={test.rule}
+      edit={<OpenButton test={test} readonly={readonly} />}
     >
       <AccordionList>
-        {variants.map((variant) => (
+        {test.vst.map((vst) => (
           <AccordionItem
-            key={variant}
-            title={variant}
+            key={vst}
+            title={vst}
             icon={
               <VariantIcon
-                platform={parseBuildVerifiedSecurityTest(variant)?.platform}
+                platform={parseBuildVerifiedSecurityTest(vst)?.platform}
               />
             }
             actions={
               <>
-                <CopyButton variant={variant} />
+                <CopyButton vstName={vst} />
               </>
             }
           />
@@ -87,11 +84,11 @@ const TestItem: React.FC<{
 };
 
 const CopyButton: React.FC<{
-  variant: string;
-}> = ({ variant }) => {
+  vstName: string;
+}> = ({ vstName }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { data, mutate, isLoading } = useMutation(
-    (variant: string) => createURL(variant, serviceConfig),
+    (vstName: string) => createURL(vstName, serviceConfig),
     {
       onSuccess: () => {
         notifySuccess(
@@ -117,7 +114,7 @@ const CopyButton: React.FC<{
     return (
       <AccordionAction
         loading={isLoading}
-        onClick={() => mutate(variant)}
+        onClick={() => mutate(vstName)}
         icon={<DownloadIcon />}
       />
     );
@@ -126,4 +123,36 @@ const CopyButton: React.FC<{
   return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
 };
 
+const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
+  test,
+  readonly,
+}) => {
+  const { open } = useTab();
+  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const { mutate, isLoading } = useMutation(
+    (testCodeFile: string) => downloadTest(testCodeFile, serviceConfig),
+    {
+      onSuccess: async (code) => {
+        open(test, code);
+        hideOverlay();
+        const saveMessage = readonly
+          ? " in read-only mode"
+          : ". all changes will auto-save";
+        notifySuccess(`Opened test${saveMessage}`);
+      },
+      onError: (e) => {
+        notifyError("Failed to open test code.", e);
+      },
+    }
+  );
+
+  return (
+    <AccordionAction
+      onClick={() => mutate(test.name)}
+      loading={isLoading}
+      icon={<EditorIcon />}
+    />
+  );
+};
 export default VerifiedTests;
