@@ -108,7 +108,6 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       <VariantIcon platform={platform} className={styles.icon} />
       <span className={styles.truncate}>{id}</span>
       <span>{tabName.replace(id, "")}</span>
-      {readonly && <LockedTest showTooltip={false} />}
       <div className={styles.closeContainer}>
         <IconButton
           className={styles.iconButton}
