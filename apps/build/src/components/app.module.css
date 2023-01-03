@@ -17,13 +17,18 @@
   overflow-y: auto;
 }
 
-.app main .browser {
+.app .browser {
   display: flex;
   flex-direction: column;
 }
 
+.app .browser h4 {
+  padding-left: .7rem;
+}
+
 .handle {
   position: relative;
+  border-left: 1px solid var(--color-secondary-10);
 }
 
 .handle:hover {
