@@ -11,6 +11,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "staging": "vite",
+    "local": "vite",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

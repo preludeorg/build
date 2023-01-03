@@ -9,6 +9,8 @@
   "scripts": {
     "build": "turbo run build --",
     "dev": "turbo run dev --parallel",
+    "staging": "turbo run staging --parallel",
+    "local": "turbo run local --parallel",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck"
   },

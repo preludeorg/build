@@ -9,6 +9,12 @@
     "dev": {
       "cache": false
     },
+    "staging": {
+      "cache": false
+    },
+    "local": {
+      "cache": false
+    },
     "typecheck": {
       "cache": false,
       "outputs": []
