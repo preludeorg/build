@@ -14,15 +14,13 @@ import {
   DownloadIcon,
   notifyError,
   notifySuccess,
-  Overlay,
   useAccordion,
   VariantIcon,
 } from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
 import { useMemo } from "react";
 import shallow from "zustand/shallow";
-import useNavigationStore from "../../../hooks/navigation-store";
-import { useTests } from "../../../hooks/use-tests";
+import { useTests } from "../../hooks/use-tests";
 
 const filterVST = (test: Test, vst: string[]) => {
   return vst.filter((v) => parseBuildVerifiedSecurityTest(v)?.id === test.id);
@@ -33,22 +31,14 @@ const VerifiedTests: React.FC = () => {
   const verified =
     tests.data?.reduce((acc, test) => acc.concat(test?.vst), [] as string[]) ||
     ([] as string[]);
-  const isLoading = tests.isLoading;
   const testIds = useMemo(
     () =>
       new Set(verified.map((t) => parseBuildVerifiedSecurityTest(t)?.id ?? "")),
     [verified]
   );
-  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
-
   return (
-    <Overlay
-      hideOverlay={hideOverlay}
-      loading={isLoading}
-      position="right"
-      title="Verified Security Tests"
-      description="Copy the URL to a VST and execute it on any host."
-    >
+    <div title="Verified Security Tests">
+      <h4>Verified Security Tests</h4>
       {verified &&
         tests.data
           ?.filter((test) => testIds.has(test.id))
@@ -59,7 +49,7 @@ const VerifiedTests: React.FC = () => {
               variants={filterVST(test, verified)}
             />
           ))}
-    </Overlay>
+    </div>
   );
 };
 
