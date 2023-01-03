@@ -1,4 +1,4 @@
-import {isPreludeTest, Test} from "@theprelude/core";
+import { isPreludeTest, Test } from "@theprelude/core";
 import create from "zustand";
 
 export interface Tab {
