@@ -10,13 +10,11 @@ import {
   AccordionAction,
   AccordionItem,
   AccordionList,
-  ConfirmDialog,
   CopyIcon,
   DownloadIcon,
   notifyError,
   notifySuccess,
   Overlay,
-  Trashcan,
   useAccordion,
   VariantIcon,
 } from "@theprelude/ds";
