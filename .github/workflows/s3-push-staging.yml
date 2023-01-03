@@ -1,9 +1,9 @@
 name: Staging - Deploy to S3 Bucket
 
 on:
-  pull_request:
-    branches:
-      - master
+#  pull_request:
+#    branches:
+#      - master
   push:
     branches:
       - master
