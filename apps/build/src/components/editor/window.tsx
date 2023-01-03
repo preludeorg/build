@@ -20,7 +20,6 @@ import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import useNavigationStore from "../../hooks/navigation-store";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
-import LockedTest from "../locked-test/locked-test";
 import ControlPanel from "./control-panel";
 import Editor from "./editor";
 import styles from "./editor.module.pcss";

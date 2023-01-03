@@ -23,7 +23,6 @@ import shallow from "zustand/shallow";
 import useNavigationStore from "../../../hooks/navigation-store";
 import { useTab } from "../../../hooks/use-tab";
 import { useTests } from "../../../hooks/use-tests";
-import LockedTest from "../../locked-test/locked-test";
 
 const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
@@ -53,12 +52,7 @@ const TestItem: React.FC<{
 
   return (
     <Accordion
-      title={
-        <>
-          {test.rule}
-          {readonly && <LockedTest showTooltip />}
-        </>
-      }
+      title={<>{test.rule}</>}
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
     >
