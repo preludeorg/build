@@ -53,6 +53,10 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
     };
   }, []);
 
+  const createTest =() => {
+
+  }
+
   return (
     <div ref={ref} className={styles.welcome}>
       <header>
@@ -96,6 +100,10 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         <p className={styles.text}>More guides & documentation</p>
         <ArrowRight className={styles.rightArrow} />
       </a>
+      <div className={styles.actions}>
+        <Button onClick={() => createTest()} intent="primary">Create</Button>
+        <Button intent="secondary">View</Button>
+      </div>
     </div>
   );
 });
