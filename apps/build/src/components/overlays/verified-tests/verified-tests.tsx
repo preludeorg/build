@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   createURL,
   parseBuildVerifiedSecurityTest,
@@ -30,10 +30,13 @@ const filterVST = (test: Test, vst: string[]) => {
 
 const VerifiedTests: React.FC = () => {
   const tests = useTests();
-  const verified = tests.data?.reduce((acc, test) => acc.concat(test?.vst), [] as string[]) || [] as string[];
+  const verified =
+    tests.data?.reduce((acc, test) => acc.concat(test?.vst), [] as string[]) ||
+    ([] as string[]);
   const isLoading = tests.isLoading;
   const testIds = useMemo(
-    () => new Set(verified.map((t) => parseBuildVerifiedSecurityTest(t)?.id ?? "")),
+    () =>
+      new Set(verified.map((t) => parseBuildVerifiedSecurityTest(t)?.id ?? "")),
     [verified]
   );
   const hideOverlay = useNavigationStore((state) => state.hideOverlay);
@@ -77,7 +80,9 @@ const TestItem: React.FC<{
             key={variant}
             title={variant}
             icon={
-              <VariantIcon platform={parseBuildVerifiedSecurityTest(variant)?.platform} />
+              <VariantIcon
+                platform={parseBuildVerifiedSecurityTest(variant)?.platform}
+              />
             }
             actions={
               <>

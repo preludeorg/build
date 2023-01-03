@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   downloadTest,
   isPreludeTest,
@@ -68,7 +68,11 @@ const TestItem: React.FC<{
             <AccordionItem
               key={vst}
               title={vst}
-              icon={<VariantIcon platform={parseVerifiedSecurityTest(vst)?.platform} />}
+              icon={
+                <VariantIcon
+                  platform={parseVerifiedSecurityTest(vst)?.platform}
+                />
+              }
               actions={
                 <>
                   <OpenButton testCodeFile={test.name} readonly={readonly} />
