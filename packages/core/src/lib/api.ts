@@ -7,7 +7,7 @@ function productHeader(): HeadersInit {
   };
 }
 
-export interface Variant {
+export interface VerifiedSecurityTest {
   name: string;
   code: string;
   readonly?: boolean;

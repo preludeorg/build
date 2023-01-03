@@ -75,7 +75,7 @@ const TestItem: React.FC<{
               }
               actions={
                 <>
-                  <OpenButton testCodeFile={test.name} readonly={readonly} />
+                  <OpenButton test={test} readonly={readonly} />
                 </>
               }
             />
@@ -86,8 +86,8 @@ const TestItem: React.FC<{
   );
 };
 
-const OpenButton: React.FC<{ testCodeFile: string; readonly: boolean }> = ({
-  testCodeFile,
+const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
+  test,
   readonly,
 }) => {
   const { open } = useTab();
@@ -97,7 +97,7 @@ const OpenButton: React.FC<{ testCodeFile: string; readonly: boolean }> = ({
     (testCodeFile: string) => downloadTest(testCodeFile, serviceConfig),
     {
       onSuccess: async (code) => {
-        open({ name: testCodeFile, code, readonly });
+        open(test, code);
         hideOverlay();
         const saveMessage = readonly
           ? " in read-only mode"
@@ -112,7 +112,7 @@ const OpenButton: React.FC<{ testCodeFile: string; readonly: boolean }> = ({
 
   return (
     <AccordionAction
-      onClick={() => mutate(testCodeFile)}
+      onClick={() => mutate(test.name)}
       loading={isLoading}
       icon={<EditorIcon />}
     />
