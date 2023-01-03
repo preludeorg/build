@@ -1,4 +1,4 @@
-import { select, Variant } from "@theprelude/core";
+import { select, Test } from "@theprelude/core";
 import shallow from "zustand/shallow";
 import useEditorStore from "./editor-store";
 import useNavigationStore from "./navigation-store";
@@ -9,15 +9,15 @@ export const useTab = () => {
     shallow
   );
   const navigate = useNavigationStore((state) => state.navigate);
-  const close = (variant: string) => {
-    if (!closeTab(variant)) {
+  const close = (vstName: string) => {
+    if (!closeTab(vstName)) {
       navigate("welcome");
     }
   };
 
-  const open = (variant: Variant) => {
+  const open = (test: Test, code: string) => {
     navigate("editor");
-    openTab(variant);
+    openTab(test, code);
   };
 
   return { close, open };
