@@ -80,7 +80,10 @@ export const uploadTest = async (
   signal?: AbortSignal
 ) => {
   const service = new Service(config);
-  return service.build.uploadTest(name, code, { signal, headers: productHeader() });
+  return service.build.uploadTest(name, code, {
+    signal,
+    headers: productHeader(),
+  });
 };
 
 export const build = async (name: string, config: ServiceConfig) => {
