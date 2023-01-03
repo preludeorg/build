@@ -147,3 +147,8 @@
   column-gap: 1rem;
   margin: 2rem 0;
 }
+
+.form {
+  display: flex;
+  flex-direction: row;
+}
