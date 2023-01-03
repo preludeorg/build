@@ -1,10 +1,5 @@
 import { isPWA, select } from "@theprelude/core";
-import {
-  ArrowRight,
-  Button,
-  DownloadIcon,
-  PreludeWordmark,
-} from "@theprelude/ds";
+import { ArrowRight, Button, DownloadIcon } from "@theprelude/ds";
 import React, { useEffect } from "react";
 import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";

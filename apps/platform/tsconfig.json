@@ -4,7 +4,6 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-
   },
   "include": [".eslintrc.cjs", "src"],
   "references": [{ "path": "./tsconfig.vite.json" }]

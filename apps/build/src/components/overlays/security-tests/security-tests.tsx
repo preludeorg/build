@@ -1,10 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
-  deleteVariant,
-  getTest,
-  getVariant,
+  downloadTest,
   isPreludeTest,
-  parseVariant,
+  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -13,12 +11,10 @@ import {
   AccordionAction,
   AccordionItem,
   AccordionList,
-  ConfirmDialog,
   EditorIcon,
   notifyError,
   notifySuccess,
   Overlay,
-  Trashcan,
   useAccordion,
   VariantIcon,
 } from "@theprelude/ds";
@@ -27,7 +23,6 @@ import shallow from "zustand/shallow";
 import useNavigationStore from "../../../hooks/navigation-store";
 import { useTab } from "../../../hooks/use-tab";
 import { useTests } from "../../../hooks/use-tests";
-import LockedTest from "../../locked-test/locked-test";
 
 const SecurityTests: React.FC = () => {
   const { data, isLoading } = useTests();
@@ -51,42 +46,30 @@ const SecurityTests: React.FC = () => {
 const TestItem: React.FC<{
   test: Test;
 }> = ({ test }) => {
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const accordion = useAccordion();
-
-  const { data, isFetching } = useQuery(
-    ["variants", test.id, serviceConfig],
-    () => getTest(test.id, serviceConfig),
-    { enabled: accordion.expanded }
-  );
 
   const readonly = isPreludeTest(test);
 
   return (
     <Accordion
-      title={
-        <>
-          {test.question}
-          {readonly && <LockedTest showTooltip />}
-        </>
-      }
-      loading={isFetching}
+      title={<>{test.rule}</>}
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
     >
-      {data && (
+      {test.vst && (
         <AccordionList>
-          {data.map((variant) => (
+          {test.vst.map((vst) => (
             <AccordionItem
-              key={variant}
-              title={variant}
-              icon={<VariantIcon platform={parseVariant(variant)?.platform} />}
+              key={vst}
+              title={vst}
+              icon={
+                <VariantIcon
+                  platform={parseVerifiedSecurityTest(vst)?.platform}
+                />
+              }
               actions={
                 <>
-                  <OpenButton variant={variant} readonly={readonly} />
-                  {!readonly && (
-                    <DeleteButton variant={variant} testId={test.id} />
-                  )}
+                  <OpenButton test={test} readonly={readonly} />
                 </>
               }
             />
@@ -97,69 +80,36 @@ const TestItem: React.FC<{
   );
 };
 
-const OpenButton: React.FC<{ variant: string; readonly: boolean }> = ({
-  variant,
+const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
+  test,
   readonly,
 }) => {
   const { open } = useTab();
   const hideOverlay = useNavigationStore((state) => state.hideOverlay);
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { mutate, isLoading } = useMutation(
-    (variant: string) => getVariant(variant, serviceConfig),
+    (testCodeFile: string) => downloadTest(testCodeFile, serviceConfig),
     {
       onSuccess: async (code) => {
-        open({ name: variant, code, readonly });
+        open(test, code);
         hideOverlay();
         const saveMessage = readonly
           ? " in read-only mode"
           : ". all changes will auto-save";
-        notifySuccess(`Opened variant${saveMessage}`);
+        notifySuccess(`Opened test${saveMessage}`);
       },
       onError: (e) => {
-        notifyError("Failed to open variant.", e);
+        notifyError("Failed to open test code.", e);
       },
     }
   );
 
   return (
     <AccordionAction
-      onClick={() => mutate(variant)}
+      onClick={() => mutate(test.name)}
       loading={isLoading}
       icon={<EditorIcon />}
     />
-  );
-};
-
-const DeleteButton: React.FC<{ variant: string; testId: string }> = ({
-  testId,
-  variant,
-}) => {
-  const { close } = useTab();
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation(
-    (variant: string) => deleteVariant(variant, serviceConfig),
-    {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(["variants", testId]);
-        notifySuccess("Security test variant deleted.");
-        close(variant);
-      },
-      onError: (e) => {
-        notifyError("Failed to delete security test variant.", e);
-      },
-    }
-  );
-
-  return (
-    <ConfirmDialog
-      message="Do you want to delete this variant?"
-      onAffirm={() => {
-        mutate(variant);
-      }}
-    >
-      <AccordionAction loading={isLoading} icon={<Trashcan />} />
-    </ConfirmDialog>
   );
 };
 

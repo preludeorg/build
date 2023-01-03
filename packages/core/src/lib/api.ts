@@ -7,7 +7,7 @@ function productHeader(): HeadersInit {
   };
 }
 
-export interface Variant {
+export interface VerifiedSecurityTest {
   name: string;
   code: string;
   readonly?: boolean;
@@ -33,7 +33,7 @@ export const getUsers = async (config: ServiceConfig, signal?: AbortSignal) => {
   });
 };
 
-export const getTestList = async (
+export const listTests = async (
   config: ServiceConfig,
   signal?: AbortSignal
 ) => {
@@ -41,32 +41,18 @@ export const getTestList = async (
   return service.build.listTests({ signal, headers: productHeader() });
 };
 
-export const getTest = async (
-  id: string,
-  config: ServiceConfig,
-  signal?: AbortSignal
-) => {
-  const service = new Service(config);
-  return service.build.getTest(id, { signal, headers: productHeader() });
-};
-
-export const getVariant = async (
-  file: string,
-  config: ServiceConfig,
-  signal?: AbortSignal
-) => {
-  const service = new Service(config);
-  return service.build.getVariant(file, { signal, headers: productHeader() });
-};
-
-export const variantExists = async (
-  id: string,
-  file: string,
+export const createTest = async (
+  testId: string,
+  rule: string,
+  code: string,
   config: ServiceConfig,
   signal: AbortSignal
 ) => {
-  const variants = await getTest(id, config, signal);
-  return variants.includes(file);
+  const service = new Service(config);
+  await service.build.createTest(testId, rule, code, {
+    signal,
+    headers: productHeader(),
+  });
 };
 
 export const deleteTest = async (
@@ -78,63 +64,38 @@ export const deleteTest = async (
   return service.build.deleteTest(id, { signal, headers: productHeader() });
 };
 
-export const deleteVariant = async (
+export const downloadTest = async (
   name: string,
   config: ServiceConfig,
   signal?: AbortSignal
 ) => {
   const service = new Service(config);
-  return service.build.deleteVariant(name, {
-    signal,
-    headers: productHeader(),
-  });
+  return service.build.downloadTest(name, { signal, headers: productHeader() });
 };
 
-export const createVariant = async (
-  variant: Variant,
+export const uploadTest = async (
+  name: string,
+  code: string,
   config: ServiceConfig,
-  signal: AbortSignal
+  signal?: AbortSignal
 ) => {
   const service = new Service(config);
-  await service.build.createVariant(variant.name, variant.code, {
+  return service.build.uploadTest(name, code, {
     signal,
     headers: productHeader(),
   });
 };
 
-export const createTest = async (
-  testId: string,
-  question: string,
-  config: ServiceConfig,
-  signal: AbortSignal
-) => {
+export const build = async (name: string, config: ServiceConfig) => {
   const service = new Service(config);
-  await service.build.createTest(testId, question, {
-    signal,
+  return await service.build.computeProxy(name, {
     headers: productHeader(),
   });
 };
 
-export const build = async (variantName: string, config: ServiceConfig) => {
+export const createURL = async (vst: string, config: ServiceConfig) => {
   const service = new Service(config);
-  return await service.build.computeProxy(variantName, {
-    headers: productHeader(),
-  });
-};
-
-export const verifiedTests = async (config: ServiceConfig) => {
-  const service = new Service(config);
-  return await service.build.verifiedTests({ headers: productHeader() });
-};
-
-export const deleteVerified = async (name: string, config: ServiceConfig) => {
-  const service = new Service(config);
-  return await service.build.deleteVerified(name, { headers: productHeader() });
-};
-
-export const createURL = async (name: string, config: ServiceConfig) => {
-  const service = new Service(config);
-  return await service.build.createURL(name, { headers: productHeader() });
+  return await service.build.createURL(vst, { headers: productHeader() });
 };
 
 export const purgeAccount = async (config: ServiceConfig) => {

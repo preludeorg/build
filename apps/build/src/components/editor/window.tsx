@@ -1,8 +1,8 @@
 import { EditorState } from "@codemirror/state";
 import {
-  createVariant,
   debounce,
-  parseVariant,
+  uploadTest,
+  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -18,38 +18,31 @@ import React from "react";
 import shallow from "zustand/shallow";
 import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import useNavigationStore from "../../hooks/navigation-store";
-import { terminalState } from "../../hooks/terminal-store";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
-import LockedTest from "../locked-test/locked-test";
 import ControlPanel from "./control-panel";
 import Editor from "./editor";
 import styles from "./editor.module.pcss";
 
-const { showIndicator, hideIndicator } = terminalState();
-
-const saveVariant = async (
+const updateCode = async (
   name: string,
   code: string,
   config: ServiceConfig
 ) => {
   try {
-    showIndicator("auto-saving...");
-    await createVariant({ name, code }, config, new AbortController().signal);
+    await uploadTest(name, code, config, new AbortController().signal);
   } catch (e) {
     notifyError("Failed to auto-save", e);
   } finally {
-    hideIndicator();
   }
 };
 
-const processVariant = debounce(saveVariant, 1000);
+const processCode = debounce(updateCode, 1000);
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const tabs = useEditorStore(
-    (state) =>
-      Object.keys(state.tabs).map((key) => state.tabs[key].variant.name),
+    (state) => Object.keys(state.tabs).map((key) => state.tabs[key].test.name),
     shallow
   );
   const { currentTabId, ext, buffer, updateBuffer, readonly } = useEditorStore(
@@ -58,7 +51,7 @@ const EditorWindow: React.FC = () => {
       ext: state.tabs[state.currentTabId].extension,
       updateBuffer: state.updateCurrentBuffer,
       buffer: selectBuffer(state),
-      readonly: state.tabs[state.currentTabId].variant.readonly ?? false,
+      readonly: state.tabs[state.currentTabId].readonly ?? false,
     }),
     shallow
   );
@@ -82,7 +75,7 @@ const EditorWindow: React.FC = () => {
         extensions={extensions}
         onChange={(buffer) => {
           updateBuffer(buffer);
-          void processVariant(currentTabId, buffer, serviceConfig);
+          void processCode(currentTabId, buffer, serviceConfig);
         }}
       />
       <Linters />
@@ -94,16 +87,16 @@ const EditorWindow: React.FC = () => {
 export default EditorWindow;
 
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
-  const tabName = useEditorStore((state) => state.tabs[tabId].variant.name);
+  const tabName = useEditorStore((state) => state.tabs[tabId].test.name);
   const readonly = useEditorStore(
-    (state) => state.tabs[tabId].variant.readonly ?? false
+    (state) => state.tabs[tabId].readonly ?? false
   );
   const { currentTabId, switchTab, closeTab } = useEditorStore(
     select("currentTabId", "switchTab", "closeTab"),
     shallow
   );
   const navigate = useNavigationStore((state) => state.navigate);
-  const { id, platform } = parseVariant(tabName) ?? { id: "" };
+  const { id, platform } = parseVerifiedSecurityTest(tabName) ?? { id: "" };
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}
@@ -114,7 +107,6 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
       <VariantIcon platform={platform} className={styles.icon} />
       <span className={styles.truncate}>{id}</span>
       <span>{tabName.replace(id, "")}</span>
-      {readonly && <LockedTest showTooltip={false} />}
       <div className={styles.closeContainer}>
         <IconButton
           className={styles.iconButton}
