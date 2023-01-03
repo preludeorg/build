@@ -36,7 +36,8 @@ const processCode = debounce(updateCode, 1000);
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const tabs = useEditorStore(
-    (state) => Object.keys(state.tabs).map((key) => state.tabs[key].test.name),
+    (state) =>
+      Object.keys(state.tabs).map((key) => state.tabs[key].test.filename),
     shallow
   );
   const { currentTabId, ext, buffer, updateBuffer, readonly } = useEditorStore(
