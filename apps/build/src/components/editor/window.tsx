@@ -1,11 +1,5 @@
 import { EditorState } from "@codemirror/state";
-import {
-  debounce,
-  uploadTest,
-  parseVerifiedSecurityTest,
-  select,
-  useAuthStore,
-} from "@theprelude/core";
+import { debounce, select, uploadTest, useAuthStore } from "@theprelude/core";
 import {
   CloseIcon,
   IconButton,
@@ -87,16 +81,12 @@ const EditorWindow: React.FC = () => {
 export default EditorWindow;
 
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
-  const tabName = useEditorStore((state) => state.tabs[tabId].test.name);
-  const readonly = useEditorStore(
-    (state) => state.tabs[tabId].readonly ?? false
-  );
+  const tabName = useEditorStore((state) => state.tabs[tabId].test.rule);
   const { currentTabId, switchTab, closeTab } = useEditorStore(
     select("currentTabId", "switchTab", "closeTab"),
     shallow
   );
   const navigate = useNavigationStore((state) => state.navigate);
-  const { id, platform } = parseVerifiedSecurityTest(tabName) ?? { id: "" };
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}
@@ -104,9 +94,8 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
         switchTab(tabId);
       }}
     >
-      <VariantIcon platform={platform} className={styles.icon} />
-      <span className={styles.truncate}>{id}</span>
-      <span>{tabName.replace(id, "")}</span>
+      <VariantIcon className={styles.icon} />
+      <span className={styles.truncate}>{tabName}</span>
       <div className={styles.closeContainer}>
         <IconButton
           className={styles.iconButton}
