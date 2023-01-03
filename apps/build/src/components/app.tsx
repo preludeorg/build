@@ -6,6 +6,7 @@ import styles from "./app.module.css";
 import EditorPanel from "./editor/editor-panel";
 import Overlays from "./overlays/overlays";
 import StatusBar from "./status-bar/status-bar";
+import Browser from "./browser/browser";
 import Welcome from "./welcome/welcome";
 
 function Build() {
@@ -24,6 +25,7 @@ function Build() {
         </section>
         <StatusBar />
       </main>
+      <Browser />
       <Overlays overlay={overlay} />
     </div>
   );
