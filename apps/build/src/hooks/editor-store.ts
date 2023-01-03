@@ -41,7 +41,7 @@ const useEditorStore = create<EditorStore>((set) => ({
       return {
         ...state,
         tabs: newTabs,
-        currentTabId: tab.test.name,
+        currentTabId: tab.test.filename,
         buffer: tab.buffer,
       };
     });
