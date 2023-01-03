@@ -1,8 +1,8 @@
 import { EditorState } from "@codemirror/state";
 import {
-  createVariant,
   debounce,
-  parseVariant,
+  uploadTest,
+  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -25,20 +25,20 @@ import ControlPanel from "./control-panel";
 import Editor from "./editor";
 import styles from "./editor.module.pcss";
 
-const saveVariant = async (
+const updateCode = async (
   name: string,
   code: string,
   config: ServiceConfig
 ) => {
   try {
-    await createVariant({ name, code }, config, new AbortController().signal);
+    await uploadTest(name, code, config, new AbortController().signal);
   } catch (e) {
     notifyError("Failed to auto-save", e);
   } finally {
   }
 };
 
-const processVariant = debounce(saveVariant, 1000);
+const processCode = debounce(updateCode, 1000);
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
@@ -77,7 +77,7 @@ const EditorWindow: React.FC = () => {
         extensions={extensions}
         onChange={(buffer) => {
           updateBuffer(buffer);
-          void processVariant(currentTabId, buffer, serviceConfig);
+          void processCode(currentTabId, buffer, serviceConfig);
         }}
       />
       <Linters />
@@ -98,7 +98,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
     shallow
   );
   const navigate = useNavigationStore((state) => state.navigate);
-  const { id, platform } = parseVariant(tabName) ?? { id: "" };
+  const { id, platform } = parseVerifiedSecurityTest(tabName) ?? { id: "" };
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}

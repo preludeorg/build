@@ -1,6 +1,6 @@
 import {
-  getTestList,
-  parseVariant,
+  listTests,
+  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -27,8 +27,8 @@ const ControlPanel: React.FC = () => {
   const handleBuild = async () => {
     try {
       setLoading(true);
-      const test = (await getTestList(serviceConfig)).find(
-        (t) => t.id === parseVariant(currentTabId)?.id
+      const test = (await listTests(serviceConfig)).find(
+        (t) => t.id === parseVerifiedSecurityTest(currentTabId)?.id
       );
 
       if (!test) {
