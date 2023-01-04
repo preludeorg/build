@@ -43,6 +43,13 @@
   flex: 0.1;
 }
 
+.accordion > header > div {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .list {
   display: flex;
   flex-direction: column;
