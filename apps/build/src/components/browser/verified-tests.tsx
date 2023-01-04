@@ -4,6 +4,7 @@ import {
   downloadTest,
   isPreludeTest,
   parseBuildVerifiedSecurityTest,
+  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -27,30 +28,16 @@ import { useTests } from "../../hooks/use-tests";
 import { useTab } from "../../hooks/use-tab";
 import useNavigationStore from "../../hooks/navigation-store";
 import CreateTest from "./create-test";
+import styles from "./browser.module.css";
 
 const VerifiedTests: React.FC = () => {
-  const tests = useTests();
-  const verified =
-    tests.data?.reduce((acc, test) => acc.concat(test?.vst), [] as string[]) ||
-    ([] as string[]);
-  const testIds = useMemo(
-    () =>
-      new Set(verified.map((t) => parseBuildVerifiedSecurityTest(t)?.id ?? "")),
-    [verified]
-  );
-  const [testsLoading, setTestsLoading] = useState(true);
-
-  useEffect(() => {
-    if (tests.isLoading === false) {
-      setTestsLoading(false);
-    }
-  }, [tests.isLoading]);
-
+  const { data, isLoading } = useTests();
+  const testIds = useMemo(() => new Set(data?.map((t) => t.id)), [data]);
   return (
-    <div title="Verified Security Tests">
-      <CreateTest testsLoading={testsLoading} />
-      {verified &&
-        tests.data
+    <div className={styles.header} title="Verified Security Tests">
+      <h4>Verified Security Tests</h4>
+      {data &&
+        data
           ?.filter((test) => testIds.has(test.id))
           .map((test) => <TestItem key={test.id} test={test} />)}
     </div>
@@ -60,7 +47,7 @@ const VerifiedTests: React.FC = () => {
 const TestItem: React.FC<{
   test: Test;
 }> = ({ test }) => {
-  const accordion = useAccordion(true);
+  const accordion = useAccordion();
   const readonly = isPreludeTest(test);
 
   return (
@@ -158,7 +145,10 @@ const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
 
   return (
     <AccordionAction
-      onClick={() => mutate(test.filename)}
+      onClick={(e) => {
+        e.stopPropagation();
+        return mutate(test.filename);
+      }}
       loading={isLoading}
       icon={<EditorIcon />}
     />
