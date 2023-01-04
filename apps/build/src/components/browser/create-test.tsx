@@ -53,7 +53,7 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
           onClick={() => setCreateVisible(!createVisible)}
           className={styles.create}
           icon={createVisible ? <CloseIcon> :  <PlusIcon />}
-          loading={isLoading}
+          loading={testsLoading || isLoading}
           disabled={isLoading}
         />
       </div>
