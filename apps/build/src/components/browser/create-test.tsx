@@ -1,7 +1,6 @@
 import { createTest, select, useAuthStore } from "@theprelude/core";
 import {
   CheckmarkIcon,
-  CloseIcon,
   IconButton,
   Input,
   notifyError,
@@ -62,7 +61,6 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
           loading={isLoading}
           disabled={isLoading}
         />
-        <IconButton icon={<CloseIcon />} />
       </div>
       {createVisible && (
         <form onSubmit={(e) => handleCreateTest(e)} className={styles.form}>
