@@ -54,7 +54,7 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
           className={styles.create}
           icon={createVisible ? <CloseIcon> :  <PlusIcon />}
           loading={testsLoading || isLoading}
-          disabled={isLoading}
+          disabled={testsLoading || isLoading}
         />
       </div>
       {createVisible && (
