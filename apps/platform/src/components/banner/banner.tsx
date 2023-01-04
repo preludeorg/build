@@ -1,11 +1,13 @@
 import { select, useAuthStore } from "@theprelude/core";
+import { CloseIcon, IconButton } from "@theprelude/ds";
 import React from "react";
 import styles from "./banner.module.css";
 
 const Banner: React.FC = () => {
+  const [hide, setHide] = React.useState(false);
   const { isAnonymous } = useAuthStore(select("isAnonymous"));
 
-  if (!isAnonymous) return null;
+  if (!isAnonymous || hide) return null;
 
   return (
     <div className={styles.banner}>
@@ -13,6 +15,8 @@ const Banner: React.FC = () => {
         Register an account using the account drop-down on the right to save
         your work.
       </span>
+
+      <IconButton icon={<CloseIcon />} onClick={() => setHide(true)} />
     </div>
   );
 };
