@@ -43,6 +43,7 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
         queryKey: ["tests", serviceConfig],
       });
       notifySuccess("Successfully created test");
+      setCreateVisible(false);
     } catch (err) {
       notifyError("Failed to create test", err);
     } finally {
@@ -50,12 +51,19 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
     }
   };
 
+  const closeCreate = () => {
+    setCreateVisible(false);
+    setRule("");
+  };
+
   return (
     <>
       <div className={styles.title}>
         <span>Security Tests</span>
         <IconButton
-          onClick={() => setCreateVisible(!createVisible)}
+          onClick={() =>
+            createVisible ? closeCreate() : setCreateVisible(true)
+          }
           className={styles.create}
           icon={createVisible ? <CloseIcon /> : <PlusIcon />}
           loading={testsLoading || isLoading}
@@ -69,6 +77,7 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
             name="rule"
             placeholder="Enter a name for the new test"
             onChange={(e) => setRule(e.target.value)}
+            autoFocus={true}
           />
           <IconButton
             className={styles.submit}
