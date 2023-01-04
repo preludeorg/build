@@ -2,12 +2,7 @@
   margin-bottom: 0.25rem;
 }
 
-.accordion > div {
-  display: flex;
-  flex-direction: row;
-}
-
-.accordion > div > header {
+.accordion > header {
   flex: 1;
   font-size: var(--text-base);
   padding: 0.5rem 0.5rem 0.5rem 0.75rem;
@@ -15,21 +10,23 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   cursor: pointer;
 }
 
-.accordion > div > header > div {
+.accordion > header > div {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
 
-.accordion:hover > div > header,
-.accordion.active > div > header {
-  background: var(--color-secondary-10);
+.accordion:hover > header,
+.accordion.active > header {
+  background: var(--color-secondary-30);
 }
 
-.accordion > div > header > svg {
+.accordion > header > svg {
   width: 1rem;
   height: 1rem;
   fill: var(--white);
@@ -38,22 +35,12 @@
   transition: transform 250ms;
 }
 
-.accordion.active > div > header > svg {
+.accordion.active > header > svg {
   transform: rotate(180deg);
 }
 
-.accordion > div > button {
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  width: 2.5rem;
-}
-
-.accordion > div > button > svg {
-  display: flex;
-  align-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
+.accordion > header > button {
+  flex: .1;
 }
 
 .list {

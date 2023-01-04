@@ -17,13 +17,11 @@ export const Accordion: React.FC<{
         [styles.active]: expanded,
       })}
     >
-      <div>
-        <header onClick={onToggle}>
-          <div>{title}</div>
-          {loading ? <Loading /> : <ChevronIcon className={styles.expand} />}
-        </header>
+      <header onClick={onToggle}>
+        <div>{title}</div>
         {edit && <>{edit}</>}
-      </div>
+        {loading ? <Loading /> : <ChevronIcon className={styles.expand} />}
+      </header>
       {expanded && children}
     </div>
   );

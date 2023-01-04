@@ -26,6 +26,7 @@ import shallow from "zustand/shallow";
 import { useTests } from "../../hooks/use-tests";
 import { useTab } from "../../hooks/use-tab";
 import useNavigationStore from "../../hooks/navigation-store";
+import styles from "./browser.module.css";
 
 const VerifiedTests: React.FC = () => {
   const tests = useTests();
@@ -38,7 +39,7 @@ const VerifiedTests: React.FC = () => {
     [verified]
   );
   return (
-    <div title="Verified Security Tests">
+    <div className={styles.header} title="Verified Security Tests">
       <h4>Verified Security Tests</h4>
       {verified &&
         tests.data
@@ -149,7 +150,10 @@ const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
 
   return (
     <AccordionAction
-      onClick={() => mutate(test.filename)}
+      onClick={(e) => {
+        e.stopPropagation();
+        return mutate(test.filename);
+      }}
       loading={isLoading}
       icon={<EditorIcon />}
     />
