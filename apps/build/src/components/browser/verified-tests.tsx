@@ -26,14 +26,15 @@ import shallow from "zustand/shallow";
 import { useTests } from "../../hooks/use-tests";
 import { useTab } from "../../hooks/use-tab";
 import useNavigationStore from "../../hooks/navigation-store";
+import CreateTest from "./create-test";
 import styles from "./browser.module.css";
 
 const VerifiedTests: React.FC = () => {
-  const { data, isLoading } = useTests();
+  const { data, isLoading, isFetching } = useTests();
   const testIds = useMemo(() => new Set(data?.map((t) => t.id)), [data]);
   return (
     <div className={styles.header} title="Verified Security Tests">
-      <h4>Verified Security Tests</h4>
+      <CreateTest testsFetching={isFetching} />
       {data &&
         data
           ?.filter((test) => testIds.has(test.id))
