@@ -1,0 +1,10 @@
+.banner {
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner > .message {
+  display: flex;
+}

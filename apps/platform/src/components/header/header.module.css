@@ -1,10 +1,20 @@
 .header {
+  height: 100%;
   grid-area: header;
+  flex-direction: row;
+  flex-flow:row wrap;
   display: flex;
   border-bottom: 1px var(--gray-30) solid;
   justify-content: space-between;
   align-items: center;
   background: rgba(0, 0, 0, 0.2);
+}
+
+.banner {
+  display: flex;
+  flex: 0 0 100%;
+  padding: 10px;
+  background: var(--color-primary-20);
 }
 
 .brand {
