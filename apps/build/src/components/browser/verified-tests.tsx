@@ -23,17 +23,17 @@ import {
 import { Test } from "@theprelude/sdk";
 import { useMemo } from "react";
 import shallow from "zustand/shallow";
-import { useTests } from "../../hooks/use-tests";
-import { useTab } from "../../hooks/use-tab";
 import useNavigationStore from "../../hooks/navigation-store";
-import CreateTest from "./create-test";
+import { useTab } from "../../hooks/use-tab";
+import { useTests } from "../../hooks/use-tests";
 import styles from "./browser.module.css";
+import CreateTest from "./create-test";
 
 const VerifiedTests: React.FC = () => {
-  const { data, isLoading, isFetching } = useTests();
+  const { data, isFetching } = useTests();
   const testIds = useMemo(() => new Set(data?.map((t) => t.id)), [data]);
   return (
-    <div className={styles.header} title="Verified Security Tests">
+    <div className={styles.header}>
       <CreateTest testsFetching={isFetching} />
       {data &&
         data

@@ -1,5 +1,5 @@
 .accordion {
-  margin-bottom: 0.25rem;
+  margin-bottom: 1px;
 }
 
 .accordion > header {
@@ -23,7 +23,7 @@
 
 .accordion:hover > header,
 .accordion.active > header {
-  background: var(--color-secondary-30);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .accordion > header > svg {
@@ -40,7 +40,7 @@
 }
 
 .accordion > header > button {
-  flex: .1;
+  flex: 0.1;
 }
 
 .list {
