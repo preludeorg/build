@@ -1,4 +1,11 @@
-import { createTest, select, useAuthStore } from "@theprelude/core";
+import {
+  createTest,
+  select,
+  ServiceConfig,
+  Test,
+  uploadTest,
+  useAuthStore,
+} from "@theprelude/core";
 import {
   CheckmarkIcon,
   CloseIcon,
@@ -14,46 +21,71 @@ import shallow from "zustand/shallow";
 import { getLanguage } from "../../lib/lang";
 import * as uuid from "uuid";
 import styles from "./create-test.module.css";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTab } from "../../hooks/use-tab";
 
-const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const [rule, setRule] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [createVisible, setCreateVisible] = useState(false);
-  const queryClient = useQueryClient();
-
-  const handleCreateTest = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const testId = uuid.v4();
-    const code = getLanguage("go")
-      .template.replaceAll("$NAME", testId)
-      .replaceAll("$QUESTION", rule)
-      .replaceAll("$CREATED", format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS"));
-    try {
-      setIsLoading(true);
-      await createTest(
-        testId,
-        rule,
-        code,
-        serviceConfig,
-        new AbortController().signal
-      );
-      await queryClient.invalidateQueries({
-        queryKey: ["tests", serviceConfig],
-      });
-      notifySuccess("Successfully created test");
-      setCreateVisible(false);
-    } catch (err) {
-      notifyError("Failed to create test", err);
-    } finally {
-      setIsLoading(false);
-    }
+const createNewTest = async (rule: string, serviceConfig: ServiceConfig) => {
+  const testId = uuid.v4();
+  const filename = `${testId}.go`;
+  const code = getLanguage("go")
+    .template.replaceAll("$NAME", testId)
+    .replaceAll("$QUESTION", rule)
+    .replaceAll("$CREATED", format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS"));
+  if (serviceConfig.credentials === undefined) {
+    throw new Error("Missing credentials");
+  }
+  await createTest(
+    testId,
+    rule,
+    code,
+    serviceConfig,
+    new AbortController().signal
+  );
+  await uploadTest(filename, code, serviceConfig);
+  const test: Test = {
+    account_id: serviceConfig.credentials?.account,
+    id: testId,
+    filename,
+    rule,
+    vst: [],
   };
+  return { test, code };
+};
+
+const CreateTest: React.FC<{ testsFetching: boolean }> = ({
+  testsFetching,
+}) => {
+  const { open } = useTab();
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const [createVisible, setCreateVisible] = useState(false);
+  const [rule, setRule] = useState("");
+  const queryClient = useQueryClient();
 
   const closeCreate = () => {
     setCreateVisible(false);
     setRule("");
+  };
+
+  const { mutate, isLoading } = useMutation(
+    (rule: string) => createNewTest(rule, serviceConfig),
+    {
+      onSuccess: async ({ test, code }) => {
+        open(test, code);
+        notifySuccess(`Opened test. all changes will auto-save`);
+        void queryClient.invalidateQueries({
+          queryKey: ["tests", serviceConfig],
+        });
+        closeCreate();
+      },
+      onError: (e) => {
+        notifyError("Failed to open test code.", e);
+      },
+    }
+  );
+
+  const handleCreateTest = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutate(rule);
   };
 
   return (
@@ -66,8 +98,8 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
           }
           className={styles.create}
           icon={createVisible ? <CloseIcon /> : <PlusIcon />}
-          loading={testsLoading || isLoading}
-          disabled={testsLoading || isLoading}
+          loading={testsFetching}
+          disabled={testsFetching}
         />
       </div>
       {createVisible && (
@@ -84,6 +116,7 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
             type="submit"
             intent="primary"
             disabled={rule === "" || isLoading}
+            loading={isLoading}
             icon={<CheckmarkIcon />}
           >
             Create test

@@ -30,11 +30,11 @@ import CreateTest from "./create-test";
 import styles from "./browser.module.css";
 
 const VerifiedTests: React.FC = () => {
-  const { data, isLoading } = useTests();
+  const { data, isLoading, isFetching } = useTests();
   const testIds = useMemo(() => new Set(data?.map((t) => t.id)), [data]);
   return (
     <div className={styles.header} title="Verified Security Tests">
-      <CreateTest testsLoading={isLoading} />
+      <CreateTest testsFetching={isFetching} />
       {data &&
         data
           ?.filter((test) => testIds.has(test.id))

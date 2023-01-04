@@ -37,11 +37,18 @@ margin-left: auto;
   background: none;
   border-radius: 0;
   line-height: 1.5;
-  padding: 0;
+  padding: 1px;
+}
+
+.form input:focus {
+  outline: none;
+  border: none;
+  border-bottom: 1px dashed var(--transparent-white);
+  box-shadow: none;
 }
 
 .form input::placeholder {
-  font-size: var(--text-rg);
+  font-size: var(--text-sm);
   color: var(--color-primary-10);
   font-weight: 400;
 }
