@@ -1,6 +1,6 @@
 import { createTest, select, useAuthStore } from "@theprelude/core";
 import {
-  Button,
+  CheckmarkIcon,
   CloseIcon,
   IconButton,
   Input,
@@ -9,17 +9,23 @@ import {
   PlusIcon,
 } from "@theprelude/ds";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 import { getLanguage } from "../../lib/lang";
 import * as uuid from "uuid";
 import styles from "./create-test.module.css";
-import { Popover } from "@headlessui/react";
 
-const CreateTest = () => {
+const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const [rule, setRule] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(testsLoading);
+  const [createVisible, setCreateVisible] = useState(false);
+
+  useEffect(() => {
+    if (testsLoading === false) {
+      setIsLoading(false);
+    }
+  }, [testsLoading]);
 
   const handleCreateTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,38 +52,38 @@ const CreateTest = () => {
   };
 
   return (
-    <Popover>
-      {({ open, close }) => (
-        <>
-          <Popover.Button className={styles.create}>
-            <IconButton icon={<PlusIcon />} />
-          </Popover.Button>
-          <Popover.Panel className={styles.panel}>
-            <IconButton
-              onClick={close}
-              icon={<CloseIcon />}
-              className={styles.close}
-            />
-            <form onSubmit={(e) => handleCreateTest(e)} className={styles.form}>
-              <Input
-                type="text"
-                name="rule"
-                placeholder="Enter a name"
-                onChange={(e) => setRule(e.target.value)}
-              />
-              <Button
-                type="submit"
-                intent="primary"
-                disabled={rule === "" || isLoading}
-                loading={isLoading}
-              >
-                Create test
-              </Button>
-            </form>
-          </Popover.Panel>
-        </>
+    <>
+      <div className={styles.title}>
+        <span>Security Tests</span>
+        <IconButton
+          onClick={() => setCreateVisible(!createVisible)}
+          className={styles.create}
+          icon={<PlusIcon />}
+          loading={isLoading}
+          disabled={isLoading}
+        />
+        <IconButton icon={<CloseIcon />} />
+      </div>
+      {createVisible && (
+        <form onSubmit={(e) => handleCreateTest(e)} className={styles.form}>
+          <Input
+            type="text"
+            name="rule"
+            placeholder="Enter a name for the new test"
+            onChange={(e) => setRule(e.target.value)}
+          />
+          <IconButton
+            className={styles.submit}
+            type="submit"
+            intent="primary"
+            disabled={rule === "" || isLoading}
+            icon={<CheckmarkIcon />}
+          >
+            Create test
+          </IconButton>
+        </form>
       )}
-    </Popover>
+    </>
   );
 };
 

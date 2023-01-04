@@ -21,7 +21,7 @@ import {
   VariantIcon,
 } from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import shallow from "zustand/shallow";
 import { useTests } from "../../hooks/use-tests";
 import { useTab } from "../../hooks/use-tab";
@@ -38,10 +38,17 @@ const VerifiedTests: React.FC = () => {
       new Set(verified.map((t) => parseBuildVerifiedSecurityTest(t)?.id ?? "")),
     [verified]
   );
+  const [testsLoading, setTestsLoading] = useState(true);
+
+  useEffect(() => {
+    if (tests.isLoading === false) {
+      setTestsLoading(false);
+    }
+  }, [tests.isLoading]);
+
   return (
     <div title="Verified Security Tests">
-      <h4>Verified Security Tests</h4>
-      <CreateTest />
+      <CreateTest testsLoading={testsLoading} />
       {verified &&
         tests.data
           ?.filter((test) => testIds.has(test.id))
