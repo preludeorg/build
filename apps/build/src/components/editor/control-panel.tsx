@@ -1,9 +1,4 @@
-import {
-  listTests,
-  parseVerifiedSecurityTest,
-  select,
-  useAuthStore,
-} from "@theprelude/core";
+import { listTests, select, useAuthStore } from "@theprelude/core";
 import { Button, PlayIcon } from "@theprelude/ds";
 import { useState } from "react";
 import shallow from "zustand/shallow";
@@ -29,7 +24,7 @@ const ControlPanel: React.FC = () => {
     try {
       setLoading(true);
       const test = (await listTests(serviceConfig)).find(
-        (t) => t.id === parseVerifiedSecurityTest(currentTabId)?.id
+        (t) => t.id === currentTabId
       );
 
       if (!test) {

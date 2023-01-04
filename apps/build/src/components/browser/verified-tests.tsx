@@ -4,7 +4,6 @@ import {
   downloadTest,
   isPreludeTest,
   parseBuildVerifiedSecurityTest,
-  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
