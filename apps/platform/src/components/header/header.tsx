@@ -89,9 +89,11 @@ const Header = () => {
   const noUser = !initializing && !credentials;
   return (
     <header className={styles.header}>
-      <section className={styles.banner}>
-        <Banner />
-      </section>
+      {isAnonymous && (
+        <section className={styles.banner}>
+          <Banner />
+        </section>
+      )}
       <section className={styles.brand}>
         <PreludeIcon className={styles.logo} />
         <span className={styles.divider} />
