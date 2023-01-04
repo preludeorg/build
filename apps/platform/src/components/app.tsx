@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Build from "@theprelude/build";
-import { authState, select, useAuthStore } from "@theprelude/core";
+import { authState } from "@theprelude/core";
 import { Notifications } from "@theprelude/ds";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Banner from "./banner/banner";
@@ -29,12 +29,10 @@ const queryClient = new QueryClient({
 });
 
 function Platform() {
-  const { isAnonymous } = useAuthStore(select("isAnonymous"));
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className={styles.page}>
-        {isAnonymous && <Banner />}
+        <Banner />
         <div className={styles.platform}>
           <Header />
           <Nav />
