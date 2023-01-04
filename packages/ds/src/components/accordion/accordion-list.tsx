@@ -25,7 +25,7 @@ export const AccordionItem: React.FC<{
 export const AccordionAction: React.FC<{
   loading?: boolean;
   icon: JSX.Element;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }> = ({ icon, onClick, loading }) => {
   return (
     <IconButton

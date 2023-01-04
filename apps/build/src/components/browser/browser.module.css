@@ -1,0 +1,6 @@
+.header h4 {
+  font-weight: 400;
+  color: var(--color-primary-10);
+  margin: 0;
+  line-height: 3.5rem;
+}
