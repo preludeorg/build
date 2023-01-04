@@ -1,6 +1,7 @@
 import { createTest, select, useAuthStore } from "@theprelude/core";
 import {
   CheckmarkIcon,
+  CloseIcon,
   IconButton,
   Input,
   notifyError,
@@ -8,18 +9,19 @@ import {
   PlusIcon,
 } from "@theprelude/ds";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import shallow from "zustand/shallow";
 import { getLanguage } from "../../lib/lang";
 import * as uuid from "uuid";
 import styles from "./create-test.module.css";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const [rule, setRule] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [createVisible, setCreateVisible] = useState(false);
-
+  const queryClient = useQueryClient();
 
   const handleCreateTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,6 +39,9 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
         serviceConfig,
         new AbortController().signal
       );
+      await queryClient.invalidateQueries({
+        queryKey: ["tests", serviceConfig],
+      });
       notifySuccess("Successfully created test");
     } catch (err) {
       notifyError("Failed to create test", err);
@@ -52,7 +57,7 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
         <IconButton
           onClick={() => setCreateVisible(!createVisible)}
           className={styles.create}
-          icon={createVisible ? <CloseIcon> :  <PlusIcon />}
+          icon={createVisible ? <CloseIcon /> : <PlusIcon />}
           loading={testsLoading || isLoading}
           disabled={testsLoading || isLoading}
         />

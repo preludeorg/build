@@ -4,7 +4,6 @@ import {
   downloadTest,
   isPreludeTest,
   parseBuildVerifiedSecurityTest,
-  parseVerifiedSecurityTest,
   select,
   useAuthStore,
 } from "@theprelude/core";
@@ -22,7 +21,7 @@ import {
   VariantIcon,
 } from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import shallow from "zustand/shallow";
 import { useTests } from "../../hooks/use-tests";
 import { useTab } from "../../hooks/use-tab";
