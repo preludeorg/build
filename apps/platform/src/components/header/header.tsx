@@ -72,19 +72,6 @@ const Header = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isAnonymous === true) {
-      const button = Array.from(
-        document.querySelectorAll("button") as NodeListOf<HTMLElement>
-      ).filter(
-        (b) =>
-          b.id.includes("headlessui-popover-button") &&
-          b.className.includes("tag")
-      )[0];
-      button.click();
-    }
-  }, [isAnonymous]);
-
   const noUser = !initializing && !credentials;
   return (
     <header className={styles.header}>
