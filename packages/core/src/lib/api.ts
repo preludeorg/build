@@ -86,7 +86,7 @@ export const uploadTest = async (
   });
 };
 
-export const build = async (name: string, config: ServiceConfig) => {
+export const buildTest = async (name: string, config: ServiceConfig) => {
   const service = new Service(config);
   return await service.build.computeProxy(name, {
     headers: productHeader(),
