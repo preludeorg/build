@@ -137,18 +137,3 @@
 .rightArrow {
   fill: #fff;
 }
-
-/* Action Buttons */
-
-.actions {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  column-gap: 1rem;
-  margin: 2rem 0;
-}
-
-.form {
-  display: flex;
-  flex-direction: row;
-}

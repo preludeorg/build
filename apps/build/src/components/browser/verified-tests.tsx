@@ -26,6 +26,7 @@ import shallow from "zustand/shallow";
 import { useTests } from "../../hooks/use-tests";
 import { useTab } from "../../hooks/use-tab";
 import useNavigationStore from "../../hooks/navigation-store";
+import CreateTest from "./create-test";
 
 const VerifiedTests: React.FC = () => {
   const tests = useTests();
@@ -40,6 +41,7 @@ const VerifiedTests: React.FC = () => {
   return (
     <div title="Verified Security Tests">
       <h4>Verified Security Tests</h4>
+      <CreateTest />
       {verified &&
         tests.data
           ?.filter((test) => testIds.has(test.id))
