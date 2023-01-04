@@ -12,6 +12,7 @@
   /* shades */
   --white: white;
   --transparent-white: rgba(255, 255, 255, 0.2); /* Transparent White */
+  --transparent: rgba(0, 0, 0, 0.2); /* Transparent */
   --gray-10: #939393; /* Shingle Gray */
   --gray-20: #5c6063; /* Steel Metal */
   --gray-30: #3d4246; /* Metropolis */
