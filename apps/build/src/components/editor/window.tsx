@@ -102,7 +102,7 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
           className={styles.iconButton}
           onClick={(e) => {
             e.stopPropagation();
-            const hasTabs = closeTab(tabName);
+            const hasTabs = closeTab(tabId);
             if (!hasTabs) {
               navigate("welcome");
             }
