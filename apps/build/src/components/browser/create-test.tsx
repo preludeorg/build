@@ -17,7 +17,7 @@ import styles from "./create-test.module.css";
 const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const [rule, setRule] = useState("");
-  const [isLoading, setIsLoading] = useState(testsLoading);
+  const [isLoading, setIsLoading] = useState(false);
   const [createVisible, setCreateVisible] = useState(false);
 
   useEffect(() => {
