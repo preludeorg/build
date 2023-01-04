@@ -33,13 +33,6 @@ import styles from "./browser.module.css";
 const VerifiedTests: React.FC = () => {
   const { data, isLoading } = useTests();
   const testIds = useMemo(() => new Set(data?.map((t) => t.id)), [data]);
-  const [testsLoading, setTestsLoading] = useState(true);
-
-  useEffect(() => {
-    if (isLoading === false) {
-      setTestsLoading(false);
-    }
-  }, [isLoading]);
   return (
     <div className={styles.header} title="Verified Security Tests">
       <CreateTest testsLoading={isLoading} />
