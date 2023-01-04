@@ -11,7 +11,7 @@ export interface Tab {
 function createTab(test: Test, code: string): Tab {
   return {
     test,
-    extension: test.name.split(".").pop() ?? "go",
+    extension: test.filename.split(".").pop() ?? "go",
     buffer: code,
     readonly: isPreludeTest(test),
   };
@@ -37,11 +37,11 @@ const useEditorStore = create<EditorStore>((set) => ({
   openTab(test, code) {
     set((state) => {
       const tab = createTab(test, code);
-      const newTabs = { ...state.tabs, [tab.test.name]: tab };
+      const newTabs = { ...state.tabs, [tab.test.filename]: tab };
       return {
         ...state,
         tabs: newTabs,
-        currentTabId: tab.test.name,
+        currentTabId: tab.test.filename,
         buffer: tab.buffer,
       };
     });

@@ -4,8 +4,10 @@ import shallow from "zustand/shallow";
 
 export const useTests = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { data, isLoading } = useQuery(["tests", serviceConfig], () =>
-    listTests(serviceConfig)
+  const { data, isLoading } = useQuery(
+    ["tests", serviceConfig],
+    () => listTests(serviceConfig),
+    { enabled: !!serviceConfig.credentials }
   );
 
   return { data, isLoading };

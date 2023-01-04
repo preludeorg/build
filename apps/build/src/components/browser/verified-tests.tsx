@@ -151,7 +151,7 @@ const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
 
   return (
     <AccordionAction
-      onClick={() => mutate(test.name)}
+      onClick={() => mutate(test.filename)}
       loading={isLoading}
       icon={<EditorIcon />}
     />
