@@ -23,7 +23,6 @@ import {
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import styles from "./header.module.css";
-import Banner from "../banner/banner";
 
 const Header = () => {
   const {
@@ -89,11 +88,6 @@ const Header = () => {
   const noUser = !initializing && !credentials;
   return (
     <header className={styles.header}>
-      {isAnonymous && (
-        <section className={styles.banner}>
-          <Banner />
-        </section>
-      )}
       <section className={styles.brand}>
         <PreludeIcon className={styles.logo} />
         <span className={styles.divider} />

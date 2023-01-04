@@ -1,4 +1,11 @@
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .platform {
+  flex: 1;
   display: grid;
   grid-template-areas:
     "header header"
@@ -6,10 +13,11 @@
     "nav main";
   grid-template-rows: 3.5rem 1fr;
   grid-template-columns: 3.5rem 1fr;
+  height: 100%;
 }
 
 .wrapper {
   grid-area: main;
-  height: calc(100vh - 3.5rem);
+  height: 100%;
   overflow: hidden;
 }

@@ -1,10 +1,6 @@
 .banner {
-  height: 1rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.banner > .message {
-  display: flex;
+  padding: 0.5rem 1rem;
+  background: var(--color-primary-20);
+  font-size: var(--text-xs);
 }
