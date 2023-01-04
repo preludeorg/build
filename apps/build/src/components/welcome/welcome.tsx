@@ -1,5 +1,5 @@
 import { isPWA, select } from "@theprelude/core";
-import { ArrowRight, Button, DownloadIcon } from "@theprelude/ds";
+import { Button, DownloadIcon } from "@theprelude/ds";
 import React, { useEffect } from "react";
 import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
@@ -60,42 +60,51 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           <h2>Security Test Authoring</h2>
           <h4>Create and manage your own security tests with Prelude Build</h4>
         </section>
-        <section className={styles.install}>
-          {!isInstalled && Boolean(installer) && (
-            <Button onClick={handleInstall} icon={<DownloadIcon />}>
-              Install
-            </Button>
-          )}
-        </section>
+        <div className={styles.right}>
+          <section className={styles.install}>
+            {!isInstalled && Boolean(installer) && (
+              <Button onClick={handleInstall} icon={<DownloadIcon />}>
+                Install
+              </Button>
+            )}
+          </section>
+          <div>
+            <a
+              className={styles.docs}
+              href="https://docs.prelude.org/v2"
+              target="_blank"
+            >
+              <p className={styles.text}>Documentation</p>
+            </a>
+          </div>
+        </div>
       </header>
       <div className={styles.blockContainer}>
         <WelcomeBlock
-          title="Introduction to Build"
+          title="1. View Test"
           description="Learn the basic concepts of authoring, testing and deploying security tests at scale"
           image={rectangle}
           link="https://docs.prelude.org/v2/docs/basic"
         />
         <WelcomeBlock
-          title="Verified Security Tests"
+          title="2. Generate deployment URL"
           description="Design your own security test that can both test your controls and clean up after itself"
           image={rectangle2}
           link="https://docs.prelude.org/v2/docs/understanding-ttps"
         />
         <WelcomeBlock
-          title="Prelude CLI"
+          title="3. Create Test"
+          description="Use the terminal to automate your workflows or to plug into your favorite IDE"
+          image={rectangle3}
+          link="https://docs.prelude.org/v2/docs/prelude-cli-1"
+        />
+        <WelcomeBlock
+          title="4. Build Test"
           description="Use the terminal to automate your workflows or to plug into your favorite IDE"
           image={rectangle3}
           link="https://docs.prelude.org/v2/docs/prelude-cli-1"
         />
       </div>
-      <a
-        className={styles.docs}
-        href="https://docs.prelude.org/v2"
-        target="_blank"
-      >
-        <p className={styles.text}>More guides & documentation</p>
-        <ArrowRight className={styles.rightArrow} />
-      </a>
     </div>
   );
 });

@@ -1,7 +1,7 @@
 /* Welcome Screen */
 
 .welcome {
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 0 1.5rem;
 }
 
 @media (--bp-md) {
@@ -31,14 +31,20 @@
   margin: 0;
 }
 
+.right {
+  display: flex;
+  margin-left: auto;
+  gap: 1rem;
+  align-items: center;
+}
+
 .install {
   margin-left: auto;
-  padding-top: 0.5rem;
 }
 
 .blockContainer {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
   margin: 2rem 0;
   width: 100%;
