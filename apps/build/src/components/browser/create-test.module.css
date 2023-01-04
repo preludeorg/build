@@ -3,8 +3,8 @@
 .title {
   display: flex;
   flex-direction: row;
-  column-gap: 0.5rem;
-  padding: 0.75rem 1rem;
+
+  padding: 0.75rem;
 }
 
 .title span {
@@ -14,7 +14,7 @@
 }
 
 .title .create {
-margin-left: auto;
+  margin-left: auto;
 }
 
 .title .create:disabled {

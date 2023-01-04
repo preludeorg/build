@@ -9,7 +9,7 @@ const Browser: React.FC = () => {
       className={styles.browser}
       enable={{ left: true }}
       defaultSize={{
-        width: 320,
+        width: 428,
         height: "100%",
       }}
       handleClasses={{ left: styles.handle }}
