@@ -20,11 +20,6 @@ const CreateTest: React.FC<{ testsLoading: boolean }> = ({ testsLoading }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [createVisible, setCreateVisible] = useState(false);
 
-  useEffect(() => {
-    if (testsLoading === false) {
-      setIsLoading(false);
-    }
-  }, [testsLoading]);
 
   const handleCreateTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
