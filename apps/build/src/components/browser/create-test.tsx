@@ -118,9 +118,7 @@ const CreateTest: React.FC<{ testsFetching: boolean }> = ({
             disabled={rule === "" || isLoading}
             loading={isLoading}
             icon={<CheckmarkIcon />}
-          >
-            Create test
-          </IconButton>
+          />
         </form>
       )}
     </>
