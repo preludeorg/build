@@ -14,6 +14,7 @@ import {
   AccordionItem,
   AccordionList,
   CloseIcon,
+  ConfirmDialog,
   CopyIcon,
   DownloadIcon,
   EditorIcon,
@@ -56,8 +57,8 @@ const TestItem: React.FC<{
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
       title={test.rule}
+      remove={!readonly && accordion.expanded && <DeleteButton test={test} />}
       edit={<OpenButton test={test} readonly={readonly} />}
-      close={!readonly && <CloseButton test={test} />}
       className={styles.accordion}
     >
       <AccordionList>
@@ -122,7 +123,7 @@ const CopyButton: React.FC<{
   return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
 };
 
-const CloseButton: React.FC<{ test: Test }> = ({ test }) => {
+const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
   const queryClient = useQueryClient();
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { mutate, isLoading } = useMutation(
@@ -140,14 +141,11 @@ const CloseButton: React.FC<{ test: Test }> = ({ test }) => {
     }
   );
   return (
-    <AccordionAction
-      onClick={(e) => {
-        e.stopPropagation();
-        return mutate(test.id);
-      }}
-      loading={isLoading}
-      icon={<CloseIcon />}
-    />
+    <ConfirmDialog
+      children={<AccordionAction loading={isLoading} icon={<CloseIcon />} />}
+      message={"Are you positive you want to delete this test?"}
+      onAffirm={() => mutate(test.id)}
+    ></ConfirmDialog>
   );
 };
 

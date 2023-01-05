@@ -7,6 +7,7 @@ export const Accordion: React.FC<{
   title: React.ReactNode;
   children?: JSX.Element | JSX.Element[];
   loading?: boolean;
+  remove?: React.ReactNode;
   edit?: React.ReactNode;
   close?: React.ReactNode;
   expanded: boolean;
@@ -21,6 +22,7 @@ export const Accordion: React.FC<{
   loading,
   onToggle,
   className,
+  remove,
 }) => {
   return (
     <div
@@ -33,7 +35,8 @@ export const Accordion: React.FC<{
       )}
     >
       <header onClick={onToggle}>
-        <div>{title}</div>
+        <div className={styles.title}>{title}</div>
+        {remove && <>{remove}</>}
         {edit && <>{edit}</>}
         {close && <>{close}</>}
         {loading ? <Loading /> : <ChevronIcon className={styles.expand} />}
