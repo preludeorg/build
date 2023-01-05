@@ -8,9 +8,6 @@
       "outputs": [],
       "cache": false
     },
-    "dev": {
-      "cache": false
-    },
     "staging": {
       "cache": false
     },
