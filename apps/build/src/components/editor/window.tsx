@@ -5,6 +5,7 @@ import {
   select,
   uploadTest,
   useAuthStore,
+  emitter,
 } from "@theprelude/core";
 import {
   CloseIcon,
@@ -14,10 +15,15 @@ import {
 } from "@theprelude/ds";
 import { ServiceConfig } from "@theprelude/sdk";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React from "react";
 import shallow from "zustand/shallow";
-import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
-import useNavigationStore from "../../hooks/navigation-store";
+import useEditorStore, {
+  selectBuffer,
+  editorState,
+} from "../../hooks/editor-store";
+import useNavigationStore, {
+  navigatorState,
+} from "../../hooks/navigation-store";
 import { getLanguage } from "../../lib/lang";
 import { lint } from "../../lib/lang/linter";
 import ControlPanel from "./control-panel";
@@ -40,6 +46,11 @@ const updateCode = async (
 };
 
 const processCode = debounce(updateCode, 1000);
+
+emitter.on("import", () => {
+  editorState().reset();
+  navigatorState().navigate("welcome");
+});
 
 const EditorWindow: React.FC = () => {
   const queryClient = useQueryClient();
