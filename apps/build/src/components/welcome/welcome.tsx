@@ -36,6 +36,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
   );
 
   const expandFirstTest = useIntroStore((state) => state.expandFirstTest);
+  const setIsFormOpen = useIntroStore((state) => state.setIsFormOpen);
   const { open } = useTab();
   const viewFirstTest = useMutation(
     async () => {
@@ -60,6 +61,44 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
       },
       onError: (e) => {
         notifyError("Failed to open test code.", e, "open-test");
+      },
+    }
+  );
+
+  const showTestToBuild = useMutation(
+    async () => {
+      notifyLoading("Opening a test to build...", "open-build");
+      const tests = queryClient
+        .getQueryData<Array<Test>>(["tests", serviceConfig])
+        ?.filter((t) => !isPreludeTest(t));
+
+      if (!tests) throw new Error("No tests found");
+
+      return {
+        code: await downloadTest(tests[0].filename, serviceConfig),
+        test: tests[0],
+      };
+    },
+    {
+      onSuccess: async ({ code, test }) => {
+        open(test, code);
+        const saveMessage = isPreludeTest(test)
+          ? " in read-only mode"
+          : ". all changes will auto-save";
+        notifySuccess(`Opened test${saveMessage}`, "open-build");
+        setTimeout(() => {
+          driver.highlight({
+            element: ".build-button",
+            popover: {
+              position: "top",
+              title: "Build Test",
+              description: "Click here to build your test and see the results.",
+            },
+          });
+        }, 200);
+      },
+      onError: (e) => {
+        notifyError("Failed to open test code.", e, "open-build");
       },
     }
   );
@@ -171,6 +210,20 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         />
         <WelcomeBlock
           completed={completedTests.includes("createTest")}
+          onClick={() => {
+            setIsFormOpen(true);
+            setTimeout(() => {
+              driver.highlight({
+                element: ".create-test-form",
+                popover: {
+                  position: "left",
+                  title: "Create Test",
+                  description:
+                    "Enter a name for your test and click the checkmark to create a new test.",
+                },
+              });
+            }, 200);
+          }}
           step={3}
           title="Create Test"
           description="Tests are written in Go to be cross-platform by default. Customize your security testing by writing your first test."
@@ -178,6 +231,9 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         />
         <WelcomeBlock
           completed={completedTests.includes("buildTest")}
+          onClick={() => {
+            showTestToBuild.mutate();
+          }}
           step={4}
           title="Build Test"
           description="When tests are built, they are compiled and checked against a variety of malware signatures before becoming available for deployment. Build your new test."
