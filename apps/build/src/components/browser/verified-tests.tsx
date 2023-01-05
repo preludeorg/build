@@ -1,7 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createURL,
   downloadTest,
+  deleteTest,
   isPreludeTest,
   parseBuildVerifiedSecurityTest,
   select,
@@ -12,6 +13,8 @@ import {
   AccordionAction,
   AccordionItem,
   AccordionList,
+  CloseIcon,
+  ConfirmDialog,
   CopyIcon,
   DownloadIcon,
   EditorIcon,
@@ -21,7 +24,7 @@ import {
   VariantIcon,
 } from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../../hooks/navigation-store";
 import { useTab } from "../../hooks/use-tab";
@@ -54,6 +57,7 @@ const TestItem: React.FC<{
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
       title={test.rule}
+      remove={!readonly && <DeleteButton test={test} />}
       edit={<OpenButton test={test} readonly={readonly} />}
       className={styles.accordion}
     >
@@ -117,6 +121,32 @@ const CopyButton: React.FC<{
   }
 
   return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
+};
+
+const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
+  const queryClient = useQueryClient();
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const { mutate, isLoading } = useMutation(
+    (testId: string) => deleteTest(testId, serviceConfig),
+    {
+      onSuccess: async () => {
+        void queryClient.invalidateQueries({
+          queryKey: ["tests", serviceConfig],
+        });
+        notifySuccess(`Deleted test ${test.rule}`);
+      },
+      onError: (e) => {
+        notifyError("Failed to delete test", e);
+      },
+    }
+  );
+  return (
+    <ConfirmDialog
+      children={<AccordionAction loading={isLoading} icon={<CloseIcon />} />}
+      message={"Are you positive you want to delete this test?"}
+      onAffirm={() => mutate(test.id)}
+    ></ConfirmDialog>
+  );
 };
 
 const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({

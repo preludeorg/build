@@ -58,7 +58,7 @@ export const createTest = async (
 export const deleteTest = async (
   id: string,
   config: ServiceConfig,
-  signal: AbortSignal
+  signal?: AbortSignal
 ) => {
   const service = new Service(config);
   return service.build.deleteTest(id, { signal, headers: productHeader() });
