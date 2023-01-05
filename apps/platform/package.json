@@ -10,8 +10,7 @@
   },
   "type": "module",
   "scripts": {
-    "staging": "vite",
-    "local": "vite",
+    "dev": "vite",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
