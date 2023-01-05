@@ -10,12 +10,17 @@ export const Accordion: React.FC<{
   edit?: React.ReactNode;
   expanded: boolean;
   onToggle: () => void;
-}> = ({ title, children, expanded, edit, loading, onToggle }) => {
+  className?: string;
+}> = ({ title, children, expanded, edit, loading, onToggle, className }) => {
   return (
     <div
-      className={classNames(styles.accordion, {
-        [styles.active]: expanded,
-      })}
+      className={classNames(
+        styles.accordion,
+        {
+          [styles.active]: expanded,
+        },
+        className
+      )}
     >
       <header onClick={onToggle}>
         <div>{title}</div>
