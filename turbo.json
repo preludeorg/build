@@ -8,10 +8,7 @@
       "outputs": [],
       "cache": false
     },
-    "staging": {
-      "cache": false
-    },
-    "local": {
+    "dev": {
       "cache": false
     },
     "typecheck": {
