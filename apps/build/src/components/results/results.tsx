@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import shallow from "zustand/shallow";
+import useIntroStore from "../../hooks/intro-store";
 import { useTimer } from "../../hooks/use-timer";
 import styles from "./results.module.css";
 
@@ -49,6 +50,7 @@ export default Results;
 const TIMEOUT_LINK = 10 * 60 * 1000;
 const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
   const [expanded, setExpanded] = useState(false);
+  const { markCompleted } = useIntroStore(select("markCompleted"), shallow);
   const [deployURL, setDeployURL] = useState<string | null>(null);
   const { host, credentials, showTooltip } = useAuthStore(
     select("host", "credentials", "showTooltip"),
@@ -102,7 +104,10 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
             <div className={styles.divider} />
             <DownloadLink
               deployURL={deployURL}
-              onClick={() => mutation.mutate()}
+              onClick={() => {
+                markCompleted("deployTest");
+                mutation.mutate();
+              }}
               loading={mutation.isLoading}
               timer={timer}
             />

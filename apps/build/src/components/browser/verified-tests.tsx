@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createURL,
-  downloadTest,
   deleteTest,
   isPreludeTest,
   parseBuildVerifiedSecurityTest,
@@ -24,16 +23,20 @@ import {
   VariantIcon,
 } from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import shallow from "zustand/shallow";
-import useNavigationStore from "../../hooks/navigation-store";
-import { useTab } from "../../hooks/use-tab";
+import useIntroStore from "../../hooks/intro-store";
+import { useOpenTest } from "../../hooks/use-open-test";
 import { useTests } from "../../hooks/use-tests";
+import { driver } from "../driver/driver";
 import styles from "./browser.module.css";
 import CreateTest from "./create-test";
 
 const VerifiedTests: React.FC = () => {
   const { data, isFetching } = useTests();
+  const isExpandedFirstTest = useIntroStore(
+    (state) => state.isExpandedFirstTest
+  );
   const testIds = useMemo(() => new Set(data?.map((t) => t.id)), [data]);
   return (
     <div className={styles.header}>
@@ -41,24 +44,34 @@ const VerifiedTests: React.FC = () => {
       {data &&
         data
           ?.filter((test) => testIds.has(test.id))
-          .map((test) => <TestItem key={test.id} test={test} />)}
+          .map((test, index) => (
+            <TestItem
+              key={test.id}
+              defaultExpanded={index === 0 && isExpandedFirstTest}
+              test={test}
+            />
+          ))}
     </div>
   );
 };
 
 const TestItem: React.FC<{
   test: Test;
-}> = ({ test }) => {
+  defaultExpanded: boolean;
+}> = ({ test, defaultExpanded }) => {
   const accordion = useAccordion();
-  const readonly = isPreludeTest(test);
+
+  useEffect(() => {
+    accordion.setExpanded(defaultExpanded);
+  }, [defaultExpanded]);
 
   return (
     <Accordion
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
       title={test.rule}
-      remove={!readonly && <DeleteButton test={test} />}
-      edit={<OpenButton test={test} readonly={readonly} />}
+      edit={<OpenButton test={test} />}
+      remove={!isPreludeTest(test) && <DeleteButton test={test} />}
       className={styles.accordion}
     >
       <AccordionList>
@@ -86,11 +99,13 @@ const TestItem: React.FC<{
 const CopyButton: React.FC<{
   vstName: string;
 }> = ({ vstName }) => {
+  const { markCompleted } = useIntroStore(select("markCompleted"), shallow);
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { data, mutate, isLoading } = useMutation(
     (vstName: string) => createURL(vstName, serviceConfig),
     {
       onSuccess: () => {
+        markCompleted("deployTest");
         notifySuccess(
           "Link generated. Click the copy icon to add it to your clipboard. Link expires in 10 minutes."
         );
@@ -113,14 +128,24 @@ const CopyButton: React.FC<{
   if (!data?.url) {
     return (
       <AccordionAction
+        className="deploy-button"
         loading={isLoading}
-        onClick={() => mutate(vstName)}
+        onClick={() => {
+          driver.reset();
+          mutate(vstName);
+        }}
         icon={<DownloadIcon />}
       />
     );
   }
 
-  return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
+  return (
+    <AccordionAction
+      className="deploy-button"
+      onClick={handleCopy}
+      icon={<CopyIcon />}
+    />
+  );
 };
 
 const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
@@ -149,37 +174,16 @@ const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
   );
 };
 
-const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
-  test,
-  readonly,
-}) => {
-  const { open } = useTab();
-  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { mutate, isLoading } = useMutation(
-    (testCodeFile: string) => downloadTest(testCodeFile, serviceConfig),
-    {
-      onSuccess: async (code) => {
-        open(test, code);
-        hideOverlay();
-        const saveMessage = readonly
-          ? " in read-only mode"
-          : ". all changes will auto-save";
-        notifySuccess(`Opened test${saveMessage}`);
-      },
-      onError: (e) => {
-        notifyError("Failed to open test code.", e);
-      },
-    }
-  );
+const OpenButton: React.FC<{ test: Test }> = ({ test }) => {
+  const openTest = useOpenTest(test);
 
   return (
     <AccordionAction
       onClick={(e) => {
         e.stopPropagation();
-        return mutate(test.filename);
+        return openTest.mutate(test.filename);
       }}
-      loading={isLoading}
+      loading={openTest.isLoading}
       icon={<EditorIcon />}
     />
   );

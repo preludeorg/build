@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createTest,
   select,
@@ -15,14 +16,16 @@ import {
   notifySuccess,
   PlusIcon,
 } from "@theprelude/ds";
+import classNames from "classnames";
 import { format } from "date-fns";
 import { useState } from "react";
-import shallow from "zustand/shallow";
-import { getLanguage } from "../../lib/lang";
 import * as uuid from "uuid";
-import styles from "./create-test.module.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import shallow from "zustand/shallow";
+import useIntroStore from "../../hooks/intro-store";
 import { useTab } from "../../hooks/use-tab";
+import { getLanguage } from "../../lib/lang";
+import { driver } from "../driver/driver";
+import styles from "./create-test.module.css";
 
 const createNewTest = async (rule: string, serviceConfig: ServiceConfig) => {
   const testId = uuid.v4();
@@ -57,12 +60,18 @@ const CreateTest: React.FC<{ testsFetching: boolean }> = ({
 }) => {
   const { open } = useTab();
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const { markCompleted } = useIntroStore(select("markCompleted"), shallow);
   const [createVisible, setCreateVisible] = useState(false);
+  const { isFormOpen, setIsFormOpen } = useIntroStore(
+    select("isFormOpen", "setIsFormOpen"),
+    shallow
+  );
   const [rule, setRule] = useState("");
   const queryClient = useQueryClient();
 
   const closeCreate = () => {
     setCreateVisible(false);
+    setIsFormOpen(false);
     setRule("");
   };
 
@@ -70,6 +79,7 @@ const CreateTest: React.FC<{ testsFetching: boolean }> = ({
     (rule: string) => createNewTest(rule, serviceConfig),
     {
       onSuccess: async ({ test, code }) => {
+        markCompleted("createTest");
         open(test, code);
         notifySuccess(`Opened test. all changes will auto-save`);
         void queryClient.invalidateQueries({
@@ -85,25 +95,29 @@ const CreateTest: React.FC<{ testsFetching: boolean }> = ({
 
   const handleCreateTest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    driver.reset();
     mutate(rule);
   };
+
+  const showForm = createVisible || isFormOpen;
 
   return (
     <>
       <div className={styles.title}>
         <span>Security Tests</span>
         <IconButton
-          onClick={() =>
-            createVisible ? closeCreate() : setCreateVisible(true)
-          }
+          onClick={() => (showForm ? closeCreate() : setCreateVisible(true))}
           className={styles.create}
-          icon={createVisible ? <CloseIcon /> : <PlusIcon />}
+          icon={showForm ? <CloseIcon /> : <PlusIcon />}
           loading={testsFetching}
           disabled={testsFetching}
         />
       </div>
-      {createVisible && (
-        <form onSubmit={(e) => handleCreateTest(e)} className={styles.form}>
+      {showForm && (
+        <form
+          onSubmit={(e) => handleCreateTest(e)}
+          className={classNames(styles.form, "create-test-form")}
+        >
           <Input
             type="text"
             name="rule"

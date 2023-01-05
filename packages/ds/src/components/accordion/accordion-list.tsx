@@ -23,12 +23,14 @@ export const AccordionItem: React.FC<{
 };
 
 export const AccordionAction: React.FC<{
+  className?: string;
   loading?: boolean;
   icon: JSX.Element;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}> = ({ icon, onClick, loading }) => {
+}> = ({ icon, onClick, loading, className }) => {
   return (
     <IconButton
+      className={className}
       onClick={onClick}
       intent="primary"
       icon={icon}
