@@ -1,0 +1,25 @@
+div.driver {
+  font-family: var(--font-family) !important;
+  background-color: var(--color-secondary-30) !important;
+  box-shadow: 12px 12px 15px rgb(0 0 0 / 25%) !important;
+  border-radius: 4px !important;
+  font-size: var(--text-sm) !important;
+  color: var(--white) !important;
+}
+
+.driver :global(.driver-popover-title) {
+  font-family: var(--font-family) !important;
+}
+
+.driver :global(.driver-popover-description) {
+  font-family: var(--font-family) !important;
+  color: var(--white) !important;
+}
+
+.driver :global(.driver-popover-tip.top) {
+  border-color: transparent transparent var(--color-secondary-30) !important;
+}
+
+.driver :global(.driver-popover-tip.right) {
+  border-color: transparent transparent transparent var(--color-secondary-30) !important;
+}

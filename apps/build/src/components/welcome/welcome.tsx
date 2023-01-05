@@ -10,6 +10,7 @@ import {
 import {
   Button,
   DownloadIcon,
+  notify,
   notifyError,
   notifyLoading,
   notifySuccess,
@@ -22,7 +23,7 @@ import rectangle3 from "../../assets/rectangle3.png";
 import useIntroStore from "../../hooks/intro-store";
 import useNavigationStore from "../../hooks/navigation-store";
 import { useTab } from "../../hooks/use-tab";
-
+import { driver } from "../driver/driver";
 import WelcomeBlock from "./welcome-block";
 import styles from "./welcome.module.css";
 
@@ -33,8 +34,9 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
     (state) => state.completedTests,
     shallow
   );
-  const { open } = useTab();
 
+  const expandFirstTest = useIntroStore((state) => state.expandFirstTest);
+  const { open } = useTab();
   const viewFirstTest = useMutation(
     async () => {
       notifyLoading("Opening a test to view...", "open-test");
@@ -134,7 +136,13 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
       <div className={styles.blockContainer}>
         <WelcomeBlock
           completed={completedTests.includes("viewTest")}
-          onClick={viewFirstTest.mutate}
+          onClick={() => {
+            if (!queryClient.getQueryData(["tests", serviceConfig])) {
+              notify("Waiting for tests to load...");
+              return;
+            }
+            viewFirstTest.mutate();
+          }}
           step={1}
           title="View Test"
           description="Prelude periodically releases new open-source tests that ensure your endpoint defense is protecting you. Open your first test."
@@ -142,6 +150,20 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         />
         <WelcomeBlock
           completed={completedTests.includes("deployTest")}
+          onClick={() => {
+            expandFirstTest();
+            setTimeout(() => {
+              driver.highlight({
+                element: ".deploy-button svg",
+                popover: {
+                  position: "left",
+                  title: "Deploy Test",
+                  description:
+                    "Click here to generate a url for the VST then click the copy button to copy the url to your clipboard.",
+                },
+              });
+            }, 500);
+          }}
           step={2}
           title="Deploy Test"
           description="Each test is compiled for all major operating systems and can be accessed via HTTP. Download a test and execute it through a terminal."

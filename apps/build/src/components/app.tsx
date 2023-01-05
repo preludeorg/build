@@ -1,11 +1,12 @@
 import { select } from "@theprelude/core";
+import "driver.js/dist/driver.min.css";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../hooks/navigation-store";
 import { useDefaultHeight } from "../hooks/use-default-height";
 import styles from "./app.module.css";
+import Browser from "./browser/browser";
 import EditorPanel from "./editor/editor-panel";
 import Overlays from "./overlays/overlays";
-import Browser from "./browser/browser";
 import Welcome from "./welcome/welcome";
 
 function Build() {
