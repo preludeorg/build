@@ -1,221 +1,221 @@
 .results {
-	padding: 1rem;
+  padding: 1rem;
 }
 
 .exit {
-	display: flex;
+  display: flex;
 }
 
 .exit > Button {
-	margin-left: auto;
+  margin-left: auto;
 }
 
 ul {
-	padding: 0;
-	list-style-type: none;
-	margin-bottom: 0;
+  padding: 0;
+  list-style-type: none;
+  margin-bottom: 0;
 }
 
 .variantContainer {
-	display: flex;
-	flex-direction: column;
-	font-size: var(--text-xs);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-xs);
 }
 
 .variant {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	column-gap: 0.5rem;
-	border-top: 1px solid var(--color-primary-10);
-	position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.5rem;
+  border-top: 1px solid var(--color-primary-10);
+  position: relative;
 }
 
 .variantContainer:first-child > .variant:before {
-	content: " ";
-	position: absolute;
-	top: -5px;
-	left: 0;
-	right: 0;
-	display: block;
+  content: " ";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  right: 0;
+  display: block;
 }
 
 .variant:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .name {
-	width: 25rem;
-	padding: 0.875rem 0;
+  width: 25rem;
+  padding: 0.875rem 0;
 }
 
 .chevronIcon {
-	width: 1rem;
-	height: 1rem;
-	fill: var(--white);
-	transform: rotate(180deg);
-	margin-left: auto;
-	transition: transform 250ms;
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
+  transform: rotate(180deg);
+  margin-left: auto;
+  transition: transform 250ms;
 }
 
 .activeChevron {
-	transform: rotate(0deg);
+  transform: rotate(0deg);
 }
 
 .steps {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .stepChevron {
-	fill: var(--gray-10);
-	transform: rotate(225deg);
+  fill: var(--gray-10);
+  transform: rotate(225deg);
 }
 
 .step {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	padding: 1rem 0;
-	border-top: 1px dashed var(--color-secondary-10);
-	overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 1rem 0;
+  border-top: 1px dashed var(--color-secondary-10);
+  overflow: hidden;
 }
 
 .stepCentered {
-	align-items: center;
+  align-items: center;
 }
 
 .info {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	column-gap: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  column-gap: 1rem;
 }
 
 .infoBlock {
-	display: flex;
-	flex-direction: row;
-	column-gap: 0.5rem;
-	align-items: center;
-	width: 6rem;
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  align-items: center;
+  width: 6rem;
 }
 
 .infoDeployBlock {
-	display: flex;
-	flex-direction: row;
-	column-gap: 0.5rem;
-	align-items: center;
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  align-items: center;
 }
 
 .checkmarkIcon {
-	fill: var(--color-success);
+  fill: var(--color-success);
 }
 
 .pass {
-	display: block;
-	color: var(--color-success);
+  display: block;
+  color: var(--color-success);
 }
 
 .passBorder {
-	padding-top: 1rem;
-	border-top: 1px solid var(--color-primary-10);
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-primary-10);
 }
 
 .alertIcon {
-	fill: var(--color-error);
+  fill: var(--color-error);
 }
 
 .alert {
-	display: block;
-	color: var(--color-error);
+  display: block;
+  color: var(--color-error);
 }
 
 .timeIcon {
-	fill: var(--gray-10);
+  fill: var(--gray-10);
 }
 
 .download {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	column-gap: 0.5rem;
-	color: var(--white);
-	white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.5rem;
+  color: var(--white);
+  white-space: nowrap;
 }
 
 .download input {
-	padding: 0.5rem 0.75rem;
-	background-color: transparent;
-	border: 1px solid var(--color-primary-10);
-	border-radius: 0.25rem;
-	white-space: nowrap;
-	height: 2rem;
+  padding: 0.5rem 0.75rem;
+  background-color: transparent;
+  border: 1px solid var(--color-primary-10);
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  height: 2rem;
 }
 
 .download.left {
-	margin-left: 1rem;
+  margin-left: 1rem;
 }
 
 .copy:hover {
-	cursor: default;
+  cursor: default;
 }
 
 .url {
-	background-color: transparent;
-	padding: 0;
-	border: none;
-	color: var(--white);
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  color: var(--white);
 }
 
 .url:focus {
-	outline: none;
+  outline: none;
 }
 
 .copyIconButton {
-	border: none;
-	background: var(--gray-30);
-	padding: 0.5rem 0.75rem;
-	height: 2rem;
+  border: none;
+  background: var(--gray-30);
+  padding: 0.5rem 0.75rem;
+  height: 2rem;
 }
 
 .output {
-	display: flex;
-	flex-direction: row;
-	overflow: hidden;
-	width: 60%;
-	min-width: 300px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  width: 60%;
+  min-width: 300px;
 }
 
 .output.more {
-	flex-direction: column;
+  flex-direction: column;
 }
 
 .output.more .details {
-	margin-left: 0;
+  margin-left: 0;
 }
 
 .details {
-	text-decoration: underline;
-	text-underline-offset: 2px;
-	cursor: pointer;
-	white-space: nowrap;
-	margin-left: 1rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-left: 1rem;
 }
 
 .truncate {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .deployIcon {
-	width: 1rem;
-	height: 1rem;
-	fill: var(--white);
+  width: 1rem;
+  height: 1rem;
+  fill: var(--white);
 }
 
 .divider {
-	width: 2px;
-	border-left: 2px solid #3d4246;
-	height: 30px;
+  width: 2px;
+  border-left: 2px solid #3d4246;
+  height: 30px;
 }
