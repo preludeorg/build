@@ -12,3 +12,8 @@
   width: 1rem;
   height: 1rem;
 }
+
+.banner a {
+  color: var(--white);
+  text-underline-offset: 2px;  
+}

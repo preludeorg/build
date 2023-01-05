@@ -13,7 +13,10 @@ const Banner: React.FC = () => {
     <div className={styles.banner}>
       <span className={styles.message}>
         Register an account using the account drop-down on the right to save
-        your work.
+        your work.{" "}
+        <a href="https://docs.prelude.org/docs/prelude-account" target="_blank">
+          Click here to learn more.
+        </a>
       </span>
 
       <IconButton icon={<CloseIcon />} onClick={() => setHide(true)} />
