@@ -12,7 +12,7 @@ const WelcomeBlock: React.FC<{
 }> = (props) => {
   return (
     <button
-      onClick={props.onClick}
+      onClick={() => !props.completed && props.onClick?.()}
       className={classNames(styles.block, {
         [styles.completedBlock]: props.completed,
       })}
