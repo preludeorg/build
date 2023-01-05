@@ -31,8 +31,8 @@ const createNewTest = async (rule: string, serviceConfig: ServiceConfig) => {
   const testId = uuid.v4();
   const filename = `${testId}.go`;
   const code = getLanguage("go")
-    .template.replaceAll("$NAME", testId)
-    .replaceAll("$QUESTION", rule)
+    .template.replaceAll("$FILENAME", filename)
+    .replaceAll("$RULE", rule)
     .replaceAll("$CREATED", format(new Date(), "yyyy-MM-dd hh:mm:ss.SSSSSS"));
   if (serviceConfig.credentials === undefined) {
     throw new Error("Missing credentials");
