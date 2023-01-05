@@ -1,9 +1,15 @@
 import toast, { Toaster } from "react-hot-toast";
 
 export const notify = (msg: string) => toast(msg);
-export const notifySuccess = (msg: string) => toast.success(msg);
-export const notifyError = (msg: string, error?: unknown) =>
-  toast.error(error ? `${msg}. Reason: ${(error as Error).message}` : msg);
+export const notifyLoading = (msg: string, id?: string) =>
+  toast.loading(msg, { id });
+export const dismissNotify = (id?: string) => toast.dismiss(id);
+export const notifySuccess = (msg: string, id?: string) =>
+  toast.success(msg, { id });
+export const notifyError = (msg: string, error?: unknown, id?: string) =>
+  toast.error(error ? `${msg}. Reason: ${(error as Error).message}` : msg, {
+    id,
+  });
 
 export function Notifications() {
   return (

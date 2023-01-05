@@ -62,6 +62,12 @@
   border: 1px solid var(--color-secondary-10);
   text-decoration: none;
   color: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.completedBlock {
+  cursor: default;
 }
 
 .step {
@@ -79,6 +85,10 @@
 
 .block:hover {
   background-color: var(--color-secondary-20);
+}
+
+.completedBlock:hover {
+  background-color: var(--color-secondary-30);
 }
 
 .title {

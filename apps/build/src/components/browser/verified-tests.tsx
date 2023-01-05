@@ -1,8 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import {
   createURL,
-  downloadTest,
-  isPreludeTest,
   parseBuildVerifiedSecurityTest,
   select,
   useAuthStore,
@@ -23,8 +21,7 @@ import {
 import { Test } from "@theprelude/sdk";
 import { useMemo } from "react";
 import shallow from "zustand/shallow";
-import useNavigationStore from "../../hooks/navigation-store";
-import { useTab } from "../../hooks/use-tab";
+import { useOpenTest } from "../../hooks/use-open-test";
 import { useTests } from "../../hooks/use-tests";
 import styles from "./browser.module.css";
 import CreateTest from "./create-test";
@@ -47,14 +44,13 @@ const TestItem: React.FC<{
   test: Test;
 }> = ({ test }) => {
   const accordion = useAccordion();
-  const readonly = isPreludeTest(test);
 
   return (
     <Accordion
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
       title={test.rule}
-      edit={<OpenButton test={test} readonly={readonly} />}
+      edit={<OpenButton test={test} />}
       className={styles.accordion}
     >
       <AccordionList>
@@ -119,37 +115,16 @@ const CopyButton: React.FC<{
   return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
 };
 
-const OpenButton: React.FC<{ test: Test; readonly: boolean }> = ({
-  test,
-  readonly,
-}) => {
-  const { open } = useTab();
-  const hideOverlay = useNavigationStore((state) => state.hideOverlay);
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { mutate, isLoading } = useMutation(
-    (testCodeFile: string) => downloadTest(testCodeFile, serviceConfig),
-    {
-      onSuccess: async (code) => {
-        open(test, code);
-        hideOverlay();
-        const saveMessage = readonly
-          ? " in read-only mode"
-          : ". all changes will auto-save";
-        notifySuccess(`Opened test${saveMessage}`);
-      },
-      onError: (e) => {
-        notifyError("Failed to open test code.", e);
-      },
-    }
-  );
+const OpenButton: React.FC<{ test: Test }> = ({ test }) => {
+  const openTest = useOpenTest(test);
 
   return (
     <AccordionAction
       onClick={(e) => {
         e.stopPropagation();
-        return mutate(test.filename);
+        return openTest.mutate(test.filename);
       }}
-      loading={isLoading}
+      loading={openTest.isLoading}
       icon={<EditorIcon />}
     />
   );

@@ -1,16 +1,22 @@
 import { CheckmarkIcon } from "@theprelude/ds";
+import classNames from "classnames";
 import styles from "./welcome.module.css";
 
 const WelcomeBlock: React.FC<{
   step: number;
-  link: string;
   title: string;
   image: string;
   description: string;
   completed?: boolean;
+  onClick?: () => void;
 }> = (props) => {
   return (
-    <a className={styles.block} href={props.link} target="_blank">
+    <button
+      onClick={props.onClick}
+      className={classNames(styles.block, {
+        [styles.completedBlock]: props.completed,
+      })}
+    >
       {props.completed && (
         <div className={styles.completed}>
           <div className={styles.check}>
@@ -24,7 +30,7 @@ const WelcomeBlock: React.FC<{
       </h2>
       <img className={styles.image} src={props.image} />
       <p className={styles.description}>{props.description}</p>
-    </a>
+    </button>
   );
 };
 

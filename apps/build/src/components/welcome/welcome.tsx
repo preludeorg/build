@@ -1,15 +1,67 @@
-import { isPWA, select } from "@theprelude/core";
-import { Button, DownloadIcon } from "@theprelude/ds";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  downloadTest,
+  isPreludeTest,
+  isPWA,
+  select,
+  Test,
+  useAuthStore,
+} from "@theprelude/core";
+import {
+  Button,
+  DownloadIcon,
+  notifyError,
+  notifyLoading,
+  notifySuccess,
+} from "@theprelude/ds";
 import React, { useEffect } from "react";
 import shallow from "zustand/shallow";
 import rectangle from "../../assets/rectangle.png";
 import rectangle2 from "../../assets/rectangle2.png";
 import rectangle3 from "../../assets/rectangle3.png";
+import useIntroStore from "../../hooks/intro-store";
 import useNavigationStore from "../../hooks/navigation-store";
+import { useTab } from "../../hooks/use-tab";
+
 import WelcomeBlock from "./welcome-block";
 import styles from "./welcome.module.css";
 
 const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
+  const queryClient = useQueryClient();
+  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const completedTests = useIntroStore(
+    (state) => state.completedTests,
+    shallow
+  );
+  const { open } = useTab();
+
+  const viewFirstTest = useMutation(
+    async () => {
+      notifyLoading("Opening a test to view...", "open-test");
+      const tests = queryClient.getQueryData([
+        "tests",
+        serviceConfig,
+      ]) as Array<Test>;
+
+      return {
+        code: await downloadTest(tests[0].filename, serviceConfig),
+        test: tests[0],
+      };
+    },
+    {
+      onSuccess: async ({ code, test }) => {
+        open(test, code);
+        const saveMessage = isPreludeTest(test)
+          ? " in read-only mode"
+          : ". all changes will auto-save";
+        notifySuccess(`Opened test${saveMessage}`, "open-test");
+      },
+      onError: (e) => {
+        notifyError("Failed to open test code.", e, "open-test");
+      },
+    }
+  );
+
   const { installer, setInstaller, isInstalled, setIsInstalled } =
     useNavigationStore(
       select("installer", "setInstaller", "isInstalled", "setIsInstalled"),
@@ -81,33 +133,33 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
       </header>
       <div className={styles.blockContainer}>
         <WelcomeBlock
-          completed
+          completed={completedTests.includes("viewTest")}
+          onClick={viewFirstTest.mutate}
           step={1}
           title="View Test"
           description="Prelude periodically releases new open-source tests that ensure your endpoint defense is protecting you. Open your first test."
           image={rectangle}
-          link="https://docs.prelude.org/v2/docs/basic"
         />
         <WelcomeBlock
+          completed={completedTests.includes("deployTest")}
           step={2}
           title="Deploy Test"
           description="Each test is compiled for all major operating systems and can be accessed via HTTP. Download a test and execute it through a terminal."
           image={rectangle2}
-          link="https://docs.prelude.org/v2/docs/understanding-ttps"
         />
         <WelcomeBlock
+          completed={completedTests.includes("createTest")}
           step={3}
           title="Create Test"
           description="Tests are written in Go to be cross-platform by default. Customize your security testing by writing your first test."
           image={rectangle3}
-          link="https://docs.prelude.org/v2/docs/prelude-cli-1"
         />
         <WelcomeBlock
+          completed={completedTests.includes("buildTest")}
           step={4}
           title="Build Test"
           description="When tests are built, they are compiled and checked against a variety of malware signatures before becoming available for deployment. Build your new test."
           image={rectangle3}
-          link="https://docs.prelude.org/v2/docs/prelude-cli-1"
         />
       </div>
     </div>
