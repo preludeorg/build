@@ -172,7 +172,7 @@ const Options: React.FC<{
       </div>
       <div className={styles.divider} />
       <a onClick={showAccountManager}>
-        {isAnonymous ? "Create a handle" : "Update handle"}
+        {isAnonymous ? "Register account" : "Update account info"}
       </a>
 
       <a
