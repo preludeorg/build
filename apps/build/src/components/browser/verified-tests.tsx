@@ -55,6 +55,7 @@ const TestItem: React.FC<{
       onToggle={accordion.toogle}
       title={test.rule}
       edit={<OpenButton test={test} readonly={readonly} />}
+      className={styles.accordion}
     >
       <AccordionList>
         {test.vst.map((vst) => (
