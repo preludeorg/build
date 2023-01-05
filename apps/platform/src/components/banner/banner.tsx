@@ -20,7 +20,6 @@ const Banner: React.FC = () => {
           Click here to learn more.
         </a>
       </div>
-
       <IconButton icon={<CloseIcon />} onClick={() => setHide(true)} />
     </div>
   );

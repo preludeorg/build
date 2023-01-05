@@ -25,3 +25,8 @@
   color: var(--white);
   text-underline-offset: 2px; 
 }
+
+.banner a {
+  color: var(--white);
+  text-underline-offset: 2px;  
+}
