@@ -6,10 +6,6 @@
   align-items: center;
 }
 
-.banner span {
-  margin: 0 auto;
-}
-
 .banner svg {
   fill: var(--white);
   width: 1rem;
@@ -17,7 +13,15 @@
   margin-left: auto;
 }
 
-.banner a {
+.message {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  margin: 0 auto;
+
+}
+
+.message a {
   color: var(--white);
-  text-underline-offset: 2px;  
+  text-underline-offset: 2px; 
 }
