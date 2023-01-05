@@ -7,7 +7,6 @@ import EditorPanel from "./editor/editor-panel";
 import Overlays from "./overlays/overlays";
 import Browser from "./browser/browser";
 import Welcome from "./welcome/welcome";
-import Results from "./results/results";
 
 function Build() {
   const { panel, overlay } = useNavigationStore(
@@ -22,9 +21,6 @@ function Build() {
         <section className={styles.topSection}>
           {panel === "welcome" && <Welcome ref={ref} />}
           {panel === "editor" && <EditorPanel />}
-        </section>
-        <section className={styles.bottomSection}>
-          <Results />
         </section>
       </main>
       <Browser />
