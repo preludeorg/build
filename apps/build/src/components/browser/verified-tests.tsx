@@ -57,7 +57,7 @@ const TestItem: React.FC<{
       expanded={accordion.expanded}
       onToggle={accordion.toogle}
       title={test.rule}
-      remove={!readonly && accordion.expanded && <DeleteButton test={test} />}
+      remove={!readonly && <DeleteButton test={test} />}
       edit={<OpenButton test={test} readonly={readonly} />}
       className={styles.accordion}
     >
