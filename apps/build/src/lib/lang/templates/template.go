@@ -6,18 +6,18 @@ CREATED: $CREATED
 package main
 
 import (
-  "fmt"
-  "os"
+	"fmt"
+	"os"
 )
 
 func test() {
-  fmt.Println("Run test")
-  os.Exit(100)
+	fmt.Println("Run test")
+	os.Exit(100)
 }
 
 func clean() {
-  fmt.Println("Clean up")
-  os.Exit(100)
+	fmt.Println("Clean up")
+	os.Exit(100)
 }
 
 func main() {
