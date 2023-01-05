@@ -81,26 +81,31 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
       </header>
       <div className={styles.blockContainer}>
         <WelcomeBlock
-          title="1. View Test"
-          description="Learn the basic concepts of authoring, testing and deploying security tests at scale"
+          completed
+          step={1}
+          title="View Test"
+          description="Prelude periodically releases new open-source tests that ensure your endpoint defense is protecting you. Open your first test."
           image={rectangle}
           link="https://docs.prelude.org/v2/docs/basic"
         />
         <WelcomeBlock
-          title="2. Generate deployment URL"
-          description="Design your own security test that can both test your controls and clean up after itself"
+          step={2}
+          title="Deploy Test"
+          description="Each test is compiled for all major operating systems and can be accessed via HTTP. Download a test and execute it through a terminal."
           image={rectangle2}
           link="https://docs.prelude.org/v2/docs/understanding-ttps"
         />
         <WelcomeBlock
-          title="3. Create Test"
-          description="Use the terminal to automate your workflows or to plug into your favorite IDE"
+          step={3}
+          title="Create Test"
+          description="Tests are written in Go to be cross-platform by default. Customize your security testing by writing your first test."
           image={rectangle3}
           link="https://docs.prelude.org/v2/docs/prelude-cli-1"
         />
         <WelcomeBlock
-          title="4. Build Test"
-          description="Use the terminal to automate your workflows or to plug into your favorite IDE"
+          step={4}
+          title="Build Test"
+          description="When tests are built, they are compiled and checked against a variety of malware signatures before becoming available for deployment. Build your new test."
           image={rectangle3}
           link="https://docs.prelude.org/v2/docs/prelude-cli-1"
         />
