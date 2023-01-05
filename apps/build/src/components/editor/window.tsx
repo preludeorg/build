@@ -1,11 +1,5 @@
 import { EditorState } from "@codemirror/state";
-import {
-  debounce,
-  uploadTest,
-  parseVerifiedSecurityTest,
-  select,
-  useAuthStore,
-} from "@theprelude/core";
+import { debounce, select, uploadTest, useAuthStore } from "@theprelude/core";
 import {
   CloseIcon,
   IconButton,
@@ -42,7 +36,8 @@ const processCode = debounce(updateCode, 1000);
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const tabs = useEditorStore(
-    (state) => Object.keys(state.tabs).map((key) => state.tabs[key].test.name),
+    (state) =>
+      Object.keys(state.tabs).map((key) => state.tabs[key].test.filename),
     shallow
   );
   const { currentTabId, ext, buffer, updateBuffer, readonly } = useEditorStore(
@@ -87,16 +82,12 @@ const EditorWindow: React.FC = () => {
 export default EditorWindow;
 
 const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
-  const tabName = useEditorStore((state) => state.tabs[tabId].test.name);
-  const readonly = useEditorStore(
-    (state) => state.tabs[tabId].readonly ?? false
-  );
+  const tabName = useEditorStore((state) => state.tabs[tabId].test.rule);
   const { currentTabId, switchTab, closeTab } = useEditorStore(
     select("currentTabId", "switchTab", "closeTab"),
     shallow
   );
   const navigate = useNavigationStore((state) => state.navigate);
-  const { id, platform } = parseVerifiedSecurityTest(tabName) ?? { id: "" };
   return (
     <li
       className={classNames({ [styles.active]: tabId === currentTabId })}
@@ -104,15 +95,14 @@ const Tab: React.FC<{ tabId: string }> = ({ tabId }) => {
         switchTab(tabId);
       }}
     >
-      <VariantIcon platform={platform} className={styles.icon} />
-      <span className={styles.truncate}>{id}</span>
-      <span>{tabName.replace(id, "")}</span>
+      <VariantIcon className={styles.icon} />
+      <span className={styles.truncate}>{tabName}</span>
       <div className={styles.closeContainer}>
         <IconButton
           className={styles.iconButton}
           onClick={(e) => {
             e.stopPropagation();
-            const hasTabs = closeTab(tabName);
+            const hasTabs = closeTab(tabId);
             if (!hasTabs) {
               navigate("welcome");
             }

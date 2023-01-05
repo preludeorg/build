@@ -1,18 +1,21 @@
 .accordion {
-  margin-bottom: 0.25rem;
+  margin-bottom: 1px;
 }
 
 .accordion > header {
+  flex: 1;
   font-size: var(--text-base);
   padding: 0.5rem 0.5rem 0.5rem 0.75rem;
   background: var(--color-secondary-30);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   cursor: pointer;
 }
 
 .accordion > header > div {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -20,7 +23,7 @@
 
 .accordion:hover > header,
 .accordion.active > header {
-  background: var(--color-secondary-10);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .accordion > header > svg {
@@ -34,6 +37,17 @@
 
 .accordion.active > header > svg {
   transform: rotate(180deg);
+}
+
+.accordion > header > button {
+  flex: 0.1;
+}
+
+.accordion > header > div {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .list {

@@ -3,6 +3,7 @@ import Build from "@theprelude/build";
 import { authState } from "@theprelude/core";
 import { Notifications } from "@theprelude/ds";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Banner from "./banner/banner";
 import Header from "./header/header";
 import Nav from "./nav/nav";
 import styles from "./platform.module.css";
@@ -30,13 +31,16 @@ const queryClient = new QueryClient({
 function Platform() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className={styles.platform}>
-        <Header />
-        <Nav />
-        <main className={styles.wrapper}>
-          <RouterProvider router={router} />
-        </main>
-        <Notifications />
+      <div className={styles.page}>
+        <Banner />
+        <div className={styles.platform}>
+          <Header />
+          <Nav />
+          <main className={styles.wrapper}>
+            <RouterProvider router={router} />
+          </main>
+          <Notifications />
+        </div>
       </div>
       <ReloadPrompt />
     </QueryClientProvider>

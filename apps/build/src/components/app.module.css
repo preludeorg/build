@@ -17,14 +17,18 @@
   overflow-y: auto;
 }
 
-.app main .footer {
+.app .browser {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  border-left: 1px solid var(--color-secondary-10);
+}
+
+.app .browser h4 {
+  padding-left: .7rem;
 }
 
 .handle {
-  text-align: center;
+  position: relative;
 }
 
 .handle:hover {
@@ -33,10 +37,13 @@
 
 .handle:hover .dragHandle {
   fill: var(--white);
+  transform: translateX(-3px) rotate(90deg);
 }
 
 .dragHandle {
+  top: 50%;
+  position: absolute;
   fill: var(--color-primary-10);
   width: 1rem;
-  transform: translateY(-3px);
+  transform: translateX(-3px) rotate(90deg);
 }

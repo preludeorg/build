@@ -10,6 +10,7 @@ export const Input = React.forwardRef<
     <input
       ref={ref}
       className={classNames(styles.input, className)}
+      autoComplete="off"
       {...props}
     />
   );
