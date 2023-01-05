@@ -17,6 +17,12 @@
   overflow-y: auto;
 }
 
+.app main .bottomSection {
+  flex: 1;
+  overflow-y: auto;
+  display: none;
+}
+
 .app .browser {
   display: flex;
   flex-direction: column;

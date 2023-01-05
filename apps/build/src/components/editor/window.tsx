@@ -1,5 +1,11 @@
 import { EditorState } from "@codemirror/state";
-import { debounce, select, uploadTest, useAuthStore } from "@theprelude/core";
+import {
+  buildTest,
+  debounce,
+  select,
+  uploadTest,
+  useAuthStore,
+} from "@theprelude/core";
 import {
   CloseIcon,
   IconButton,
@@ -8,7 +14,7 @@ import {
 } from "@theprelude/ds";
 import { ServiceConfig } from "@theprelude/sdk";
 import classNames from "classnames";
-import React from "react";
+import React, { useState } from "react";
 import shallow from "zustand/shallow";
 import useEditorStore, { selectBuffer } from "../../hooks/editor-store";
 import useNavigationStore from "../../hooks/navigation-store";
@@ -17,6 +23,8 @@ import { lint } from "../../lib/lang/linter";
 import ControlPanel from "./control-panel";
 import Editor from "./editor";
 import styles from "./editor.module.pcss";
+import Results from "../results/results";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const updateCode = async (
   name: string,
@@ -34,6 +42,7 @@ const updateCode = async (
 const processCode = debounce(updateCode, 1000);
 
 const EditorWindow: React.FC = () => {
+  const queryClient = useQueryClient();
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const tabs = useEditorStore(
     (state) =>
@@ -50,6 +59,20 @@ const EditorWindow: React.FC = () => {
     }),
     shallow
   );
+  const {
+    mutate,
+    isLoading,
+    data: results,
+  } = useMutation(() => buildTest(currentTabId, serviceConfig), {
+    onSuccess: async ({}) => {
+      void queryClient.invalidateQueries({
+        queryKey: ["tests", serviceConfig],
+      });
+    },
+    onError: (e) => {
+      notifyError("Failed to build the test.", e);
+    },
+  });
 
   const extensions = React.useMemo(
     () => [...getLanguage(ext).mode, EditorState.readOnly.of(readonly)],
@@ -74,7 +97,8 @@ const EditorWindow: React.FC = () => {
         }}
       />
       <Linters />
-      <ControlPanel />
+      <ControlPanel build={mutate} loading={isLoading} />
+      {results && <Results results={results} />}
     </div>
   );
 };
