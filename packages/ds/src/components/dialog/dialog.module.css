@@ -8,7 +8,7 @@
   top: 120%;
   display: flex;
   flex-direction: column;
-  width: 18rem;
+  width: max-content;
   padding: 0.5rem 1rem;
   row-gap: 1rem;
   background-color: var(--color-secondary-30);
@@ -20,7 +20,7 @@
 
 .prompt:before {
   right: 0;
-  top: -10%;
+  top: -7%;
   position: absolute;
   content: "";
   padding: 0.2rem;
@@ -50,6 +50,10 @@
   cursor: pointer;
   align-items: center;
   display: flex;
+}
+
+.options > button > span {
+  font-size: var(--text-sm);
 }
 
 .options {

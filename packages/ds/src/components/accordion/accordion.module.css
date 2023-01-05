@@ -12,13 +12,19 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  column-gap: 0.5rem;
 }
 
-.accordion > header > div {
+.accordion > header > .title {
   flex: 1;
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: auto;
 }
 
 .accordion:hover > header,
@@ -40,14 +46,7 @@
 }
 
 .accordion > header > button {
-  flex: 0.1;
-}
-
-.accordion > header > div {
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* flex: 0.1; */
 }
 
 .list {

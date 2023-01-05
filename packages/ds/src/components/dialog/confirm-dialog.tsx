@@ -35,6 +35,7 @@ export const ConfirmDialog: React.FC<{
             </div>
             <div className={styles.options}>
               <Button
+                className={styles.button}
                 onClick={() => {
                   close();
                   onAffirm();
@@ -43,6 +44,7 @@ export const ConfirmDialog: React.FC<{
                 {affirmative}
               </Button>
               <Button
+                className={styles.button}
                 onClick={() => {
                   close();
                   onDecline?.();
