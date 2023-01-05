@@ -1,4 +1,4 @@
-name: Dev - Deploy to S3 Bucket
+name: Staging - Deploy to S3 Bucket
 
 on:
   push:
@@ -23,8 +23,8 @@ jobs:
 
   Build:
     runs-on: ubuntu-latest
-    environment: dev
-    name: Dev - Build the application and deploy to S3 Bucket
+    environment: staging
+    name: Staging - Build the application and deploy to S3 Bucket
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
