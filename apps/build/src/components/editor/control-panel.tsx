@@ -1,15 +1,19 @@
+import { select } from "@theprelude/core";
 import { Button, PlayIcon } from "@theprelude/ds";
 import shallow from "zustand/shallow";
 import useEditorStore from "../../hooks/editor-store";
+import useIntroStore from "../../hooks/intro-store";
 import { getLanguage } from "../../lib/lang";
 import { validate } from "../../lib/lang/linter";
+import { driver } from "../driver/driver";
 import styles from "./control-panel.module.css";
 
 const ControlPanel: React.FC<{ build: () => void; loading: boolean }> = ({
   build,
   loading,
 }) => {
-  const { validTest, currentTabId, readonly } = useEditorStore((state) => {
+  const { markCompleted } = useIntroStore(select("markCompleted"), shallow);
+  const { validTest, readonly } = useEditorStore((state) => {
     const tab = state.tabs[state.currentTabId];
     return {
       validTest: validate(tab.buffer, getLanguage(tab.extension).linters),
@@ -22,7 +26,12 @@ const ControlPanel: React.FC<{ build: () => void; loading: boolean }> = ({
     <div className={styles.controlPanel}>
       {!readonly && (
         <Button
-          onClick={build}
+          className="build-button"
+          onClick={() => {
+            markCompleted("buildTest");
+            driver.reset();
+            build();
+          }}
           intent={"success"}
           icon={<PlayIcon />}
           disabled={!validTest || loading}

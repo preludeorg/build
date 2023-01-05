@@ -232,6 +232,19 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         <WelcomeBlock
           completed={completedTests.includes("buildTest")}
           onClick={() => {
+            if (!queryClient.getQueryData(["tests", serviceConfig])) {
+              notify("Waiting for tests to load...");
+              return;
+            }
+
+            if (
+              queryClient
+                .getQueryData<Test[]>(["tests", serviceConfig])
+                ?.filter((t) => !isPreludeTest(t)).length === 0
+            ) {
+              notify("No tests found. Create a test first.");
+              return;
+            }
             showTestToBuild.mutate();
           }}
           step={4}

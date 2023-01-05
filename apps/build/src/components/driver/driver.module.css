@@ -23,3 +23,7 @@ div.driver {
 .driver :global(.driver-popover-tip.right) {
   border-color: transparent transparent transparent var(--color-secondary-30) !important;
 }
+
+.driver :global(.driver-popover-tip.bottom) {
+  border-color: var(--color-secondary-30) transparent transparent !important;
+}
