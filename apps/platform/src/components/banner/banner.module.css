@@ -1,6 +1,6 @@
 .banner {
   display: flex;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   background: var(--color-primary-20);
   font-size: var(--text-xs);
   align-items: center;
