@@ -16,7 +16,6 @@ import {
   notifySuccess,
   PlusIcon,
 } from "@theprelude/ds";
-import classNames from "classnames";
 import { format } from "date-fns";
 import { useState } from "react";
 import * as uuid from "uuid";
@@ -115,8 +114,9 @@ const CreateTest: React.FC<{ testsFetching: boolean }> = ({
       </div>
       {showForm && (
         <form
+          data-tooltip-id="create-test"
           onSubmit={(e) => handleCreateTest(e)}
-          className={classNames(styles.form, "create-test-form")}
+          className={styles.form}
         >
           <Input
             type="text"

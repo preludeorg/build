@@ -42,7 +42,7 @@ const ControlPanel: React.FC = () => {
       <div className={styles.controlPanel}>
         {!readonly && (
           <Button
-            className="build-button"
+            data-tooltip-id="build-test"
             onClick={() => {
               markCompleted("buildTest");
               driver.reset();

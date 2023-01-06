@@ -39,33 +39,6 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
   const expandFirstTest = useIntroStore((state) => state.expandFirstTest);
   const setIsFormOpen = useIntroStore((state) => state.setIsFormOpen);
   const { open } = useTab();
-  const viewFirstTest = useMutation(
-    async () => {
-      notifyLoading("Opening a test to view...", "open-test");
-      const tests = queryClient.getQueryData([
-        "tests",
-        serviceConfig,
-      ]) as Array<Test>;
-
-      return {
-        code: await downloadTest(tests[0].filename, serviceConfig),
-        test: tests[0],
-      };
-    },
-    {
-      onSuccess: async ({ code, test }) => {
-        open(test, code);
-        const saveMessage = isPreludeTest(test)
-          ? " in read-only mode"
-          : ". all changes will auto-save";
-        notifySuccess(`Opened test${saveMessage}`, "open-test");
-      },
-      onError: (e) => {
-        notifyError("Failed to open test code.", e, "open-test");
-      },
-    }
-  );
-
   const showTestToBuild = useMutation(
     async () => {
       notifyLoading("Opening a test to build...", "open-build");
@@ -89,7 +62,9 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         notifySuccess(`Opened test${saveMessage}`, "open-build");
         setTimeout(() => {
           driver.highlight({
-            element: ".build-button",
+            element: document.querySelector(
+              "[data-tooltip-id='build-test']"
+            ) as HTMLElement,
             popover: {
               position: "top",
               title: "Build Test",
@@ -181,7 +156,19 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
               notify("Waiting for tests to load...");
               return;
             }
-            viewFirstTest.mutate();
+
+            setTimeout(() => {
+              driver.highlight({
+                element: document.querySelector(
+                  "[data-tooltip-id='view-test']"
+                ) as HTMLElement,
+                popover: {
+                  position: "left",
+                  title: "View Test",
+                  description: "Click here to open the test in the editor",
+                },
+              });
+            }, 500);
           }}
           step={1}
           title="View Test"
@@ -194,12 +181,14 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
             expandFirstTest();
             setTimeout(() => {
               driver.highlight({
-                element: ".deploy-button svg",
+                element: document.querySelector(
+                  "[data-tooltip-id='deploy-test']"
+                ) as HTMLElement,
                 popover: {
                   position: "left",
                   title: "Deploy Test",
                   description:
-                    "Click here to generate a url for the VST then click the copy button to copy the url to your clipboard.",
+                    "Click here to generate a url for the VST (Verified Security Test) then click the copy button to copy the url to your clipboard.",
                 },
               });
             }, 500);
@@ -215,7 +204,9 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
             setIsFormOpen(true);
             setTimeout(() => {
               driver.highlight({
-                element: ".create-test-form",
+                element: document.querySelector(
+                  "[data-tooltip-id='create-test']"
+                ) as HTMLElement,
                 popover: {
                   position: "left",
                   title: "Create Test",

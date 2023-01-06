@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import { IconButton } from "../button/icon-button";
 import styles from "./accordion.module.css";
 
@@ -22,20 +22,26 @@ export const AccordionItem: React.FC<{
   );
 };
 
-export const AccordionAction: React.FC<{
-  className?: string;
-  loading?: boolean;
+export interface AccordionActionProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}> = ({ icon, onClick, loading, className }) => {
+  loading?: boolean;
+}
+
+export const AccordionAction: React.FC<AccordionActionProps> = ({
+  icon,
+  onClick,
+  loading,
+  ...props
+}) => {
   return (
     <IconButton
-      className={className}
       onClick={onClick}
       intent="primary"
       icon={icon}
       loading={loading}
       disabled={loading}
+      {...props}
     />
   );
 };
