@@ -34,9 +34,12 @@ const Results: React.FC<{ results: ComputeResult[] }> = ({ results }) => {
   if (hide) return null;
   return (
     <div className={styles.results}>
-      <span className={styles.exit}>
-        <IconButton icon={<CloseIcon />} onClick={() => setHide(true)} />
-      </span>
+      <header className={styles.header}>
+        <span className={styles.title}>Build Results</span>
+        <span className={styles.exit}>
+          <IconButton icon={<CloseIcon />} onClick={() => setHide(true)} />
+        </span>
+      </header>
       <ul className={styles.variantContainer}>
         {results.map((r) => (
           <VariantResult result={r} key={r.name} />

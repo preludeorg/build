@@ -12,7 +12,6 @@ import {
   AccordionAction,
   AccordionItem,
   AccordionList,
-  CloseIcon,
   ConfirmDialog,
   CopyIcon,
   DownloadIcon,
