@@ -34,8 +34,8 @@ export const Accordion: React.FC<{
     >
       <header onClick={onToggle}>
         <div className={styles.title}>{title}</div>
-        {edit && <>{edit}</>}
         {remove && <>{remove}</>}
+        {edit && <>{edit}</>}
         {loading ? <Loading /> : <ChevronIcon className={styles.expand} />}
       </header>
       {expanded && children}

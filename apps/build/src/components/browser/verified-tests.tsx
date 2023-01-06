@@ -19,6 +19,7 @@ import {
   EditorIcon,
   notifyError,
   notifySuccess,
+  TrashcanIcon,
   useAccordion,
   VariantIcon,
 } from "@theprelude/ds";
@@ -71,7 +72,10 @@ const TestItem: React.FC<{
       onToggle={accordion.toogle}
       title={test.rule}
       edit={<OpenButton test={test} />}
-      remove={!isPreludeTest(test) && <DeleteButton test={test} />}
+      remove={
+        !isPreludeTest(test) &&
+        accordion.expanded && <DeleteButton test={test} />
+      }
       className={styles.accordion}
     >
       <AccordionList>
@@ -167,7 +171,7 @@ const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
   );
   return (
     <ConfirmDialog
-      children={<AccordionAction loading={isLoading} icon={<CloseIcon />} />}
+      children={<AccordionAction loading={isLoading} icon={<TrashcanIcon />} />}
       message={"Are you positive you want to delete this test?"}
       onAffirm={() => mutate(test.id)}
     ></ConfirmDialog>
