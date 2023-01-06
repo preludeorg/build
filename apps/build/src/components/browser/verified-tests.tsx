@@ -25,6 +25,7 @@ import {
 import { Test } from "@theprelude/sdk";
 import React, { useEffect, useMemo } from "react";
 import shallow from "zustand/shallow";
+import useEditorStore from "../../hooks/editor-store";
 import useIntroStore from "../../hooks/intro-store";
 import { useOpenTest } from "../../hooks/use-open-test";
 import { useTests } from "../../hooks/use-tests";
@@ -151,6 +152,7 @@ const CopyButton: React.FC<{
 const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
   const queryClient = useQueryClient();
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
+  const { closeTab } = useEditorStore(select("closeTab"), shallow);
   const { mutate, isLoading } = useMutation(
     (testId: string) => deleteTest(testId, serviceConfig),
     {
@@ -159,6 +161,7 @@ const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
           queryKey: ["tests", serviceConfig],
         });
         notifySuccess(`Deleted test ${test.rule}`);
+        closeTab(test.filename);
       },
       onError: (e) => {
         notifyError("Failed to delete test", e);
