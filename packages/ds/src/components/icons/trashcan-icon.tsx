@@ -1,4 +1,6 @@
-export const TrashcanIcon: React.FC<{ className?: string }> = ({ className }) => {
+export const TrashcanIcon: React.FC<{ className?: string }> = ({
+  className,
+}) => {
   return (
     <svg
       className={className}
