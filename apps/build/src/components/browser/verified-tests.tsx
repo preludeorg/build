@@ -129,7 +129,7 @@ const CopyButton: React.FC<{
   if (!data?.url) {
     return (
       <AccordionAction
-        className="deploy-button"
+        data-tooltip-id="deploy-test"
         loading={isLoading}
         onClick={() => {
           driver.reset();
@@ -140,13 +140,7 @@ const CopyButton: React.FC<{
     );
   }
 
-  return (
-    <AccordionAction
-      className="deploy-button"
-      onClick={handleCopy}
-      icon={<CopyIcon />}
-    />
-  );
+  return <AccordionAction onClick={handleCopy} icon={<CopyIcon />} />;
 };
 
 const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
@@ -182,8 +176,10 @@ const OpenButton: React.FC<{ test: Test }> = ({ test }) => {
 
   return (
     <AccordionAction
+      data-tooltip-id="view-test"
       onClick={(e) => {
         e.stopPropagation();
+        driver.reset();
         return openTest.mutate(test.filename);
       }}
       loading={openTest.isLoading}
