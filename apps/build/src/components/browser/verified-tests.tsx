@@ -72,10 +72,7 @@ const TestItem: React.FC<{
       onToggle={accordion.toogle}
       title={test.rule}
       edit={<OpenButton test={test} />}
-      remove={
-        !isPreludeTest(test) &&
-        accordion.expanded && <DeleteButton test={test} />
-      }
+      remove={!isPreludeTest(test) && <DeleteButton test={test} />}
       className={styles.accordion}
     >
       <AccordionList>
