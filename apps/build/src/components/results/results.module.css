@@ -2,11 +2,23 @@
   padding: 1rem;
 }
 
-.exit {
+.header {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.exit > Button {
+.title {
+  font-family: var(--font-primary);
+  font-size: var(--text-rg);
+  font-weight: 400;
+  color: var(--color-primary-10);
+}
+
+.exit {
+}
+
+.exit > button {
   margin-left: auto;
 }
 
@@ -29,6 +41,7 @@ ul {
   column-gap: 0.5rem;
   border-top: 1px solid var(--color-primary-10);
   position: relative;
+  padding: 0.25rem 0;
 }
 
 .variantContainer:first-child > .variant:before {
