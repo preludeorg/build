@@ -17,9 +17,10 @@ import {
 } from "@theprelude/ds";
 import React, { useEffect } from "react";
 import shallow from "zustand/shallow";
-import rectangle from "../../assets/rectangle.png";
-import rectangle2 from "../../assets/rectangle2.png";
-import rectangle3 from "../../assets/rectangle3.png";
+import buildTestImg from "../../assets/build-test.png";
+import createTestImg from "../../assets/create-test.png";
+import deployTestImg from "../../assets/deploy-test.png";
+import viewTestImg from "../../assets/view-test.png";
 import useIntroStore from "../../hooks/intro-store";
 import useNavigationStore from "../../hooks/navigation-store";
 import { useTab } from "../../hooks/use-tab";
@@ -172,7 +173,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           step={1}
           title="View Test"
           description="Prelude periodically releases new open-source tests that ensure your endpoint defense is protecting you. Open your first test."
-          image={rectangle}
+          image={viewTestImg}
         />
         <WelcomeBlock
           completed={completedTests.includes("deployTest")}
@@ -195,7 +196,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           step={2}
           title="Deploy Test"
           description="Each test is compiled for all major operating systems and can be accessed via HTTP. Download a test and execute it through a terminal."
-          image={rectangle2}
+          image={deployTestImg}
         />
         <WelcomeBlock
           completed={completedTests.includes("createTest")}
@@ -218,7 +219,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           step={3}
           title="Create Test"
           description="Tests are written in Go to be cross-platform by default. Customize your security testing by writing your first test."
-          image={rectangle3}
+          image={createTestImg}
         />
         <WelcomeBlock
           completed={completedTests.includes("buildTest")}
@@ -241,7 +242,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           step={4}
           title="Build Test"
           description="When tests are built, they are compiled and checked against a variety of malware signatures before becoming available for deployment. Build your new test."
-          image={rectangle3}
+          image={buildTestImg}
         />
       </div>
     </div>

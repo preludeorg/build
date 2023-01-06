@@ -12,13 +12,13 @@ import {
   AccordionAction,
   AccordionItem,
   AccordionList,
-  CloseIcon,
   ConfirmDialog,
   CopyIcon,
   DownloadIcon,
   EditorIcon,
   notifyError,
   notifySuccess,
+  TrashcanIcon,
   useAccordion,
   VariantIcon,
 } from "@theprelude/ds";
@@ -164,7 +164,7 @@ const DeleteButton: React.FC<{ test: Test }> = ({ test }) => {
   );
   return (
     <ConfirmDialog
-      children={<AccordionAction loading={isLoading} icon={<CloseIcon />} />}
+      children={<AccordionAction loading={isLoading} icon={<TrashcanIcon />} />}
       message={"Are you positive you want to delete this test?"}
       onAffirm={() => mutate(test.id)}
     ></ConfirmDialog>
