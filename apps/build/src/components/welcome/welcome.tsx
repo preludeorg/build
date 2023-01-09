@@ -155,17 +155,18 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
               notify("Waiting for tests to load...");
               return;
             }
-
-            driver.highlight({
-              element: document.querySelector(
-                "[data-tooltip-id='view-test']"
-              ) as HTMLElement,
-              popover: {
-                position: "left",
-                title: "View Test",
-                description: "Click here to open the test in the editor",
-              },
-            });
+            setTimeout(() => {
+              driver.highlight({
+                element: document.querySelector(
+                  "[data-tooltip-id='view-test']"
+                ) as HTMLElement,
+                popover: {
+                  position: "left",
+                  title: "View Test",
+                  description: "Click here to open the test in the editor",
+                },
+              });
+            }, 500);
           }}
           step={1}
           title="View Test"
