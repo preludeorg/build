@@ -1,11 +1,11 @@
 import { Probe } from "@theprelude/core";
-import { CheckmarkIcon, GithubIcon, LinuxIcon } from "@theprelude/ds";
+import { CheckmarkIcon, GithubIcon, ProbeStatusIcon } from "@theprelude/ds";
 import styles from "./activity.module.css";
 
-const Activity: React.FC<{ probe: Probe; activity: Record<string, any> }> = ({
-  probe,
-  activity,
-}) => {
+const Activity: React.FC<{
+  probe: Probe;
+  activity: Record<string, any>;
+}> = ({ probe, activity }) => {
   const statusMessage = {
     "1": "The test encountered an unexpected error",
     "2": "The test was malformed",
@@ -32,27 +32,16 @@ const Activity: React.FC<{ probe: Probe; activity: Record<string, any> }> = ({
       return "active";
     }
   };
-
   return (
     <div className={styles.activity}>
       <div className={styles.report}>
         <div className={styles.probe}>
-          <LinuxIcon />
-          <span>{`Probe Platform - ${probe.endpoint_id}`}</span>
-          <div
-            className={
-              checkStatus(probe.updated) === "active"
-                ? styles.active
-                : styles.inactive
-            }
-          ></div>
+          <pre>{probe.endpoint_id}</pre>
+          <ProbeStatusIcon />
         </div>
-        <div className={styles.title}>
-          <h2>Can we exploit the Office macro CVEs?</h2>
-          <span>{`Executed `}</span>
-        </div>
+        <h2 className={styles.title}>Can we exploit the Office macro CVEs?</h2>
+
         <div className={styles.results}>
-          {/* Map through tailored results */}
           <div className={styles.result}>
             <CheckmarkIcon className={styles.checkmark} />
             <div className={styles.resultInfo}>

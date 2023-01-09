@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet";
 import styles from "./app.module.css";
-import { changePallete } from "@theprelude/core";
 import Tutorial from "./tutorial/tutorial";
 import { useProbes } from "../hooks/use-probes";
 import { useActivity } from "../hooks/use-activity";
@@ -9,7 +8,6 @@ import { useState } from "react";
 import Activity from "./activity/activity";
 
 export default function Welcome() {
-  changePallete("welcome");
   const [screen, setScreen] = useState("tutorial");
   const [probe, setProbe] = useState({});
   const probes = useProbes();
@@ -18,12 +16,18 @@ export default function Welcome() {
     <div className={styles.welcome}>
       <Helmet>
         <title>Prelude | Welcome</title>
-        <style>{"body {  background-color: #1a2121; }"}</style>
+        <style>
+          {
+            "body {  background-color: #1a2121; } :root {--color-border: var(--color-detail-light); --color-primary-20: #344B4B; --color-secondary-10: #669393; }"
+          }
+        </style>
       </Helmet>
-      {screen === "tutorial" ? <Tutorial /> : <Activity probe={probe} activity={activity} />}
-      {probes?.data && probes?.data.length > 0 && (
-        <ProbeList probes={probes} setScreen={setScreen} setProbe={setProbe} />
+      {screen === "tutorial" ? (
+        <Tutorial />
+      ) : (
+        <Activity probe={probe} activity={activity} />
       )}
+      <ProbeList probes={probes} setScreen={setScreen} setProbe={setProbe} />
     </div>
   );
 }

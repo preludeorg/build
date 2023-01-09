@@ -1,5 +1,5 @@
 import { Probe } from "@theprelude/core";
-import { Button, DarwinIcon, PlusIcon } from "@theprelude/ds";
+import { Button, PlusIcon, ProbeStatusIcon } from "@theprelude/ds";
 import styles from "./probe-list.module.css";
 
 const ProbeList: React.FC<{
@@ -12,6 +12,7 @@ const ProbeList: React.FC<{
 }> = ({ probes, setScreen, setProbe }) => {
   return (
     <div className={styles.list}>
+      <span className={styles.title}>Probes</span>
       <Button
         className={styles.add}
         onClick={() => setScreen("tutorial")}
@@ -51,7 +52,7 @@ const Probes: React.FC<{
       key={probe.endpoint_id}
       className={styles.probe}
       onClick={handleClick}
-      icon={<DarwinIcon />}
+      icon={<ProbeStatusIcon />}
       extraIcon={
         <div
           className={

@@ -2,17 +2,13 @@ import styles from "./tutorial.module.css";
 import {
   Button,
   CheckmarkIcon,
-  CopyIcon,
-  DarwinIcon,
   GithubIcon,
-  IconButton,
-  LinuxIcon,
+  InputGroup,
   PulseSmallIcon,
+  RefreshIcon,
 } from "@theprelude/ds";
-import { useTests } from "../../hooks/use-tests";
 
 const Tutorial = () => {
-  const tests = useTests();
   const testName = <>Can we exploit the Office macro CVEs?</>;
   const testDescription = (
     <>
@@ -25,6 +21,7 @@ const Tutorial = () => {
       Administrator.
     </>
   );
+  const test = <>Check for macro-enabled documents</>;
   return (
     <div className={styles.tutorial}>
       <div className={styles.headline}>
@@ -35,41 +32,25 @@ const Tutorial = () => {
         <h2>{testName}</h2>
         <p>{testDescription}</p>
         <div className={styles.subTests}>
-          {tests.data?.map((t) => (
-            <div className={styles.subTest} key={t.question}>
-              <CheckmarkIcon className={styles.subTestIcon} />
-              <span>{t.question}</span>
-              <a href="/" target="_blank">
-                <GithubIcon className={styles.subTestIcon} />
-              </a>
-            </div>
-          ))}
+          <div className={styles.subTest}>
+            <CheckmarkIcon className={styles.subTestIcon} />
+            <span>{test}</span>
+            <a href="/" target="_blank">
+              <GithubIcon className={styles.subTestIcon} />
+            </a>
+          </div>
         </div>
       </div>
       <div className={styles.execute}>
-        <p>
-          Execute this test by running the following command in your terminal.
-        </p>
-        <div className={styles.platforms}>
-          <Button icon={<LinuxIcon />} intent="secondary">
-            Linux
-          </Button>
-          <Button icon={<DarwinIcon />} intent="secondary">
-            Darwin
-          </Button>
-        </div>
+        <p>Name your endpoint to execute a security test.</p>
         <div className={styles.command}>
-          <input
-            className={styles.curl}
-            type="url"
-            value={"This is the cURL"}
-            readOnly
-          ></input>
-          <IconButton
-            className={styles.copyIcon}
-            intent="secondary"
-            icon={<CopyIcon />}
+          <InputGroup
+            groupClassName={styles.create}
+            placeholder="Enter a name for the endpoint"
+            type="text"
+            after={<RefreshIcon className={styles.refreshIcon} />}
           />
+          <Button>Create</Button>
         </div>
       </div>
     </div>

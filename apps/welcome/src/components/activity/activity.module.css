@@ -19,22 +19,9 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.probe > svg {
-  fill: var(--white);
-  height: 1rem;
-  width: 1rem;
-}
-
-.probe .active {
-  padding: 4px;
-  border-radius: 50%;
-  background-color: var(--color-success);
-}
-
-.probe .inactive {
-  padding: 4px;
-  border-radius: 50%;
-  background-color: var(--color-error);
+.probe pre {
+  margin: 0;
+  font-size: var(--text-lg);
 }
 
 .title {
@@ -43,6 +30,7 @@
   flex-direction: column;
   row-gap: 0.5rem;
   margin-bottom: 1rem;
+  margin: 0;
 }
 
 .title > h2 {

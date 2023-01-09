@@ -39,6 +39,8 @@ export * from "./components/icons/user-icon";
 export * from "./components/icons/pulse-small-icon";
 export * from "./components/icons/plus-icon";
 export * from "./components/icons/github-icon";
+export * from "./components/icons/refresh-icon";
+export * from "./components/icons/probe-status-icon"
 export * from "./components/notifications/notifications";
 export * from "./components/overlay/overlay";
 export * from "./components/tooltip/tooltip";
