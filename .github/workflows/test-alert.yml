@@ -1,0 +1,35 @@
+name: Staging - Deploy to S3 Bucket
+
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: environment-${{ github.ref }}
+
+env:
+
+permissions:
+  contents: read
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    environment: staging
+    name: Staging - Build the application and deploy to S3 Bucket
+    steps:
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "repo": ${{ github.repository }},
+              "env": ${{ env.GITHUB_HEAD_REF }}
+              "user": ${{ env.GITHUB_ACTOR }}
+            }
+        env:
+          SLACK_WEBHOOK_URL: https://hooks.slack.com/workflows/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
+          # SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
