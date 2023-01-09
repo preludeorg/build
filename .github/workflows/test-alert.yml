@@ -1,4 +1,4 @@
-name: Staging - Deploy to S3 Bucket
+name: Test Alert
 
 on:
   pull_request:
@@ -9,16 +9,11 @@ on:
 concurrency:
   group: environment-${{ github.ref }}
 
-env:
-
-permissions:
-  contents: read
-
 jobs:
   Build:
     runs-on: ubuntu-latest
     environment: staging
-    name: Staging - Build the application and deploy to S3 Bucket
+    name: Test Alert
     steps:
       - name: Send custom JSON data to Slack workflow
         id: slack
