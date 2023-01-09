@@ -22,8 +22,8 @@ jobs:
           payload: |
             {
               "repo": "${{ github.repository }}",
-              "env": "${{ env.GITHUB_HEAD_REF }}"
-              "user": "${{ env.GITHUB_ACTOR }}",
+              "env": "${{ env.GITHUB_HEAD_REF }}",
+              "user": "${{ env.GITHUB_ACTOR }}"
             }
         env:
           SLACK_WEBHOOK_URL: https://hooks.slack.com/workflows/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
