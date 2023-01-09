@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   downloadTest,
+  emitter,
   isPreludeTest,
   isPWA,
   select,
@@ -36,8 +37,6 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
     shallow
   );
 
-  const expandFirstTest = useIntroStore((state) => state.expandFirstTest);
-  const setIsFormOpen = useIntroStore((state) => state.setIsFormOpen);
   const { open } = useTab();
   const showTestToBuild = useMutation(
     async () => {
@@ -157,18 +156,16 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
               return;
             }
 
-            setTimeout(() => {
-              driver.highlight({
-                element: document.querySelector(
-                  "[data-tooltip-id='view-test']"
-                ) as HTMLElement,
-                popover: {
-                  position: "left",
-                  title: "View Test",
-                  description: "Click here to open the test in the editor",
-                },
-              });
-            }, 500);
+            driver.highlight({
+              element: document.querySelector(
+                "[data-tooltip-id='view-test']"
+              ) as HTMLElement,
+              popover: {
+                position: "left",
+                title: "View Test",
+                description: "Click here to open the test in the editor",
+              },
+            });
           }}
           step={1}
           title="View Test"
@@ -178,7 +175,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         <WelcomeBlock
           completed={completedTests.includes("deployTest")}
           onClick={() => {
-            expandFirstTest();
+            emitter.emit("deployTest");
             setTimeout(() => {
               driver.highlight({
                 element: document.querySelector(
@@ -201,7 +198,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
         <WelcomeBlock
           completed={completedTests.includes("createTest")}
           onClick={() => {
-            setIsFormOpen(true);
+            emitter.emit("createTest");
             setTimeout(() => {
               driver.highlight({
                 element: document.querySelector(
