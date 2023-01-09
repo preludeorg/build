@@ -6,6 +6,7 @@ import {
   Test,
   uploadTest,
   useAuthStore,
+  useEmitter,
 } from "@theprelude/core";
 import {
   CheckmarkIcon,
@@ -61,18 +62,16 @@ const CreateTest: React.FC<{ testsFetching: boolean }> = ({
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
   const { markCompleted } = useIntroStore(select("markCompleted"), shallow);
   const [createVisible, setCreateVisible] = useState(false);
-  const { isFormOpen, setIsFormOpen } = useIntroStore(
-    select("isFormOpen", "setIsFormOpen"),
-    shallow
-  );
+
   const [rule, setRule] = useState("");
   const queryClient = useQueryClient();
 
   const closeCreate = () => {
     setCreateVisible(false);
-    setIsFormOpen(false);
     setRule("");
   };
+
+  useEmitter("createTest", () => setCreateVisible(true));
 
   const { mutate, isLoading } = useMutation(
     (rule: string) => createNewTest(rule, serviceConfig),
@@ -98,21 +97,21 @@ const CreateTest: React.FC<{ testsFetching: boolean }> = ({
     mutate(rule);
   };
 
-  const showForm = createVisible || isFormOpen;
-
   return (
     <>
       <div className={styles.title}>
         <span>Security Tests</span>
         <IconButton
-          onClick={() => (showForm ? closeCreate() : setCreateVisible(true))}
+          onClick={() =>
+            createVisible ? closeCreate() : setCreateVisible(true)
+          }
           className={styles.create}
-          icon={showForm ? <CloseIcon /> : <PlusIcon />}
+          icon={createVisible ? <CloseIcon /> : <PlusIcon />}
           loading={testsFetching}
           disabled={testsFetching}
         />
       </div>
-      {showForm && (
+      {createVisible && (
         <form
           data-tooltip-id="create-test"
           onSubmit={(e) => handleCreateTest(e)}

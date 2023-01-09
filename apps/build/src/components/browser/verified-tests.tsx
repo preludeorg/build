@@ -6,6 +6,7 @@ import {
   parseBuildVerifiedSecurityTest,
   select,
   useAuthStore,
+  useEmitter,
 } from "@theprelude/core";
 import {
   Accordion,
@@ -23,7 +24,7 @@ import {
   VariantIcon,
 } from "@theprelude/ds";
 import { Test } from "@theprelude/sdk";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import shallow from "zustand/shallow";
 import useEditorStore from "../../hooks/editor-store";
 import useIntroStore from "../../hooks/intro-store";
@@ -35,9 +36,6 @@ import CreateTest from "./create-test";
 
 const VerifiedTests: React.FC = () => {
   const { data, isFetching } = useTests();
-  const isExpandedFirstTest = useIntroStore(
-    (state) => state.isExpandedFirstTest
-  );
   const testIds = useMemo(() => new Set(data?.map((t) => t.id)), [data]);
   return (
     <div className={styles.header}>
@@ -46,11 +44,7 @@ const VerifiedTests: React.FC = () => {
         data
           ?.filter((test) => testIds.has(test.id))
           .map((test, index) => (
-            <TestItem
-              key={test.id}
-              defaultExpanded={index === 0 && isExpandedFirstTest}
-              test={test}
-            />
+            <TestItem key={test.id} index={index} test={test} />
           ))}
     </div>
   );
@@ -58,13 +52,18 @@ const VerifiedTests: React.FC = () => {
 
 const TestItem: React.FC<{
   test: Test;
-  defaultExpanded: boolean;
-}> = ({ test, defaultExpanded }) => {
+  index: number;
+}> = ({ test, index }) => {
   const accordion = useAccordion();
 
-  useEffect(() => {
-    accordion.setExpanded(defaultExpanded);
-  }, [defaultExpanded]);
+  useEmitter(
+    "deployTest",
+    () => {
+      if (index !== 0) return;
+      accordion.setExpanded(true);
+    },
+    [index]
+  );
 
   return (
     <Accordion

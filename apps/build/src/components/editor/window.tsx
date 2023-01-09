@@ -1,10 +1,10 @@
 import { EditorState } from "@codemirror/state";
 import {
   debounce,
-  emitter,
   select,
   uploadTest,
   useAuthStore,
+  useEmitter,
 } from "@theprelude/core";
 import {
   CloseIcon,
@@ -44,10 +44,10 @@ const updateCode = async (
 
 const processCode = debounce(updateCode, 1000);
 
-emitter.on("import", () => {
+const handleImport = () => {
   editorState().reset();
   navigatorState().navigate("welcome");
-});
+};
 
 const EditorWindow: React.FC = () => {
   const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
@@ -71,6 +71,8 @@ const EditorWindow: React.FC = () => {
     () => [...getLanguage(ext).mode, EditorState.readOnly.of(readonly)],
     [ext, readonly]
   );
+
+  useEmitter("import", handleImport);
 
   return (
     <div className={styles.window}>
