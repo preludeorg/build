@@ -11,6 +11,16 @@
     "email": "support@prelude.org"
   },
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/main.tsx",
+      "require": "./src/main.tsx"
+    },
+    "./theme.module.css": {
+      "import": "./src/styles/theme.module.css",
+      "require": "./src/styles/theme.module.css"
+    }
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

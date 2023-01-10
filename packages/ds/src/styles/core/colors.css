@@ -1,14 +1,4 @@
 :root {
-  /* main colors */
-  --color-primary-10: #7e95a9; /* Angora Blue */
-  --color-primary-20: #38597a; /* Blue Bay */
-  --color-primary-30: #1c456d; /* Blueberry */
-
-  --color-secondary-10: #444c5b; /* Night Flight */
-  --color-secondary-20: #323844; /* Soft Steal */
-  --color-secondary-30: #272b33; /* Shark */
-  --color-secondary-40: #21252b; /* Dark Mountain */
-
   /* shades */
   --white: white;
   --transparent-white: rgba(255, 255, 255, 0.2); /* Transparent White */
@@ -19,11 +9,6 @@
   --gray-30: #3d4246; /* Metropolis */
   --gray-40: #232323; /* Carbon */
   --black: #1e1e1e; /* Halloween Black */
-
-  /* details */
-
-  --color-detail-dark: #1a2121; /* Dark Teal */
-  --color-detail-light: #344b4b; /* Sea Teal */
 
   /* alerts */
   --color-success: #73b762;

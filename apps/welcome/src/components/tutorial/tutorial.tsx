@@ -1,4 +1,3 @@
-import styles from "./tutorial.module.css";
 import {
   Button,
   CheckmarkIcon,
@@ -7,48 +6,41 @@ import {
   PulseSmallIcon,
   RefreshIcon,
 } from "@theprelude/ds";
+import styles from "./tutorial.module.css";
 
 const Tutorial = () => {
-  const testName = <>Can we exploit the Office macro CVEs?</>;
-  const testDescription = (
-    <>
-      LockBit 2.0 is an affiliate-based Ransomware-as-a-Service (RaaS) that was
-      first observed in June 2021. This chain simulates post-exploitation
-      activity of LockBit, including deleting Volume Shadow Copies, performing a
-      UAC bypass, creating a named pipe, and writing a ransom note to the user's
-      desktop. Endpoint detection should identify LockBit 2.0 ransomware
-      activity and respond before it can cause damage. This chain must be run as
-      Administrator.
-    </>
-  );
-  const test = <>Check for macro-enabled documents</>;
   return (
     <div className={styles.tutorial}>
       <div className={styles.headline}>
-        <PulseSmallIcon className={styles.pulse} />
-        <h4>Verified Security Test</h4>
+        <h3>Welcome to Prelude</h3>
+        <p>
+          We help organizations know if their most important endpoints are
+          vulnerable to the latest exploits. We do that by running continuous
+          security tests against production endpoints - no matter where they
+          are. This test was designed by the Prelude team to gather intelligence
+          from any Windows, Darwin or Linux endpoint and measure whether your
+          defenses are protecting your endpoints correctly.
+        </p>
       </div>
       <div className={styles.test}>
-        <h2>{testName}</h2>
-        <p>{testDescription}</p>
-        <div className={styles.subTests}>
-          <div className={styles.subTest}>
-            <CheckmarkIcon className={styles.subTestIcon} />
-            <span>{test}</span>
-            <a href="/" target="_blank">
-              <GithubIcon className={styles.subTestIcon} />
-            </a>
-          </div>
+        <h2>Will your computer quarantine a malicious Office document?</h2>
+        <div>
+          <span>Rule</span>
+          <p>Malicious files should quarantine when written to disk.</p>
+        </div>
+
+        <div>
+          <span>Test</span>
+          <p>Will your computer quarantine a malicious Office document?</p>
         </div>
       </div>
       <div className={styles.execute}>
-        <p>Name your endpoint to execute a security test.</p>
+        <p>Create an endpoint to begin executing the security test:</p>
         <div className={styles.command}>
           <InputGroup
             groupClassName={styles.create}
             placeholder="Enter a name for the endpoint"
             type="text"
-            after={<RefreshIcon className={styles.refreshIcon} />}
           />
           <Button>Create</Button>
         </div>

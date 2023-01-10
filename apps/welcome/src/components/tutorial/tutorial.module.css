@@ -7,14 +7,16 @@
 
 .tutorial .headline {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  column-gap: 0.625rem;
-  padding: 1rem 0;
+  flex-direction: column;
 }
 
-.tutorial .headline > h4 {
+.tutorial .headline > h3 {
   margin: 0;
+}
+
+.tutorial .headline > p {
+  font-size: var(--text-sm);
+  line-height: 20px;
 }
 
 .pulse {
@@ -23,12 +25,13 @@
 
 .test {
   padding-bottom: 1rem;
-  border-top: 1px solid var(--color-detail-light);
-  border-bottom: 1px solid var(--color-detail-light);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .test > h2 {
   margin: 1rem 0;
+  line-height: 42px;
 }
 
 .test > p {

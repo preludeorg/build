@@ -21,9 +21,6 @@ function Build() {
     <div className={styles.app}>
       <Helmet>
         <title>Prelude | Build</title>
-        <style>
-          {"body {  background-color: var(--color-secondary-40); }"}
-        </style>
       </Helmet>
 
       <main>

@@ -8,7 +8,7 @@ const ProbeList: React.FC<{
     isLoading: boolean;
   };
   setScreen: (s: string) => void;
-  setProbe: ({}) => void;
+  setProbe: (probe: Probe) => void;
 }> = ({ probes, setScreen, setProbe }) => {
   return (
     <div className={styles.list}>
@@ -30,7 +30,7 @@ const ProbeList: React.FC<{
 const Probes: React.FC<{
   probe: Probe;
   setScreen: (s: string) => void;
-  setProbe: ({}) => void;
+  setProbe: (probe: Probe) => void;
 }> = ({ probe, setScreen, setProbe }) => {
   const checkStatus = (probeTime: string) => {
     const date = new Date().getTime();

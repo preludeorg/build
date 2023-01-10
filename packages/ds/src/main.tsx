@@ -44,3 +44,4 @@ export * from "./components/icons/windows-icon";
 export * from "./components/notifications/notifications";
 export * from "./components/overlay/overlay";
 export * from "./components/tooltip/tooltip";
+export * from "./hooks/theme-store";
