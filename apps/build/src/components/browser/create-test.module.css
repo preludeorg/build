@@ -1,0 +1,59 @@
+/* Action Buttons */
+
+.title {
+  display: flex;
+  flex-direction: row;
+  padding: 0.75rem 0.5rem 0.75rem 1rem;
+}
+
+.title span {
+  font-size: var(--text-rg);
+  font-weight: 400;
+  color: var(--color-primary-10);
+}
+
+.title .create {
+  margin-left: auto;
+}
+
+.title .create:disabled {
+  border: none;
+  background: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  padding: 0.75rem 0.5rem 0.75rem 1rem;
+  background-color: var(--transparent);
+  align-items: center;
+}
+
+.form input {
+  border: none;
+  border-bottom: 1px dashed var(--transparent-white);
+  background: none;
+  border-radius: 0;
+  line-height: 1.5;
+  padding: 1px;
+}
+
+.form input:focus {
+  outline: none;
+  border: none;
+  border-bottom: 1px dashed var(--transparent-white);
+  box-shadow: none;
+}
+
+.form input::placeholder {
+  font-size: var(--text-sm);
+  color: var(--color-primary-10);
+  font-weight: 400;
+}
+
+.form .submit,
+.form .submit:disabled {
+  border: none;
+  background: none;
+}

@@ -22,7 +22,10 @@ export const ConfirmDialog: React.FC<{
   return (
     <Popover className={styles.confirm}>
       <Popover.Button as="div">{children}</Popover.Button>
-      <Popover.Panel className={styles.prompt}>
+      <Popover.Panel
+        className={styles.prompt}
+        onClick={(ev: React.MouseEvent<HTMLElement>) => ev.stopPropagation()}
+      >
         {({ close }) => (
           <>
             <div className={styles.message}>
@@ -35,6 +38,7 @@ export const ConfirmDialog: React.FC<{
             </div>
             <div className={styles.options}>
               <Button
+                className={styles.button}
                 onClick={() => {
                   close();
                   onAffirm();
@@ -43,6 +47,7 @@ export const ConfirmDialog: React.FC<{
                 {affirmative}
               </Button>
               <Button
+                className={styles.button}
                 onClick={() => {
                   close();
                   onDecline?.();

@@ -1,5 +1,6 @@
 export * from "@theprelude/sdk";
 export * from "./hooks/use-config";
+export * from "./hooks/use-emitter";
 export * from "./lib/api";
 export * from "./lib/emitter";
 export * from "./stores/auth-store";

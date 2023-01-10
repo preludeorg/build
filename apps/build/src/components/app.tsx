@@ -1,13 +1,13 @@
 import { select } from "@theprelude/core";
+import "driver.js/dist/driver.min.css";
 import Helmet from "react-helmet";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../hooks/navigation-store";
 import { useDefaultHeight } from "../hooks/use-default-height";
 import styles from "./app.module.css";
+import Browser from "./browser/browser";
 import EditorPanel from "./editor/editor-panel";
-import Footer from "./footer";
 import Overlays from "./overlays/overlays";
-import StatusBar from "./status-bar/status-bar";
 import Welcome from "./welcome/welcome";
 
 function Build() {
@@ -15,7 +15,7 @@ function Build() {
     select("panel", "overlay"),
     shallow
   );
-  const { ref, defaultHeight } = useDefaultHeight();
+  const { ref } = useDefaultHeight();
 
   return (
     <div className={styles.app}>
@@ -31,9 +31,8 @@ function Build() {
           {panel === "welcome" && <Welcome ref={ref} />}
           {panel === "editor" && <EditorPanel />}
         </section>
-        <Footer defaultHeight={defaultHeight} />
-        <StatusBar />
       </main>
+      <Browser />
       <Overlays overlay={overlay} />
     </div>
   );

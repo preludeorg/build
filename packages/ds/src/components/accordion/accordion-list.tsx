@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import { IconButton } from "../button/icon-button";
 import styles from "./accordion.module.css";
 
@@ -22,11 +22,18 @@ export const AccordionItem: React.FC<{
   );
 };
 
-export const AccordionAction: React.FC<{
-  loading?: boolean;
+export interface AccordionActionProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;
-  onClick?: () => void;
-}> = ({ icon, onClick, loading }) => {
+  loading?: boolean;
+}
+
+export const AccordionAction: React.FC<AccordionActionProps> = ({
+  icon,
+  onClick,
+  loading,
+  ...props
+}) => {
   return (
     <IconButton
       onClick={onClick}
@@ -34,6 +41,7 @@ export const AccordionAction: React.FC<{
       icon={icon}
       loading={loading}
       disabled={loading}
+      {...props}
     />
   );
 };

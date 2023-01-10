@@ -1,0 +1,14 @@
+.header h4 {
+  font-weight: 400;
+  color: var(--color-primary-10);
+  margin: 0;
+  line-height: 3.5rem;
+}
+
+.accordion > header {
+  padding: 0.75rem 0.5rem 0.75rem 1rem;
+}
+
+.accordion > header > svg {
+  fill: var(--color-primary-10);
+}

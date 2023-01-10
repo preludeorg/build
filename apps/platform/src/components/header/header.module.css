@@ -1,5 +1,8 @@
 .header {
+  height: 100%;
   grid-area: header;
+  flex-direction: row;
+  flex-flow: row wrap;
   display: flex;
   border-bottom: 1px var(--gray-30) solid;
   justify-content: space-between;

@@ -3,6 +3,7 @@ import { authState } from "@theprelude/core";
 import { Loading, Notifications } from "@theprelude/ds";
 import React, { Suspense } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
+import Banner from "./banner/banner";
 import Header from "./header/header";
 import Nav from "./nav/nav";
 import styles from "./platform.module.css";
@@ -22,15 +23,18 @@ const queryClient = new QueryClient({
 function Root() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className={styles.platform}>
-        <Header />
-        <Nav />
-        <main className={styles.wrapper}>
-          <Suspense fallback={<Loading />}>
-            <Outlet />
-          </Suspense>
-        </main>
-        <Notifications />
+      <div className={styles.page}>
+        <Banner />
+        <div className={styles.platform}>
+          <Header />
+          <Nav />
+          <main className={styles.wrapper}>
+            <Suspense fallback={<Loading />}>
+              <Outlet />
+            </Suspense>
+          </main>
+          <Notifications />
+        </div>
       </div>
       <ReloadPrompt />
     </QueryClientProvider>

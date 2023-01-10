@@ -13,6 +13,7 @@
   --white: white;
   --transparent-white: rgba(255, 255, 255, 0.2); /* Transparent White */
   --transparent-black: rgba(0, 0, 0, 0.2); /* Transparent Black */
+  --transparent: rgba(0, 0, 0, 0.2); /* Transparent */
   --gray-10: #939393; /* Shingle Gray */
   --gray-20: #5c6063; /* Steel Metal */
   --gray-30: #3d4246; /* Metropolis */
@@ -21,17 +22,17 @@
 
   /* details */
 
-  --color-detail-dark: #1A2121; /* Dark Teal */
-  --color-detail-light: #344B4B; /* Sea Teal */
+  --color-detail-dark: #1a2121; /* Dark Teal */
+  --color-detail-light: #344b4b; /* Sea Teal */
 
   /* alerts */
   --color-success: #73b762;
-  --color-deepSuccess: #59DA39;
+  --color-deepSuccess: #59da39;
   --color-error: #f28c8c;
-  --color-alert: #D43535;
-  --color-deepAlert: #A42525;
+  --color-alert: #d43535;
+  --color-deepAlert: #a42525;
   --color-warning: #ffbf44;
-  --color-aero: #78B6ED; /* Aero */
+  --color-aero: #78b6ed; /* Aero */
 
   /* typography */
   --color-text: var(--white);

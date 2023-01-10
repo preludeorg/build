@@ -1,17 +1,19 @@
-import { Variant } from "@theprelude/core";
+import { isPreludeTest, Test } from "@theprelude/core";
 import create from "zustand";
 
 export interface Tab {
-  variant: Variant;
+  test: Test;
   extension: string;
   buffer: string;
+  readonly: boolean;
 }
 
-function createTab(variant: Variant): Tab {
+function createTab(test: Test, code: string): Tab {
   return {
-    variant,
-    extension: variant.name.split(".").pop() ?? "c",
-    buffer: variant.code,
+    test,
+    extension: test.filename.split(".").pop() ?? "go",
+    buffer: code,
+    readonly: isPreludeTest(test),
   };
 }
 
@@ -21,7 +23,7 @@ interface EditorStore {
   previousTabId: string;
   buffer: string;
   reset: () => void;
-  openTab: (variant: Variant) => void;
+  openTab: (test: Test, code: string) => void;
   switchTab: (tabId: string) => void;
   closeTab: (tabId: string) => boolean;
   updateCurrentBuffer: (buffer: string) => void;
@@ -32,14 +34,14 @@ const useEditorStore = create<EditorStore>((set) => ({
   currentTabId: "",
   previousTabId: "",
   buffer: "",
-  openTab(variant) {
+  openTab(test, code) {
     set((state) => {
-      const tab = createTab(variant);
-      const newTabs = { ...state.tabs, [tab.variant.name]: tab };
+      const tab = createTab(test, code);
+      const newTabs = { ...state.tabs, [tab.test.filename]: tab };
       return {
         ...state,
         tabs: newTabs,
-        currentTabId: tab.variant.name,
+        currentTabId: tab.test.filename,
         buffer: tab.buffer,
       };
     });
