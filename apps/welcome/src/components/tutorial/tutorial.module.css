@@ -1,0 +1,88 @@
+.tutorial {
+  display: flex;
+  flex-direction: column;
+  width: 37.5rem;
+  margin: 6rem auto;
+}
+
+.tutorial .headline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.625rem;
+  padding: 1rem 0;
+}
+
+.tutorial .headline > h4 {
+  margin: 0;
+}
+
+.pulse {
+  fill: var(--color-success);
+}
+
+.test {
+  padding-bottom: 1rem;
+  border-top: 1px solid var(--color-detail-light);
+  border-bottom: 1px solid var(--color-detail-light);
+}
+
+.test > h2 {
+  margin: 1rem 0;
+}
+
+.test > p {
+  margin: 0;
+}
+
+.subTests {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+  row-gap: 1px;
+}
+
+.subTest {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  background-color: var(--transparent-black);
+}
+
+.subTest > span {
+  margin: 0 0.5rem 0 0.25rem;
+}
+
+.subTestIcon {
+  fill: var(--gray-10);
+}
+
+.execute {
+  padding: 1rem 0;
+}
+
+.execute p {
+  margin: 0;
+}
+
+.command {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.75rem;
+  color: var(--white);
+  white-space: nowrap;
+  margin: 1rem 0;
+}
+
+.command .create input {
+  background: none;
+  color: var(--white);
+  width: 16rem;
+  line-height: 1.25rem;
+}
+
+.refreshIcon {
+  fill: var(--white);
+}

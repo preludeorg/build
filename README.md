@@ -1,6 +1,6 @@
 # Prelude Build
 
-<a href="https://www.preludesecurity.com/">Prelude Build</a> is an easy-to-use IDE - purpose built for authoring, testing and verifying security tests for use in real environments. Our goal is to provide a consistent and repeatable way to write, verify and deploy tests for any scale.
+<a href="https://www.preludesecurity.com/products/build">Prelude Build</a> is an easy-to-use IDE - purpose built for authoring, testing and verifying security tests for use in real environments. Our goal is to provide a consistent and repeatable way to write, verify and deploy tests for any scale.
 
 https://user-images.githubusercontent.com/813716/206263410-9cae39fd-1140-4a8c-b534-777718faed77.mp4
 
@@ -35,7 +35,7 @@ You may opt for one or both, depending on your workflow. Both are fully open-sou
 
 The Build UI is a <a href="https://web.dev/progressive-web-apps/">Progressive Web Application (PWA)</a> - which means it is a website that functions as a desktop application. This modern deployment mechanism allows the best of both worlds: you can run it as a native desktop experience (where the icon shows up in your dock) but you don't need to actually install it, as it's just browser technology under the covers.
 
-PWA's can run anywhere, on any device you can load a browser. To use the GUI - click on the "Launch Prelude Build" CTAs on https://www.preludesecurity.com/.
+PWA's can run anywhere, on any device you can load a browser. To use the GUI - click on the "Launch Prelude Build" CTAs on https://www.preludesecurity.com/products/build.
 
 ### Quickstart
 
