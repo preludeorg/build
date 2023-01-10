@@ -26,11 +26,11 @@
 .app .browser {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--color-secondary-10);
+  border-left: 1px solid var(--color-border);
 }
 
 .app .browser h4 {
-  padding-left: .7rem;
+  padding-left: 0.7rem;
 }
 
 .handle {

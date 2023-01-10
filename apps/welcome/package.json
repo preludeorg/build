@@ -1,0 +1,48 @@
+{
+  "name": "@theprelude/welcome",
+  "description": "An introduction into the Prelude Platform",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "src/main.tsx",
+  "types": "src/main.tsx",
+  "author": {
+    "name": "Prelude Research",
+    "email": "support@prelude.org"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/main.tsx",
+      "require": "./src/main.tsx"
+    },
+    "./theme.module.css": {
+      "import": "./src/styles/theme.module.css",
+      "require": "./src/styles/theme.module.css"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix"
+  },
+  "dependencies": {
+    "@theprelude/core": "*",
+    "@theprelude/ds": "*",
+    "classnames": "^2.3.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-helmet": "^6.1.6",
+    "@vitejs/plugin-react": "^2.1.0",
+    "eslint-config-custom": "*",
+    "prettier": "^2.7.1",
+    "tsconfig": "*",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4"
+  }
+}

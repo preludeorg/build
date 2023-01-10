@@ -98,6 +98,16 @@ export const createURL = async (vst: string, config: ServiceConfig) => {
   return await service.build.createURL(vst, { headers: productHeader() });
 };
 
+export const getProbeList = async (config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.detect.listProbes();
+};
+
+export const getActivity = async (config: ServiceConfig) => {
+  const service = new Service(config);
+  return await service.detect.describeActivity();
+};
+
 export const purgeAccount = async (config: ServiceConfig) => {
   const service = new Service(config);
   return await service.iam.purgeAccount({

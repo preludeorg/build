@@ -1,5 +1,6 @@
 import { select } from "@theprelude/core";
 import "driver.js/dist/driver.min.css";
+import Helmet from "react-helmet";
 import shallow from "zustand/shallow";
 import useNavigationStore from "../hooks/navigation-store";
 import { useDefaultHeight } from "../hooks/use-default-height";
@@ -18,6 +19,10 @@ function Build() {
 
   return (
     <div className={styles.app}>
+      <Helmet>
+        <title>Prelude | Build</title>
+      </Helmet>
+
       <main>
         <section className={styles.topSection}>
           {panel === "welcome" && <Welcome ref={ref} />}

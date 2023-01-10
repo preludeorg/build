@@ -1,0 +1,74 @@
+.list {
+  width: 428px;
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.list .title {
+  padding: 0.75rem 1rem;
+  background: none;
+  color: var(--color-secondary-10);
+  font-size: var(--text-rg);
+}
+
+.add {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--transparent-black);
+  column-gap: 0.5rem;
+  border: none;
+  width: 100%;
+  border-radius: 0;
+  font-size: var(--button-sm);
+}
+
+.add > svg {
+  fill: var(--white);
+}
+
+.add:hover {
+  background-color: var(--color-secondary-30);
+  border: none;
+  box-shadow: none;
+}
+
+.probe {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  column-gap: 0.5rem;
+  border-radius: 0;
+  border: none;
+  background-color: #1b2929;
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+}
+
+.status {
+  fill: var(--white);
+}
+
+.probe .active {
+  padding: 4px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  margin-left: auto;
+}
+
+.probe .inactive {
+  padding: 4px;
+  border-radius: 50%;
+  background-color: var(--color-error);
+  margin-left: auto;
+}
+
+.probe:hover {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--transparent-black);
+  box-shadow: none;
+}

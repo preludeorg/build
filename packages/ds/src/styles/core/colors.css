@@ -1,17 +1,8 @@
 :root {
-  /* main colors */
-  --color-primary-10: #7e95a9; /* Angora Blue */
-  --color-primary-20: #38597a; /* Blue Bay */
-  --color-primary-30: #1c456d; /* Blueberry */
-
-  --color-secondary-10: #444c5b; /* Night Flight */
-  --color-secondary-20: #323844; /* Soft Steal */
-  --color-secondary-30: #272b33; /* Shark */
-  --color-secondary-40: #21252b; /* Dark Mountain */
-
   /* shades */
   --white: white;
   --transparent-white: rgba(255, 255, 255, 0.2); /* Transparent White */
+  --transparent-black: rgba(0, 0, 0, 0.2); /* Transparent Black */
   --transparent: rgba(0, 0, 0, 0.2); /* Transparent */
   --gray-10: #939393; /* Shingle Gray */
   --gray-20: #5c6063; /* Steel Metal */
@@ -21,12 +12,12 @@
 
   /* alerts */
   --color-success: #73b762;
-  --color-deepSuccess: #59DA39;
+  --color-deepSuccess: #59da39;
   --color-error: #f28c8c;
-  --color-alert: #D43535;
-  --color-deepAlert: #A42525;
+  --color-alert: #d43535;
+  --color-deepAlert: #a42525;
   --color-warning: #ffbf44;
-  --color-aero: #78B6ED; /* Aero */
+  --color-aero: #78b6ed; /* Aero */
 
   /* typography */
   --color-text: var(--white);

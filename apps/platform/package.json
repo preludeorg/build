@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@theprelude/build": "*",
+    "@theprelude/welcome": "*",
     "@theprelude/ds": "*",
     "@theprelude/core": "*",
     "@tanstack/react-query": "4.16.1",

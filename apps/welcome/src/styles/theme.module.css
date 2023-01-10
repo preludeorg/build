@@ -1,0 +1,12 @@
+.page {
+  --color-primary-10: #669393; /* Turquoise */
+  --color-primary-20: #344b4b; /* Sea Teal */
+  --color-primary-30: #1f3f3f; /* Everglade */
+  --color-secondary-10: #669393; /* Turquoise */
+  --color-secondary-20: #344b4b; /* Sea Teal */
+  --color-secondary-30: #1b2929; /* Ocean */
+  --color-secondary-40: #1a2121; /* Dark Teal */
+
+  --color-border: var(--color-primary-20);
+  background-color: var(--color-secondary-40);
+}

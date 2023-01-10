@@ -3,8 +3,11 @@
 @import "core/typography.css";
 @import "core/breakpoints.css";
 
+* {
+  transition: border-color 0.75s ease;
+}
+
 body {
-  background-color: var(--color-secondary-40);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;

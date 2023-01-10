@@ -1,0 +1,121 @@
+.tutorial {
+  display: flex;
+  flex-direction: column;
+  width: 37.5rem;
+  margin: 6rem auto;
+}
+
+.tutorial .headline {
+  display: flex;
+  flex-direction: column;
+}
+
+.tutorial .headline > h3 {
+  margin: 0;
+}
+
+.tutorial .headline > p {
+  font-size: var(--text-sm);
+  line-height: 20px;
+}
+
+.pulse {
+  fill: var(--color-success);
+}
+
+.test {
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.test > h2 {
+  margin: 1rem 0;
+  line-height: 42px;
+}
+
+.test > p {
+  margin: 0;
+}
+
+.attribute {
+  margin-bottom: 1rem;
+}
+
+.attribute section {
+  display: inline-flex;
+  background-color: var(--color-primary-30);
+  font-size: var(--text-xs);
+  padding: 0.25rem 0.5rem;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.attribute p {
+  margin: 0;
+  background-color: var(--transparent-black);
+  width: max-content;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.attribute a {
+  color: var(--gray-10);
+}
+
+.attribute a:hover {
+  color: var(--white);
+}
+
+.subTests {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+  row-gap: 1px;
+}
+
+.subTest {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  background-color: var(--transparent-black);
+}
+
+.subTest > span {
+  margin: 0 0.5rem 0 0.25rem;
+}
+
+.subTestIcon {
+  fill: var(--gray-10);
+}
+
+.execute {
+  padding: 1rem 0;
+}
+
+.execute p {
+  margin: 0;
+}
+
+.command {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.75rem;
+  color: var(--white);
+  white-space: nowrap;
+  margin: 1rem 0;
+}
+
+.command .create input {
+  background: none;
+  color: var(--white);
+  width: 16rem;
+  line-height: 1.25rem;
+}
+
+.refreshIcon {
+  fill: var(--white);
+}
