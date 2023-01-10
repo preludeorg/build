@@ -29,7 +29,6 @@ const queryClient = new QueryClient({
 
 function Root() {
   const currentApp = useThemeStore((state) => state.currentApp);
-  console.log(welcomeTheme);
   return (
     <QueryClientProvider client={queryClient}>
       <div
