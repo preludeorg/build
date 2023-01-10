@@ -34,15 +34,11 @@ const Activity: React.FC<{
   probe?: Probe;
   activity: Record<string, any>;
 }> = ({ probe }) => {
-  if (!probe) {
-    return null;
-  }
-
   return (
     <div className={styles.activity}>
       <div className={styles.report}>
         <div className={styles.probe}>
-          <pre>{probe.endpoint_id}</pre>
+          <pre>{probe?.endpoint_id}</pre>
           <ProbeStatusIcon />
         </div>
         <h2 className={styles.title}>Can we exploit the Office macro CVEs?</h2>

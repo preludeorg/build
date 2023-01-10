@@ -1,10 +1,9 @@
 import {
   Button,
-  CheckmarkIcon,
+  FlaskIcon,
   GithubIcon,
   InputGroup,
-  PulseSmallIcon,
-  RefreshIcon,
+  RouteIcon,
 } from "@theprelude/ds";
 import styles from "./tutorial.module.css";
 
@@ -24,26 +23,39 @@ const Tutorial = () => {
       </div>
       <div className={styles.test}>
         <h2>Will your computer quarantine a malicious Office document?</h2>
-        <div>
-          <span>Rule</span>
+        <div className={styles.attribute}>
+          <section>
+            <RouteIcon /> <span>Rule</span>
+          </section>
           <p>Malicious files should quarantine when written to disk.</p>
         </div>
 
-        <div>
-          <span>Test</span>
-          <p>Will your computer quarantine a malicious Office document?</p>
+        <div className={styles.attribute}>
+          <section>
+            <FlaskIcon /> <span>Test</span>
+          </section>
+          <p>
+            Will your computer quarantine a malicious Office document?{" "}
+            <a
+              href="https://github.com/preludeorg/test/blob/master/tests/b74ad239-2ddd-4b1e-b608-8397a43c7c54/b74ad239-2ddd-4b1e-b608-8397a43c7c54.go"
+              target={"_blank"}
+            >
+              <GithubIcon />
+            </a>
+          </p>
         </div>
       </div>
       <div className={styles.execute}>
         <p>Create an endpoint to begin executing the security test:</p>
-        <div className={styles.command}>
+        <form className={styles.command}>
           <InputGroup
+            required
             groupClassName={styles.create}
             placeholder="Enter a name for the endpoint"
             type="text"
           />
-          <Button>Create</Button>
-        </div>
+          <Button type="submit">Create</Button>
+        </form>
       </div>
     </div>
   );
