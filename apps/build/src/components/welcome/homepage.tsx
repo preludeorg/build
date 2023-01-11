@@ -24,7 +24,12 @@ const Homepage = () => {
               </Button>
             </li>
             <li>
-              <Button icon={<KeyIcon />}>Export credentials</Button>
+              <Button
+                onClick={() => emitter.emit("exportCredentials")}
+                icon={<KeyIcon />}
+              >
+                Export credentials
+              </Button>
             </li>
           </ul>
         </div>
