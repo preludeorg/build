@@ -32,8 +32,10 @@ import styles from "./welcome.module.css";
 
 const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
   const queryClient = useQueryClient();
-  const serviceConfig = useAuthStore(select("host", "credentials"), shallow);
-  const { isAnonymous } = useAuthStore(select("isAnonymous"));
+  const { isAnonymous, host, credentials } = useAuthStore(
+    select("isAnonymous", "host", "credentials"),
+    shallow
+  );
   const completedTests = useIntroStore(
     (state) => state.completedTests,
     shallow
@@ -44,13 +46,13 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
     async () => {
       notifyLoading("Opening a test to build...", "open-build");
       const tests = queryClient
-        .getQueryData<Array<Test>>(["tests", serviceConfig])
+        .getQueryData<Array<Test>>(["tests", { host, credentials }])
         ?.filter((t) => !isPreludeTest(t));
 
       if (!tests) throw new Error("No tests found");
 
       return {
-        code: await downloadTest(tests[0].filename, serviceConfig),
+        code: await downloadTest(tests[0].filename, { host, credentials }),
         test: tests[0],
       };
     },
@@ -156,7 +158,7 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           <WelcomeBlock
             completed={completedTests.includes("viewTest")}
             onClick={() => {
-              if (!queryClient.getQueryData(["tests", serviceConfig])) {
+              if (!queryClient.getQueryData(["tests", { host, credentials }])) {
                 notify("Waiting for tests to load...");
                 return;
               }
@@ -227,14 +229,14 @@ const Welcome = React.forwardRef<HTMLDivElement>(({}, ref) => {
           <WelcomeBlock
             completed={completedTests.includes("buildTest")}
             onClick={() => {
-              if (!queryClient.getQueryData(["tests", serviceConfig])) {
+              if (!queryClient.getQueryData(["tests", { host, credentials }])) {
                 notify("Waiting for tests to load...");
                 return;
               }
 
               if (
                 queryClient
-                  .getQueryData<Test[]>(["tests", serviceConfig])
+                  .getQueryData<Test[]>(["tests", { host, credentials }])
                   ?.filter((t) => !isPreludeTest(t)).length === 0
               ) {
                 notify("No tests found. Create a test first.");
