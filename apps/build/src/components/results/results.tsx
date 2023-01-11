@@ -86,9 +86,7 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
 
   const status = result.steps.map((s) => s.status);
   const isPass = status.every((e) => e === 0);
-  const hasSuccessPublish = result.steps.some(
-    (s) => s.step.toLowerCase() === "publish" && s.status === 0
-  );
+  const passedAllTests = result.steps.every((s) => s.status === 0);
 
   return (
     <li className={styles.variantContainer}>
@@ -99,7 +97,7 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
           <AlertIcon className={styles.alertIcon} />
         )}
         <span className={styles.name}>{result.name}</span>
-        {!expanded && hasSuccessPublish && (
+        {!expanded && passedAllTests && (
           <>
             <div className={styles.divider} />
             <DownloadLink
@@ -155,7 +153,7 @@ const VariantResult: React.FC<{ result: ComputeResult }> = ({ result }) => {
               {s.output.length !== 0 && <VariantOutput step={s} />}
             </li>
           ))}
-          {hasSuccessPublish && (
+          {passedAllTests && (
             <li className={classNames(styles.step, styles.stepCentered)}>
               <div className={styles.info}>
                 <div className={styles.infoDeployBlock}>
