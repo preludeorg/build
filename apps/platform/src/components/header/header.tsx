@@ -7,6 +7,7 @@ import {
   select,
   useAuthStore,
   useConfig,
+  useEmitter,
 } from "@theprelude/core";
 import {
   CheckmarkIcon,
@@ -73,6 +74,10 @@ const Header = () => {
   }, []);
 
   const noUser = !initializing && !credentials;
+
+  const { handleExport } = useConfig();
+  useEmitter("exportCredentials", () => handleExport());
+
   return (
     <header className={styles.header}>
       <section className={styles.brand}>
