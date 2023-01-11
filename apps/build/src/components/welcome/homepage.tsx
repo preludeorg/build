@@ -42,30 +42,43 @@ const Homepage = () => {
           <h3>Docs</h3>
           <ul>
             <li>
-              <a>
+              <a href="https://docs.prelude.org/docs/build" target="_blank">
                 <BookIcon />
                 <h4>Introduction to Build</h4>
               </a>
             </li>
             <li>
-              <a>
+              <a
+                href="https://docs.prelude.org/docs/deploying-security-tests"
+                target="_blank"
+              >
                 <BookIcon />
                 <h4>Using Build at scale</h4>
               </a>
             </li>
             <li>
-              <a>
+              <a href="https://docs.prelude.org/docs/tests" target="_blank">
                 <BookIcon />
                 <h4>Your first test</h4>
               </a>
             </li>
             <li>
-              <a>
+              <a
+                href="https://docs.prelude.org/docs/tests#results"
+                target="_blank"
+              >
                 <BookIcon />
                 <h4>Reading the test results</h4>
               </a>
             </li>
           </ul>
+          <a
+            href="https://docs.prelude.org/docs"
+            target="_blank"
+            className={styles.more}
+          >
+            More...
+          </a>
         </div>
       </div>
     </div>

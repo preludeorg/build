@@ -75,6 +75,7 @@
   border: 1px solid var(--color-secondary-10);
   background-color: var(--color-secondary-30);
   width: 20rem;
+  text-decoration: none;
 }
 
 .right > div > ul > li > a:hover {
@@ -88,4 +89,14 @@
 .right > div > ul > li > a > h4 {
   margin: 0;
   line-height: 2rem;
+}
+
+.right .more {
+  color: var(--color-aero);
+  text-decoration: none;
+  width: max-content;
+}
+
+.right .more:hover {
+  cursor: pointer;
 }
