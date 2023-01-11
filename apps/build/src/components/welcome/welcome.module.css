@@ -117,7 +117,7 @@
 
 /* Documentation Block */
 
-.docs {
+.documentation {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -132,7 +132,7 @@
   color: #fff;
 }
 
-.docs:hover {
+.documentation:hover {
   background-color: var(--color-secondary-20);
 }
 

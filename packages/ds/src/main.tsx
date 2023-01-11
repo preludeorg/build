@@ -36,6 +36,8 @@ export * from "./components/icons/variant-icon";
 export * from "./components/icons/windows-icon";
 export * from "./components/icons/user-icon";
 export * from "./components/icons/plus-icon";
+export * from "./components/icons/key-icon";
+export * from "./components/icons/book-icon";
 export * from "./components/notifications/notifications";
 export * from "./components/overlay/overlay";
 export * from "./components/tooltip/tooltip";
